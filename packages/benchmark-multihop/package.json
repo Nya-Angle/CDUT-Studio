@@ -1,0 +1,16 @@
+{
+  "name": "@profer/benchmark-multihop",
+  "version": "0.1.0",
+  "license": "AGPL-3.0-only",
+  "description": "MultiHop-RAG 自动化评测与可视化看板（独立于主程序的轻量测试程序）",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "benchmark-multihop": "./src/server.ts"
+  },
+  "scripts": {
+    "start": "bun run src/server.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test"
+  }
+}

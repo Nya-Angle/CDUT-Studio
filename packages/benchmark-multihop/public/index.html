@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MultiHop-RAG 评测看板 · CDUT Studio</title>
+<style>
+  :root {
+    --bg: #0b1020;
+    --panel: #131a2e;
+    --panel-2: #182238;
+    --line: #26314d;
+    --text: #e6ecff;
+    --muted: #8b98b8;
+    --primary: #6f8cff;
+    --primary-2: #8f6fff;
+    --ok: #38d39f;
+    --warn: #ffb454;
+    --danger: #ff6b81;
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(1200px 600px at 10% -10%, #1b2547 0%, var(--bg) 55%);
+    color: var(--text);
+    font-family: "Inter", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 32px 20px 80px; }
+  header { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .logo {
+    width: 44px; height: 44px; border-radius: 13px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    display: grid; place-items: center; font-weight: 700; font-size: 18px;
+    box-shadow: 0 10px 30px rgba(111,140,255,.35);
+  }
+  h1 { font-size: 20px; margin: 0; letter-spacing: -.2px; }
+  .sub { color: var(--muted); font-size: 12.5px; margin-top: 3px; }
+  .chip {
+    margin-left: auto; display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 13px; border-radius: 999px; font-size: 12px;
+    background: var(--panel); border: 1px solid var(--line);
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+  .dot.on { background: var(--ok); box-shadow: 0 0 0 3px rgba(56,211,159,.18); }
+  .dot.off { background: var(--danger); }
+  .card {
+    background: linear-gradient(180deg, var(--panel), var(--panel-2));
+    border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 20px; margin-top: 20px;
+    box-shadow: 0 20px 50px rgba(3,8,28,.45);
+  }
+  .card h2 { font-size: 14px; margin: 0 0 14px; color: var(--text); letter-spacing: .2px; }
+  .grid { display: grid; gap: 18px; }
+  .controls { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); align-items: end; }
+  label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 7px; }
+  select, input[type=number] {
+    width: 100%; padding: 10px 12px; border-radius: 11px; border: 1px solid var(--line);
+    background: #0e1526; color: var(--text); font-size: 13px; outline: none;
+  }
+  select:focus, input:focus { border-color: var(--primary); }
+  .checks { display: flex; gap: 14px; padding-top: 4px; }
+  .checks label { display: flex; align-items: center; gap: 7px; color: var(--text); margin: 0; font-size: 13px; }
+  .btn {
+    border: none; cursor: pointer; border-radius: 12px; padding: 11px 18px; font-size: 13px;
+    font-weight: 600; color: #fff; background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    box-shadow: 0 12px 28px rgba(111,140,255,.32); transition: transform .15s, opacity .15s;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+  .btn.ghost { background: transparent; border: 1px solid var(--line); color: var(--text); box-shadow: none; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .progress-track { height: 9px; border-radius: 999px; background: #0e1526; overflow: hidden; border: 1px solid var(--line); }
+  .progress-fill { height: 100%; width: 0%; border-radius: 999px; background: linear-gradient(90deg, var(--primary), var(--primary-2)); transition: width .25s; }
+  .phase { font-size: 12.5px; color: var(--muted); margin-top: 10px; }
+  .metrics { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+  .engine-card { background: #0f1628; border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+  .engine-name { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .tag { font-size: 10.5px; padding: 2px 8px; border-radius: 999px; background: rgba(111,140,255,.15); color: var(--primary); }
+  .kv { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+  .kv .item { background: #0b1222; border: 1px solid var(--line); border-radius: 11px; padding: 10px; }
+  .kv .k { font-size: 10.5px; color: var(--muted); }
+  .kv .v { font-size: 17px; font-weight: 700; margin-top: 4px; }
+  .bars { display: flex; flex-direction: column; gap: 12px; }
+  .bar-row { display: grid; grid-template-columns: 120px 1fr 64px; gap: 12px; align-items: center; font-size: 12px; }
+  .bar-track { height: 12px; border-radius: 999px; background: #0e1526; overflow: hidden; border: 1px solid var(--line); }
+  .bar-fill { height: 100%; border-radius: 999px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; font-size: 11px; }
+  tr.detail td { background: #0b1222; }
+  .pill { font-size: 10.5px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+  .pill.ok { color: var(--ok); border-color: rgba(56,211,159,.4); }
+  .pill.bad { color: var(--danger); border-color: rgba(255,107,129,.4); }
+  .muted { color: var(--muted); font-size: 12px; }
+  .toast { margin-top: 14px; font-size: 12.5px; }
+  .toast.err { color: var(--danger); }
+  .toast.ok { color: var(--ok); }
+  details summary { cursor: pointer; color: var(--primary); }
+  code { background: #0b1222; padding: 1px 6px; border-radius: 6px; font-size: 11px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">M</div>
+    <div>
+      <h1>MultiHop-RAG 检索评测看板</h1>
+      <div class="sub">经典混合检索 vs 分层 Leiden GraphRAG · 双轨指标评估 · 国际学术规范报告导出</div>
+    </div>
+    <div class="chip" id="runtimeChip"><span class="dot" id="runtimeDot"></span><span id="runtimeText">正在探测主程序…</span></div>
+  </header>
+
+  <div class="card">
+    <h2>评测配置</h2>
+    <div class="grid controls">
+      <div>
+        <label>数据集</label>
+        <select id="datasetSelect">
+          <option value="embedded">内置离线样例（合成语料 · 50 题）</option>
+          <option value="official">官方全集 MultiHop-RAG（2556 题 · 需下载）</option>
+        </select>
+      </div>
+      <div>
+        <label>对比引擎</label>
+        <div class="checks">
+          <label><input type="checkbox" id="engineClassic" checked /> classic 经典混合</label>
+          <label><input type="checkbox" id="engineGraphrag" checked /> graphrag 分层图谱</label>
+        </div>
+      </div>
+      <div>
+        <label>检索 Top-K（文档数）</label>
+        <input type="number" id="topK" value="10" min="1" max="200" />
+      </div>
+      <div class="row">
+        <button class="btn" id="runBtn">开始评测</button>
+        <button class="btn ghost" id="downloadBtn">下载/更新官方全集</button>
+      </div>
+    </div>
+    <div class="toast" id="datasetInfo"></div>
+    <div style="margin-top:16px" class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="phase" id="phaseText">尚未开始。</div>
+    <div class="toast err" id="errorText"></div>
+  </div>
+
+  <div class="card" id="resultCard" style="display:none">
+    <h2>聚合指标总览</h2>
+    <div class="metrics" id="engineMetrics"></div>
+    <h2 style="margin-top:26px">指标对比（Hit@10 / MRR / MAP@10）</h2>
+    <div class="bars" id="compareBars"></div>
+    <div class="row" style="margin-top:20px">
+      <button class="btn" id="exportMd">导出 Markdown</button>
+      <button class="btn ghost" id="exportJson">导出 JSON</button>
+      <button class="btn ghost" id="exportCsv">导出 CSV</button>
+    </div>
+  </div>
+
+  <div class="card" id="detailCard" style="display:none">
+    <h2>逐题多跳召回详情</h2>
+    <div class="row" style="margin-bottom:12px">
+      <label style="margin:0">引擎</label>
+      <select id="detailEngine" style="width:auto"></select>
+      <label style="margin:0">题型</label>
+      <select id="detailType" style="width:auto">
+        <option value="">全部</option>
+        <option value="inference">inference</option>
+        <option value="comparison">comparison</option>
+        <option value="temporal">temporal</option>
+        <option value="null">null</option>
+      </select>
+    </div>
+    <div style="overflow:auto; max-height:560px">
+      <table id="detailTable">
+        <thead>
+          <tr>
+            <th style="width:44px"></th><th>查询</th><th style="width:92px">题型</th>
+            <th style="width:64px">Hit@4</th><th style="width:64px">Hit@10</th>
+            <th style="width:60px">MRR</th><th style="width:64px">MAP@10</th>
+            <th style="width:96px">证据链完整</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const state = { report: null, runtime: null, detailEngine: '' }
+
+const $ = (id) => document.getElementById(id)
+
+async function probeRuntime() {
+  try {
+    const res = await fetch('/api/runtime')
+    state.runtime = await res.json()
+  } catch { state.runtime = { connected: false } }
+  const dot = $('runtimeDot'); const text = $('runtimeText')
+  if (state.runtime.connected) {
+    dot.className = 'dot on'; text.textContent = '主程序已连接'
+  } else {
+    dot.className = 'dot off'
+    text.textContent = state.runtime.error === 'RUNTIME_NOT_FOUND' ? '未检测到主程序' : '主程序未连接'
+  }
+}
+
+async function loadDatasets() {
+  const res = await fetch('/api/datasets')
+  const data = await res.json()
+  const parts = [`内置样例：${data.embedded.corpusSize} 篇语料 / ${data.embedded.queryCount} 题`]
+  parts.push(data.official.cached
+    ? `官方全集：已缓存（${data.official.summary.corpusSize} 篇 / ${data.official.summary.queryCount} 题）`
+    : '官方全集：未缓存（点击「下载/更新官方全集」拉取）')
+  $('datasetInfo').textContent = parts.join('　·　')
+}
+
+function selectedEngines() {
+  const engines = []
+  if ($('engineClassic').checked) engines.push('classic')
+  if ($('engineGraphrag').checked) engines.push('graphrag')
+  return engines
+}
+
+function setProgress(percent, phase) {
+  $('progressFill').style.width = Math.max(0, Math.min(100, percent)) + '%'
+  if (phase) $('phaseText').textContent = phase
+}
+
+async function runBenchmark() {
+  const engines = selectedEngines()
+  if (engines.length === 0) { $('errorText').textContent = '请至少选择一个检索引擎。'; return }
+  $('runBtn').disabled = true
+  $('errorText').textContent = ''
+  $('resultCard').style.display = 'none'
+  $('detailCard').style.display = 'none'
+  setProgress(2, '正在建立连接…')
+
+  try {
+    const res = await fetch('/api/run', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        dataset: $('datasetSelect').value,
+        engines,
+        topK: Number($('topK').value) || 10,
+      }),
+    })
+    if (!res.ok || !res.body) throw new Error('评测服务响应异常：HTTP ' + res.status)
+    const reader = res.body.getReader()
+    const decoder = new TextDecoder()
+    let buffer = ''
+    while (true) {
+      const { value, done } = await reader.read()
+      if (done) break
+      buffer += decoder.decode(value, { stream: true })
+      const frames = buffer.split('\n\n')
+      buffer = frames.pop()
+      for (const frame of frames) {
+        const evLine = frame.split('\n').find((l) => l.startsWith('event: '))
+        const dataLine = frame.split('\n').find((l) => l.startsWith('data: '))
+        if (!evLine || !dataLine) continue
+        const event = evLine.slice(7).trim()
+        const payload = JSON.parse(dataLine.slice(6))
+        handleEvent(event, payload)
+      }
+    }
+  } catch (err) {
+    $('errorText').textContent = String(err && err.message ? err.message : err)
+  } finally {
+    $('runBtn').disabled = false
+  }
+}
+
+function handleEvent(event, payload) {
+  if (event === 'status') {
+    setProgress(5, payload.message)
+  } else if (event === 'progress') {
+    const total = payload.total * payload.engineCount
+    const done = payload.engineIndex * payload.total + payload.completed
+    setProgress(5 + 90 * (done / Math.max(1, total)), `${payload.phase} · 引擎 ${payload.engine} · ${payload.completed}/${payload.total}`)
+  } else if (event === 'done') {
+    setProgress(100, '评测完成。')
+    renderReport(payload.report, payload.highlights)
+  } else if (event === 'error') {
+    $('errorText').textContent = payload.message
+    setProgress(0, '评测中断。')
+  }
+}
+
+const pct = (v) => (v * 100).toFixed(2) + '%'
+const fx = (v) => Number(v).toFixed(4)
+
+function renderReport(report, highlights) {
+  state.report = report
+  const container = $('engineMetrics')
+  container.innerHTML = ''
+  for (const h of highlights) {
+    const div = document.createElement('div')
+    div.className = 'engine-card'
+    div.innerHTML = `
+      <div class="engine-name">${h.engine} <span class="tag">${h.engine === 'graphrag' ? '分层 Leiden GraphRAG' : '经典混合检索'}</span></div>
+      <div class="kv">
+        <div class="item"><div class="k">Hit@4</div><div class="v">${pct(h.hitAt4)}</div></div>
+        <div class="item"><div class="k">Hit@10</div><div class="v">${pct(h.hitAt10)}</div></div>
+        <div class="item"><div class="k">MRR</div><div class="v">${fx(h.mrr)}</div></div>
+        <div class="item"><div class="k">MAP@10</div><div class="v">${fx(h.mapAt10)}</div></div>
+        <div class="item"><div class="k">覆盖率·加权</div><div class="v">${pct(h.answerCoverageToken)}</div></div>
+        <div class="item"><div class="k">证据链完整率</div><div class="v">${pct(h.fullEvidenceRecall)}</div></div>
+      </div>
+      <div class="muted" style="margin-top:12px">参评题数 ${h.scoredQueries} · null query ${h.nullQueries} · 平均耗时 ${h.avgLatencyMs.toFixed(1)} ms</div>
+      <div class="muted" style="margin-top:6px">覆盖率·严格 ${pct(h.answerCoverageStrict)} · Null 拒答率 ${h.nullQueries > 0 ? pct(h.refusalRate) : 'N/A'} · 误召回率 ${h.nullQueries > 0 ? pct(h.falseRecallRate) : 'N/A'}</div>`
+    container.appendChild(div)
+  }
+
+  const bars = $('compareBars')
+  bars.innerHTML = ''
+  const metrics = [
+    { key: 'hitAt10', label: 'Hit@10', color: 'linear-gradient(90deg,#6f8cff,#8f6fff)' },
+    { key: 'mrr', label: 'MRR', color: 'linear-gradient(90deg,#38d39f,#2aa5d6)' },
+    { key: 'mapAt10', label: 'MAP@10', color: 'linear-gradient(90deg,#ffb454,#ff6b81)' },
+  ]
+  if (highlights.some((h) => h.nullQueries > 0)) {
+    metrics.push({ key: 'refusalRate', label: 'Null 拒答率', color: 'linear-gradient(90deg,#38d39f,#6f8cff)' })
+  }
+  for (const metric of metrics) {
+    for (const h of highlights) {
+      const row = document.createElement('div')
+      row.className = 'bar-row'
+      row.innerHTML = `<span class="muted">${h.engine} · ${metric.label}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${(h[metric.key] * 100).toFixed(2)}%;background:${metric.color}"></div></div>
+        <span>${metric.key === 'mrr' || metric.key === 'mapAt10' ? fx(h[metric.key]) : pct(h[metric.key])}</span>`
+      bars.appendChild(row)
+    }
+  }
+
+  $('resultCard').style.display = 'block'
+  $('detailCard').style.display = 'block'
+  const engineSelect = $('detailEngine')
+  engineSelect.innerHTML = ''
+  for (const h of highlights) {
+    const opt = document.createElement('option'); opt.value = h.engine; opt.textContent = h.engine
+    engineSelect.appendChild(opt)
+  }
+  state.detailEngine = highlights[0] ? highlights[0].engine : ''
+  renderDetail()
+}
+
+function renderDetail() {
+  if (!state.report) return
+  const engine = $('detailEngine').value || state.detailEngine
+  const type = $('detailType').value
+  const tbody = $('detailTable').querySelector('tbody')
+  tbody.innerHTML = ''
+  const rows = (state.report.perEngineResults[engine] || []).filter((r) => !type || r.questionType === type)
+  for (const r of rows) {
+    const tr = document.createElement('tr')
+    const recall = r.fullEvidenceRecall === null ? '<span class="pill">N/A</span>'
+      : (r.fullEvidenceRecall ? '<span class="pill ok">完整</span>' : '<span class="pill bad">缺失</span>')
+    tr.innerHTML = `
+      <td><details><summary></summary></details></td>
+      <td>${escapeHtml(r.query)}</td>
+      <td>${r.questionType}</td>
+      <td>${r.hitAt4 === null ? '—' : r.hitAt4}</td>
+      <td>${r.hitAt10 === null ? '—' : r.hitAt10}</td>
+      <td>${r.mrr === null ? '—' : fx(r.mrr)}</td>
+      <td>${r.mapAt10 === null ? '—' : fx(r.mapAt10)}</td>
+      <td>${recall}</td>`
+    tbody.appendChild(tr)
+    const detail = document.createElement('tr')
+    detail.className = 'detail'
+    detail.style.display = 'none'
+    detail.innerHTML = `<td></td><td colspan="7">
+      <div class="muted">金标证据语料：<code>${r.goldKeys.join(', ') || '（无 · null query）'}</code></div>
+      <div class="muted" style="margin-top:6px">检索命中语料（按排名）：<code>${r.retrievedKeys.join(', ') || '（空）'}</code></div>
+      ${r.isNullQuery ? `<div class="muted" style="margin-top:6px">拒答判定：<span class="pill ${r.refusalCorrect ? 'ok' : 'bad'}">${r.refusalCorrect ? '正确拒答' : '误召回'}</span> · top-1 检索分 ${Number(r.topScore).toFixed(4)}（判定口径：低于本引擎非 null 查询 top-1 分中位数即视为正确拒答）</div>` : `<div class="muted" style="margin-top:6px">答案覆盖：严格 <span class="pill ${r.answerCoveredStrict ? 'ok' : 'bad'}">${r.answerCoveredStrict ? '命中' : '未命中'}</span> · 加权覆盖率 ${(Number(r.answerCoverageToken) * 100).toFixed(1)}%</div>`}
+      ${r.error ? `<div class="toast err" style="margin-top:6px">${escapeHtml(r.error)}</div>` : ''}
+    </td>`
+    tbody.appendChild(detail)
+    tr.querySelector('summary').addEventListener('click', (e) => {
+      e.preventDefault()
+      detail.style.display = detail.style.display === 'none' ? 'table-row' : 'none'
+    })
+  }
+}
+
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))
+}
+
+async function exportReport(format) {
+  if (!state.report) return
+  const res = await fetch('/api/export', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ report: state.report, format }),
+  })
+  const blob = await res.blob()
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'multihop-rag-report.' + (format === 'md' ? 'md' : format)
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
+async function downloadOfficial() {
+  $('downloadBtn').disabled = true
+  $('datasetInfo').textContent = '正在从 Hugging Face 拉取官方全集，请稍候…'
+  try {
+    const res = await fetch('/api/datasets/download', { method: 'POST' })
+    const data = await res.json()
+    if (data.success) {
+      $('datasetInfo').textContent = `官方全集已就绪：${data.summary.corpusSize} 篇语料 / ${data.summary.queryCount} 题`
+    } else {
+      $('datasetInfo').textContent = '下载失败：' + (data.message || '未知错误')
+    }
+  } catch (err) {
+    $('datasetInfo').textContent = '下载失败：' + String(err)
+  } finally {
+    $('downloadBtn').disabled = false
+  }
+}
+
+$('runBtn').addEventListener('click', runBenchmark)
+$('downloadBtn').addEventListener('click', downloadOfficial)
+$('detailEngine').addEventListener('change', renderDetail)
+$('detailType').addEventListener('change', renderDetail)
+$('exportMd').addEventListener('click', () => exportReport('md'))
+$('exportJson').addEventListener('click', () => exportReport('json'))
+$('exportCsv').addEventListener('click', () => exportReport('csv'))
+
+probeRuntime()
+loadDatasets()
+setInterval(probeRuntime, 5000)
+</script>
+</body>
+</html>

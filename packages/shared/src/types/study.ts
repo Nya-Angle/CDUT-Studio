@@ -54,6 +54,11 @@ export interface StudyDocumentOutline {
   /** 供模型直接消费的轻量级大纲导航 Markdown（通常小于 800 字） */
   navigationMarkdown: string
   createdAt: number
+  /**
+   * 该资料是否处于「已激活」状态（默认 true）。
+   * 未激活的资料静默排除在 RAG 检索切块与提示词大纲注入之外，仅在 UI 中淡化展示。
+   */
+  enabled?: boolean
 }
 
 /** 学生认知记忆档案：三维概念清单 */
@@ -98,12 +103,18 @@ export interface StudyInspectSectionResult {
   error?: string
 }
 
-// ===== 学习资料准入限制（红线约束） =====
+// ===== 学习资料准入限制 =====
 
-/** 单个 AI 速课堂会话最多允许上传的资料文件数 */
-export const MAX_STUDY_DOCUMENTS_PER_SESSION = 10
-/** 单个学习资料文件体积上限（200MB） */
-export const MAX_STUDY_DOCUMENT_SIZE_BYTES = 200 * 1024 * 1024
+/**
+ * 单个 AI 速课堂会话允许上传的资料文件数。
+ * 现已全量解除上限（无限资料导入），保留常数以免破坏既有调用方。
+ */
+export const MAX_STUDY_DOCUMENTS_PER_SESSION = Number.POSITIVE_INFINITY
+/**
+ * 单个学习资料文件体积上限（字节）。
+ * 现已全量解除大小限制，保留常数以免破坏既有调用方。
+ */
+export const MAX_STUDY_DOCUMENT_SIZE_BYTES = Number.POSITIVE_INFINITY
 /** 速课堂资料白名单扩展名（非白名单直接拒绝，纯文本 / 图片本地纯化） */
 export const ALLOWED_STUDY_EXTENSIONS = [
   '.ppt', '.pptx', '.ppsx', '.potx',
@@ -157,6 +168,20 @@ export interface StudyDocumentQueryInput {
   documentId: string
 }
 
+/** 切换单份资料激活状态的入参（勾选框即时落盘） */
+export interface StudyToggleDocumentActiveInput {
+  sessionId: string
+  documentId: string
+  enabled: boolean
+}
+
+/** 批量设置资料激活状态的入参（全选 / 全不选） */
+export interface StudySetDocumentsActiveInput {
+  sessionId: string
+  documentIds: string[]
+  enabled: boolean
+}
+
 export const STUDY_IPC_CHANNELS = {
   /** 导入并解析学习资料，返回结构化大纲 */
   INGEST_DOCUMENTS: 'study:ingest-documents',
@@ -166,6 +191,10 @@ export const STUDY_IPC_CHANNELS = {
   GET_OUTLINE: 'study:get-outline',
   /** 移除单份资料索引 */
   REMOVE_DOCUMENT: 'study:remove-document',
+  /** 切换单份资料的激活（勾选）状态并落盘 */
+  TOGGLE_DOCUMENT_ACTIVE: 'study:toggle-document-active',
+  /** 批量设置资料激活状态并落盘 */
+  SET_DOCUMENTS_ACTIVE: 'study:set-documents-active',
 } as const
 
 // ===== 资料树（跨资料知识图谱）契约 =====

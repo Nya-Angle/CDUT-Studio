@@ -131,7 +131,7 @@ import type {
   BrowserAddBookmarkInput,
 } from '@profer/shared'
 import { KNOWLEDGE_IPC_CHANNELS } from '@profer/shared'
-import { CDUT_AI_CLASS_IPC_CHANNELS, CDUT_ZONE_IPC_CHANNELS, STUDY_IPC_CHANNELS, YANHU_EXPRESS_IPC_CHANNELS, type CdutGatekeeperDecision, type CdutLoginInput, type CdutMutationConfirmResult, type StudyDocumentQueryInput, type StudyGraphGenerateInput, type StudyIngestDocumentsInput, type StudySearchKnowledgeInput, type YanhuCdpInput, type YanhuCdpResult, type YanhuCloseRightInput, type YanhuCreateTabInput, type YanhuNavigateInput, type YanhuReorderTabsInput, type YanhuSyncThemeInput, type YanhuTabRefInput, type YanhuViewLayout } from '@profer/shared'
+import { CDUT_AI_CLASS_IPC_CHANNELS, CDUT_ZONE_IPC_CHANNELS, STUDY_IPC_CHANNELS, YANHU_EXPRESS_IPC_CHANNELS, type CdutGatekeeperDecision, type CdutLoginInput, type CdutMutationConfirmResult, type StudyDocumentQueryInput, type StudyGraphGenerateInput, type StudyIngestDocumentsInput, type StudySearchKnowledgeInput, type StudySetDocumentsActiveInput, type StudyToggleDocumentActiveInput, type YanhuCdpInput, type YanhuCdpResult, type YanhuCloseRightInput, type YanhuCreateTabInput, type YanhuNavigateInput, type YanhuReorderTabsInput, type YanhuSyncThemeInput, type YanhuTabRefInput, type YanhuViewLayout } from '@profer/shared'
 import type { UserProfile, AppSettings } from '../types'
 import { getRuntimeStatus, getGitRepoStatus, reinitializeRuntime } from './lib/runtime-init'
 import { browserController } from './lib/browser-controller'
@@ -171,6 +171,8 @@ import {
   ingestStudyDocuments,
   listStudyDocuments,
   removeStudyDocument,
+  setStudyDocumentActive,
+  setStudyDocumentsActive,
 } from './lib/study/study-document-indexer'
 import {
   listChannels,
@@ -6237,6 +6239,19 @@ export function registerIpcHandlers(): void {
 
   ipcMain.handle(STUDY_IPC_CHANNELS.REMOVE_DOCUMENT, (_event, input: StudyDocumentQueryInput) => {
     return { success: removeStudyDocument(input.sessionId, input.documentId) }
+  })
+
+  ipcMain.handle(STUDY_IPC_CHANNELS.TOGGLE_DOCUMENT_ACTIVE, (_event, input: StudyToggleDocumentActiveInput) => {
+    const enabled = setStudyDocumentActive(input.sessionId, input.documentId, Boolean(input.enabled))
+    // 激活状态变化后立即失效检索缓存，确保下一次检索严格按最新勾选状态执行。
+    getGlobalStudyRetriever().invalidate(input.sessionId)
+    return { success: true, enabled }
+  })
+
+  ipcMain.handle(STUDY_IPC_CHANNELS.SET_DOCUMENTS_ACTIVE, (_event, input: StudySetDocumentsActiveInput) => {
+    setStudyDocumentsActive(input.sessionId, input.documentIds ?? [], Boolean(input.enabled))
+    getGlobalStudyRetriever().invalidate(input.sessionId)
+    return { success: true }
   })
 
   // ===== AI 速课堂（专属工作区 / 会话 / 资料树图谱） =====

@@ -28,7 +28,7 @@ import type {
 } from '@profer/shared'
 import { getStudySessionDir } from '../config-paths'
 import { readJsonFileSafe } from '../safe-file'
-import { listStudyRetrievalChunks, type StudyRetrievalChunk } from './study-document-indexer'
+import { listStudyRetrievalChunks, getStudyIndexFingerprint, MAX_STUDY_RETRIEVAL_TOP_K, type StudyRetrievalChunk } from './study-document-indexer'
 
 // ===== 检索参数常量 =====
 
@@ -89,8 +89,6 @@ interface IndexedChunk {
 
 /** 全域倒排索引（单会话维度） */
 interface GlobalCorpusIndex {
-  /** 指纹：文档构成变化时触发重建 */
-  fingerprint: string
   chunks: IndexedChunk[]
   /** 词元 → 文档频率 */
   docFreq: Map<string, number>
@@ -98,13 +96,6 @@ interface GlobalCorpusIndex {
   avgLength: number
   /** sectionId → 切块（含 chunk 元数据） */
   bySectionId: Map<string, IndexedChunk>
-}
-
-/** 会话指纹：文档数量 + 总字符 + 总切块数，任一变化即重建 */
-function buildFingerprint(chunks: StudyRetrievalChunk[]): string {
-  const docs = new Set(chunks.map((chunk) => chunk.documentId))
-  const totalChars = chunks.reduce((sum, chunk) => sum + chunk.content.length, 0)
-  return `${docs.size}:${chunks.length}:${totalChars}`
 }
 
 /** 构建全域倒排索引 */
@@ -128,7 +119,6 @@ function buildGlobalCorpusIndex(sessionId: string): GlobalCorpusIndex {
   }
 
   return {
-    fingerprint: buildFingerprint(rawChunks),
     chunks,
     docFreq,
     avgLength: chunks.length > 0 ? totalLength / chunks.length : 1,
@@ -260,16 +250,21 @@ function pruneToExcerpt(chunk: StudyRetrievalChunk, queryTerms: string[]): strin
 
 /** 全域跨文档混合检索器 */
 export class GlobalStudyRetriever {
-  /** 会话 → 倒排索引缓存（指纹变化时重建） */
-  private cache = new Map<string, GlobalCorpusIndex>()
+  /** 会话 → { 轻量指纹, 倒排索引 } 缓存（仅指纹变化时重建） */
+  private cache = new Map<string, { fingerprint: string; index: GlobalCorpusIndex }>()
 
-  /** 获取（必要时重建）指定会话的全域索引 */
+  /**
+   * 获取（必要时重建）指定会话的全域索引。
+   * 先以轻量指纹（目录 stat，不读取切块内容）判断缓存是否可用，
+   * 避免每次检索都全量读取索引文件并重新分词。
+   */
   private getIndex(sessionId: string): GlobalCorpusIndex {
-    const fresh = buildGlobalCorpusIndex(sessionId)
+    const fingerprint = getStudyIndexFingerprint(sessionId)
     const cached = this.cache.get(sessionId)
-    if (cached && cached.fingerprint === fresh.fingerprint) return cached
-    this.cache.set(sessionId, fresh)
-    return fresh
+    if (cached && cached.fingerprint === fingerprint) return cached.index
+    const index = buildGlobalCorpusIndex(sessionId)
+    this.cache.set(sessionId, { fingerprint, index })
+    return index
   }
 
   /** 失效指定会话（或全部）的索引缓存 */
@@ -287,7 +282,7 @@ export class GlobalStudyRetriever {
     query: string,
     options: { targetDocumentId?: string; topK?: number } = {},
   ): StudySearchKnowledgeResult {
-    const topK = Math.max(1, Math.min(10, options.topK ?? DEFAULT_TOP_K))
+    const topK = Math.max(1, Math.min(MAX_STUDY_RETRIEVAL_TOP_K, options.topK ?? DEFAULT_TOP_K))
     const trimmedQuery = query.trim()
     if (!trimmedQuery) return { success: false, items: [], error: 'EMPTY_QUERY' }
 

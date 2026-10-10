@@ -14,7 +14,6 @@
 import * as React from 'react'
 import { useAtom, useAtomValue } from 'jotai'
 import { Cpu, Loader2, Sparkles, Wand2, Zap } from 'lucide-react'
-import { MAX_STUDY_DOCUMENTS_PER_SESSION } from '@profer/shared'
 import type { KnowledgeGraphGenerationMode } from '@profer/shared'
 import { Dialog, DialogContent, DialogTitle } from '@profer/ui/primitives/dialog'
 import { cn } from '@/lib/utils'
@@ -178,7 +177,7 @@ export function AiClassGraphGenerateModal({
             <div className="rounded-xl border border-border/50 bg-muted/30 px-3 py-2">
               <p className="text-[10px] text-muted-foreground">已解析资料</p>
               <p className="mt-0.5 text-sm font-semibold text-foreground">
-                {documents.length} / {MAX_STUDY_DOCUMENTS_PER_SESSION} 份
+                {documents.length} 份
               </p>
             </div>
             <div className="rounded-xl border border-border/50 bg-muted/30 px-3 py-2">
