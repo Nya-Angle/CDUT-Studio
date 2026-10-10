@@ -26,7 +26,7 @@ describe('normalizeText', () => {
 describe('scoreRetrieval', () => {
   test('命中排名第 1 的金标文档 → 全指标满分', () => {
     const score = scoreRetrieval(['a', 'b', 'c'], ['a'])
-    expect(score).toEqual({ hitAt4: 1, hitAt10: 1, mrr: 1, mapAt10: 1 })
+    expect(score).toEqual({ hitAt4: 1, hitAt10: 1, mrr: 1, mapAt10: 1, recallAt4: 1, recallAt10: 1 })
   })
 
   test('命中排名第 2 → MRR = 1/2，Hit@4 = 1', () => {
@@ -55,11 +55,33 @@ describe('scoreRetrieval', () => {
 
   test('未命中任何金标 → 全为 0', () => {
     const score = scoreRetrieval(['x', 'y'], ['a'])
-    expect(score).toEqual({ hitAt4: 0, hitAt10: 0, mrr: 0, mapAt10: 0 })
+    expect(score).toEqual({ hitAt4: 0, hitAt10: 0, mrr: 0, mapAt10: 0, recallAt4: 0, recallAt10: 0 })
   })
 
   test('空金标集合 → 全为 0（防御性）', () => {
-    expect(scoreRetrieval(['a'], [])).toEqual({ hitAt4: 0, hitAt10: 0, mrr: 0, mapAt10: 0 })
+    expect(scoreRetrieval(['a'], [])).toEqual({
+      hitAt4: 0,
+      hitAt10: 0,
+      mrr: 0,
+      mapAt10: 0,
+      recallAt4: 0,
+      recallAt10: 0,
+    })
+  })
+
+  test('部分金标在 Top-4 之外：Recall@4 < Recall@10，读数为召回比例', () => {
+    // gold = {a, b}；b 落在第 5 位 → Top-4 只召回 1/2，Top-10 召回 2/2
+    const score = scoreRetrieval(['a', 'x1', 'x2', 'x3', 'b'], ['a', 'b'])
+    expect(score.recallAt4).toBeCloseTo(0.5, 6)
+    expect(score.recallAt10).toBeCloseTo(1, 6)
+    expect(score.hitAt4).toBe(1)
+    expect(score.mapAt10).toBeCloseTo((1 + 2 / 5) / 2, 6)
+  })
+
+  test('金标集合去重：重复命中同一文档不重复计召回', () => {
+    const score = scoreRetrieval(['a', 'a', 'b'], ['a'])
+    expect(score.recallAt4).toBe(1)
+    expect(score.recallAt10).toBe(1)
   })
 
   test('排名超出 Top-10 的金标不计入', () => {

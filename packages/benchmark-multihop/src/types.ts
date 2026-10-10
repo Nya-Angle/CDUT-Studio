@@ -80,6 +80,10 @@ export interface QueryEvaluation {
   mrr: number | null
   /** 平均精度 MAP@10 */
   mapAt10: number | null
+  /** 金标证据在 Top-4 中的召回比例（连续口径） */
+  recallAt4: number | null
+  /** 金标证据在 Top-10 中的召回比例（连续口径） */
+  recallAt10: number | null
   /** 答案是否被检索证据覆盖（严格口径：归一化整串包含）；null query 为 null */
   answerCoveredStrict: boolean | null
   /** 答案关键信息单元的加权覆盖率（0~1）；null query 为 null */
@@ -106,6 +110,10 @@ export interface EngineSummary {
   hitAt10: number
   mrr: number
   mapAt10: number
+  /** 金标证据召回率·Top-4（连续口径） */
+  recallAt4: number
+  /** 金标证据召回率·Top-10（连续口径） */
+  recallAt10: number
   /** 答案证据覆盖率·严格口径（归一化整串包含） */
   answerCoverageStrict: number
   /** 答案证据覆盖率·加权口径（关键信息单元加权召回） */

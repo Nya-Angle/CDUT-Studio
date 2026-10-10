@@ -19,7 +19,7 @@ function fixed(value: number): string {
 /** 按题型统计单一引擎的检索指标 */
 function typeBreakdown(
   results: QueryEvaluation[],
-): Array<{ type: string; count: number; hitAt10: number; mrr: number; mapAt10: number }> {
+): Array<{ type: string; count: number; hitAt10: number; recallAt4: number; recallAt10: number; mrr: number; mapAt10: number }> {
   const groups = new Map<string, QueryEvaluation[]>()
   for (const item of results) {
     if (item.isNullQuery) continue
@@ -27,12 +27,16 @@ function typeBreakdown(
     list.push(item)
     groups.set(item.questionType, list)
   }
+  const avg = (items: QueryEvaluation[], pick: (item: QueryEvaluation) => number | null): number =>
+    items.length > 0 ? items.reduce((sum, item) => sum + (pick(item) ?? 0), 0) / items.length : 0
   return [...groups.entries()].map(([type, items]) => ({
     type,
     count: items.length,
-    hitAt10: items.length > 0 ? items.reduce((sum, item) => sum + (item.hitAt10 ?? 0), 0) / items.length : 0,
-    mrr: items.length > 0 ? items.reduce((sum, item) => sum + (item.mrr ?? 0), 0) / items.length : 0,
-    mapAt10: items.length > 0 ? items.reduce((sum, item) => sum + (item.mapAt10 ?? 0), 0) / items.length : 0,
+    hitAt10: avg(items, (item) => item.hitAt10),
+    recallAt4: avg(items, (item) => item.recallAt4),
+    recallAt10: avg(items, (item) => item.recallAt10),
+    mrr: avg(items, (item) => item.mrr),
+    mapAt10: avg(items, (item) => item.mapAt10),
   }))
 }
 
@@ -50,19 +54,20 @@ export function renderMarkdownReport(report: EvaluationReport): string {
 
   lines.push('## 一、聚合指标总览')
   lines.push('')
-  lines.push('| 引擎 | 参评题数 | Hit@4 | Hit@10 | MRR | MAP@10 | 覆盖率(严格) | 覆盖率(加权) | 多跳证据链完整率 | Null 拒答率 | 平均耗时(ms) |')
-  lines.push('| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |')
+  lines.push('| 引擎 | 参评题数 | Hit@4 | Hit@10 | Recall@4 | Recall@10 | MRR | MAP@10 | 覆盖率(严格) | 覆盖率(加权) | 多跳证据链完整率 | Null 拒答率 | 平均耗时(ms) |')
+  lines.push('| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |')
   for (const engine of report.engines) {
     const refusal = engine.nullQueries > 0 ? pct(engine.refusalRate) : 'N/A'
     lines.push(
       `| ${engine.engine} | ${engine.scoredQueries} | ${pct(engine.hitAt4)} | ${pct(engine.hitAt10)} | ` +
+        `${pct(engine.recallAt4)} | ${pct(engine.recallAt10)} | ` +
         `${fixed(engine.mrr)} | ${fixed(engine.mapAt10)} | ${pct(engine.answerCoverageStrict)} | ` +
         `${pct(engine.answerCoverageToken)} | ` +
         `${pct(engine.fullEvidenceRecall)} | ${refusal} | ${engine.avgLatencyMs.toFixed(1)} |`,
     )
   }
   lines.push('')
-  lines.push('> 注：`null query`（答案不在语料中）不参与 Hit/MRR/MAP 指标，改以「正确拒答率」评估（口径见第三节）；真正的问答准确率需由大模型生成作答后判定，离线运行器如实不编造该数值。')
+  lines.push('> 注：`null query`（答案不在语料中）不参与 Hit/Recall/MRR/MAP 指标，改以「正确拒答率」评估（口径见第三节）；真正的问答准确率需由大模型生成作答后判定，离线运行器如实不编造该数值。')
   lines.push('')
 
   lines.push('## 二、分题型检索指标')
@@ -71,10 +76,13 @@ export function renderMarkdownReport(report: EvaluationReport): string {
     const results = report.perEngineResults[engine.engine] ?? []
     lines.push(`### ${engine.engine}`)
     lines.push('')
-    lines.push('| 题型 | 题数 | Hit@10 | MRR | MAP@10 |')
-    lines.push('| --- | ---: | ---: | ---: | ---: |')
+    lines.push('| 题型 | 题数 | Hit@10 | Recall@4 | Recall@10 | MRR | MAP@10 |')
+    lines.push('| --- | ---: | ---: | ---: | ---: | ---: | ---: |')
     for (const row of typeBreakdown(results)) {
-      lines.push(`| ${row.type} | ${row.count} | ${pct(row.hitAt10)} | ${fixed(row.mrr)} | ${fixed(row.mapAt10)} |`)
+      lines.push(
+        `| ${row.type} | ${row.count} | ${pct(row.hitAt10)} | ${pct(row.recallAt4)} | ${pct(row.recallAt10)} | ` +
+          `${fixed(row.mrr)} | ${fixed(row.mapAt10)} |`,
+      )
     }
     lines.push('')
   }
@@ -123,8 +131,10 @@ export function renderMarkdownReport(report: EvaluationReport): string {
   lines.push('## 五、指标口径说明')
   lines.push('')
   lines.push('- **Hit@4 / Hit@10**：Top-4 / Top-10 检索结果中是否包含任意金标证据文档。')
+  lines.push('- **Recall@4 / Recall@10**：Top-k 内召回的金标证据占全部金标证据的比例（连续口径）。多跳场景下 Hit 易饱和，Recall 才能反映"证据召回了几分"。')
   lines.push('- **MRR**：首个金标证据文档排名的倒数。')
   lines.push('- **MAP@10**：Top-10 平均精度（多跳证据集）。')
+  lines.push('> ⚠️ **Recall 单独看可被"多召回"刷高**（top-k 越大越占优），必须与 MAP@10 / 多跳证据链完整率同看：前者管"召回全不全"，后两者管"排得准不准、证据齐不齐"。')
   lines.push('- **覆盖率(严格)**：归一化后金标答案整串包含于检索证据中的比例（历史基线，易被短答案刷分）。')
   lines.push('- **覆盖率(加权)**：把金标答案拆为「日期 / 数字 / 命名实体 / 实词」四类加权单元，统计其在检索证据词元中的加权召回率，能正确反映自由文本答案的证据支撑度。')
   lines.push('- **多跳证据链完整率（Full Evidence Recall）**：一条查询的全部金标证据文档是否均被召回。')
@@ -157,6 +167,8 @@ export function renderCsvReport(report: EvaluationReport): string {
     'hit_at_10',
     'mrr',
     'map_at_10',
+    'recall_at_4',
+    'recall_at_10',
     'answer_covered_strict',
     'answer_coverage_token',
     'full_evidence_recall',
@@ -180,6 +192,8 @@ export function renderCsvReport(report: EvaluationReport): string {
           item.hitAt10 ?? '',
           item.mrr ?? '',
           item.mapAt10 ?? '',
+          item.recallAt4 === null ? '' : item.recallAt4.toFixed(4),
+          item.recallAt10 === null ? '' : item.recallAt10.toFixed(4),
           item.answerCoveredStrict === null ? '' : item.answerCoveredStrict ? 1 : 0,
           item.answerCoverageToken === null ? '' : item.answerCoverageToken.toFixed(4),
           item.fullEvidenceRecall === null ? '' : item.fullEvidenceRecall ? 1 : 0,
@@ -223,6 +237,8 @@ export interface ReportHighlight {
   hitAt10: number
   mrr: number
   mapAt10: number
+  recallAt4: number
+  recallAt10: number
   answerCoverageStrict: number
   answerCoverageToken: number
   fullEvidenceRecall: number
@@ -241,6 +257,8 @@ export function extractHighlights(report: EvaluationReport): ReportHighlight[] {
     hitAt10: engine.hitAt10,
     mrr: engine.mrr,
     mapAt10: engine.mapAt10,
+    recallAt4: engine.recallAt4,
+    recallAt10: engine.recallAt10,
     answerCoverageStrict: engine.answerCoverageStrict,
     answerCoverageToken: engine.answerCoverageToken,
     fullEvidenceRecall: engine.fullEvidenceRecall,
