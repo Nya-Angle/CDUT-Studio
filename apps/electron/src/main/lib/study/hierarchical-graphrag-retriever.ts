@@ -24,7 +24,7 @@ import type {
 } from '@profer/shared'
 import { getStudySessionDir } from '../config-paths'
 import { readJsonFileSafe } from '../safe-file'
-import { listStudyRetrievalChunks, type StudyRetrievalChunk } from './study-document-indexer'
+import { listStudyRetrievalChunks, getStudyIndexFingerprint, MAX_STUDY_RETRIEVAL_TOP_K, type StudyRetrievalChunk } from './study-document-indexer'
 import { buildHierarchicalCommunities, type CommunityNode, type WeightedEdge } from './hierarchical-graphrag'
 
 // ===== 检索参数常量 =====
@@ -253,6 +253,42 @@ function buildCommunityIndex(
 
 /** 分层认知检索器 */
 export class HierarchicalGraphRagRetriever {
+  /** 会话 → { 轻量指纹, 切块, 社群索引 } 缓存（图边构建与 Leiden 聚类只做一次） */
+  private cache = new Map<
+    string,
+    { fingerprint: string; chunks: StudyRetrievalChunk[]; communityIndex: CommunityIndex }
+  >()
+
+  /** 失效指定会话（或全部）的分层索引缓存 */
+  invalidate(sessionId?: string): void {
+    if (sessionId) this.cache.delete(sessionId)
+    else this.cache.clear()
+  }
+
+  /**
+   * 获取（必要时重建）分层社群索引。
+   * 图边构建 + Leiden 聚类 + 社群索引是重计算，按轻量指纹缓存，避免每题重跑。
+   */
+  private getArtifacts(
+    sessionId: string,
+  ): { chunks: StudyRetrievalChunk[]; communityIndex: CommunityIndex } {
+    const fingerprint = getStudyIndexFingerprint(sessionId)
+    const cached = this.cache.get(sessionId)
+    if (cached && cached.fingerprint === fingerprint) return cached
+
+    const chunks = listStudyRetrievalChunks(sessionId)
+    const edges = buildChunkEdges(sessionId, chunks)
+    const communities = buildHierarchicalCommunities({
+      nodes: chunks.map((chunk) => ({ id: chunk.sectionId, title: chunk.title })),
+      edges,
+    })
+    const communityIndex = buildCommunityIndex(chunks, communities)
+
+    const artifacts = { fingerprint, chunks, communityIndex }
+    this.cache.set(sessionId, artifacts)
+    return artifacts
+  }
+
   /**
    * 分层图谱检索。
    *
@@ -265,24 +301,16 @@ export class HierarchicalGraphRagRetriever {
     query: string,
     options: { targetDocumentId?: string; topK?: number } = {},
   ): StudySearchKnowledgeResult {
-    const topK = Math.max(1, Math.min(10, options.topK ?? DEFAULT_TOP_K))
+    const topK = Math.max(1, Math.min(MAX_STUDY_RETRIEVAL_TOP_K, options.topK ?? DEFAULT_TOP_K))
     const trimmedQuery = query.trim()
     if (!trimmedQuery) return { success: false, items: [], error: 'EMPTY_QUERY' }
 
     try {
-      const chunks = listStudyRetrievalChunks(sessionId)
+      const { chunks, communityIndex: index } = this.getArtifacts(sessionId)
       if (chunks.length === 0) return { success: true, items: [] }
 
       const uniqueTerms = [...new Set(tokenize(trimmedQuery))]
       if (uniqueTerms.length === 0) return { success: true, items: [] }
-
-      // 1. 构建 section 级图边并跑 Leiden 得三层社群
-      const edges = buildChunkEdges(sessionId, chunks)
-      const communities = buildHierarchicalCommunities({
-        nodes: chunks.map((chunk) => ({ id: chunk.sectionId, title: chunk.title })),
-        edges,
-      })
-      const index = buildCommunityIndex(chunks, communities)
 
       // 2. 常规 query：词法相关度 + 社群归属综合打分
       const scoped = options.targetDocumentId

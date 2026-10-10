@@ -40,6 +40,9 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 .cache
 *.tsbuildinfo
 
+# MultiHop-RAG 官方数据集本地缓存（体积大，不入库）
+packages/benchmark-multihop/data/
+
 # IDE 与编辑器配置（彻底阻断本地配置与临时文件）
 .idea
 .vscode/

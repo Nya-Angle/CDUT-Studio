@@ -25,11 +25,10 @@ import type {
 } from '@profer/shared'
 import {
   ALLOWED_STUDY_EXTENSIONS,
-  MAX_STUDY_DOCUMENTS_PER_SESSION,
-  MAX_STUDY_DOCUMENT_SIZE_BYTES,
 } from '@profer/shared'
 import {
   getStudentCognitionPath,
+  getStudyActiveDocumentsPath,
   getStudyDocumentDir,
   getStudyDocumentIndexPath,
   getStudySessionDir,
@@ -314,7 +313,7 @@ function buildNavigationMarkdown(document: PersistedStudyDocument): string {
 }
 
 /** 由持久化文档派生对外大纲（剥离完整原文） */
-function toOutline(document: PersistedStudyDocument): StudyDocumentOutline {
+function toOutline(document: PersistedStudyDocument, disabledDocumentIds?: Set<string>): StudyDocumentOutline {
   const sections: StudyDocumentSection[] = document.sections.map(({ content: _content, ...section }) => section)
   return {
     documentId: document.documentId,
@@ -326,6 +325,7 @@ function toOutline(document: PersistedStudyDocument): StudyDocumentOutline {
     sections,
     navigationMarkdown: buildNavigationMarkdown(document),
     createdAt: document.createdAt,
+    enabled: !(disabledDocumentIds?.has(document.documentId) ?? false),
   }
 }
 
@@ -339,40 +339,73 @@ function readPersistedDocument(sessionId: string, documentId: string): Persisted
   }
 }
 
+// ===== 资料激活状态（有状态记忆勾选框） =====
+
+/** 激活状态落盘结构：仅记录被停用的文档标识（缺省即全部激活） */
+interface ActiveDocumentsState {
+  /** 被用户取消勾选、静默排除出检索的文档标识列表 */
+  disabledDocumentIds: string[]
+}
+
+/** 读取当前会话被停用（未勾选）的文档标识集合 */
+export function readDisabledDocumentIds(sessionId: string): Set<string> {
+  try {
+    const state = readJsonFileSafe<ActiveDocumentsState>(getStudyActiveDocumentsPath(sessionId))
+    return new Set(Array.isArray(state?.disabledDocumentIds) ? state.disabledDocumentIds : [])
+  } catch (error) {
+    console.warn('[速课堂索引] 读取资料激活状态失败，按全部激活处理', error)
+    return new Set()
+  }
+}
+
+/** 是否处于激活状态（默认激活） */
+export function isStudyDocumentEnabled(sessionId: string, documentId: string): boolean {
+  return !readDisabledDocumentIds(sessionId).has(documentId)
+}
+
+/** 落盘激活状态（原子写入） */
+function writeDisabledDocumentIds(sessionId: string, disabled: Set<string>): void {
+  const state: ActiveDocumentsState = { disabledDocumentIds: [...disabled] }
+  writeJsonFileAtomic(getStudyActiveDocumentsPath(sessionId), state as unknown as object)
+}
+
+/** 切换单份资料的激活状态并落盘 */
+export function setStudyDocumentActive(sessionId: string, documentId: string, enabled: boolean): boolean {
+  const disabled = readDisabledDocumentIds(sessionId)
+  if (enabled) disabled.delete(documentId)
+  else disabled.add(documentId)
+  writeDisabledDocumentIds(sessionId, disabled)
+  return enabled
+}
+
+/** 批量设置资料激活状态并落盘 */
+export function setStudyDocumentsActive(sessionId: string, documentIds: string[], enabled: boolean): void {
+  const disabled = readDisabledDocumentIds(sessionId)
+  for (const documentId of documentIds) {
+    if (enabled) disabled.delete(documentId)
+    else disabled.add(documentId)
+  }
+  writeDisabledDocumentIds(sessionId, disabled)
+}
+
 // ===== 对外 API =====
 
 /**
  * 导入并解析一批学习资料，返回结构化大纲。
  * 单个文件解析失败时如实跳过并记录日志，不影响其余文件。
+ * 已全量解除资料份数与单文件体积限制，支持无上限批量导入。
  */
 export async function ingestStudyDocuments(
   sessionId: string,
   filePaths: string[],
 ): Promise<StudyDocumentOutline[]> {
   const outlines: StudyDocumentOutline[] = []
-  // 会话资料总数准入：本课堂已存 + 本批次不得超过上限
-  const existingCount = listStudyDocuments(sessionId).length
-  let remaining = Math.max(0, MAX_STUDY_DOCUMENTS_PER_SESSION - existingCount)
-  if (remaining === 0) {
-    console.warn(`[速课堂索引] 该课堂已达 ${MAX_STUDY_DOCUMENTS_PER_SESSION} 份资料上限，拒绝导入`)
-    return outlines
-  }
 
   for (const filePath of filePaths) {
-    if (remaining <= 0) {
-      console.warn(`[速课堂索引] 已达单课堂 ${MAX_STUDY_DOCUMENTS_PER_SESSION} 份资料上限，剩余文件跳过`)
-      break
-    }
     try {
-      // 准入守卫 1：白名单格式校验（非白名单直接拒绝）
+      // 准入守卫：白名单格式校验（非白名单直接拒绝）
       if (!isStudyDocumentExtension(filePath)) {
         console.warn(`[速课堂索引] 不支持的文件格式，已拒绝: ${filePath}`)
-        continue
-      }
-      // 准入守卫 2：单文件体积校验（不得超过 200MB）
-      const fileSize = statSync(filePath).size
-      if (fileSize > MAX_STUDY_DOCUMENT_SIZE_BYTES) {
-        console.warn(`[速课堂索引] 文件超过 200MB 上限，已拒绝: ${filePath}`)
         continue
       }
 
@@ -428,8 +461,7 @@ export async function ingestStudyDocuments(
       }
 
       const document = persistDocument(sessionId, documentId, filePath, fileType, rawSections)
-      outlines.push(toOutline(document))
-      remaining--
+      outlines.push(toOutline(document, readDisabledDocumentIds(sessionId)))
       console.log(
         `[速课堂索引] 已索引学习资料: ${document.fileName} → ${document.sections.length} 块 / ${document.totalChars} 字`,
       )
@@ -440,17 +472,106 @@ export async function ingestStudyDocuments(
   return outlines
 }
 
+/** 评测专用：原始文本语料注入入参（跳过文件解析，直接切块落盘） */
+export interface StudyRawDocumentInput {
+  /** 语料稳定标识（如新闻标题），用于回传 documentId 映射 */
+  key: string
+  /** 语料标题（作为资料文件名参与检索展示） */
+  title: string
+  /** 语料正文纯文本 */
+  content: string
+}
+
+/**
+ * 评测专用：把纯文本语料直接注入索引（跳过文件解析链路），返回 key → documentId 映射。
+ * 与正式导入共用同一套切块与落盘逻辑，保证评测结论与真实课堂检索一致。
+ */
+export function ingestStudyRawDocuments(
+  sessionId: string,
+  documents: StudyRawDocumentInput[],
+): Array<{ key: string; documentId: string; totalSections: number }> {
+  const mapping: Array<{ key: string; documentId: string; totalSections: number }> = []
+  for (const doc of documents) {
+    try {
+      const documentId = randomUUID()
+      const markdown = normalizeToMarkdown(`${doc.title}\n\n${doc.content}`)
+      let rawSections: RawSection[] = rawSectionsFromMarkdown(markdown)
+      if (rawSections.length === 0) rawSections = splitGenericText(`${doc.title}\n\n${doc.content}`)
+      if (rawSections.length === 0) rawSections = [{ title: doc.title, level: 1, content: doc.content }]
+
+      const document = persistDocument(sessionId, documentId, doc.title, 'text', rawSections)
+      mapping.push({ key: doc.key, documentId: document.documentId, totalSections: document.sections.length })
+    } catch (error) {
+      console.warn(`[速课堂索引] 评测语料注入失败，已跳过: ${doc.key}`, error)
+    }
+  }
+  return mapping
+}
+
+/**
+ * 文档稳定排序比较器。
+ *
+ * 关键：目录名是随机 UUID，直接按它排序会导致检索切块次序、同分 tie-break、
+ * 社群编号在**每次运行间都不同**（评测不可复现）。改用内容派生键排序。
+ */
+function compareDocumentsByStableOrder(a: PersistedStudyDocument, b: PersistedStudyDocument): number {
+  return (
+    a.createdAt - b.createdAt ||
+    a.fileName.localeCompare(b.fileName) ||
+    a.documentId.localeCompare(b.documentId)
+  )
+}
+
 /** 列出当前会话已索引的全部学习资料大纲 */
 export function listStudyDocuments(sessionId: string): StudyDocumentOutline[] {
   const sessionDir = getStudySessionDir(sessionId)
   if (!existsSync(sessionDir)) return []
-  const outlines: StudyDocumentOutline[] = []
+  const disabled = readDisabledDocumentIds(sessionId)
+  const documents: PersistedStudyDocument[] = []
   for (const entry of readdirSync(sessionDir, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue
     const document = readPersistedDocument(sessionId, entry.name)
-    if (document) outlines.push(toOutline(document))
+    if (document) documents.push(document)
   }
-  return outlines.sort((a, b) => a.createdAt - b.createdAt)
+  documents.sort(compareDocumentsByStableOrder)
+  return documents.map((document) => toOutline(document, disabled))
+}
+
+/**
+ * 速课堂检索单次返回切块数的硬上限（安全阀）。
+ * 默认产品路径（study 工具）仍走 5 / 10，此处仅放宽内部天花板，
+ * 便于评测链路按「文档数」维度取到足够多的候选切块。
+ */
+export const MAX_STUDY_RETRIEVAL_TOP_K = 200
+
+/**
+ * 轻量会话指纹：仅做目录枚举与文件 stat，**不读取、不分词任何切块内容**。
+ *
+ * 用途：检索器据此判断是否需要重建内存索引，避免「每次检索都全量重建」。
+ * 覆盖三类会影响检索结果的落盘变化：
+ *   - 各文档的 index.json（新增 / 移除文档、内容变化）；
+ *   - active-documents.json（激活勾选变化，直接改变候选切块集合）；
+ *   - knowledge-graph.json（图谱边变化，影响图谱 1-Hop 扩散）。
+ */
+export function getStudyIndexFingerprint(sessionId: string): string {
+  const sessionDir = getStudySessionDir(sessionId)
+  if (!existsSync(sessionDir)) return 'empty'
+  const parts: string[] = []
+  for (const entry of readdirSync(sessionDir, { withFileTypes: true })) {
+    try {
+      if (entry.isDirectory()) {
+        const stat = statSync(join(sessionDir, entry.name, 'index.json'))
+        parts.push(`${entry.name}:${stat.size}:${stat.mtimeMs}`)
+      } else if (entry.name === 'active-documents.json' || entry.name === 'knowledge-graph.json') {
+        const stat = statSync(join(sessionDir, entry.name))
+        parts.push(`${entry.name}:${stat.size}:${stat.mtimeMs}`)
+      }
+    } catch {
+      // 缺失/不可读的文件不参与指纹
+    }
+  }
+  parts.sort()
+  return parts.join('|')
 }
 
 /** 检索用切块（含完整原文，仅供全域混合检索建立内存倒排索引，绝不注入提示词） */
@@ -464,15 +585,25 @@ export interface StudyRetrievalChunk {
   pageRange?: [number, number]
 }
 
-/** 列出当前会话全部切块（含完整原文），供全域混合检索建立倒排索引 */
+/**
+ * 列出当前会话全部切块（含完整原文），供全域混合检索建立倒排索引。
+ * 未勾选激活的资料在此静默排除，绝不进入 RAG 检索候选集。
+ */
 export function listStudyRetrievalChunks(sessionId: string): StudyRetrievalChunk[] {
   const sessionDir = getStudySessionDir(sessionId)
   if (!existsSync(sessionDir)) return []
-  const chunks: StudyRetrievalChunk[] = []
+  const disabled = readDisabledDocumentIds(sessionId)
+  const documents: PersistedStudyDocument[] = []
   for (const entry of readdirSync(sessionDir, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue
+    if (disabled.has(entry.name)) continue
     const document = readPersistedDocument(sessionId, entry.name)
-    if (!document) continue
+    if (document) documents.push(document)
+  }
+  documents.sort(compareDocumentsByStableOrder)
+
+  const chunks: StudyRetrievalChunk[] = []
+  for (const document of documents) {
     for (const section of document.sections) {
       chunks.push({
         documentId: document.documentId,
@@ -491,7 +622,7 @@ export function listStudyRetrievalChunks(sessionId: string): StudyRetrievalChunk
 /** 读取单份资料完整大纲 */
 export function getStudyDocumentOutline(sessionId: string, documentId: string): StudyDocumentOutline | null {
   const document = readPersistedDocument(sessionId, documentId)
-  return document ? toOutline(document) : null
+  return document ? toOutline(document, readDisabledDocumentIds(sessionId)) : null
 }
 
 /** 移除单份资料索引（物理清理目录） */
@@ -645,7 +776,8 @@ const MAX_OUTLINE_PROMPT_CHARS = 6000
  * 超大时按字符预算截断，并在末尾提示改用工具查阅细节。无资料时返回空串，由调用方兜底。
  */
 export function buildStudyOutlineForPrompt(sessionId: string): string {
-  const outlines = listStudyDocuments(sessionId)
+  // 未勾选激活的资料静默排除，绝不注入上下文大纲。
+  const outlines = listStudyDocuments(sessionId).filter((doc) => doc.enabled !== false)
   if (outlines.length === 0) return ''
   const lines: string[] = []
   let used = 0

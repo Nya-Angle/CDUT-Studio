@@ -10,7 +10,7 @@ import { IPC_CHANNELS, REVIEW_IPC_CHANNELS, CHANNEL_IPC_CHANNELS, CHAT_IPC_CHANN
 import { USER_PROFILE_IPC_CHANNELS, SETTINGS_IPC_CHANNELS, SKIN_IPC_CHANNELS, SCRATCH_PAD_IPC_CHANNELS, APP_ICON_IPC_CHANNELS, DOCK_BADGE_IPC_CHANNELS, STORAGE_IPC_CHANNELS, NOTIFICATION_SOUND_IPC_CHANNELS, DESKTOP_NOTIFICATION_IPC_CHANNELS } from '../types'
 import type { CustomNotificationSound } from '../types'
 import type { PresetReference, PresetReferenceReport, PresetScopeRebindResult, LarkCliStatus, LarkCliOperationResult, LarkLoginStartResult, LarkLoginEvent, LarkMcpCredentialsInput, LarkMcpSetupResult, LarkMcpStatus } from '@profer/shared'
-import { CDUT_AI_CLASS_IPC_CHANNELS, CDUT_ZONE_IPC_CHANNELS, STUDY_IPC_CHANNELS, type AiClassSessionSummary, type CdutAccountProfile, type CdutGatekeeperDecision, type CdutGatekeeperNoticeEvent, type CdutLoginInput, type CdutLoginResult, type CdutSavedAccountSummary, type CdutMutationConfirmRequest, type CdutMutationConfirmResult, type KnowledgeGraphData, type StudyDocumentOutline, type StudyDocumentQueryInput, type StudyGraphCostEstimate, type StudyGraphGenerateInput, type StudyGraphProgressEvent, type StudyIngestDocumentsInput, type StudySearchKnowledgeInput, type StudySearchKnowledgeResult } from '@profer/shared'
+import { CDUT_AI_CLASS_IPC_CHANNELS, CDUT_ZONE_IPC_CHANNELS, STUDY_IPC_CHANNELS, type AiClassSessionSummary, type CdutAccountProfile, type CdutGatekeeperDecision, type CdutGatekeeperNoticeEvent, type CdutLoginInput, type CdutLoginResult, type CdutSavedAccountSummary, type CdutMutationConfirmRequest, type CdutMutationConfirmResult, type KnowledgeGraphData, type StudyDocumentOutline, type StudyDocumentQueryInput, type StudyGraphCostEstimate, type StudyGraphGenerateInput, type StudyGraphProgressEvent, type StudyIngestDocumentsInput, type StudySearchKnowledgeInput, type StudySearchKnowledgeResult, type StudySetDocumentsActiveInput, type StudyToggleDocumentActiveInput } from '@profer/shared'
 import { YANHU_EXPRESS_IPC_CHANNELS, type YanhuCloseRightInput, type YanhuCreateTabInput, type YanhuLoadingChangedEvent, type YanhuNavigateInput, type YanhuReorderTabsInput, type YanhuSyncThemeInput, type YanhuTabRefInput, type YanhuTabsState, type YanhuUrlChangedEvent, type YanhuViewLayout, type YanhuPetBootstrap, type YanhuPetChatInput, type YanhuPetConfig, type YanhuPetMessage, type YanhuPetStateEvent, type YanhuPetStreamEvent, type YanhuPetViewport, type YanhuPetWindowGeometry } from '@profer/shared'
 import type {
   RuntimeStatus,
@@ -1621,6 +1621,8 @@ export interface ElectronAPI {
     listDocuments: (sessionId: string) => Promise<StudyDocumentOutline[]>
     getOutline: (input: StudyDocumentQueryInput) => Promise<StudyDocumentOutline | null>
     removeDocument: (input: StudyDocumentQueryInput) => Promise<{ success: boolean }>
+    toggleDocumentActive: (input: StudyToggleDocumentActiveInput) => Promise<{ success: boolean; enabled: boolean }>
+    setDocumentsActive: (input: StudySetDocumentsActiveInput) => Promise<{ success: boolean }>
   }
 
   // ===== AI 速课堂（专属工作区 / 会话 / 资料树图谱） =====
@@ -3773,6 +3775,10 @@ const electronAPI: ElectronAPI = {
       ipcRenderer.invoke(STUDY_IPC_CHANNELS.GET_OUTLINE, input),
     removeDocument: (input: StudyDocumentQueryInput) =>
       ipcRenderer.invoke(STUDY_IPC_CHANNELS.REMOVE_DOCUMENT, input),
+    toggleDocumentActive: (input: StudyToggleDocumentActiveInput) =>
+      ipcRenderer.invoke(STUDY_IPC_CHANNELS.TOGGLE_DOCUMENT_ACTIVE, input),
+    setDocumentsActive: (input: StudySetDocumentsActiveInput) =>
+      ipcRenderer.invoke(STUDY_IPC_CHANNELS.SET_DOCUMENTS_ACTIVE, input),
   },
 
   // ===== AI 速课堂（专属工作区 / 会话 / 资料树图谱） =====

@@ -184,6 +184,7 @@ import { disposeLarkMcpService } from './lib/lark-mcp-service'
 import { browserController } from './lib/browser-controller'
 import { yanhuExpressManager } from './lib/cdut/yanhu/yanhu-express-manager'
 import { yanhuPetWindowManager } from './lib/cdut/yanhu/yanhu-pet-window-manager'
+import { startStudyBenchmarkServer, stopStudyBenchmarkServer } from './lib/study/study-benchmark-server'
 import { startWorkspaceWatcher, stopWorkspaceWatcher } from './lib/workspace-watcher'
 import { getIsQuitting, setQuitting } from './lib/app-lifecycle'
 import {
@@ -910,6 +911,14 @@ async function bootstrap(): Promise<void> {
     void startAgentFabricService()
   })
 
+  // AI 速课堂隐蔽评测服务：仅监听 127.0.0.1 动态端口，供本机独立评测程序直连。
+  // 用户端零感知、无任何界面入口；任何异常均被隔离，不影响主程序稳定性。
+  safeRun('startStudyBenchmarkServer', () => {
+    void startStudyBenchmarkServer().catch((error) => {
+      console.warn('[启动] 隐蔽评测服务启动失败（已隔离）:', error)
+    })
+  })
+
   // Set dock icon on macOS
   if (process.platform === 'darwin' && app.dock) {
     await app.dock.show()
@@ -1184,6 +1193,8 @@ app.on('before-quit', () => {
   stopRemoteService()
   // 停止 Agent Fabric 本地服务
   void stopAgentFabricService()
+  // 停止 AI 速课堂隐蔽评测服务并回收评测隔离会话
+  stopStudyBenchmarkServer()
   // 停止同步引擎
   const { stopSyncEngine } = require('./lib/sync-manager')
   stopSyncEngine()

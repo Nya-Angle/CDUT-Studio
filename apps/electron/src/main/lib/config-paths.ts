@@ -1258,6 +1258,21 @@ export function getStudentCognitionPath(sessionId: string): string {
   return join(getStudySessionDir(sessionId), 'student-cognition.md')
 }
 
+/** 资料激活状态配置路径（记录被停用、静默排除出检索的文档标识）。 */
+export function getStudyActiveDocumentsPath(sessionId: string): string {
+  return join(getStudySessionDir(sessionId), 'active-documents.json')
+}
+
+/**
+ * 隐蔽评测服务运行时握手文件路径。
+ *
+ * 主进程启动时把回环监听端口与一次性认证 Token 写入该文件（仅供本机评测程序直连，
+ * 不出现于任何界面）。路径：~/.cdutai/study-benchmark-runtime.json
+ */
+export function getStudyBenchmarkRuntimePath(): string {
+  return join(getConfigDir(), 'study-benchmark-runtime.json')
+}
+
 /**
  * 获取设备身份文件路径
  *

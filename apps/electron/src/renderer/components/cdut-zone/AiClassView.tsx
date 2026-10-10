@@ -13,6 +13,7 @@ import * as React from 'react'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import {
   BookOpen,
+  Check,
   ChevronLeft,
   ChevronRight,
   FileText,
@@ -22,11 +23,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import type { StudyDocumentOutline } from '@profer/shared'
-import {
-  ALLOWED_STUDY_EXTENSIONS,
-  MAX_STUDY_DOCUMENTS_PER_SESSION,
-  MAX_STUDY_DOCUMENT_SIZE_BYTES,
-} from '@profer/shared'
+import { ALLOWED_STUDY_EXTENSIONS } from '@profer/shared'
 import { cn } from '@/lib/utils'
 import { activeSessionIdAtom } from '@/atoms/tab-atoms'
 import {
@@ -100,50 +97,28 @@ export function AiClassView(): React.ReactElement {
   )
 
   /**
-   * 上传前置拦截（红线约束）：
-   *   - 白名单格式校验：非白名单直接过滤并告警；
-   *   - 单文件体积校验：超过 200MB 直接过滤并告警；
-   *   - 会话总数校验：本课堂最多 10 份，超出部分截断并友好提示。
+   * 上传前置拦截：
+   *   - 仅保留白名单格式纯化（非白名单直接过滤并告警）；
+   *   - 资料份数与单文件体积限制已全量解除，支持无上限批量导入超大文件。
    */
-  const validateIncomingFiles = React.useCallback(
-    (files: File[]): string[] => {
-      if (files.length === 0) return []
-      const remaining = MAX_STUDY_DOCUMENTS_PER_SESSION - documents.length
-      if (remaining <= 0) {
-        toast.error(`本课堂已达 ${MAX_STUDY_DOCUMENTS_PER_SESSION} 份资料上限，请先删除旧资料后再上传`)
-        return []
+  const validateIncomingFiles = React.useCallback((files: File[]): string[] => {
+    if (files.length === 0) return []
+    const accepted: File[] = []
+    let invalidCount = 0
+    for (const file of files) {
+      const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase()
+      if (!(ALLOWED_STUDY_EXTENSIONS as readonly string[]).includes(ext)) {
+        invalidCount++
+        continue
       }
+      accepted.push(file)
+    }
+    if (invalidCount > 0) toast.error(`已过滤 ${invalidCount} 个不支持的文件格式`)
 
-      const accepted: File[] = []
-      let invalidCount = 0
-      let oversizedCount = 0
-      for (const file of files) {
-        const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase()
-        if (!(ALLOWED_STUDY_EXTENSIONS as readonly string[]).includes(ext)) {
-          invalidCount++
-          continue
-        }
-        if (file.size > MAX_STUDY_DOCUMENT_SIZE_BYTES) {
-          oversizedCount++
-          continue
-        }
-        accepted.push(file)
-      }
-      if (invalidCount > 0) toast.error(`已过滤 ${invalidCount} 个不支持的文件格式`)
-      if (oversizedCount > 0) toast.error(`已过滤 ${oversizedCount} 个超过 200MB 的文件`)
-
-      let selected = accepted
-      if (accepted.length > remaining) {
-        selected = accepted.slice(0, remaining)
-        toast.error(`本课堂最多支持 ${MAX_STUDY_DOCUMENTS_PER_SESSION} 份资料，本次仅接收前 ${remaining} 份`)
-      }
-
-      return selected
-        .map((file) => window.electronAPI.getPathForFile(file))
-        .filter((path): path is string => Boolean(path))
-    },
-    [documents.length],
-  )
+    return accepted
+      .map((file) => window.electronAPI.getPathForFile(file))
+      .filter((path): path is string => Boolean(path))
+  }, [])
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>): void => {
     event.preventDefault()
@@ -167,6 +142,32 @@ export function AiClassView(): React.ReactElement {
     }
     setDocuments((prev) => prev.filter((doc) => doc.documentId !== documentId))
     setActiveDocumentId((current) => (current === documentId ? null : current))
+  }
+
+  /**
+   * 切换单份资料的激活（勾选）状态。
+   * 采用乐观更新即时反馈，失败时回滚；激活状态由主进程落盘持久化，
+   * 未勾选的资料将被静默排除在 RAG 检索与提示词注入之外。
+   */
+  const handleToggleActive = async (document: StudyDocumentOutline): Promise<void> => {
+    if (!sessionId) return
+    const nextEnabled = document.enabled === false
+    const applyState = (enabled: boolean): void => {
+      setDocuments((prev) =>
+        prev.map((doc) => (doc.documentId === document.documentId ? { ...doc, enabled } : doc)),
+      )
+    }
+    applyState(nextEnabled)
+    try {
+      await window.electronAPI.study.toggleDocumentActive({
+        sessionId,
+        documentId: document.documentId,
+        enabled: nextEnabled,
+      })
+    } catch (error) {
+      console.warn('[AI速课堂] 切换资料激活状态失败:', error)
+      applyState(!nextEnabled)
+    }
   }
 
   return (
@@ -230,39 +231,60 @@ export function AiClassView(): React.ReactElement {
             {documents.length === 0 ? (
               <p className="rounded-lg bg-muted/40 px-2 py-2 text-[11px] text-muted-foreground">暂无资料，先上传课件或教材。</p>
             ) : (
-              documents.map((doc) => (
-                <div
-                  key={doc.documentId}
-                  className={cn(
-                    'group/doc flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors',
-                    activeDocument?.documentId === doc.documentId
-                      ? 'bg-primary/10 ring-1 ring-primary/30'
-                      : 'hover:bg-muted/60',
-                  )}
-                >
-                  <button
-                    type="button"
-                    onClick={() => setActiveDocumentId(doc.documentId)}
-                    className="flex min-w-0 flex-1 items-center gap-2 text-left"
+              documents.map((doc) => {
+                const docEnabled = doc.enabled !== false
+                return (
+                  <div
+                    key={doc.documentId}
+                    className={cn(
+                      'group/doc flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors',
+                      activeDocument?.documentId === doc.documentId
+                        ? 'bg-primary/10 ring-1 ring-primary/30'
+                        : 'hover:bg-muted/60',
+                      !docEnabled && 'opacity-45',
+                    )}
                   >
-                    <FileText size={14} className="shrink-0 text-muted-foreground" />
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[11px] font-medium text-foreground">{doc.fileName}</span>
-                      <span className="block text-[10px] text-muted-foreground">
-                        {doc.totalSections} 章 · {doc.totalChars} 字
+                    {/* 激活记忆勾选框：未勾选资料静默排除出检索与上下文注入 */}
+                    <button
+                      type="button"
+                      role="checkbox"
+                      aria-checked={docEnabled}
+                      title={docEnabled ? '已激活：参与检索与讲解（点击停用）' : '已停用：排除出检索与讲解（点击激活）'}
+                      onClick={() => void handleToggleActive(doc)}
+                      className={cn(
+                        'flex size-4 shrink-0 items-center justify-center rounded-[5px] border transition-colors',
+                        docEnabled
+                          ? 'border-primary bg-primary text-primary-foreground'
+                          : 'border-border bg-background text-transparent hover:border-primary/60',
+                      )}
+                    >
+                      <Check size={11} strokeWidth={3} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveDocumentId(doc.documentId)}
+                      className="flex min-w-0 flex-1 items-center gap-2 text-left"
+                    >
+                      <FileText size={14} className="shrink-0 text-muted-foreground" />
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-[11px] font-medium text-foreground">{doc.fileName}</span>
+                        <span className="block text-[10px] text-muted-foreground">
+                          {doc.totalSections} 章 · {doc.totalChars} 字
+                          {docEnabled ? '' : ' · 已停用'}
+                        </span>
                       </span>
-                    </span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => void handleRemove(doc.documentId)}
-                    title="移除该资料"
-                    className="shrink-0 rounded p-1 text-muted-foreground/60 opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover/doc:opacity-100"
-                  >
-                    <Trash2 size={12} />
-                  </button>
-                </div>
-              ))
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void handleRemove(doc.documentId)}
+                      title="移除该资料"
+                      className="shrink-0 rounded p-1 text-muted-foreground/60 opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover/doc:opacity-100"
+                    >
+                      <Trash2 size={12} />
+                    </button>
+                  </div>
+                )
+              })
             )}
           </div>
         </div>
