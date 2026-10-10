@@ -303,13 +303,14 @@ function renderReport(report, highlights) {
       <div class="kv">
         <div class="item"><div class="k">Hit@4</div><div class="v">${pct(h.hitAt4)}</div></div>
         <div class="item"><div class="k">Hit@10</div><div class="v">${pct(h.hitAt10)}</div></div>
+        <div class="item"><div class="k">Recall@4</div><div class="v">${pct(h.recallAt4)}</div></div>
+        <div class="item"><div class="k">Recall@10</div><div class="v">${pct(h.recallAt10)}</div></div>
         <div class="item"><div class="k">MRR</div><div class="v">${fx(h.mrr)}</div></div>
         <div class="item"><div class="k">MAP@10</div><div class="v">${fx(h.mapAt10)}</div></div>
-        <div class="item"><div class="k">覆盖率·加权</div><div class="v">${pct(h.answerCoverageToken)}</div></div>
-        <div class="item"><div class="k">证据链完整率</div><div class="v">${pct(h.fullEvidenceRecall)}</div></div>
       </div>
       <div class="muted" style="margin-top:12px">参评题数 ${h.scoredQueries} · null query ${h.nullQueries} · 平均耗时 ${h.avgLatencyMs.toFixed(1)} ms</div>
-      <div class="muted" style="margin-top:6px">覆盖率·严格 ${pct(h.answerCoverageStrict)} · Null 拒答率 ${h.nullQueries > 0 ? pct(h.refusalRate) : 'N/A'} · 误召回率 ${h.nullQueries > 0 ? pct(h.falseRecallRate) : 'N/A'}</div>`
+      <div class="muted" style="margin-top:6px">覆盖率·严格 ${pct(h.answerCoverageStrict)} · 覆盖率·加权 ${pct(h.answerCoverageToken)} · 证据链完整率 ${pct(h.fullEvidenceRecall)}</div>
+      <div class="muted" style="margin-top:6px">Null 拒答率 ${h.nullQueries > 0 ? pct(h.refusalRate) : 'N/A'} · 误召回率 ${h.nullQueries > 0 ? pct(h.falseRecallRate) : 'N/A'}</div>`
     container.appendChild(div)
   }
 
@@ -317,6 +318,7 @@ function renderReport(report, highlights) {
   bars.innerHTML = ''
   const metrics = [
     { key: 'hitAt10', label: 'Hit@10', color: 'linear-gradient(90deg,#6f8cff,#8f6fff)' },
+    { key: 'recallAt10', label: 'Recall@10', color: 'linear-gradient(90deg,#8f6fff,#c06fff)' },
     { key: 'mrr', label: 'MRR', color: 'linear-gradient(90deg,#38d39f,#2aa5d6)' },
     { key: 'mapAt10', label: 'MAP@10', color: 'linear-gradient(90deg,#ffb454,#ff6b81)' },
   ]
@@ -373,7 +375,7 @@ function renderDetail() {
     detail.innerHTML = `<td></td><td colspan="7">
       <div class="muted">金标证据语料：<code>${r.goldKeys.join(', ') || '（无 · null query）'}</code></div>
       <div class="muted" style="margin-top:6px">检索命中语料（按排名）：<code>${r.retrievedKeys.join(', ') || '（空）'}</code></div>
-      ${r.isNullQuery ? `<div class="muted" style="margin-top:6px">拒答判定：<span class="pill ${r.refusalCorrect ? 'ok' : 'bad'}">${r.refusalCorrect ? '正确拒答' : '误召回'}</span> · top-1 检索分 ${Number(r.topScore).toFixed(4)}（判定口径：低于本引擎非 null 查询 top-1 分中位数即视为正确拒答）</div>` : `<div class="muted" style="margin-top:6px">答案覆盖：严格 <span class="pill ${r.answerCoveredStrict ? 'ok' : 'bad'}">${r.answerCoveredStrict ? '命中' : '未命中'}</span> · 加权覆盖率 ${(Number(r.answerCoverageToken) * 100).toFixed(1)}%</div>`}
+      ${r.isNullQuery ? `<div class="muted" style="margin-top:6px">拒答判定：<span class="pill ${r.refusalCorrect ? 'ok' : 'bad'}">${r.refusalCorrect ? '正确拒答' : '误召回'}</span> · top-1 检索分 ${Number(r.topScore).toFixed(4)}（判定口径：低于本引擎非 null 查询 top-1 分中位数即视为正确拒答）</div>` : `<div class="muted" style="margin-top:6px">答案覆盖：严格 <span class="pill ${r.answerCoveredStrict ? 'ok' : 'bad'}">${r.answerCoveredStrict ? '命中' : '未命中'}</span> · 加权覆盖率 ${(Number(r.answerCoverageToken) * 100).toFixed(1)}% · Recall@10 ${(Number(r.recallAt10) * 100).toFixed(1)}%</div>`}
       ${r.error ? `<div class="toast err" style="margin-top:6px">${escapeHtml(r.error)}</div>` : ''}
     </td>`
     tbody.appendChild(detail)

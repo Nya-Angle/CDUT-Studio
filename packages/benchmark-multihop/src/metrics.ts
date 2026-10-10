@@ -28,6 +28,10 @@ export interface RetrievalScore {
   hitAt10: number
   mrr: number
   mapAt10: number
+  /** 金标证据在 Top-4 中被召回的比例（连续口径，多跳场景比 Hit 更有区分度） */
+  recallAt4: number
+  /** 金标证据在 Top-10 中被召回的比例 */
+  recallAt10: number
 }
 
 /**
@@ -38,7 +42,9 @@ export interface RetrievalScore {
  */
 export function scoreRetrieval(rankedDocIds: string[], goldDocIds: string[]): RetrievalScore {
   const goldSet = new Set(goldDocIds)
-  if (goldSet.size === 0) return { hitAt4: 0, hitAt10: 0, mrr: 0, mapAt10: 0 }
+  if (goldSet.size === 0) {
+    return { hitAt4: 0, hitAt10: 0, mrr: 0, mapAt10: 0, recallAt4: 0, recallAt10: 0 }
+  }
 
   const top10 = rankedDocIds.slice(0, 10)
   let hitAt4 = 0
@@ -46,6 +52,9 @@ export function scoreRetrieval(rankedDocIds: string[], goldDocIds: string[]): Re
   let firstRelevantRank = 0
   let averagePrecision = 0
   let relevantSeen = 0
+  let goldHitInTop4 = 0
+  let goldHitInTop10 = 0
+  const seenGold = new Set<string>()
 
   for (let index = 0; index < top10.length; index++) {
     const isRelevant = goldSet.has(top10[index] ?? '')
@@ -55,6 +64,11 @@ export function scoreRetrieval(rankedDocIds: string[], goldDocIds: string[]): Re
       if (firstRelevantRank === 0) firstRelevantRank = index + 1
       relevantSeen += 1
       averagePrecision += relevantSeen / (index + 1)
+      if (!seenGold.has(top10[index] as string)) {
+        seenGold.add(top10[index] as string)
+        goldHitInTop10 += 1
+        if (index < 4) goldHitInTop4 += 1
+      }
     }
   }
 
@@ -64,6 +78,8 @@ export function scoreRetrieval(rankedDocIds: string[], goldDocIds: string[]): Re
     hitAt10,
     mrr: firstRelevantRank > 0 ? 1 / firstRelevantRank : 0,
     mapAt10: denominator > 0 ? averagePrecision / denominator : 0,
+    recallAt4: goldHitInTop4 / goldSet.size,
+    recallAt10: goldHitInTop10 / goldSet.size,
   }
 }
 
