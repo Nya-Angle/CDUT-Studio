@@ -52,8 +52,9 @@ import type {
   AgentSessionEvent,
   ResourceLoader,
   ToolDefinition,
+  ExtensionFactory,
 } from '@earendil-works/pi-coding-agent'
-import type { Transport as PiAgentTransport } from '@earendil-works/pi-ai'
+import type { Api, Model, ProviderResponse, Transport as PiAgentTransport } from '@earendil-works/pi-ai'
 import type { AgentMessage, AgentToolResult, AgentToolUpdateCallback } from '@earendil-works/pi-agent-core'
 import type { AssistantMessage } from '@earendil-works/pi-ai/compat'
 import { Type, type TSchema } from 'typebox'
@@ -84,6 +85,13 @@ import {
   sanitizePiContextMessages,
 } from './pi-message-adapter'
 import { DEFAULT_CONTEXT_WINDOW, buildModel, normalizePiApi } from './pi-model-registry'
+import {
+  applyWatchdogTerminalReason,
+  applyWatchdogToAssistantError,
+  createPiReviewWatchdog,
+  resolvePiReviewWatchdogTimeouts,
+  type PiReviewWatchdog,
+} from './pi-review-watchdog'
 import { createPartialMessageCoalescer, type PartialMessageCoalescer } from './pi-streaming-control'
 import { runPiPromptChain, type PiInterruptReservation } from './pi-prompt-chain'
 import { createPiRetryTerminalGate, getPiNativeRetryOutcome, mapPiNativeRetryEvent } from './pi-retry-control'
@@ -103,6 +111,28 @@ type BashOperations = import('@earendil-works/pi-coding-agent').BashOperations
 type BashToolOptions = import('@earendil-works/pi-coding-agent').BashToolOptions
 
 const PI_NATIVE_MAX_RETRIES = 8
+
+/**
+ * 能证明「模型真的开始产出内容」的 Pi 会话事件——只有它们才满足首字节条件。
+ *
+ * 关键区分：`message_start` 与 HTTP 响应头同时到达，只证明连接建立，**不证明模型在生成**。
+ * 部分兼容网关会先回响应头再长时间空转（实测 GLM 渠道可挂 300s 以上），
+ * 若把响应头当首字节，请求级看门狗会被提前满足，轮次重新退化成无限 running。
+ */
+const PI_REVIEW_CONTENT_EVENTS: ReadonlySet<string> = new Set([
+  'message_update',
+  'tool_execution_start',
+  'tool_execution_update',
+  'tool_execution_end',
+])
+
+/** 只证明「链路仍在运转」但不证明模型在生成的控制类事件。 */
+const PI_REVIEW_ACTIVITY_EVENTS: ReadonlySet<string> = new Set([
+  'message_start',
+  'message_end',
+  'compaction_start',
+  'compaction_end',
+])
 const PI_NATIVE_RETRY_BASE_DELAY_MS = 1_000
 const piToolExecutionContext = new AsyncLocalStorage<{ toolCallId: string }>()
 
@@ -112,6 +142,13 @@ type PiRetrySettings = {
   baseDelayMs?: number
 }
 
+function toPiPromptImages(images: string[] | undefined): Array<{ type: 'image'; source: { type: 'base64'; mediaType: string; data: string } }> {
+  return (images ?? []).flatMap((image) => {
+    const match = /^data:(image\/[a-zA-Z0-9.+-]+);base64,([A-Za-z0-9+/=]+)$/.exec(image)
+    return match ? [{ type: 'image' as const, source: { type: 'base64' as const, mediaType: match[1]!, data: match[2]! } }] : []
+  })
+}
+
 /**
  * Pi SDK 原生重试按 provider 隔离。
  *
@@ -119,8 +156,10 @@ type PiRetrySettings = {
  * 这类重试应交给 Profer 编排层统一判断，否则会绕过 Ollama 特判并在用户看来
  * "一发就开始重试"。GPT 等其他渠道继续保留 Pi 原生断流重试。
  */
-export function buildPiRetrySettings(provider: ProviderType): PiRetrySettings {
-  if (provider === 'ollama') return { enabled: false }
+export function buildPiRetrySettings(provider: ProviderType, options: { isReviewRequest?: boolean } = {}): PiRetrySettings {
+  // Review tool calls can append observations/checks. Retrying a completed tool turn
+  // may replay those writes, so let the review client hand missing work to a person.
+  if (provider === 'ollama' || options.isReviewRequest) return { enabled: false }
   return {
     enabled: true,
     maxRetries: PI_NATIVE_MAX_RETRIES,
@@ -141,6 +180,10 @@ export interface PiAgentQueryOptions extends AgentQueryInput {
    * Pi 不做 SDK 侧 beta 協商，该偏好只决定注册给 Pi 的上下文窗口。
    */
   context1m?: boolean | null
+  /** 用户为所选渠道模型明确配置的上下文窗口 token 数。 */
+  contextWindow?: number
+  /** 用户为所选渠道模型明确配置的最大输出 token 数。 */
+  maxTokens?: number
   maxTurns?: number
   permissionMode: ProferPermissionMode
   canUseTool?: (
@@ -162,6 +205,10 @@ export interface PiAgentQueryOptions extends AgentQueryInput {
   customTools?: ToolDefinition[]
   /** N2d（07 §4.4）：工具档案——review 仅注册审核业务工具+压缩，不注册通用 read/bash/write 与产品工具 */
   toolProfile?: 'general' | 'review'
+  /** 仅在辅助审核工作台的有效案卷运行绑定上启用；不改变普通 Pi 会话策略。 */
+  contextPolicy?: { kind: 'review'; caseId: string; runId: string }
+  /** 内容审核专用多模态页图；只附加到本次 Pi 首轮消息，不进入普通文件工具上下文。 */
+  images?: string[]
   onSessionId?: (sdkSessionId: string, sessionFile?: string) => void
   /** Profer assistant UI UUID → Pi 树状 session entry ID 的持久映射；分叉/回退依赖它定位 branch 点。 */
   onPiEntryBindings?: (bindings: Record<string, string>) => void
@@ -1061,6 +1108,48 @@ The current session context has been safely compacted. Based on the compaction s
 - Give the final reply only when the original request is fully completed; if genuinely blocked, state the blocker explicitly.
 </profer_compaction_continuation>`
 
+const PI_REVIEW_COMPACTION_THRESHOLD_RATIO = 0.7
+const PI_REVIEW_COMPACTION_INSTRUCTIONS = '这是辅助审核工作台中的案卷审核会话。请用简短、可继续执行的状态摘要压缩旧上下文，严格保留：当前案卷与运行 ID、模板和规则版本；已提交检查的 ID、结论与状态；尚未提交的检查草稿须明确标成草稿；已确认事实及其材料版本、blockId 和引文；材料逐份读取状态与尚未读取/需人工核验的材料；最近一次被拒提交的项目和原因；下一步应继续的检查。\n不得把“材料已读取”当成“材料符合”，不得把草稿或待核实事项变成已接受结论，不得丢弃冲突与不确定性。不要复制长段材料正文、图片内容或 base64。摘要不是材料出处；压缩后应先查看案卷运行账本确认已提交状态，再继续未完成的读取和检查。若当前轮尚有可提交的检查结果，先用 review_submit_result 以 finish=false 持久化，再压缩。'
+const PI_REVIEW_COMPACTION_CONTINUATION_PROMPT = '<profer_review_compaction_continuation>\n审核会话刚完成上下文压缩。先使用审核工具核对当前案卷运行账本中的已提交检查、材料读取覆盖和拒绝项；再继续未读材料与缺失检查。保留有效结论，不把压缩摘要当作材料证据，不重复已完成的读取或提交。\n</profer_review_compaction_continuation>'
+
+function calculatePiAutoCompactionReserveTokensForPolicy(contextWindow: number, contextPolicy?: PiAgentQueryOptions['contextPolicy']): number {
+  if (contextPolicy?.kind !== 'review') return calculatePiAutoCompactionReserveTokens(contextWindow)
+  if (!Number.isFinite(contextWindow) || contextWindow <= 0) {
+    throw new TypeError('Pi context window must be a positive finite number')
+  }
+  // 审核会话更早压缩，给大批材料读取和后续检查留出空间；普通会话继续使用共享的 80% 阈值。
+  return Math.ceil(contextWindow * (1 - PI_REVIEW_COMPACTION_THRESHOLD_RATIO))
+}
+
+function createPiReviewLedgerCompactionExtension(contextPolicy: NonNullable<PiAgentQueryOptions['contextPolicy']>): ExtensionFactory {
+  return (pi) => {
+    pi.on('session_before_compact', async (event) => {
+      try {
+        const { buildPiReviewCompactionSummary } = require('../review/pi-case-review-service') as typeof import('../review/pi-case-review-service')
+        const summary = buildPiReviewCompactionSummary(contextPolicy.caseId, contextPolicy.runId)
+        if (!summary) return undefined
+        return {
+          compaction: {
+            summary,
+            firstKeptEntryId: event.preparation.firstKeptEntryId,
+            tokensBefore: event.preparation.tokensBefore,
+            details: {
+              kind: 'review-ledger-checkpoint',
+              caseId: contextPolicy.caseId,
+              runId: contextPolicy.runId,
+              readFiles: [...event.preparation.fileOps.read],
+              modifiedFiles: [...event.preparation.fileOps.edited],
+            },
+          },
+        }
+      } catch (error) {
+        console.warn(`[Pi 审核压缩] 无法从运行账本生成检查点，回退到 Pi 原生摘要 (${contextPolicy.runId}):`, error)
+        return undefined
+      }
+    })
+  }
+}
+
 function buildPinnedArtifactsContinuationBlock(cwd?: string): string {
   if (!cwd) return ''
   try {
@@ -1292,9 +1381,10 @@ export function buildCurrentSessionCompactionTool(
 export async function compactCurrentSessionAfterTurn(
   session: Pick<AgentSession, 'compact' | 'sessionId'>,
   onNoop: (message: SDKMessage) => void,
+  customInstructions?: string,
 ): Promise<'compacted' | 'noop'> {
   try {
-    await session.compact()
+    await session.compact(customInstructions)
     return 'compacted'
   } catch (error) {
     if (!isCompactionNoopError(error)) throw error
@@ -1327,10 +1417,13 @@ export function estimatePiContextTokens(messages: readonly AgentMessage[]): numb
  * 从而保证自动压缩绝不打断正在进行的对话/任务；手动 /compact 与模型主动 CompactContext 不受影响。
  * 压缩为尽力而为：失败仅记录日志，不会让已完成的本轮任务失败。
  */
-async function autoCompactWhenIdle(options: {
-  session: AgentSession
+export async function autoCompactWhenIdle(options: {
+  session: Pick<AgentSession, 'isIdle' | 'waitForIdle' | 'compact'> & {
+    agent: { state: { messages: readonly AgentMessage[] } }
+  }
   contextWindow: number | undefined
   reserveTokens: number
+  customInstructions?: string
 }): Promise<void> {
   const { session, contextWindow, reserveTokens } = options
   if (!contextWindow || contextWindow <= 0) return
@@ -1341,7 +1434,7 @@ async function autoCompactWhenIdle(options: {
   if (contextTokens === undefined) return
   if (contextTokens <= contextWindow - reserveTokens) return
   try {
-    await session.compact()
+    await session.compact(options.customInstructions)
   } catch (error) {
     if (!isCompactionNoopError(error)) {
       console.warn('[Pi adapter] 空闲态自动压缩失败，已跳过（不影响本轮）：', error)
@@ -2468,9 +2561,21 @@ export class PiAgentAdapter implements AgentProviderAdapter {
     let unsubscribe: (() => void) | undefined
     let requestProxyDispatcher: Dispatcher | undefined
     let partialAssistantCoalescer: PartialMessageCoalescer<{ message: AssistantMessage; uuid: string }> | undefined
+    // 审核轮次看门狗必须在 try 之外声明：外层 catch 也要能把「无进展」原因写进终态。
+    let reviewWatchdog: PiReviewWatchdog | undefined
+    let reviewWatchdogTimer: ReturnType<typeof setInterval> | undefined
+    let activeReviewRequest: AbortController | undefined
+    let releaseActiveRequestSignal: (() => void) | undefined
 
     const cleanupActiveSession = (): void => {
       try {
+        if (reviewWatchdogTimer) {
+          clearInterval(reviewWatchdogTimer)
+          reviewWatchdogTimer = undefined
+        }
+        releaseActiveRequestSignal?.()
+        releaseActiveRequestSignal = undefined
+        activeReviewRequest = undefined
         unsubscribe?.()
         unsubscribe = undefined
         partialAssistantCoalescer?.dispose()
@@ -2517,8 +2622,9 @@ export class PiAgentAdapter implements AgentProviderAdapter {
         ? sdk.SessionManager.open(sessionFile, input.piSessionDir, cwd)
         : sdk.SessionManager.create(cwd, input.piSessionDir)
       const { modelRuntime, model } = await buildModel(sdk, input)
-      const autoCompactionReserveTokens = calculatePiAutoCompactionReserveTokens(
+      const autoCompactionReserveTokens = calculatePiAutoCompactionReserveTokensForPolicy(
         model.contextWindow ?? DEFAULT_CONTEXT_WINDOW,
+        input.contextPolicy,
       )
       let compactContextRequested = false
       let automaticCompactionContinuations = 0
@@ -2556,7 +2662,7 @@ export class PiAgentAdapter implements AgentProviderAdapter {
         compaction: { enabled: false, reserveTokens: autoCompactionReserveTokens },
         // Continue the same transcript after transient failures so completed tools are not replayed.
         // Ollama 由 buildPiRetrySettings 单独关闭 native retry，避免兼容层重复提交工具上下文。
-        retry: buildPiRetrySettings(input.provider),
+        retry: buildPiRetrySettings(input.provider, { isReviewRequest: input.toolProfile === 'review' }),
         ...connectionSettings,
       })
       const openAIReasoningProfile = (input.provider === 'openai-codex' || input.provider === 'xai' || input.provider === 'openai-responses')
@@ -2584,6 +2690,7 @@ export class PiAgentAdapter implements AgentProviderAdapter {
           })
         : undefined
       const extensionFactories = [
+        ...(input.contextPolicy?.kind === 'review' ? [createPiReviewLedgerCompactionExtension(input.contextPolicy)] : []),
         ...(input.provider === 'openai-codex'
           ? [createCodexRequestSettingsExtension({
               thinkingLevel: input.thinkingLevel ?? 'off',
@@ -2706,19 +2813,111 @@ export class PiAgentAdapter implements AgentProviderAdapter {
       // 全协议净化与瘦身管道：剥离历史 Thinking、折叠历史超长 ToolResult。
       // OpenAI 兼容协议额外做 store/developer/平坦化专属处理。
       const isOpenAICompatiblePayload = normalizePiApi(input.provider, input.baseUrl) === 'openai-completions'
+      /**
+       * 审核轮次看门狗（P0-C：失败可追踪）。
+       *
+       * 只对 review 档案启用：普通编码会话存在长时间无输出的合法命令（构建、测试），
+       * 用同一套「无进展」判据会误杀。审核轮次的每次模型请求都应当持续产出数据。
+       *
+       * 命中后必须做到两件事：立刻中止在途请求，并让本轮终态带上可诊断的中文原因，
+       * 绝不允许 V2 run 无限停在 running。
+       */
+      const reviewWatchdogTimeoutMs = resolvePiReviewWatchdogTimeouts({
+        transportIdleTimeoutMs: settingsManager.getHttpIdleTimeoutMs(),
+      })
+      reviewWatchdog = isReviewProfile
+        ? createPiReviewWatchdog({
+            label: `渠道：${input.channelName ?? input.provider}，模型：${input.model ?? session.model?.id ?? '未知'}`,
+            timeouts: reviewWatchdogTimeoutMs,
+            logger: (message) => console.error(`${message} session=${input.sessionId}`),
+          })
+        : undefined
+      /**
+       * 中止当前审核轮次。
+       *
+       * 两件事都要做，缺一不可：
+       * 1. 断掉在途的模型请求（让它立刻停止等数据，而不是继续空耗）；
+       * 2. 中止整轮 Pi 会话——工具执行卡住时没有「在途请求」可断，
+       *    只断请求会让轮次继续挂着。
+       * 注意：这里不设置 active.abortRequested，看门狗不是用户停止，
+       * 终态由下面的 result 覆盖逻辑给出可诊断原因。
+       */
+      const abortReviewTurn = (reason: string): void => {
+        try {
+          activeReviewRequest?.abort(new Error(reason))
+        } catch { /* AbortController.abort 不会抛，防御性兜底 */ }
+        void active.session?.abort().catch((error) => {
+          console.error('[Pi 审核看门狗] 中止会话失败:', error)
+        })
+      }
+      if (reviewWatchdog) {
+        console.log(
+          `[Pi 审核看门狗] 已启用 session=${input.sessionId} `
+          + `首字节阈值=${Math.round(reviewWatchdogTimeoutMs.firstByteTimeoutMs / 1_000)}s `
+          + `整轮无进展阈值=${Math.round(reviewWatchdogTimeoutMs.turnStallTimeoutMs / 60_000)}min`,
+        )
+        // 闭包内固定已窄化的引用，避免 let 声明在回调里退化为可能 undefined。
+        const watchdog = reviewWatchdog
+        reviewWatchdogTimer = setInterval(() => {
+          const reason = watchdog.evaluate()
+          if (!reason) return
+          // 只触发一次：之后的请求由 streamFunction 直接拒止，避免重试把轮次重新挂起。
+          if (reviewWatchdogTimer) clearInterval(reviewWatchdogTimer)
+          reviewWatchdogTimer = undefined
+          abortReviewTurn(reason)
+        }, 5_000)
+        reviewWatchdogTimer.unref?.()
+      }
       session.agent.streamFunction = (requestModel, context, options) => {
+        // 请求级首字节看门狗：把「长时间无数据返回」变成可诊断的中止，
+        // 而不是等传输层超时后只留下一句 fetch failed。
+        const outerSignal = options?.signal as AbortSignal | undefined
+        const requestController = new AbortController()
+        releaseActiveRequestSignal?.()
+        releaseActiveRequestSignal = undefined
+        if (outerSignal) {
+          if (outerSignal.aborted) requestController.abort()
+          else {
+            const forwardAbort = () => requestController.abort()
+            outerSignal.addEventListener('abort', forwardAbort, { once: true })
+            releaseActiveRequestSignal = () => outerSignal.removeEventListener('abort', forwardAbort)
+          }
+        }
+        activeReviewRequest = requestController
+        // 看门狗已触发过：任何新请求（含原生重试）都必须立即拒止，不能重新挂起轮次。
+        if (reviewWatchdog?.startRequest() === true) requestController.abort()
         const originalOnPayload = options?.onPayload
+        const originalOnResponse = options?.onResponse
         const wrappedOptions = {
           ...options,
+          // 看门狗需要可主动中止的请求级信号；外层 signal 通过监听转发，语义不变。
+          ...(reviewWatchdog ? { signal: requestController.signal } : {}),
           onPayload: async (params: any, model: any) => {
             // 统一进入跨协议净化与瘦身管道
             const cleanedParams = sanitizeContextForInference(params, model, { openAICompatible: isOpenAICompatiblePayload })
+            // 请求组装阶段还没有真正发出 HTTP，只刷新进展，不能算首字节。
+            reviewWatchdog?.noteActivity()
             if (originalOnPayload) {
               const customResult = await originalOnPayload(cleanedParams, model)
               return customResult !== undefined ? customResult : cleanedParams
             }
             return cleanedParams
           },
+          ...(reviewWatchdog
+            ? {
+                /**
+                 * 响应头只证明连接建立，**不是**首字节。
+                 *
+                 * 兼容网关（含实测的 GLM 自部署 vLLM）会先回响应头、再长时间不吐 token；
+                 * 若把响应头当首字节，请求级看门狗会被提前满足，轮次又变成无限 running。
+                 * 这里只刷新「链路还活着」，真正的首字节由内容类会话事件标记。
+                 */
+                onResponse: (response: ProviderResponse, responseModel: Model<Api>) => {
+                  reviewWatchdog?.noteActivity()
+                  return originalOnResponse?.(response, responseModel)
+                },
+              }
+            : {}),
         }
         return runWithPiRequestProxy(
           requestProxyDispatcher,
@@ -2758,7 +2957,12 @@ export class PiAgentAdapter implements AgentProviderAdapter {
       const flushPendingTerminalRetryError = (): void => {
         if (!pendingTerminalRetryError) return
         runtimeGuard.recordMessage(pendingTerminalRetryError.assistantMessage)
-        queue.push(pendingTerminalRetryError.sdkMessage)
+        // 看门狗命中：延迟刷出的失败 assistant 也必须带中文可诊断原因，
+        // 否则编排层会按「瞬时网络错误」自动重试，轮次重新挂起。
+        const watchdogReason = reviewWatchdog?.firedReason()
+        queue.push(watchdogReason
+          ? applyWatchdogToAssistantError(pendingTerminalRetryError.sdkMessage as unknown as Record<string, unknown>, watchdogReason) as unknown as SDKMessage
+          : pendingTerminalRetryError.sdkMessage)
         pendingTerminalRetryError = undefined
       }
 
@@ -2794,6 +2998,23 @@ export class PiAgentAdapter implements AgentProviderAdapter {
       }, PI_PARTIAL_UPDATE_INTERVAL_MS)
 
       unsubscribe = session.subscribe((event: AgentSessionEvent) => {
+        // 看门狗进展信号：任何会话事件都证明链路仍在运转，但只有数据类事件
+        // （消息流、工具执行）才算「模型已经开始返回数据」。
+        // 这样不依赖各协议是否实现 onResponse，也不会把 turn_start 误当首字节。
+        if (reviewWatchdog) {
+          if (PI_REVIEW_CONTENT_EVENTS.has(event.type)) reviewWatchdog.touch()
+          else if (PI_REVIEW_ACTIVITY_EVENTS.has(event.type)) reviewWatchdog.noteActivity()
+          // 消息结束即该次模型请求结束（工具执行阶段不应再算「请求在途」），
+          // 同时释放请求级控制器，避免下一轮误断一个已结束的请求。
+          if (event.type === 'message_end') {
+            reviewWatchdog.endRequest()
+            if (activeReviewRequest && reviewWatchdog.state.requestStartedAt == null) {
+              releaseActiveRequestSignal?.()
+              releaseActiveRequestSignal = undefined
+              activeReviewRequest = undefined
+            }
+          }
+        }
         try {
           for (const lifecycleEvent of mapPiHarnessLifecycleEvent(event)) {
             try {
@@ -2829,10 +3050,15 @@ export class PiAgentAdapter implements AgentProviderAdapter {
               }
               const isAssistant = isAssistantPiMessage(event.message)
               const assistantUuid = isAssistant ? assistantUuidFor() : undefined
-              const converted = convertPiMessage(event.message, session.sessionId, input.model, {
+              const rawConverted = convertPiMessage(event.message, session.sessionId, input.model, {
                 final: true,
                 ...(assistantUuid && { uuid: assistantUuid }),
               })
+              // 看门狗命中后的失败 assistant：先换成中文可诊断原因再往下走。
+              const watchdogAssistantReason = reviewWatchdog?.firedReason()
+              const converted = watchdogAssistantReason && rawConverted?.type === 'assistant'
+                ? applyWatchdogToAssistantError(rawConverted as unknown as Record<string, unknown>, watchdogAssistantReason) as unknown as SDKMessage
+                : rawConverted
               const isRetryableAssistantError = isAssistant && (event.message as AssistantMessage).stopReason === 'error'
               if (isRetryableAssistantError && converted?.type === 'assistant' && assistantUuid) {
                 // Native retry 会丢弃该失败 assistant；不应消耗 Proma 的 turn/budget 配额。
@@ -2895,6 +3121,15 @@ export class PiAgentAdapter implements AgentProviderAdapter {
                 model.id,
                 input.model ?? session.model?.id,
               )
+              // 看门狗命中：本轮终态必须是带可诊断原因的失败，不能被
+              // 「Request was aborted」之类传输层文案覆盖，更不能报成成功。
+              const watchdogReason = reviewWatchdog?.firedReason()
+              if (watchdogReason) {
+                pendingTerminalResult = applyWatchdogTerminalReason(
+                  pendingTerminalResult as unknown as Record<string, unknown>,
+                  watchdogReason,
+                ) as unknown as SDKMessage
+              }
               break
             }
             case 'auto_retry_end': {
@@ -3005,7 +3240,7 @@ export class PiAgentAdapter implements AgentProviderAdapter {
         // 手动压缩：走 pi 原生 session.compact()，而非把 /compact 当普通 prompt 发给模型。
         // compaction_start/end 事件已在上面的 subscribe 中转成 compacting/compact_boundary system 消息；
         // compact() 不发 agent_end，故这里补一个合成 result 消息收束本轮（供 orchestrator 结束消费循环）。
-        session.compact()
+        session.compact(input.contextPolicy?.kind === 'review' ? PI_REVIEW_COMPACTION_INSTRUCTIONS : undefined)
           .then(() => {
             queue.push({
               type: 'result',
@@ -3045,6 +3280,7 @@ export class PiAgentAdapter implements AgentProviderAdapter {
           .finally(cleanupActiveSession)
       } else {
         const runCompactionAwareChain = async (): Promise<void> => {
+          let pendingReviewImages = toPiPromptImages(input.images)
           let continuationPrompt: string | undefined
           do {
             await runPiPromptChain(
@@ -3052,7 +3288,15 @@ export class PiAgentAdapter implements AgentProviderAdapter {
               active,
               {
                 // 受管 Skill 已在 prepareInitialPrompt 处理，禁止 SDK 按文本再展开一次。
-                prompt: (prompt) => session.prompt(prompt, { source: 'rpc', expandPromptTemplates: false }),
+                prompt: (prompt) => {
+                  const images = pendingReviewImages
+                  pendingReviewImages = []
+                  return session.prompt(prompt, {
+                    source: 'rpc',
+                    expandPromptTemplates: false,
+                    ...(images.length > 0 ? { images } : {}),
+                  } as never)
+                },
                 prepareInitialPrompt: (prompt) => preparePromptWithPromaSkills(resourceLoader, prompt, input.skillMentions),
                 shouldStopBeforeNextTurn: () => runtimeGuard.shouldStopBeforeNextTurn(),
                 rejectPendingInterruptPrompts: (error) => rejectPendingInterruptPrompts(active, error),
@@ -3065,7 +3309,11 @@ export class PiAgentAdapter implements AgentProviderAdapter {
             if (!compactContextRequested) break
             try {
               // 模型主动请求压缩：本 turn 落定后执行 session.compact()，再按需续跑原任务。
-              await compactCurrentSessionAfterTurn(session, (message) => queue.push(message))
+              await compactCurrentSessionAfterTurn(
+                session,
+                (message) => queue.push(message),
+                input.contextPolicy?.kind === 'review' ? PI_REVIEW_COMPACTION_INSTRUCTIONS : undefined,
+              )
             } catch (error) {
               // 用户在压缩期间停止时，Pi 会取消 summarization；这是正常中止而不是运行错误。
               if (active.abortRequested) return
@@ -3080,7 +3328,10 @@ export class PiAgentAdapter implements AgentProviderAdapter {
             })
             if (continuation.shouldContinue) {
               automaticCompactionContinuations += 1
-              continuationPrompt = appendOutputFormatInstruction(continuation.prompt, input.outputFormat)
+              continuationPrompt = appendOutputFormatInstruction(
+                input.contextPolicy?.kind === 'review' ? PI_REVIEW_COMPACTION_CONTINUATION_PROMPT : continuation.prompt,
+                input.outputFormat,
+              )
               // 当前终态仅表示为执行压缩而结束的内部 loop，不应让上层把原任务视为完成。
               pendingTerminalResult = undefined
             } else {
@@ -3101,6 +3352,7 @@ export class PiAgentAdapter implements AgentProviderAdapter {
               session,
               contextWindow: model.contextWindow ?? DEFAULT_CONTEXT_WINDOW,
               reserveTokens: autoCompactionReserveTokens,
+              customInstructions: input.contextPolicy?.kind === 'review' ? PI_REVIEW_COMPACTION_INSTRUCTIONS : undefined,
             })
             // 若 agent_end 已把终态 result 存入 pendingTerminalResult（等待 overflow 压缩），
             // 在 prompt 链最终落定后必须 flush 出来，否则上层会因本轮无 result 而误判。
@@ -3113,12 +3365,17 @@ export class PiAgentAdapter implements AgentProviderAdapter {
             persistPiEntryBindings()
             queue.close()
           })
-          .catch((error) => queue.fail(error))
+          .catch((error) => {
+            // 看门狗命中时底层只会留下「Request was aborted」，必须换成可诊断原因。
+            const watchdogReason = reviewWatchdog?.firedReason()
+            queue.fail(watchdogReason ? new Error(watchdogReason) : error)
+          })
           .finally(cleanupActiveSession)
       }
     } catch (error) {
       rejectActiveReady(active, error)
-      queue.fail(error)
+      const watchdogReason = reviewWatchdog?.firedReason()
+      queue.fail(watchdogReason ? new Error(watchdogReason) : error)
     }
 
     try {

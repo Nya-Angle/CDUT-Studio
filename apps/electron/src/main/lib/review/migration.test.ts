@@ -25,6 +25,7 @@ describe('V1→V2 迁移（M1）', () => {
     expect(result.migrated).toBeTrue()
     const v2 = getCaseV2(v1.id)!
     expect(v2.templateId).toBe('comprehensive-assessment-v2')
+    expect(v2.templateVersion).toBe(getTemplateStored('comprehensive-assessment-v2')!.version)
     expect(v2.subjects.length).toBe(v1.items.length)
     expect(v2.subjects[0]!.fields.declaredScore!.kind).toBe('number')
     expect(v2.documents.length).toBe(v1.documents.length)

@@ -1,0 +1,10 @@
+{
+  "applicationSha": "ef9074e367d2e7fda5955d8b0d6d9a4812836a6d",
+  "results": [
+    {
+      "id": "SUPPLEMENT-SETUP",
+      "status": "FAIL",
+      "error": "Error: Actual enabled button missing: 开始审核"
+    }
+  ]
+}

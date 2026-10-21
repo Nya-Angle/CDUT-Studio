@@ -126,18 +126,39 @@
 
 ---
 
-### 3. 📑 材料审核：工业级“三栏同屏”审校工作台
+### 3. 📑 材料审核：案卷式审核工作台
 
-针对学工部、班级事务、社团报销、奖助学金申请等繁重审核场景设计。彻底终结“人工肉眼找茬”时代。
+面向奖助评审、综测成果、班级事务和报销材料等场景。每次审核以一个案卷组织模板、分项、规则和多份材料，由项目 Pi Agent 执行通用推理，审核专区按案卷提供受限的文档能力。
 
+```
+┌───────────────────────┬───────────────────────┬───────────────────────┐
+│  📌 左栏：审核标准依据   │  📄 中栏：送审材料文件   │ ✅ 右栏：AI 审核研判报告 │
+├───────────────────────┼───────────────────────┼───────────────────────┤
+│ • 可编辑的审核模板与规则 │ • PDF/Office/表格等材料 │ • 检查状态与逐项说明     │
+│ • 可单独上传规则材料     │ • 按需读取文本/表格块   │ • 引用位置与待办         │
+│ • 覆盖多个审核分项       │ • 需要时核验指定图像页 │ • 能力调用与模型用量     │
+└───────────────────────┴───────────────────────┴───────────────────────┘
+```
 
-| 📌 左栏：审核标准依据 | 📄 中栏：送审材料文件 | ✅ 右栏：AI 审核研判报告 |
-| :--- | :--- | :--- |
-| • 预置成理公开规范规程<br>&nbsp;&nbsp;(如评奖学金积分细则)<br>• 支持用户自定义上传 | • 拖拽上传申报文档<br>• 支持 PDF/DOCX/表格<br>• 自动 OCR 与版面还原 | • 🔴 格式不符：缺少抬头<br>• 🟡 证明缺失：奖项无佐证<br>• 🟢 结论：初审通过(94分) |
+* **材料能力按需调用**：Agent 可以列出案卷材料、检索文本、按块/工作表/行读取，并针对影响结论的单页调用视觉核验；不把所有正文和图像预先塞进提示。
+* **受控结论**：自动结论需要真实材料块引用；规则材料未完整读取、证据不足或需要负责人确定的事项保留为待确认/待补件。
+* **运行可追踪**：审核结果显示检查状态、引用依据、材料能力调用和可取得的模型 token 用量。默认由审核人员处理结果；启用批次自动化后，也只有满足严格准入条件的案卷才会写入正式决定。
 
+批量审核的当前实现状态、边界、测试记录和接手步骤见[开发者交接文档](docs/design/review-agent/17-current-state-and-handoff.md)。当前功能分支包含批次队列执行/恢复、技术异常定向重试、问题组预览与人工确认后逐案处置，以及需逐批授权和严格门控的自动补件/通过；这不代表接入了学校身份或远端审批。
 
-* **依据库预设**：内置成理公开评奖评优细则、第二课堂认定办法、常用公文格式规范。
-* **高精度差异高亮**：对缺漏公章、年级错位、学分绩点有异议处进行直观标红与批注提示。
+离线演示入口与最终独立验收见[批量审核复验报告](docs/design/review-agent/24-batch-review-independent-final-acceptance.md)：失败提示包含真实失败数量，全部执行失败时待人工分流为零，旧自动处置单独显示为历史回执。
+
+测试仓库现已整合上游 PDF/RAG 更新与审核模块，整合依据和冲突处理见[上游整合记录](docs/design/review-agent/25-upstream-review-integration.md)。当前阶段产物将以 Draft PR 提交上游评审，已完成与未完成部分见[阶段交付状态](docs/design/review-agent/28-review-stage-delivery-status.md)：模块化模板完成初次验证后仍在开发，大批试测模板未纳入提交，富文本完整解析等待上游更新。
+
+直接案卷审核的 Pi 阶段已在测试仓库 Draft PR #21 接入 Main 后台入口：Main 创建内部会话、等待真实受理后持续执行，用户在案卷查看结果与停止；普通聊天列表不显示新内部会话。材料准备与事项识别仍在前台，需等待“审核中，可切换页面”后再离开。已有普通审核聊天不批量迁移。启动恢复会先拒绝旧运行授权，再原子保存中断状态；存储故障时拒止仍生效，不能把未落盘状态当作恢复完成。实施边界见[最小规范](docs/design/review-agent/27-background-review-session-proposal.md)，当前验收、实机复验与外部阻断见[证据台账](docs/design/review-agent/29-background-session-preflight-audit.md)。当前仍为开发阶段，未合并或放行完整生产链路。Main/A0 历史证据见 [34 号](docs/design/review-agent/34-pre-p06-main-a0-acceptance-20261013.md)，P06 原始实机失败与累计审计分别保留在 [37 号](docs/design/review-agent/37-p06-s02-local-acceptance-20261013.md)和 [38 号](docs/design/review-agent/38-p01-p06-s02-cumulative-risk-audit-20261013.md)。
+
+上游后续照片蒙版与空闲态压缩已同步，离线审核入口和批量页面已通过实际 `bun run dev` 回放，结果见[dev 复验记录](docs/design/review-agent/26-upstream-refresh-dev-acceptance.md)。
+
+2026-10-15 同步：本仓库 main 将整合原项目 `c179f257` 与审核分支 `60e805cf` 的完整受控源码。通用 Office 解析使用上游新引擎，文件预览使用只读侧栏；审核材料引用继续保留弹窗入口和专用 DOCX/XLSX 结构提取。同步记录见 [48 号](docs/design/review-agent/48-upstream-cloud-main-integration-20261015.md)。P06 实机结论继续限定于原冻结版本，未签收门禁不因本次 main 同步而升级；后续工作按 [47 号](docs/design/review-agent/47-p06-evidence-driven-followup-plan-20261015.md) 执行。
+
+Pi 工具执行接入 Main 的权限回调，普通会话的自动审批、计划模式和手动拒止采用既有权限服务。审核专用工具继续核验本轮案卷指派，完整兼容矩阵以 29 号验收台账为准。
+
+同一份合成综测案卷的基线与能力库复跑记录见 [审核 Agent 能力库对照](outputs/template-review-suite-2026-10-08/run-results-deepseek-capabilities/COMPARISON.md)。该单案测试显示材料覆盖从 0/4 个被记为已读提高到 4/4、修正了一个错误自动通过；总 token 约下降 6.6%，耗时约增加 1.9 秒。基线把文本材料预注入提示，但没有逐份读取日志，故 0/4 指能力覆盖记账，不表示模型完全没看到文本材料。
 
 ---
 
@@ -155,6 +176,7 @@ flowchart TD
     classDef zone fill:#FFE8C7,stroke:#D97706,stroke-width:2px,color:#5C3A12
     classDef module fill:#FFF8EE,stroke:#E0A458,stroke-width:1px,color:#4A3218
     classDef external fill:#F3F4F6,stroke:#98A2B3,stroke-width:1px,color:#344054
+    classDef brain fill:#EEF6FF,stroke:#4A7DFF,stroke-width:1px,color:#17305C
 
     User(["成理师生用户"]):::user
     Client["CDUT Studio<br/>桌面客户端"]:::client
@@ -168,6 +190,13 @@ flowchart TD
         Review["材料审核<br/>三栏同屏 · 规则<br/>差异批注<br/>报告导出"]:::module
     end
 
+    subgraph CoreEngine ["智能体核心中枢 Agent Core"]
+        Planner["意图规划器"]:::brain
+        RAG["成理专属知识库 RAG<br/>(校史、规章制度等)"]:::brain
+        Tutor["自主带教与思维导图拆解引擎"]:::brain
+        Audit["项目 Pi 审核 Agent + 案卷材料能力"]:::brain
+    end
+
     CAS["统一身份认证<br/>CAS"]:::external
     JW["青果教务<br/>课表 · 成绩<br/>考场 · 空教室"]:::external
     YH["砚湖易办<br/>数字校园"]:::external
@@ -175,6 +204,7 @@ flowchart TD
     User <--> Client
     Client --> Core
     Core --> Zone
+    Core --> Planner
 
     Zone --> Quick
     Zone --> AIClass
@@ -184,6 +214,12 @@ flowchart TD
     Zone --> CAS
     Quick --> JW
     Yanhu --> YH
+
+    Planner --> RAG
+    Planner --> Tutor
+    Planner --> Audit
+    Audit --> Visual["渲染检查结果、依据、待办与能力记录"]
+    Tutor --> Mindmap["动态生成交互脑图"]
 ```
 
 通用底座由 Pi Agent 统一驱动：会话与记忆、多智能体协作、Skills 与工具、定时任务、18 家模型渠道，以及基于文件检查点 / MinGit 的本地沙盒和 `~/.cdutai` 本地存储。
@@ -343,3 +379,5 @@ flowchart TD
   <br/><br/>
   <a href="#cdut-studio-">⬆ 返回顶部</a>
 </div>
+
+P06 实机批量补修：case/group 级检查不依赖非空 subjectIds 判定有效工具结果；无有效提交继续生成 execution-failed。真实验收状态仍见 docs/design/review-agent/29-background-session-preflight-audit.md。

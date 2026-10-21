@@ -1,0 +1,38 @@
+name: Review Baseline CI
+on:
+  pull_request:
+    paths:
+      - 'apps/electron/src/main/lib/review/**'
+      - 'apps/electron/src/main/lib/skin-manager-service.test.ts'
+      - 'apps/electron/src/main/lib/agent-workspace-profile.test.ts'
+      - 'apps/electron/scripts/packaging-guards.test.ts'
+      - 'apps/electron/resources/CHANGELOG.json'
+      - '.github/workflows/review-ci-baseline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  review-baseline:
+    runs-on: ubuntu-latest
+    env:
+      ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: bun install --frozen-lockfile
+      - name: Focused baseline regressions
+        run: |
+          bun test --isolate --timeout 30000 apps/electron/src/main/lib/review/single-case-workspace.e2e.test.ts
+          bun test --isolate --timeout 30000 apps/electron/src/main/lib/review/run-service-v2.artifacts.test.ts
+          bun test --isolate --timeout 30000 apps/electron/src/main/lib/review/boot-check.test.ts
+          bun test --isolate --timeout 30000 apps/electron/src/main/lib/review/fixtures/all-templates-fixture.test.ts
+          bun test --isolate --timeout 30000 apps/electron/scripts/packaging-guards.test.ts
+          bun test --isolate --timeout 30000 apps/electron/src/main/lib/skin-manager-service.test.ts
+          bun test --isolate --timeout 30000 apps/electron/src/main/lib/agent-workspace-profile.test.ts

@@ -1,0 +1,36 @@
+{
+  "id": "dual-fault-held-proof",
+  "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+  "status": "PASS",
+  "assertions": [
+    {
+      "name": "owner 索引和 UUID journal 实际同时失写",
+      "pass": true
+    },
+    {
+      "name": "V2/assignment 失写未冒称已完成",
+      "pass": true
+    },
+    {
+      "name": "当前进程旧工具 fail-closed",
+      "pass": true
+    },
+    {
+      "name": "真实旧 executor 已停止",
+      "pass": true
+    }
+  ],
+  "timeline": [
+    {
+      "at": "2026-10-14T15:06:38.450Z",
+      "event": "real-owner-index-and-journal-EACCES",
+      "indexWriteRejected": true,
+      "journalWriteRejected": true
+    }
+  ],
+  "persisted": {
+    "runStatus": "running",
+    "revokedAtPersisted": false
+  },
+  "finishedAt": "2026-10-14T15:06:38.457Z"
+}

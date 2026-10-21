@@ -1,0 +1,225 @@
+{
+  "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+  "scope": "真实 Electron/Main/Pi，隔离诊断入口，未替换 provider 或 executor",
+  "results": [
+    {
+      "id": "E03",
+      "status": "PASS",
+      "timeline": [
+        {
+          "at": "2026-10-14T16:10:17.251Z",
+          "event": "real-old-ACK",
+          "caseId": "case-1791975357071-nm4od9",
+          "runId": "run-pi-mv8b37b8-hl60u",
+          "runStatus": "running",
+          "phase": "accepted"
+        },
+        {
+          "at": "2026-10-14T16:10:17.266Z",
+          "event": "real-stop-pending-window-hit",
+          "stopEntered": true,
+          "stopPending": true,
+          "actualExecutorFinished": false
+        },
+        {
+          "at": "2026-10-14T16:10:17.278Z",
+          "event": "restart-busy-rejected",
+          "accepted": false,
+          "error": "Error: Error invoking remote method 'review-v2:start-background-pi-review': Error: 该案卷正在启动或停止，请稍后再试"
+        },
+        {
+          "at": "2026-10-14T16:10:17.799Z",
+          "event": "real-stop-released",
+          "caseId": "case-1791975357071-nm4od9",
+          "runId": "run-pi-mv8b37b8-hl60u",
+          "runStatus": "cancelled",
+          "completedAt": "2026-10-14T16:10:17.258Z",
+          "phase": "incomplete"
+        },
+        {
+          "at": "2026-10-14T16:10:17.882Z",
+          "event": "immediate-restart-accepted",
+          "caseId": "case-1791975357071-nm4od9",
+          "runId": "run-pi-mv8b37tj-31oai",
+          "runStatus": "running",
+          "phase": "accepted"
+        }
+      ],
+      "assertions": [
+        {
+          "name": "真实 Main stopAndWait Promise pending",
+          "pass": true
+        },
+        {
+          "name": "Renderer stop Promise 同时 pending",
+          "pass": true
+        },
+        {
+          "name": "pending 窗口 restart 实际 busy 拒绝",
+          "pass": true
+        },
+        {
+          "name": "释放 stop 后旧轮 cancelled",
+          "pass": true
+        },
+        {
+          "name": "释放后立即 restart accepted/running",
+          "pass": true
+        },
+        {
+          "name": "旧指派撤销并拒绝工具",
+          "pass": true
+        },
+        {
+          "name": "新 run 与新指派一致且允许当前工具",
+          "pass": true
+        },
+        {
+          "name": "新轮仍可正常停止",
+          "pass": true
+        }
+      ],
+      "startedAt": "2026-10-14T16:10:16.729Z",
+      "pendingWitness": {
+        "stopEntered": true,
+        "stopPending": true,
+        "actualExecutorFinished": false
+      },
+      "oldAssignment": {
+        "run": "cancelled",
+        "assignmentFound": true,
+        "revoked": true,
+        "toolAllowed": false
+      },
+      "newAssignment": {
+        "run": "running",
+        "assignmentFound": true,
+        "revoked": false,
+        "toolAllowed": true
+      },
+      "cleanup": {
+        "caseId": "case-1791975357071-nm4od9",
+        "runId": "run-pi-mv8b37tj-31oai",
+        "runStatus": "cancelled",
+        "completedAt": "2026-10-14T16:10:18.439Z",
+        "phase": "incomplete"
+      },
+      "finishedAt": "2026-10-14T16:10:18.467Z"
+    },
+    {
+      "id": "E04",
+      "status": "PASS",
+      "timeline": [
+        {
+          "at": "2026-10-14T16:10:18.683Z",
+          "event": "real-old-executor-ACK",
+          "caseId": "case-1791975357078-yre4o9",
+          "runId": "run-pi-mv8b38ep-b76uk",
+          "runStatus": "running",
+          "phase": "accepted"
+        },
+        {
+          "at": "2026-10-14T16:10:18.685Z",
+          "event": "actual-old-outcome-closure-captured",
+          "captured": true,
+          "toolAllowed": true
+        },
+        {
+          "at": "2026-10-14T16:10:19.247Z",
+          "event": "new-executor-ACK-before-late-callback",
+          "caseId": "case-1791975357078-yre4o9",
+          "runId": "run-pi-mv8b38vf-bxi71",
+          "runStatus": "running",
+          "phase": "accepted"
+        },
+        {
+          "at": "2026-10-14T16:10:19.251Z",
+          "event": "late-production-outcome-returned",
+          "callbackExecuted": true,
+          "outcome": "completed",
+          "before": {
+            "caseId": "case-1791975357078-yre4o9",
+            "runId": "run-pi-mv8b38vf-bxi71",
+            "runStatus": "running",
+            "phase": "accepted"
+          },
+          "after": {
+            "caseId": "case-1791975357078-yre4o9",
+            "runId": "run-pi-mv8b38vf-bxi71",
+            "runStatus": "running",
+            "phase": "accepted"
+          }
+        },
+        {
+          "at": "2026-10-14T16:10:19.256Z",
+          "event": "late-production-outcome-returned",
+          "callbackExecuted": true,
+          "outcome": "failed",
+          "before": {
+            "caseId": "case-1791975357078-yre4o9",
+            "runId": "run-pi-mv8b38vf-bxi71",
+            "runStatus": "running",
+            "phase": "accepted"
+          },
+          "after": {
+            "caseId": "case-1791975357078-yre4o9",
+            "runId": "run-pi-mv8b38vf-bxi71",
+            "runStatus": "running",
+            "phase": "accepted"
+          }
+        }
+      ],
+      "assertions": [
+        {
+          "name": "真实 executor 输入的 Main outcome 闭包已捕获",
+          "pass": true
+        },
+        {
+          "name": "迟到回调前新轮 accepted/running",
+          "pass": true
+        },
+        {
+          "name": "旧 completed 回调确实调用且新状态未回退",
+          "pass": true
+        },
+        {
+          "name": "旧 failed 回调确实调用且新状态未回退",
+          "pass": true
+        },
+        {
+          "name": "迟到回调后旧指派和工具仍拒绝",
+          "pass": true
+        },
+        {
+          "name": "新指派仍有效",
+          "pass": true
+        },
+        {
+          "name": "迟到回调后新轮停止仍正常",
+          "pass": true
+        }
+      ],
+      "startedAt": "2026-10-14T16:10:18.468Z",
+      "oldAuthorization": {
+        "run": "cancelled",
+        "assignmentFound": true,
+        "revoked": true,
+        "toolAllowed": false
+      },
+      "newAuthorization": {
+        "run": "running",
+        "assignmentFound": true,
+        "revoked": false,
+        "toolAllowed": true
+      },
+      "cleanup": {
+        "caseId": "case-1791975357078-yre4o9",
+        "runId": "run-pi-mv8b38vf-bxi71",
+        "runStatus": "cancelled",
+        "completedAt": "2026-10-14T16:10:19.828Z",
+        "phase": "incomplete"
+      },
+      "finishedAt": "2026-10-14T16:10:19.855Z"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "09-full-regression",
+  "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014",
+  "argv": [
+    "bun",
+    "test",
+    "--isolate",
+    "--timeout",
+    "30000"
+  ],
+  "startedAt": "2026-10-14T15:34:04.330275+00:00",
+  "environment": {
+    "NO_COLOR": "1",
+    "PROFER_CONFIG_DIR": "/tmp/p06-live-gates-7vm08xeg/config",
+    "PROFER_USER_DATA_DIR": "/tmp/p06-live-gates-7vm08xeg/user-data",
+    "CI": "true"
+  },
+  "finishedAt": "2026-10-14T15:34:29.113581+00:00",
+  "exitCode": 0,
+  "files": {
+    "09-full-regression.stdout.log": {
+      "sha256": "92d10c656fda82c70607586e9f9d05f8a8ea0a76dc706015744e11d234140b91",
+      "bytes": 143014
+    },
+    "09-full-regression.stderr.log": {
+      "sha256": "8681c414ae4c936019201b8e169289d5dcb9a9bb3038f170948fa800b6390dd5",
+      "bytes": 556696
+    }
+  }
+}

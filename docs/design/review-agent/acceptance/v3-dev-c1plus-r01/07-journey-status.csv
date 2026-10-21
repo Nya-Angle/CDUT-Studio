@@ -1,0 +1,8 @@
+journey,description,implementation_state,gate_O,gate_E,gate_L,gate_P,evidence_sha,remaining
+A,First case + 51st user template,NOT_STARTED,NOT_RUN,NOT_RUN,BLOCKED_NO_AUTH,NOT_RUN,,Dev-B publish/Main routing/real Pi/read-model
+B,Material replacement + source validity + re-review,PARTIAL,NOT_RUN,NOT_RUN,BLOCKED_NO_AUTH,NOT_RUN,f552d93b21d98479dc7f58ef040177932d1660db,CurrentValidity CAS added; complete Run1->Run2 and authorized human reconfirm pending
+C,Pi partial + numeric + tool failure,NOT_STARTED,NOT_RUN,NOT_RUN,BLOCKED_NO_AUTH,NOT_RUN,,Dev-A execution and Dev-C Run coverage
+D,Same case dual batches / exact Run,NOT_STARTED,NOT_RUN,NOT_RUN,BLOCKED_NO_AUTH,NOT_RUN,,C3 exact transaction finalizer
+E,Manual rating/recusal/supplement/appeal,NOT_STARTED,NOT_RUN,NOT_RUN,BLOCKED_NO_AUTH,NOT_RUN,,Trusted school Principal + lifecycle
+F,Background Owner / crash / offline / Outbox,NOT_STARTED,NOT_RUN,NOT_RUN,BLOCKED_NO_AUTH,NOT_RUN,,C4 recovery journal and Dev-A owner
+G,Template version change/immutability,PARTIAL,NOT_RUN,NOT_RUN,BLOCKED_NO_AUTH,NOT_RUN,f552d93b21d98479dc7f58ef040177932d1660db,Internal Plan bind+ACK not yet connected to Dev-B signed artifact

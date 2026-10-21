@@ -133,4 +133,47 @@ describe('Pi Harness tool facts', () => {
     const fact = createToolFact(context, { toolName: 'BrowserClick', input: {}, result: 'ok' })!
     expect(fact).toMatchObject({ kind: 'external_or_unknown', outcome: 'unknown' })
   })
+
+  test('审核域工具记为 review_operation 且按结构化结果给出真实 outcome', () => {
+    // 真实案卷读取结果（review_read_documents）：成功批次
+    const read = createToolFact(context, {
+      toolUseId: 'chatcmpl-tool-a46e656b26e652fb',
+      toolName: 'review_read_documents',
+      input: { documents: [{ documentVersionId: 'doc-1-v1' }] },
+      result: [{ type: 'text', text: JSON.stringify({ results: [{ ok: true, documentVersionId: 'doc-1-v1' }], acceptedCount: 1, rejectedCount: 0 }) }],
+    })!
+    expect(read).toMatchObject({
+      kind: 'review_operation',
+      outcome: 'success',
+      fingerprint: 'chatcmpl-tool-a46e656b26e652fb',
+    })
+    expect(read.summary).toBe('review_read_documents success')
+    // 不持久化材料正文，只保留结果摘要哈希
+    expect(JSON.stringify(read)).not.toContain('doc-1-v1')
+
+    // 整批读取被拒（业务失败但不是协议错误）
+    const rejected = createToolFact(context, {
+      toolName: 'review_read_documents',
+      input: {},
+      result: [{ type: 'text', text: JSON.stringify({ results: [{ ok: false, error: '文档不存在' }] }) }],
+    })!
+    expect(rejected).toMatchObject({ kind: 'review_operation', outcome: 'failure' })
+
+    // 提交结果被拒
+    const submitRejected = createToolFact(context, {
+      toolName: 'review_submit_result',
+      input: {},
+      result: JSON.stringify({ ok: false, rejected: [{ ruleId: 'r1' }] }),
+    })!
+    expect(submitRejected).toMatchObject({ kind: 'review_operation', outcome: 'failure' })
+
+    // 协议层错误
+    const protocolError = createToolFact(context, {
+      toolName: 'review_inspect_document_image',
+      input: {},
+      result: 'boom',
+      isError: true,
+    })!
+    expect(protocolError).toMatchObject({ kind: 'review_operation', outcome: 'failure' })
+  })
 })

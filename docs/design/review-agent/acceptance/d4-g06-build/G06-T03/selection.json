@@ -1,0 +1,120 @@
+{
+  "templateId": "g06-t03",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "g06-t03-test-1",
+      "subjectId": "g06-t03-subject-1",
+      "title": "科研成果首次登记与认领审核合成对象1",
+      "businessType": "g06-research-work-claim",
+      "scenario": "br-01",
+      "scenarioSource": {
+        "sourceId": "src-axis-br-01",
+        "sourceVersionId": "g06-t03-v01-925ce8215d138bed",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "br-07",
+          "applicability": "applicable",
+          "sourceId": "src-axis-br-07",
+          "sourceVersionId": "g06-t03-v01-925ce8215d138bed",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br-08",
+          "applicability": "unknown",
+          "sourceId": "src-axis-br-08",
+          "sourceVersionId": "g06-t03-v01-925ce8215d138bed",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "br-09",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-br-09",
+          "sourceVersionId": "g06-t03-v01-925ce8215d138bed",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br-10",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-br-10",
+          "sourceVersionId": "g06-t03-v01-925ce8215d138bed",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br-11",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-br-11",
+          "sourceVersionId": "g06-t03-v01-925ce8215d138bed",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br-12",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-br-12",
+          "sourceVersionId": "g06-t03-v01-925ce8215d138bed",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "g06-t03-test-2",
+      "subjectId": "g06-t03-subject-2",
+      "title": "科研成果首次登记与认领审核合成对象2",
+      "businessType": "g06-research-work-claim",
+      "scenario": "br-02",
+      "scenarioSource": {
+        "sourceId": "src-axis-br-02",
+        "sourceVersionId": "g06-t03-v01-925ce8215d138bed",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "br-07",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-br-07",
+          "sourceVersionId": "g06-t03-v01-925ce8215d138bed",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br-08",
+          "applicability": "applicable",
+          "sourceId": "src-axis-br-08",
+          "sourceVersionId": "g06-t03-v01-925ce8215d138bed",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br-09",
+          "applicability": "unknown",
+          "sourceId": "src-axis-br-09",
+          "sourceVersionId": "g06-t03-v01-925ce8215d138bed",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "br-10",
+          "applicability": "unknown",
+          "sourceId": "src-axis-br-10",
+          "sourceVersionId": "g06-t03-v01-925ce8215d138bed",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "br-11",
+          "applicability": "unknown",
+          "sourceId": "src-axis-br-11",
+          "sourceVersionId": "g06-t03-v01-925ce8215d138bed",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "br-12",
+          "applicability": "unknown",
+          "sourceId": "src-axis-br-12",
+          "sourceVersionId": "g06-t03-v01-925ce8215d138bed",
+          "decidedBy": "undetermined"
+        }
+      ]
+    }
+  ]
+}

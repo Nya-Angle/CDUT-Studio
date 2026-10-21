@@ -12,7 +12,7 @@
  */
 
 import { basename, relative, resolve } from 'node:path'
-import { readdirSync, statSync } from 'node:fs'
+import { readdirSync, realpathSync, statSync } from 'node:fs'
 import type { FileIndexEntry, FileSearchResult } from '@profer/shared'
 
 const IGNORE_DIRS = new Set([
@@ -54,6 +54,8 @@ export interface RemoteWorkspaceFileSearchInput {
   sessionAttachedPaths?: readonly string[]
   /** 工作区级附加目录 / 附加文件。 */
   workspaceAttachedPaths?: readonly string[]
+  /** Same Main-derived review-private fence as the subsequent file-read endpoint. */
+  denyPath?: (path: string) => boolean
 }
 
 function scanDirectory(
@@ -63,8 +65,9 @@ function scanDirectory(
   target: Entry[],
   useAbsolutePath: boolean,
   source: EntrySource,
+  denyPath?: (path: string) => boolean,
 ): void {
-  if (depth > MAX_DEPTH) return
+  if (depth > MAX_DEPTH || isDeniedRemoteSearchPath(dir, denyPath)) return
   // 不预先声明类型（readdirSync 重载在 ReturnType 下会选到 Buffer 变体）。
   const items = (() => {
     try {
@@ -79,6 +82,7 @@ function scanDirectory(
     if (IGNORE_FILES.has(item.name)) continue
     if (item.isDirectory() && IGNORE_DIRS.has(item.name)) continue
     const fullPath = resolve(dir, item.name)
+    if (isDeniedRemoteSearchPath(fullPath, denyPath)) continue
     const isDirectory = item.isDirectory()
     target.push({
       name: item.name,
@@ -87,14 +91,15 @@ function scanDirectory(
       source,
     })
     if (isDirectory) {
-      scanDirectory(fullPath, depth + 1, baseRoot, target, useAbsolutePath, source)
+      scanDirectory(fullPath, depth + 1, baseRoot, target, useAbsolutePath, source, denyPath)
     }
   }
 }
 
 /** 附加路径：目录/文件本身作为一条条目（与桌面端 `addAttachedPath` 等价）。 */
-function addAttachedPath(pathValue: string, target: Entry[], source: EntrySource): void {
+function addAttachedPath(pathValue: string, target: Entry[], source: EntrySource, denyPath?: (path: string) => boolean): void {
   const attachedPath = resolve(pathValue)
+  if (isDeniedRemoteSearchPath(attachedPath, denyPath)) return
   const name = basename(attachedPath)
   if (!name || IGNORE_FILES.has(name)) return
   let stats
@@ -115,7 +120,19 @@ function addAttachedPath(pathValue: string, target: Entry[], source: EntrySource
     type: 'dir',
     source,
   })
-  scanDirectory(attachedPath, 0, attachedPath, target, true, source)
+  scanDirectory(attachedPath, 0, attachedPath, target, true, source, denyPath)
+}
+
+/** Search entries are visible metadata; guard aliases before adding a name, not only at read time. */
+function isDeniedRemoteSearchPath(path: string, denyPath?: (path: string) => boolean): boolean {
+  if (!denyPath) return false
+  if (denyPath(resolve(path))) return true
+  try {
+    return denyPath(realpathSync(path))
+  } catch {
+    // Broken/unreadable paths are not useful search results and should not be listed.
+    return true
+  }
 }
 
 /**
@@ -130,17 +147,17 @@ export function searchRemoteWorkspaceFiles(input: RemoteWorkspaceFileSearchInput
   const workspaceEntries: Entry[] = []
 
   // session 分组：相对路径（与桌面端一致）
-  scanDirectory(resolve(input.sessionRoot), 0, resolve(input.sessionRoot), sessionEntries, false, 'session')
+  scanDirectory(resolve(input.sessionRoot), 0, resolve(input.sessionRoot), sessionEntries, false, 'session', input.denyPath)
   for (const attached of input.sessionAttachedPaths ?? []) {
-    addAttachedPath(attached, sessionEntries, 'session')
+    addAttachedPath(attached, sessionEntries, 'session', input.denyPath)
   }
 
   // workspace 分组：绝对路径（工作区文件目录 + 工作区级附加目录/文件）
   if (input.workspaceRoot) {
-    addAttachedPath(input.workspaceRoot, workspaceEntries, 'workspace')
+    addAttachedPath(input.workspaceRoot, workspaceEntries, 'workspace', input.denyPath)
   }
   for (const attached of input.workspaceAttachedPaths ?? []) {
-    addAttachedPath(attached, workspaceEntries, 'workspace')
+    addAttachedPath(attached, workspaceEntries, 'workspace', input.denyPath)
   }
 
   const limit = Math.max(1, Math.min(

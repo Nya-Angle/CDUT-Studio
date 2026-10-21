@@ -1,0 +1,186 @@
+{
+  "sha": "de1318c5d0d502b66e030e3500e83cc518d389e6",
+  "initial_code_status": "",
+  "profile": "/tmp/review-p01-p06-gates-3il_rpqk",
+  "environment": {
+    "PROFER_CONFIG_DIR": "/tmp/review-p01-p06-gates-3il_rpqk/config",
+    "PROFER_USER_DATA_DIR": "/tmp/review-p01-p06-gates-3il_rpqk/user-data",
+    "CI": "true",
+    "NO_COLOR": "1"
+  },
+  "results": [
+    {
+      "name": "01-typecheck",
+      "sha": "de1318c5d0d502b66e030e3500e83cc518d389e6",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-p06-s02-acceptance-20261013",
+      "argv": [
+        "bun",
+        "run",
+        "typecheck"
+      ],
+      "started_at": "2026-10-13T12:32:33.316379+00:00",
+      "finished_at": "2026-10-13T12:33:07.744893+00:00",
+      "seconds": 34.429,
+      "exit_code": 0,
+      "log": "01-typecheck.log",
+      "log_sha256": "08b3dde79ce03450048d76f9ddb593472031d7976c59f8901305d8ee53af499c"
+    },
+    {
+      "name": "02-p06-focused",
+      "sha": "de1318c5d0d502b66e030e3500e83cc518d389e6",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-p06-s02-acceptance-20261013",
+      "argv": [
+        "bun",
+        "test",
+        "--isolate",
+        "--timeout",
+        "30000",
+        "apps/electron/src/main/lib/review/review-pi-run-bridge.main.test.ts",
+        "apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts",
+        "apps/electron/src/main/lib/review/review-p06-driver-contract.test.ts"
+      ],
+      "started_at": "2026-10-13T12:33:07.762211+00:00",
+      "finished_at": "2026-10-13T12:33:08.131471+00:00",
+      "seconds": 0.369,
+      "exit_code": 0,
+      "log": "02-p06-focused.log",
+      "log_sha256": "49a5709d9441eb0d47d02172b0a1c4b305fc6c0642bd1fb0cfb98c18c2a0779e"
+    },
+    {
+      "name": "03-p01-p06-focused",
+      "sha": "de1318c5d0d502b66e030e3500e83cc518d389e6",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-p06-s02-acceptance-20261013",
+      "argv": [
+        "bun",
+        "test",
+        "--isolate",
+        "--timeout",
+        "30000",
+        "apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts",
+        "apps/electron/src/main/lib/review/review-background-state.p03-main.test.ts",
+        "apps/electron/src/main/lib/review/review-deleted-owner-tombstone.p04.test.ts",
+        "apps/electron/src/main/lib/review/review-desktop-isolation.p04.test.ts",
+        "apps/electron/src/main/lib/review/review-desktop-private-path.p04.test.ts",
+        "apps/electron/src/main/lib/review/review-feishu-owner-boundary.p05.test.ts",
+        "apps/electron/src/main/lib/review/review-ordinary-ipc-pending.p04.test.ts",
+        "apps/electron/src/main/lib/review/review-owned-session.p03.test.ts",
+        "apps/electron/src/main/lib/review/review-p06-driver-contract.test.ts",
+        "apps/electron/src/main/lib/review/review-pi-run-bridge.main.test.ts",
+        "apps/electron/src/main/lib/review/review-relay-multi-viewer-contract.p05.test.ts",
+        "apps/electron/src/main/lib/review/review-remote-indirect-access.p05.test.ts",
+        "apps/electron/src/main/lib/review/review-remote-path-access.p05.test.ts",
+        "apps/electron/src/main/lib/review/review-remote-reconnect-search.p05.test.ts",
+        "apps/electron/src/main/lib/review/review-remote-websocket-relay.p05.test.ts",
+        "apps/electron/src/main/lib/review/review-strict-profile.p02.probe.test.ts",
+        "apps/electron/src/main/lib/review/review-tombstone-index-scale.p04.test.ts",
+        "apps/electron/src/renderer/lib/agent-session-list.test.ts",
+        "apps/electron/src/renderer/lib/agent-tab-access.test.ts",
+        "apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts"
+      ],
+      "started_at": "2026-10-13T12:33:08.146834+00:00",
+      "finished_at": "2026-10-13T12:33:12.712688+00:00",
+      "seconds": 4.566,
+      "exit_code": 0,
+      "log": "03-p01-p06-focused.log",
+      "log_sha256": "1997fe7271c1ce5c00ff24cb3d58be663e1854d637f0982acdc41d41da4a58d4"
+    },
+    {
+      "name": "04-full-tests",
+      "sha": "de1318c5d0d502b66e030e3500e83cc518d389e6",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-p06-s02-acceptance-20261013",
+      "argv": [
+        "bun",
+        "test",
+        "--isolate",
+        "--timeout",
+        "30000"
+      ],
+      "started_at": "2026-10-13T12:33:12.728203+00:00",
+      "finished_at": "2026-10-13T12:33:37.345152+00:00",
+      "seconds": 24.617,
+      "exit_code": 0,
+      "log": "04-full-tests.log",
+      "log_sha256": "a08995e054a81f6649fc8e2a4044cf68d105ea8fc260046a2614652a4b6b388a"
+    },
+    {
+      "name": "05-boundaries",
+      "sha": "de1318c5d0d502b66e030e3500e83cc518d389e6",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-p06-s02-acceptance-20261013",
+      "argv": [
+        "bun",
+        "run",
+        "check:boundaries"
+      ],
+      "started_at": "2026-10-13T12:33:37.361932+00:00",
+      "finished_at": "2026-10-13T12:33:37.512520+00:00",
+      "seconds": 0.151,
+      "exit_code": 0,
+      "log": "05-boundaries.log",
+      "log_sha256": "b35d72b8a64d0646b3540a7f4d894f8b82ffded0c84b28f8b153b87edda0825d"
+    },
+    {
+      "name": "06-skin-contract",
+      "sha": "de1318c5d0d502b66e030e3500e83cc518d389e6",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-p06-s02-acceptance-20261013/apps/electron",
+      "argv": [
+        "bun",
+        "run",
+        "check:skin-contract"
+      ],
+      "started_at": "2026-10-13T12:33:37.527279+00:00",
+      "finished_at": "2026-10-13T12:33:37.578271+00:00",
+      "seconds": 0.051,
+      "exit_code": 0,
+      "log": "06-skin-contract.log",
+      "log_sha256": "31c78fee02004b67eceb5eab5edceb08b05cbe34b09fd65d2f588ec46d6a2a13"
+    },
+    {
+      "name": "07-build-main",
+      "sha": "de1318c5d0d502b66e030e3500e83cc518d389e6",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-p06-s02-acceptance-20261013/apps/electron",
+      "argv": [
+        "bun",
+        "run",
+        "build:main"
+      ],
+      "started_at": "2026-10-13T12:33:37.593550+00:00",
+      "finished_at": "2026-10-13T12:33:38.126869+00:00",
+      "seconds": 0.533,
+      "exit_code": 0,
+      "log": "07-build-main.log",
+      "log_sha256": "82298c61ccd39e9828b8da09b61b11b51232a3763bd4aa89283c080389a5a9b1"
+    },
+    {
+      "name": "08-build-preload",
+      "sha": "de1318c5d0d502b66e030e3500e83cc518d389e6",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-p06-s02-acceptance-20261013/apps/electron",
+      "argv": [
+        "bun",
+        "run",
+        "build:preload"
+      ],
+      "started_at": "2026-10-13T12:33:38.142579+00:00",
+      "finished_at": "2026-10-13T12:33:38.172741+00:00",
+      "seconds": 0.03,
+      "exit_code": 0,
+      "log": "08-build-preload.log",
+      "log_sha256": "d4f5a47f872b5985addec568ec271e09a9a3c9baa251dfdf15a7b70d69a05a27"
+    },
+    {
+      "name": "09-build-renderer",
+      "sha": "de1318c5d0d502b66e030e3500e83cc518d389e6",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-p06-s02-acceptance-20261013/apps/electron",
+      "argv": [
+        "bun",
+        "run",
+        "build:renderer"
+      ],
+      "started_at": "2026-10-13T12:33:38.188179+00:00",
+      "finished_at": "2026-10-13T12:34:42.202923+00:00",
+      "seconds": 64.015,
+      "exit_code": 0,
+      "log": "09-build-renderer.log",
+      "log_sha256": "b5e0443071ef9becb3c421089b113a5e0a5e72794ba8f01aefa674719b9beafd"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "at": "2026-10-14T16:30:45.020801+00:00",
+  "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+  "operation": "SIGKILL only isolated Electron Main; fresh restart retains config/run-dir 0500, original run/journal 0400",
+  "oldMainPid": 1118993
+}

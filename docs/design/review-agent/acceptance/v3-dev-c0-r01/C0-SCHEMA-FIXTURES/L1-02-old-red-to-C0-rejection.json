@@ -1,0 +1,22 @@
+{
+  "testId": "L1-02",
+  "oldStatus": "REPRODUCED_FAIL",
+  "oldProbeType": "Main-handler-harness",
+  "sourcePr": 139,
+  "sourceSha": "db0284879f75ce123b5d83cb6577a3cc7ad057da",
+  "reportSha": "10d499d6d120dcffc3c1c8a90aabac9302a9757f",
+  "oldEvidencePath": "docs/design/review-agent/acceptance/v3-pre-round3-local-verification-r01/03-high-risk-reproduction-evidence/L1-02-actor-and-appeal.json",
+  "channels": [
+    "CREATE_CASE_V2",
+    "UPDATE_FIELDS_V2",
+    "CORRECT_OBSERVATION_V2",
+    "SET_EVIDENCE_LINK_V2"
+  ],
+  "oldObserved": "P06 Main handler harness persisted synthetic renderer school/teacher actor in Receipt in four writes",
+  "newTestFile": "apps/electron/src/main/lib/review/review-c0-ipc.test.ts",
+  "newExpected": "ACTOR_UNTRUSTED before mutation; Receipt count and revision unchanged",
+  "liveElectronRendererAttackProven": false,
+  "newLiveElectronVerificationCompleted": false,
+  "synthetic": true,
+  "noRealSchoolCredential": true
+}

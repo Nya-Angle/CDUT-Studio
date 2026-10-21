@@ -108,7 +108,7 @@ export function resolveChannelAgentBaseUrl(channel: Pick<Channel, 'provider' | '
  *
  * 服务端只负责「有哪些模型」，以下两项属于用户本地决定，不得被同步洗掉：
  * - 模型级 enabled（用户启停）
- * - 模型上的 1M 勾选（context1m）
+ * - 模型上的本地运行参数（context1m / contextWindow / maxTokens）
  */
 export function mergeServerChannelModels(
   serverModels: readonly Partial<ChannelModel>[],
@@ -121,6 +121,8 @@ export function mergeServerChannelModels(
       ...model,
       enabled: localModel ? localModel.enabled : model.enabled !== false,
       ...(localModel?.context1m !== undefined && { context1m: localModel.context1m }),
+      ...(localModel?.contextWindow !== undefined && { contextWindow: localModel.contextWindow }),
+      ...(localModel?.maxTokens !== undefined && { maxTokens: localModel.maxTokens }),
     } as ChannelModel
   })
 }

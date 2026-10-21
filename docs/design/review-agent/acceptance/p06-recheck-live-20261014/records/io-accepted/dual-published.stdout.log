@@ -1,0 +1,1 @@
+{"id":"dual-fault","status":"FAIL","assertions":4,"failed":1,"error":"AssertionError [ERR_ASSERTION]: 故障中当前 Main 工具 fail-closed"}

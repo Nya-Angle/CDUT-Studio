@@ -1,9 +1,0 @@
-{
-  "duplicatedVotes": 2,
-  "missingJudgeBypassedTotal": 4,
-  "nanAccepted": true,
-  "naTotal": 2,
-  "naExpectedWhenExcluded": 4,
-  "emptyBlockTotal": 0,
-  "outboxWrittenBeforePushCompletes": false
-}

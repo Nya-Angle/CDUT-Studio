@@ -1,0 +1,7 @@
+SHA: df0c0d5740d4522c2ea4663c8e8b93a497a70b7f
+CWD: /home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013
+COMMAND: bun run check:boundaries
+START UTC: 2026-10-12T17:51:12.251227+00:00
+
+$ bun scripts/check-boundaries.ts
+check-boundaries: ✅ 无边界违规

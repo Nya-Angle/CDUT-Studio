@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "applicationSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+  "ordinaryVisible": true,
+  "ordinaryMetadataAccessible": true,
+  "ownerAbsent": true,
+  "providerReplies": 1,
+  "markerReturned": true,
+  "scope": "真实普通 IPC/Pi/provider 正例；完整聊天 UI、权限、工具、Claude、批量、Pocket 等尚未签收"
+}

@@ -428,7 +428,13 @@ async function resolvePiModelDefaults(
       ? Math.max(rawCatalogContextWindow, ONE_MILLION_CONTEXT_WINDOW)
       : rawCatalogContextWindow
   // 渠道模型上的 1M 勾选最后统一生效（强开抬到 1M、强关压回保守窗口）。
-  const contextWindow = applyModel1MContextPreference(computedContextWindow, input.context1m)
+  const configuredContextWindow = Number.isFinite(input.contextWindow) && (input.contextWindow ?? 0) > 0
+    ? Math.floor(input.contextWindow!)
+    : undefined
+  const configuredMaxTokens = Number.isFinite(input.maxTokens) && (input.maxTokens ?? 0) > 0
+    ? Math.floor(input.maxTokens!)
+    : undefined
+  const contextWindow = configuredContextWindow ?? applyModel1MContextPreference(computedContextWindow, input.context1m)
   return {
     // 非 catalog 模型不再默认赋为 true，仅当模型名明确命中推理特征时为 true
     reasoning: catalogModel?.reasoning ?? isHeuristicReasoningModel(input.model),
@@ -441,7 +447,7 @@ async function resolvePiModelDefaults(
     input: catalogModel ? [...catalogModel.input] : ['text', 'image'],
     cost: catalogModel ? { ...catalogModel.cost } : { ...ZERO_MODEL_COST },
     contextWindow,
-    maxTokens: isVolcengineGlm5x ? VOLCENGINE_GLM_MAX_TOKENS : (catalogModel?.maxTokens ?? (isGlm53 ? GLM_53_MAX_TOKENS : DEFAULT_MAX_TOKENS)),
+    maxTokens: configuredMaxTokens ?? (isVolcengineGlm5x ? VOLCENGINE_GLM_MAX_TOKENS : (catalogModel?.maxTokens ?? (isGlm53 ? GLM_53_MAX_TOKENS : DEFAULT_MAX_TOKENS))),
   }
 }
 

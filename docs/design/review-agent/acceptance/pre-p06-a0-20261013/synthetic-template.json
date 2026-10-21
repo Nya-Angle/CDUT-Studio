@@ -1,0 +1,44 @@
+{
+  "templateId": "a0-background-synthetic-20261013",
+  "version": 1,
+  "schemaVersion": 2,
+  "name": "A0 合成预算检查",
+  "objectType": "person",
+  "displayName": {
+    "template": "{{title}}"
+  },
+  "fields": [],
+  "sections": [
+    {
+      "id": "all",
+      "name": "内容核验",
+      "order": 0,
+      "required": false,
+      "criteria": [
+        {
+          "id": "budget",
+          "title": "预算文本核验",
+          "requirement": "完整读取申请文本，核对其是否明确写明总预算100元。只核对文字，不判断学校授权。提交检查时必须引用本轮实际读取的原文出处。",
+          "execution": "semantic",
+          "targetScope": "case"
+        }
+      ]
+    }
+  ],
+  "materialSlots": [],
+  "policyVersionIds": [],
+  "policyRefs": [],
+  "stages": [
+    {
+      "id": "review",
+      "name": "本地预审",
+      "kind": "manual-review",
+      "executorRole": "reviewer"
+    }
+  ],
+  "outputs": [],
+  "status": "published",
+  "sourceNote": "A0_SYNTHETIC_ONLY: 合成测试责任，不是校规或行政审批",
+  "createdAt": "2026-10-12T20:35:43.746Z",
+  "publishedAt": "2026-10-12T20:35:43.751Z"
+}

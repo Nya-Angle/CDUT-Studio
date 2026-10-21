@@ -1,0 +1,1 @@
+{"id":"E06-SCAN-PDF","status":"FAIL","assertions":3,"error":"AssertionError [ERR_ASSERTION]: 真实 PDF iframe 导航已完成"}

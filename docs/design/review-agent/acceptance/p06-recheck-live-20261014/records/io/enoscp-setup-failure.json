@@ -1,0 +1,9 @@
+{
+  "id": "enoscp",
+  "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+  "status": "FAIL",
+  "assertions": [],
+  "timeline": [],
+  "error": "Error: 可用真实按钮缺失：CDUT 专区",
+  "finishedAt": "2026-10-14T15:01:53.175Z"
+}

@@ -19,6 +19,8 @@ import {
   CalendarDays,
   GraduationCap,
   LogIn,
+  PanelLeftClose,
+  PanelLeftOpen,
   ShieldCheck,
   Sparkles,
   User,
@@ -37,6 +39,7 @@ import { WindowControlsHost } from '@/components/WindowControlsTemplate'
 import { resolveWindowControlsRightInset } from '@/lib/window-controls-layout'
 import { cdutAccountAtom, cdutSidebarRestoreAtom, cdutSubViewAtom } from '@/atoms/cdut-account-atoms'
 import { sidebarCollapsedAtom } from '@/atoms/tab-atoms'
+import { studyLeftPanelCollapsedAtom } from '@/atoms/study-atoms'
 import { useEnterCdutAiClass } from '@/hooks/useEnterCdutAiClass'
 import { AiClassSessionPickerModal } from './AiClassSessionPickerModal'
 import { MutationConfirmModal } from './MutationConfirmModal'
@@ -58,6 +61,27 @@ const SUB_VIEW_TITLES: Record<Exclude<CdutSubViewId, null>, string> = {
   'ai-class': 'AI 速课堂',
   'yanhu-express': '智联万站',
   'material-review': '材料审核',
+}
+
+/**
+ * 速课堂左栏收起/展开开关：渲染于子页面顶栏校徽右侧，
+ * 与右栏拖拽把手、认知底座徽标完全解耦，避免碰撞。
+ */
+function LeftPanelToggleButton(): React.ReactElement {
+  const [leftCollapsed, setLeftCollapsed] = useAtom(studyLeftPanelCollapsedAtom)
+  const label = leftCollapsed ? '展开课程资料与大纲栏' : '收起课程资料与大纲栏'
+  return (
+    <button
+      type="button"
+      onClick={() => setLeftCollapsed((c) => !c)}
+      className="inline-flex items-center gap-1.5 rounded-lg border border-primary/25 bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary transition-all hover:border-primary/40 hover:bg-primary/20 active:scale-95"
+      title={label}
+      aria-label={label}
+    >
+      {leftCollapsed ? <PanelLeftOpen size={14} /> : <PanelLeftClose size={14} />}
+      <span className="text-[11px]">{leftCollapsed ? '展开向导' : '收起向导'}</span>
+    </button>
+  )
 }
 
 /** 未登录态：专区三大核心能力矩阵展示 */
@@ -162,7 +186,7 @@ export function CdutZoneView(): React.ReactElement {
 
   // 若在子页面中登出/登录态失效，强制退回专区首页并恢复边栏
   React.useEffect(() => {
-    if (!isConnected && activeSubView !== null) {
+    if (!isConnected && activeSubView !== null && activeSubView !== 'material-review') {
       setActiveSubView(null)
       if (sidebarRestore !== null) setSidebarCollapsed(sidebarRestore)
       setSidebarRestore(null)
@@ -308,6 +332,11 @@ export function CdutZoneView(): React.ReactElement {
           <CdutSubViewContainer
             title={SUB_VIEW_TITLES[activeSubView]}
             onClose={handleCloseSubView}
+            leftAction={
+              activeSubView === 'ai-class' ? (
+                <LeftPanelToggleButton />
+              ) : null
+            }
             actions={
               activeSubView === 'ai-class' ? (
                 <button
@@ -417,6 +446,17 @@ export function CdutZoneView(): React.ReactElement {
                     </div>
                   ))}
                 </div>
+
+                {/* 本地候选审核不依赖 CDUT 校园账户；正式校园能力仍受独立登录保护。 */}
+                <Button
+                  type="button"
+                  data-testid="cdut-local-review-entry"
+                  variant="outline"
+                  onClick={() => handleSelectModule('material-review')}
+                  className="w-full justify-center gap-2 border-primary/30 bg-primary/5 text-primary"
+                >
+                  <span>进入本地材料审核（无需校园账号）</span>
+                </Button>
 
                 {/* 本地安全承诺 */}
                 <div className="flex items-center gap-2 text-xs text-muted-foreground/80">

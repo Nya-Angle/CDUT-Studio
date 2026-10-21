@@ -1,16 +1,22 @@
 # 通用审核 Agent 设计文档导航
 
+> **当前开发入口（2026-10-11）：** 批量审核 A/B 与受授权的 C 阶段自动处理已合入测试仓库 main，整合上游后的工程 CI 和离线 dev 已通过。先读 [28 号阶段交付状态](28-review-stage-delivery-status.md)了解上游 Draft PR 范围与保留项，再读[开发者交接](17-current-state-and-handoff.md)和对应验收。模块化模板仍在开发；[27 号后台会话建议](27-background-review-session-proposal.md)仅是方案。下文的历史差距、路线和旧设计不能直接当成当前待办。
+
 初版日期：2026-10-03，初版代码基线：`422aacdc`。补完设计更新：2026-10-04，设计核对基线为 `c6d92732`（已合入协作者 `6a386e4b`）；N1–N7 复查基线为 `c2f4d901`，最新 G01–G13 实施复查基线为 `ddd9b1e3`，包含本次尚未提交的局部修复。本文档组是**目标设计与验收契约**，不是功能已完成声明。
 
-**现在开工先读 [G01–G13 实际复查及下一轮顺序](../../../work/reports/2026-10-04-g-stage-recheck.md) → [05 补完路线](05-completion-roadmap-and-feasibility.md) → [06 用户闭环](06-workflows-and-usability-design.md) → [07 应用与执行设计](07-application-and-execution-design.md)，以 [04 验收契约](04-acceptance-and-evaluation.md) 判断交付。** 01–03 保留早期调研与整体设计；[N1–N7 复查](../../../work/reports/2026-10-04-n-stage-recheck.md) 和 [前轮 UI 验收](../../../work/reports/2026-10-04-ui-functional-acceptance.md) 保留历史记录，当前完成状态以最新复查为准。
+10 月 4 日实施依据为 [G01–G13 实际复查及下一轮顺序](../../../work/reports/2026-10-04-g-stage-recheck.md) → [05 补完路线](05-completion-roadmap-and-feasibility.md) → [06 用户闭环](06-workflows-and-usability-design.md) → [07 应用与执行设计](07-application-and-execution-design.md)，以 [04 验收契约](04-acceptance-and-evaluation.md) 判断交付。01–03 保留早期调研与整体设计；[N1–N7 复查](../../../work/reports/2026-10-04-n-stage-recheck.md) 和 [前轮 UI 验收](../../../work/reports/2026-10-04-ui-functional-acceptance.md) 保留历史记录，当前完成状态以最新复查为准。
+
+**审核工作台的架构收敛方案见 [14 普通 Pi Agent 与简洁工作台](14-pi-native-review-and-simple-workspace-design.md)，但它是 2026-10-09 的设计核对快照，不是当前分支的待办清单。** 批量审核 A/B/C 阶段的当前实现以[交接文档](17-current-state-and-handoff.md)、[16 B 阶段验收](16-batch-review-stage-b-local-acceptance.md)及 [17 C 阶段验收](17-batch-review-stage-c-local-acceptance.md)为准；[13 框架阅读与直接试用](13-single-agent-framework-trial.md)提供单 Agent、材料解析和按需视觉读取的实验依据。
+
+[12 模板实测问题分析与可用性修复](12-template-audit-failure-analysis-and-repair.md)记录基线 `50cc7839` 的问题和功能验收要求。其当时的语义提交、图片与计算缺口不能直接当作当前全量未实现清单；当前已存在工作簿合计/唯一性定义及接线等进展，具体保留项和调整点按 14 的代码核对说明评估。07 等文档保留业务合同，不要求先完成一次大规模架构改造。
 
 ## 结论：距离目标还有多少
 
 10 月 3 日初版按 16 项能力检查，记录为 **2 项基础能力具备、9 项需要补齐、5 项尚缺业务实现**，明细见 [01 调研与差距](01-research-and-gap.md)。这是历史快照，不能换算成当前开发完成百分比。
 
-10 月 4 日核对：三栏预审流程可实际操作，V2 模板/评分/补件等基础服务已存在，但应用命令、持久化闭环、真实执行器和完整角色 UI 尚需补齐。已有运行图、算法和覆盖函数也需要修正，不能只添加按钮。完整本地产品可在现有基座上实现；真实学校身份与回写另依赖校方接口。
+10 月 4 日核对：三栏预审流程可实际操作，V2 模板/评分/补件等基础服务已存在，但应用命令、持久化闭环、真实执行器和完整角色 UI 尚需补齐。**这是历史盘点，不代表当前完整状态**；后续实现按日期记录在本组文档中，当前分支能力见交接页。真实学校身份与回写仍依赖校方接口。
 
-N1–N7 实施后复查曾发现 V2 上传/提交/运行及恢复入口缺失。G01–G13 实施后，案卷恢复、文件登记、补件回复和满足后任务回流已有实测进展；本次修复登记后提交冲突和向导自有规则丢失。V2 真正启动审核、Pi/OCR 实现、发布模板建案、补件不足后再交、评分轮次与离线第二次回复仍未闭环。进度文档的“收口”按最新复查校准，不能把本地缺失的实现归为外部实测条件。
+N1–N7 与 G01–G13 段落记录的是 2026-10-04 至 10-10 的历史复查快照，不是当前分支完整状态。后来补齐的审核运行、补件回流和批次能力可能已覆盖其中缺口；逐项当前状态以[开发者交接](17-current-state-and-handoff.md)及相应阶段验收文档为准，勿把历史缺口直接作为当前待办。
 
 目标还需要补上三个完整层次：
 
@@ -30,6 +36,13 @@ N1–N7 实施后复查曾发现 V2 上传/提交/运行及恢复入口缺失。
 
 | 文档 | 用来决定什么 |
 | --- | --- |
+| [28 阶段交付状态](28-review-stage-delivery-status.md) | 上游 Draft PR 范围、已做/未做、验证限制与最终交付步骤 |
+| [27 后台审核会话建议](27-background-review-session-proposal.md) | 隐藏会话需要改哪些链路、设置放置与复杂度；尚未实现 |
+| [17 审核当前状态与开发者交接](17-current-state-and-handoff.md) | 当前分支、实现边界、已跑验证、已知限制、接手命令与下一步 |
+| [16 B 阶段本地验收记录](16-batch-review-stage-b-local-acceptance.md) | B 阶段范围、人工集中处置场景与 B 阶段验证记录 |
+| [17 C 阶段自动化验收](17-batch-review-stage-c-local-acceptance.md) | 批次自动处理策略、通过/补件门槛、补件回流与定稿场景 |
+| [14 普通 Pi Agent 与简洁工作台](14-pi-native-review-and-simple-workspace-design.md) | 当前代码有哪些能力；正常主会话与最少提交能力如何接入；简洁页面、数据收敛和下一轮功能验收 |
+| [13 框架阅读与直接试用](13-single-agent-framework-trial.md) | Deep Agents / Docling 源码与实际试用结果、适用范围和复跑方法；不把实验能力当成已接入产品 |
 | [01 调研与差距](01-research-and-gap.md) | 现有代码实际做到哪一步；六份本地参考的价值；学生、老师、审核员、评委的具体问题 |
 | [02 产品与模板](02-product-and-templates.md) | 最后用户看到什么、需要做什么；完整功能清单；模板如何不用代码编排 |
 | [03 架构与落地](03-architecture-and-delivery.md) | 数据、状态、执行、复用边界、校方接口、迁移和交付依赖 |
@@ -37,6 +50,7 @@ N1–N7 实施后复查曾发现 V2 上传/提交/运行及恢复入口缺失。
 | [05 补完路线与可行性](05-completion-roadmap-and-feasibility.md) | 最新基础与缺口；N1–N7 依赖顺序、首轮任务、团队边界和可行性 |
 | [06 用户闭环与易用性](06-workflows-and-usability-design.md) | 学生/老师/审核员/评委/组织者的页面、动作、状态、失败路径与操作脚本 |
 | [07 应用层与执行设计](07-application-and-execution-design.md) | 共享契约、命令事务、政策仓库、Pi、检查点、计算覆盖、OCR、离线包和代码落点 |
+| [12 模板实测问题分析与可用性修复](12-template-audit-failure-analysis-and-repair.md) | 10 月 8 日实测缺口、已确认原因与未确定原因、最小修复、用户操作闭环和下一轮功能验收 |
 
 ## 与旧文档的关系
 

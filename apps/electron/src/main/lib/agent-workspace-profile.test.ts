@@ -1,13 +1,9 @@
-import { afterEach, beforeEach, describe, expect, mock, test } from 'bun:test'
+import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 
-mock.module('electron', () => ({
-  app: { getPath: () => '', getName: () => 'profer-test', isPackaged: false },
-  safeStorage: { isEncryptionAvailable: () => false },
-}))
-
+// Electron 统一由 bunfig [test].preload 注册完整替身，不能在本文件用局部 mock.module 覆盖缺失的具名导出。
 const {
   createAgentWorkspace,
   getWorkspaceMemorySummary,

@@ -1,0 +1,83 @@
+(node:1925432) [UNDICI-EHPA] Warning: EnvHttpProxyAgent is experimental, expect them to change at any time.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{
+  "scenario": "flow-full",
+  "ok": true,
+  "result": {
+    "steps": [
+      {
+        "name": "createCase",
+        "ok": true
+      },
+      {
+        "name": "import:evidence.pdf",
+        "ok": true,
+        "parseStatus": "parsed"
+      },
+      {
+        "name": "import:evidence.docx",
+        "ok": true,
+        "parseStatus": "partial"
+      },
+      {
+        "name": "attachD4Plan",
+        "checks": 60,
+        "fingerprint": "71bfc0d6b9faadabc27392f8b0e558a099fd725c10d5e1a631e2cbfaef6ccf3b"
+      },
+      {
+        "name": "startPiReview",
+        "phase": "accepted",
+        "runId": "run-pi-mvh1snzx-bq89c"
+      },
+      {
+        "name": "piReviewOutcome",
+        "phase": "incomplete",
+        "runId": "run-pi-mvh1snzx-bq89c",
+        "elapsedMs": 23319,
+        "error": "模型请求 20 秒无任何数据返回（渠道：AMD Radeon，模型：GLM-5.3-Flash），本轮审核已中止。请检查该渠道连通性，或更换响应更快的模型后重新发起审核。"
+      },
+      {
+        "name": "listRuns",
+        "count": 1,
+        "runs": [
+          {
+            "id": "run-pi-mvh1snzx-bq89c",
+            "status": "failed",
+            "checks": 60
+          }
+        ]
+      },
+      {
+        "name": "getRun",
+        "status": "failed",
+        "checkCount": 60,
+        "observations": 0
+      },
+      {
+        "name": "observations",
+        "count": 0
+      },
+      {
+        "name": "formalDecision",
+        "ok": false,
+        "code": "AGENT_DECISION_DISABLED"
+      },
+      {
+        "name": "manualDisposition",
+        "ok": true,
+        "code": null,
+        "checkId": "check-d2-18ff2f4079f330b58087-case-student-id-student-name",
+        "revision": 4,
+        "dispositionCount": 1
+      },
+      {
+        "name": "exportReport",
+        "file": "/home/miku/Bot/CDUTStudio/cdut-studio-review-agent/work/e2e/config/review-cases/case-9892b931260843b8a4ad436dd492a479/reports/report-mvh1t61f.md",
+        "decision": null
+      }
+    ],
+    "runId": "run-pi-mvh1snzx-bq89c",
+    "caseId": "case-9892b931260843b8a4ad436dd492a479",
+    "pollTimedOut": false
+  }
+}

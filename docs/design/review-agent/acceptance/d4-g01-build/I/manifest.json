@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "domain": "G01",
+  "templateKey": "I",
+  "templateId": "g01-student-identity-correction",
+  "templateVersion": 2,
+  "status": "AUTHOR_CANDIDATE_PENDING_COMMON_RUNTIME",
+  "commonFixedSha": "a7a6a11d4840ad64cfc858c17b35f35180adf063",
+  "source": {
+    "file": "g01_student_identity_complete_template_v1.7.md",
+    "version": "v1.7",
+    "sha256": "52ae0cdc27a16bb46659cd43d3e78632c44d8b5ccc86a18559b263512f51f329",
+    "archivePath": "docs/design/review-agent/business-templates/G01/originals/g01_student_identity_complete_template_v1.7.md"
+  },
+  "migratedFrom": {
+    "authorPrimeCommit": "38277ce925347284d03347cef85ee59c6f30ec26",
+    "r1FixedSha": "94d5ec32b6de1ac0c185b63b4aabfddaa29b1649",
+    "oldA": "e3321add7322fba29169f0faeac9bc66571067e0"
+  },
+  "workspace": "workspace/workspace.json",
+  "coverage": "coverage/ledger-85.json",
+  "sourceCatalog": "source-catalog.json",
+  "sourceBindings": 62,
+  "modules": 23,
+  "authoredScenarios": 13,
+  "oldGold": "UNCHANGED_UNREAD",
+  "onlineModel": "NOT_RUN",
+  "formalApproval": false,
+  "limitations": [
+    "受控注册底账仅合成fixture、不可冒充学籍真值",
+    "政策C01/C02现行性和C03研究生2024版待核",
+    "高级证据Claim图/部门实际流程不能作为自动批准",
+    "A′历史合成结果不可代替COMMON本轮独立实测"
+  ]
+}

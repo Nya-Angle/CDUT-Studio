@@ -249,6 +249,11 @@ export interface AppSettings {
   agentWorkspaceId?: string
   /** 是否已完成 Onboarding 流程 */
   onboardingCompleted?: boolean
+  /** 审核专区：AI 代批开关（08 设计：默认禁止；开启需 UI 风险确认；Agent 不可自行开启） */
+  reviewAgentAutoApproval?: boolean
+  /** AI 代批开启记录（风险确认留痕：时间+确认人） */
+  reviewAgentAutoApprovalGrantedAt?: string
+  reviewAgentAutoApprovalGrantedBy?: string
   /** 已看过的界面蒙层引导（CoachTour）内容版本；低于当前版本时自动重播一次。缺省视为 0 */
   coachTourVersion?: number
   /** 是否跳过了环境检测 */
@@ -400,6 +405,8 @@ export const SETTINGS_IPC_CHANNELS = {
   RENDERER_READY: 'settings:renderer-ready',
   GET: 'settings:get',
   UPDATE: 'settings:update',
+  /** AI 代批开关专用确认通道（08 设计：带风险确认留痕；通用 UPDATE 通道剥离此字段） */
+  SET_REVIEW_AGENT_AUTO_APPROVAL: 'settings:set-review-agent-auto-approval',
   UPDATE_SYNC: 'settings:update-sync',
   GET_SYSTEM_THEME: 'settings:get-system-theme',
   ON_SYSTEM_THEME_CHANGED: 'settings:system-theme-changed',

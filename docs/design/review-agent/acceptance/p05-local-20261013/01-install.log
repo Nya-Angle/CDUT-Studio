@@ -1,0 +1,22 @@
+SHA: df0c0d5740d4522c2ea4663c8e8b93a497a70b7f
+CWD: /home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013
+COMMAND: bun install --frozen-lockfile
+START UTC: 2026-10-12T17:50:29.161475+00:00
+
+bun install v1.4.0 (34cbb9a40)
+Resolving dependencies
+Resolved, downloaded and extracted [2]
+
++ @types/bun@1.4.2
++ @types/dompurify@3.2.0
++ @types/node@20.19.43
++ @types/react@18.3.31
++ @types/react-dom@18.3.7
++ dompurify@3.4.15
++ jszip@3.10.1
++ rcedit@5.0.2
++ typescript@5.9.3
++ jotai@2.20.3
++ source-map@0.7.6
+
+1261 packages installed [2.24s]

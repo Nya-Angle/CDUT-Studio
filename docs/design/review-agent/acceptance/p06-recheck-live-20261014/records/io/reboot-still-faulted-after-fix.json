@@ -1,0 +1,50 @@
+{
+  "id": "reboot-still-faulted",
+  "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+  "status": "PASS",
+  "assertions": [
+    {
+      "name": "重启后旧工具授权仍拒绝",
+      "pass": true
+    },
+    {
+      "name": "重启后旧 Pi binding 不复活",
+      "pass": true
+    }
+  ],
+  "timeline": [
+    {
+      "at": "2026-10-14T15:13:13.241Z",
+      "event": "fresh-electron-main-authorization",
+      "pid": 713599,
+      "runStatus": "running",
+      "toolAllowed": false,
+      "bindingReturned": false,
+      "main": {
+        "caseId": "case-1791975357085-tbbbrx",
+        "runId": "run-pi-mv88r81m-vnhyb",
+        "runStatus": "running",
+        "phase": "preparing"
+      }
+    }
+  ],
+  "realIpcState": {
+    "caseId": "case-1791975357085-tbbbrx",
+    "runId": "run-pi-mv88r81m-vnhyb",
+    "runStatus": "running",
+    "phase": "preparing"
+  },
+  "snapshot": {
+    "pid": 713599,
+    "runStatus": "running",
+    "toolAllowed": false,
+    "bindingReturned": false,
+    "main": {
+      "caseId": "case-1791975357085-tbbbrx",
+      "runId": "run-pi-mv88r81m-vnhyb",
+      "runStatus": "running",
+      "phase": "preparing"
+    }
+  },
+  "finishedAt": "2026-10-14T15:13:13.251Z"
+}

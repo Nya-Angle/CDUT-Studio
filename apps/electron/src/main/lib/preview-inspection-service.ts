@@ -256,7 +256,13 @@ export async function renderAuthorizedPreview(input: PreviewRenderInput): Promis
     sourceUrl = `${directoryUrl}/${encodeURIComponent(basename(input.filePath)).replace(/%2F/gi, '/')}`
   } else if (input.kind === 'pdf') {
     const { preparePdfPreview } = await import('./file-preview-service')
-    const prepared = await preparePdfPreview(input.filePath, [input.filePath])
+    // 单页核验/逐页截图只栅格化目标页：整份文档全量栅格化在 26 页真实 PDF 上实测约 34 秒，
+    // 逐页串行会放大成几十倍等待（历史「材料登记卡住」根因）。整份/概览范围仍按原语义渲染全文档。
+    const prepared = await preparePdfPreview(
+      input.filePath,
+      [input.filePath],
+      input.scope === 'page' && input.page ? { pages: [input.page] } : {},
+    )
     if (!prepared) throw new Error('无法准备 PDF 预览')
     sourceUrl = prepared.tmpHtmlUrl
   } else {

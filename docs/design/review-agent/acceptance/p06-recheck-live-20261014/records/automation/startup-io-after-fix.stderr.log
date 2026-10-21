@@ -1,0 +1,30 @@
+
+apps/electron/src/main/lib/review/review-startup-io-recovery.p06.test.ts:
+[审核V2] 中断运行恢复未持久化，旧授权保持拒止: startup-SESSION_f12ddb66263e/run-pi-mv88wqp3-ds9l9.json EACCES: permission denied, open '/tmp/review-startup-io-5QrmAT/review-cases/startup-SESSION_f12ddb66263e/runs-v2/run-pi-mv88wqp3-ds9l9.json.tmp'
+    path: "/tmp/review-startup-io-5QrmAT/review-cases/startup-SESSION_f12ddb66263e/runs-v2/run-pi-mv88wqp3-ds9l9.json.tmp",
+ syscall: "open",
+   errno: -13,
+    code: "EACCES"
+
+      at saveRunV2 (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/run-store-v2.ts:28:3)
+      at markStaleRunsInterrupted (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/run-store-v2.ts:66:11)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-startup-io-recovery.p06.test.ts:46:14)
+
+(pass) P06 启动恢复 I/O 故障隔离 > 恢复原文件与目录同时不可写时，磁盘仍 running，旧工具与 binding 必须拒绝 [25.39ms]
+(pass) P06 启动恢复 I/O 故障隔离 > 原文件只读但目录可写时，恢复通过原子替换持久 failed，旧授权拒绝 [3.02ms]
+[审核V2] 中断运行恢复未持久化，旧授权保持拒止: startup-SESSION_60a397e61473/run-pi-mv88wqp9-0netq.json EACCES: permission denied, open '/tmp/review-startup-io-5QrmAT/review-cases/startup-SESSION_60a397e61473/runs-v2/run-pi-mv88wqp9-0netq.json.tmp'
+    path: "/tmp/review-startup-io-5QrmAT/review-cases/startup-SESSION_60a397e61473/runs-v2/run-pi-mv88wqp9-0netq.json.tmp",
+ syscall: "open",
+   errno: -13,
+    code: "EACCES"
+
+      at saveRunV2 (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/run-store-v2.ts:28:3)
+      at markStaleRunsInterrupted (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/run-store-v2.ts:66:11)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-startup-io-recovery.p06.test.ts:67:18)
+
+(pass) P06 启动恢复 I/O 故障隔离 > 修复目录写入后可再次持久化 interrupted；新轮次和普通指派仍可用 [2.78ms]
+
+ 3 pass
+ 0 fail
+ 16 expect() calls
+Ran 3 tests across 1 file. [229.00ms]

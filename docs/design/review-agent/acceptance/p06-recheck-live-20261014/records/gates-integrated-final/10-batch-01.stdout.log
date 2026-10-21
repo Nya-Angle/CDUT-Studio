@@ -1,0 +1,35 @@
+bun test v1.4.0 (34cbb9a40)
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-workspace-business-1791996768723
+[审核模板] 已发布: workspace-test@1
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/review-ipc-poc-1791996768872/configuration
+[审核专区] IPC 处理器注册完成
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-template-1791996768885
+[审核模板] 已发布: comprehensive-assessment-v2@3
+[审核模板] 已发布: template-version-history-test@1
+[审核模板] 已发布: document-checklist-v2@1
+[审核模板] 已发布: lab-usage-v2@1
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-batch-1791996768935
+[批次] 重开: b2 → b2-r2（评分复核）
+[政策仓库] 已发布: policy-comprehensive-assessment-demo@1
+[审核模板] 已发布: comprehensive-assessment-v2@2
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-bulk-action-1791996769130
+[审核模板] 已发布: batch-b-test@1
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/test-batch-auto-1791996769175
+[政策仓库] 已发布: auto-policy@1
+[审核模板] 已发布: batch-auto-test@1
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/review-v2-id-poc-1791996769231/configuration
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-agg-1791996769262
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-stage-1791996769274

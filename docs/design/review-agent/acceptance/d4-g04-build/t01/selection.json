@@ -1,0 +1,64 @@
+{
+  "templateId": "d4-g04-t01",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "object-a",
+      "subjectId": "subject-a",
+      "title": "楼宇门禁与特定区域通行授权 合成对象 A",
+      "businessType": "g04-door-action",
+      "scenario": "grant",
+      "scenarioSource": {
+        "sourceId": "src-synthetic",
+        "sourceVersionId": "synthetic-t01-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "batch",
+          "applicability": "applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t01-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "night",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t01-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "object-b",
+      "subjectId": "subject-b",
+      "title": "楼宇门禁与特定区域通行授权 合成对象 B",
+      "businessType": "g04-door-action",
+      "scenario": "revoke",
+      "scenarioSource": {
+        "sourceId": "src-synthetic",
+        "sourceVersionId": "synthetic-t01-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "batch",
+          "applicability": "unknown",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t01-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "night",
+          "applicability": "applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t01-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

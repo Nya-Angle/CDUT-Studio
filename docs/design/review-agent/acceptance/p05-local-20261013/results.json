@@ -1,0 +1,185 @@
+[
+  {
+    "step": "01-install",
+    "command": "bun install --frozen-lockfile",
+    "argv": [
+      "bun",
+      "install",
+      "--frozen-lockfile"
+    ],
+    "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013",
+    "started_at_utc": "2026-10-12T17:50:29.161475+00:00",
+    "finished_at_utc": "2026-10-12T17:50:31.431251+00:00",
+    "duration_seconds": 2.27,
+    "exit_code": 0,
+    "status": "PASS",
+    "log": "01-install.log",
+    "log_sha256": "8eae4a86e0cf5ec8176f8b5e8a03726e6727d572978e89371882306d2c2a745c",
+    "statistics": {}
+  },
+  {
+    "step": "02-p05-focused",
+    "command": "bun test --isolate --timeout 30000 apps/electron/src/main/lib/review/review-feishu-owner-boundary.p05.test.ts apps/electron/src/main/lib/review/review-relay-multi-viewer-contract.p05.test.ts apps/electron/src/main/lib/review/review-remote-indirect-access.p05.test.ts apps/electron/src/main/lib/review/review-remote-path-access.p05.test.ts apps/electron/src/main/lib/review/review-remote-reconnect-search.p05.test.ts apps/electron/src/main/lib/review/review-remote-websocket-relay.p05.test.ts",
+    "argv": [
+      "bun",
+      "test",
+      "--isolate",
+      "--timeout",
+      "30000",
+      "apps/electron/src/main/lib/review/review-feishu-owner-boundary.p05.test.ts",
+      "apps/electron/src/main/lib/review/review-relay-multi-viewer-contract.p05.test.ts",
+      "apps/electron/src/main/lib/review/review-remote-indirect-access.p05.test.ts",
+      "apps/electron/src/main/lib/review/review-remote-path-access.p05.test.ts",
+      "apps/electron/src/main/lib/review/review-remote-reconnect-search.p05.test.ts",
+      "apps/electron/src/main/lib/review/review-remote-websocket-relay.p05.test.ts"
+    ],
+    "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013",
+    "started_at_utc": "2026-10-12T17:50:31.452495+00:00",
+    "finished_at_utc": "2026-10-12T17:50:35.125432+00:00",
+    "duration_seconds": 3.673,
+    "exit_code": 0,
+    "status": "PASS",
+    "log": "02-p05-focused.log",
+    "log_sha256": "64341970c99c3de388bc1dded61f9f834447d2a2f06aafca7f74689800861491",
+    "statistics": {
+      "pass": 43,
+      "fail": 0,
+      "tests": 43,
+      "files": 6
+    }
+  },
+  {
+    "step": "03-typecheck",
+    "command": "bun run typecheck",
+    "argv": [
+      "bun",
+      "run",
+      "typecheck"
+    ],
+    "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013",
+    "started_at_utc": "2026-10-12T17:50:35.126146+00:00",
+    "finished_at_utc": "2026-10-12T17:51:12.250849+00:00",
+    "duration_seconds": 37.125,
+    "exit_code": 0,
+    "status": "PASS",
+    "log": "03-typecheck.log",
+    "log_sha256": "3b0410be12622b2e942d5f69b2a480edd2dc5587462989adea4e259545620cf9",
+    "statistics": {}
+  },
+  {
+    "step": "04-boundaries",
+    "command": "bun run check:boundaries",
+    "argv": [
+      "bun",
+      "run",
+      "check:boundaries"
+    ],
+    "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013",
+    "started_at_utc": "2026-10-12T17:51:12.251227+00:00",
+    "finished_at_utc": "2026-10-12T17:51:12.615944+00:00",
+    "duration_seconds": 0.365,
+    "exit_code": 0,
+    "status": "PASS",
+    "log": "04-boundaries.log",
+    "log_sha256": "290fd36218adad02c1f9e41bf3ec6d131246ed706a5fa97d0477a43da42bc744",
+    "statistics": {}
+  },
+  {
+    "step": "05-skin-contract",
+    "command": "bun run check:skin-contract",
+    "argv": [
+      "bun",
+      "run",
+      "check:skin-contract"
+    ],
+    "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013/apps/electron",
+    "started_at_utc": "2026-10-12T17:51:12.616219+00:00",
+    "finished_at_utc": "2026-10-12T17:51:12.680310+00:00",
+    "duration_seconds": 0.064,
+    "exit_code": 0,
+    "status": "PASS",
+    "log": "05-skin-contract.log",
+    "log_sha256": "e1a38087febdcf024e4c20bff8b6db2eeb2ac24cb6670f17f6b5d06eea2d24bf",
+    "statistics": {}
+  },
+  {
+    "step": "06-build-main",
+    "command": "bun run build:main",
+    "argv": [
+      "bun",
+      "run",
+      "build:main"
+    ],
+    "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013/apps/electron",
+    "started_at_utc": "2026-10-12T17:51:12.680613+00:00",
+    "finished_at_utc": "2026-10-12T17:51:13.352367+00:00",
+    "duration_seconds": 0.672,
+    "exit_code": 0,
+    "status": "PASS",
+    "log": "06-build-main.log",
+    "log_sha256": "79850b3a5a0fdffe4ca73ae3f93446c5ce87740e3758409d51c5e74648a36c17",
+    "statistics": {}
+  },
+  {
+    "step": "07-build-preload",
+    "command": "bun run build:preload",
+    "argv": [
+      "bun",
+      "run",
+      "build:preload"
+    ],
+    "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013/apps/electron",
+    "started_at_utc": "2026-10-12T17:51:13.352671+00:00",
+    "finished_at_utc": "2026-10-12T17:51:13.384620+00:00",
+    "duration_seconds": 0.032,
+    "exit_code": 0,
+    "status": "PASS",
+    "log": "07-build-preload.log",
+    "log_sha256": "37a41d2de68a992976413ea461cd64053706bf31d7e05f51a6af25a5d0554e33",
+    "statistics": {}
+  },
+  {
+    "step": "08-build-renderer",
+    "command": "bun run build:renderer",
+    "argv": [
+      "bun",
+      "run",
+      "build:renderer"
+    ],
+    "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013/apps/electron",
+    "started_at_utc": "2026-10-12T17:51:13.384907+00:00",
+    "finished_at_utc": "2026-10-12T17:52:16.085868+00:00",
+    "duration_seconds": 62.701,
+    "exit_code": 0,
+    "status": "PASS",
+    "log": "08-build-renderer.log",
+    "log_sha256": "67435f6b3f062303bced1d5ab288881c00861691644e5038b23428e55cc89644",
+    "statistics": {}
+  },
+  {
+    "step": "09-full-tests",
+    "command": "bun test --isolate --timeout 30000",
+    "argv": [
+      "bun",
+      "test",
+      "--isolate",
+      "--timeout",
+      "30000"
+    ],
+    "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013",
+    "started_at_utc": "2026-10-12T17:52:16.087694+00:00",
+    "finished_at_utc": "2026-10-12T17:52:41.663771+00:00",
+    "duration_seconds": 25.576,
+    "exit_code": 0,
+    "status": "PASS",
+    "log": "09-full-tests.log",
+    "log_sha256": "c0182f200c5f42c9ebd081302227769a95d85b5a23ed6c61653c88955959e366",
+    "statistics": {
+      "pass": 3830,
+      "skip": 5,
+      "fail": 0,
+      "tests": 3835,
+      "files": 436
+    }
+  }
+]

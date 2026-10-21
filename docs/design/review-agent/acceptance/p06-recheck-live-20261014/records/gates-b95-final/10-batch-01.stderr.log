@@ -1,0 +1,184 @@
+
+packages/shared/src/review/batch-review-triage.test.ts:
+(pass) 批量审核分流只产生候选，不执行正式决定 > 所有检查符合只是可通过候选，须再次经过业务门槛 [0.45ms]
+(pass) 批量审核分流只产生候选，不执行正式决定 > 尚未执行或正在执行，不能根据旧运行误判已通过 [0.05ms]
+(pass) 批量审核分流只产生候选，不执行正式决定 > 已决定或正在补件，不重复自动提交动作 [0.03ms]
+(pass) 批量审核分流只产生候选，不执行正式决定 > 没有有效规则、结果或完整材料读取时不能认定无异常 [0.08ms]
+(pass) 批量审核分流只产生候选，不执行正式决定 > 模板或政策版本不匹配时阻止自动候选 [0.06ms]
+(pass) 批量审核分流只产生候选，不执行正式决定 > 规则检查明确不符合或需要确认，不能自动退回或自动通过 [0.04ms]
+(pass) 批量审核分流只产生候选，不执行正式决定 > 只有明确补件检查时才产生可退回候选 [0.13ms]
+(pass) 批量审核分流只产生候选，不执行正式决定 > 未执行、失败检查与技术故障分离于业务违规 [0.23ms]
+(pass) 批量审核分流只产生候选，不执行正式决定 > 需要人工最终认定的阶段保持人工处理 [0.04ms]
+(pass) 批量审核分流只产生候选，不执行正式决定 > 案卷索引出现未知阶段时按人工处理，不产生自动候选 [0.02ms]
+(pass) 相似问题保守归组 > 同规则、同状态、相同根因合并，影响案卷数去重 [0.54ms]
+(pass) 相似问题保守归组 > 同一条规则但不同原因不盲目合并 [0.48ms]
+(pass) 相似问题保守归组 > 不同规则与状态不盲目合并，同案不同问题可以出现在不同组 [0.08ms]
+(pass) 相似问题保守归组 > 外层模板版本符合但 manifest 版本不符时，技术异常不能同时进入问题组（回归） [0.05ms]
+(pass) 相似问题保守归组 > 输入哈希缺失、检查不完整、材料未读都不能进入问题组 [0.26ms]
+(pass) 相似问题保守归组 > 已形成正式决定或正在补件的运行不产生当前待处理问题组 [0.09ms]
+(pass) 相似问题保守归组 > 未完成或批次版本不匹配的运行不参与当前问题组 [0.05ms]
+(pass) 问题组人工处置草稿不自动写入决定 > 仅当前有效组能生成草稿，每案均携带 runId/inputHash 和检查 ID [0.32ms]
+(pass) 问题组人工处置草稿不自动写入决定 > 同组中仅部分案卷可处理时，不将不合格的案卷计入可执行范围 [0.19ms]
+(pass) 问题组人工处置草稿不自动写入决定 > 不允许用旧输入哈希或无效版本的组构造草稿 [0.06ms]
+
+apps/electron/src/main/lib/review/workspace-business-service-v2.test.ts:
+(pass) 三栏单案的 V2 业务闭环事务 > Given 未处理检查 When 直接决定 Then 阻断；处置后决定持久化为最终业务决定 [10.33ms]
+(pass) 三栏单案的 V2 业务闭环事务 > 人工核实 AI 无法判定项符合时，保存为独立的符合结论而不是 AI 误报 [0.86ms]
+(pass) 三栏单案的 V2 业务闭环事务 > 当前审核有未处理项时仍允许审核员以理由驳回 [0.56ms]
+(pass) 三栏单案的 V2 业务闭环事务 > Given 案卷输入变更 When 处理旧运行 Then 明确拒绝过期处置 [0.65ms]
+(pass) 三栏单案的 V2 业务闭环事务 > 要求补件不让当前审核作废；仍可处理其他待办，但未完成补件时不能通过 [1.49ms]
+(pass) 三栏单案的 V2 业务闭环事务 > 补件回复到达后，旧运行标记为过期并要求重新审核 [1.01ms]
+(pass) 三栏单案的 V2 业务闭环事务 > 事项认定追加历史，并从当前认定派生 partial-pass 与最终分数 [2.83ms]
+
+apps/electron/src/main/lib/review/review-ipc-path.test.ts:
+(pass) 20 号 QA：真实 renderer V2 IPC 路径穿越拒绝 > registerReviewIpc 的 CREATE_CASE_V2、读取及批次创建均拒绝恶意输入，配置目录外不新增文件 [1.71ms]
+
+apps/electron/src/main/lib/review/template-store.test.ts:
+(pass) 审核模板目录（M1） > 模板 ID 支持中文名称并拒绝路径穿越字符 [0.22ms]
+(pass) 审核模板目录（M1） > 旧版本地综测模板读取时补齐申报表/证明材料生命周期默认值 [0.79ms]
+(pass) 审核模板目录（M1） > 内置模板与开源参考范本都能通过结构校验 [0.66ms]
+(pass) 审核模板目录（M1） > 新版综测模板即使尚未预登记事项也会生成整案分项检查 [5.05ms]
+(pass) 审核模板目录（M1） > 必需审核分项没有标准时不能发布模板 [0.64ms]
+(pass) 审核模板目录（M1） > 新草稿版本存在时仍可读取并使用之前的已发布版本 [4.61ms]
+(pass) 审核模板目录（M1） > Given 内置草稿 When ensureBuiltinTemplateDrafts Then 幂等落盘且可发布 [5.72ms]
+(pass) 审核模板目录（M1） > 模板库支持排序、移出与恢复；历史版本仍可读取 [9.84ms]
+(pass) 审核模板目录（M1） > Given 已发布版本 When 停用 Then 状态 deprecated 且历史可读 [0.57ms]
+(pass) 发布检查（02 §5.6） > Given 悬空条件引用 When validate Then error 指出缺失字段 [0.14ms]
+(pass) 发布检查（02 §5.6） > Given 流程重复阶段 When validate Then 报循环/重复 [0.06ms]
+(pass) 发布检查（02 §5.6） > Given 阶段链遗漏终审 When validate Then 阻止发布且内置基金模板链路闭合 [0.13ms]
+(pass) 发布检查（02 §5.6） > Given 下一阶段连成循环 When validate Then 阻止无法终止的流程发布 [0.08ms]
+(pass) 发布检查（02 §5.6） > Given 旧版内置基金草稿 When 启动初始化 Then 保留旧版本并新增闭环草稿 [1.83ms]
+(pass) 发布检查（02 §5.6） > Given 非法量表 When validate Then 报权重/范围错误 [0.08ms]
+(pass) 第七种业务只靠配置创建（D12/K14） > Given 实验室使用申请配置 When validate+publish Then 通过且无学年/申报分字段 [0.65ms]
+
+apps/electron/src/main/lib/review/batch-store.test.ts:
+(pass) 批次状态机（R08） > Given 多个已保存批次 When 查询目录 Then 返回全部批次并按创建时间倒序 [0.86ms]
+(pass) 批次状态机（R08） > Given 案卷尚未处理或失败 When 定稿 Then 拒绝且保留未定稿状态 [1.95ms]
+(pass) 批次状态机（R08） > Given 创建+单案失败+重试 When 操作 Then 案卷级状态独立（坏案不阻塞全批） [0.40ms]
+(pass) 批次状态机（R08） > Given 所有案卷均有正式终态 When 定稿 Then 快照 hash 锁定；再变更被拒；重开=新轮次 [1.89ms]
+(pass) 批次状态机（R08） > Given 队列全部 done 但无任何正式业务决定 When 直接调用底层 finalizeBatch Then 禁止绕过 [0.49ms]
+(pass) 批次状态机（R08） > Given 进入 decided 但最终决定不存在 When 定稿 Then 不把已审完冒充正式决定 [0.59ms]
+(pass) 批次状态机（R08） > Given 正式决定已写入但补件或申诉还未结束 When 定稿 Then 阻止冻结 [1.29ms]
+(pass) 批次状态机（R08） > Given 批次路径使用穿越、绝对路径或分隔符 When 创建/读取/重开 Then 拒绝 [0.88ms]
+(pass) 批次状态机（R08） > Given 有运行中案卷 When 定稿 Then 拒绝 [0.27ms]
+(pass) 批次中断恢复与定向重试（B 切片） > Given 上次进程中断的 running 案卷 When 显式恢复 Then 失败标记等待人工确认，其他状态不变 [0.47ms]
+(pass) 批次中断恢复与定向重试（B 切片） > Given 失败和成功共存 When 选择单个失败案卷重试 Then 只执行选中的失败项 [1.42ms]
+(pass) 批次中断恢复与定向重试（B 切片） > Given done 但检查账本缺失 When 手动重试 Then 允许重新审核技术异常案卷 [0.48ms]
+(pass) 批次中断恢复与定向重试（B 切片） > Given done 且审核记录有效 When 请求重试 Then 不允许重复审核成功案卷 [0.75ms]
+(pass) 批次中断恢复与定向重试（B 切片） > Given 非失败状态或非法案卷 When 批量重试 Then 全部校验通过前不落盘 [0.44ms]
+(pass) 批次中断恢复与定向重试（B 切片） > Given 运行进程仍在执行 When 尝试按崩溃恢复 Then 拒绝中断恢复 [0.77ms]
+(pass) 持久 outbox（R11） > Given 推送成功 When 同 actionId 重放 Then 返回原回执（不重复执行） [0.77ms]
+(pass) 持久 outbox（R11） > Given 端口冲突 When 推送 Then conflict 持久化；重放返回同回执 [0.29ms]
+(pass) 持久 outbox（R11） > Given 同 actionId 不同载荷 When 推送 Then 拒绝 [0.32ms]
+[outbox] 推送未确认（保留原始载荷）: outbox-resume-original warn: 模拟发送后网络断开
+      at push (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/batch-store.test.ts:295:39)
+      at pushViaOutbox (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/batch-store.ts:346:34)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/batch-store.test.ts:302:25)
+
+(pass) Outbox 中断恢复与 WAL（第二轮可靠性收口） > Given 首次推送失败 When 重启扫描 Then 重放持久化的完整原载荷并记录终态回执 [1.18ms]
+(pass) Outbox 中断恢复与 WAL（第二轮可靠性收口） > Given 旧版 pending 只有哈希 When 自动恢复 Then 不得发送占位载荷；需人工核对后原调用方重放 [0.65ms]
+[outbox] 推送未确认（保留原始载荷）: outbox-corrupt-data warn: offline
+      at push (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/batch-store.test.ts:354:80)
+      at pushViaOutbox (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/batch-store.ts:346:34)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/batch-store.test.ts:355:19)
+
+(pass) Outbox 中断恢复与 WAL（第二轮可靠性收口） > Given outbox 持久化数据被篡改 When 恢复 Then 不会将伪造数据发给外部端口 [0.60ms]
+(pass) Outbox 中断恢复与 WAL（第二轮可靠性收口） > Given 校方仅返回 awaiting-receipt When 恢复 Then 保持 pending 并复用原 actionId [0.84ms]
+(pass) Outbox 中断恢复与 WAL（第二轮可靠性收口） > Given 恶意 actionId 和并发调用 When 推送 Then 拒绝路径穿越和双重执行 [0.60ms]
+(pass) 批次队列执行（G06/G11 真实队列） > Given 注入假 runCase When 执行 Then 逐案状态流转且坏案不阻塞 [1.02ms]
+(pass) 批次队列执行（G06/G11 真实队列） > Given 已定稿批次 When 执行 Then 拒绝（重开才能跑） [1.25ms]
+(pass) 批次队列执行（G06/G11 真实队列） > Given 未注入 runCase When 执行 Then 拒绝（不隐式默认执行器） [0.18ms]
+(pass) 批次队列执行（G06/G11 真实队列） > Given 没有执行器 When 启动失败 Then 批次不遗留 running 状态 [0.19ms]
+(pass) 批次队列执行（G06/G11 真实队列） > Given 同一批次已经运行 When 重复点击启动 Then 防止并发双跑 [0.75ms]
+(pass) outbox 发送前持久化（复查 §5.5） > Given 延迟响应的端口 When 推送中 Then pending 已先落盘（中断现场可恢复） [60.70ms]
+
+apps/electron/src/main/lib/review/real-chain-journey.test.ts:
+(pass) 全链路旅程（自检探查） > 1. 建案 → 带槽登记两个真实文件 → 提交（状态+首任务一次落盘） [3.58ms]
+(pass) 全链路旅程（自检探查） > 2. 真实执行器运行：引用校验过滤伪造 observations，规则白名单过滤伪造 checks [6.44ms]
+(pass) 全链路旅程（自检探查） > 3. 退回补件 → 判不足 → 再次回复（修复前被拒）→ 判满足 → 原阶段任务回流 [4.06ms]
+(pass) 全链路旅程（自检探查） > 4. 终审驳回 → 申诉更正 → 投影立即终审生效且 actor=复核人 [2.00ms]
+(pass) 全链路旅程（自检探查） > 5. 评分轮次隔离：同人 R1/R2 均可提交，按轮汇总不混算 [1.21ms]
+
+apps/electron/src/main/lib/review/review-ipc-actor-guard.test.ts:
+(pass) 审核业务命令 IPC 操作者身份边界 > 渲染器不得声明系统、Agent、校方或模拟来源 [0.10ms]
+(pass) 审核业务命令 IPC 操作者身份边界 > 没有经过机构验证的 teacher/admin/student 等角色不得进入 reviewer 审批入口 [0.06ms]
+(pass) 审核业务命令 IPC 操作者身份边界 > 未知或缺失操作者不能作为审批凭据 [0.03ms]
+(pass) 审核业务命令 IPC 操作者身份边界 > 本地 reviewer 也不得由前端自行填写审计身份 [0.03ms]
+
+apps/electron/src/main/lib/review/batch-group-action-service.test.ts:
+(pass) B 阶段：人工集中处置预览与逐案 V2 事务 > 双案可预览并确认问题，结果持久化且同操作重放幂等 [5.76ms]
+(pass) B 阶段：人工集中处置预览与逐案 V2 事务 > 人工选择的范围精确生效，不得私自修改组内其他案卷 [2.10ms]
+(pass) B 阶段：人工集中处置预览与逐案 V2 事务 > 相似文本不代表证据可信：缺失来源的案卷单独排除，另一案照常处理 [2.25ms]
+(pass) B 阶段：人工集中处置预览与逐案 V2 事务 > 预览后案卷变化必须拒绝整次提交，不能沿用旧预览写入 [1.43ms]
+(pass) B 阶段：人工集中处置预览与逐案 V2 事务 > 明确补件必须给补正要素，调用原单案补件事务并记录处置 [1.65ms]
+(pass) B 阶段：人工集中处置预览与逐案 V2 事务 > 已发现明确不符合的案卷不允许靠问题组直接正式通过 [0.91ms]
+(pass) B 阶段：人工集中处置预览与逐案 V2 事务 > 人工解决问题后才允许正式通过，且最终调用既有通过事务 [3.10ms]
+(pass) B 阶段：人工集中处置预览与逐案 V2 事务 > 明确补正缺项时，人工正式退回通过现有业务决定服务写补件 [1.84ms]
+(pass) B 阶段：人工集中处置预览与逐案 V2 事务 > 存在其他角色的未办任务时，不允许 reviewer 代替该角色批量操作 [1.08ms]
+(pass) B 阶段：人工集中处置预览与逐案 V2 事务 > 未确认操作、重复 ID 更改载荷、或非法选择范围均不能写入 [1.87ms]
+
+apps/electron/src/main/lib/review/batch-automation-service.test.ts:
+(pass) C 阶段：显式授权的自动通过与退回 > 默认辅助模式不能自动执行；未确认或缺少全局授权也不允许开自动通过 [3.44ms]
+(pass) C 阶段：显式授权的自动通过与退回 > 授权后自动通过+自动补件使用原 V2 单案事务，重放不会重复生效 [4.62ms]
+(pass) C 阶段：显式授权的自动通过与退回 > 自动补件模式绝不自动通过 [0.83ms]
+(pass) C 阶段：显式授权的自动通过与退回 > 自动通过授权撤销后，已存在的批次也不能再自动通过 [1.22ms]
+(pass) C 阶段：显式授权的自动通过与退回 > 证据缺失、旧输入、人工审批门槛或未确认政策不能冒充自动通过 [1.16ms]
+(pass) C 阶段：显式授权的自动通过与退回 > 补件满足后自动重新入队，重新审核前不沿用旧运行自动批准 [2.90ms]
+(pass) C 阶段：显式授权的自动通过与退回 > AI 提供的证据指针指向不存在的材料时不能自动通过 [1.36ms]
+(pass) C 阶段：显式授权的自动通过与退回 > 审核完成后修改案卷输入，自动处理必须拒绝旧运行 [1.39ms]
+(pass) C 阶段：显式授权的自动通过与退回 > 批次授权被关闭后原 system 身份无法绕过事务门槛审批 [1.19ms]
+(pass) C 阶段：显式授权的自动通过与退回 > 自动审批不接受缺失有效材料的本轮读取记录，即使材料标记为历史已读 [0.97ms]
+(pass) C 阶段：显式授权的自动通过与退回 > 有效规则集有两条但运行重复同一条检查时，不得假称所有规则检查完成 [0.96ms]
+(pass) C 阶段：显式授权的自动通过与退回 > 混合批次逐案分流：符合的通过、可补正的退回、人工问题保留、无证据的阻断 [3.89ms]
+(pass) C 阶段：显式授权的自动通过与退回 > 多个补件请求未全部核验满足，不得提前回流并重复执行旧结果 [2.82ms]
+(pass) C 阶段：显式授权的自动通过与退回 > 完整批次链路：审核队列 → 自动正式通过 → 可审计定稿 → 重启不可重复执行 [4.77ms]
+(pass) C 阶段：显式授权的自动通过与退回 > 已真实形成所有最终业务决定后才允许批次定稿 [1.95ms]
+
+apps/electron/src/main/lib/review/review-storage-id.test.ts:
+(pass) V2 存储路径安全：第三轮 QA 阻断修复 > 所有路径 ID 统一拒绝相对路径、分隔符、空值、编码符和超长值 [0.22ms]
+(pass) V2 存储路径安全：第三轮 QA 阻断修复 > CREATE_CASE_V2 的服务层即使使用发布模板也在访问模板和文件前拒绝非法 caseId [0.30ms]
+(pass) V2 存储路径安全：第三轮 QA 阻断修复 > 案卷聚合读取、写入与命令事务在目录生成前校验 ID 和内容一致性 [0.53ms]
+(pass) V2 存储路径安全：第三轮 QA 阻断修复 > 运行记录与节点产物的所有 ID 在读写路径调用前验证，无幽灵目录 [0.56ms]
+(pass) V2 存储路径安全：第三轮 QA 阻断修复 > Pi 材料目录与报告导出也不能绕过 V2 caseId 路径校验 [19.34ms]
+(pass) V2 存储路径安全：第三轮 QA 阻断修复 > 批次创建逐项核验成员 caseIds，拒绝落盘且不允许未授权重试 [0.25ms]
+(pass) V2 存储路径安全：第三轮 QA 阻断修复 > 合法 ID 可正常完成 V2 聚合、运行记录与产物存取 [0.61ms]
+
+apps/electron/src/main/lib/review/case-store-v2.test.ts:
+(pass) submitCommand（07 §3.3 事务） > Given 正常命令 When 提交 Then revision+1 一次且回执同事务落盘 [0.72ms]
+(pass) submitCommand（07 §3.3 事务） > Given 同 requestId 同载荷重试 When 提交 Then 返回原回执不重复执行（R01） [0.33ms]
+(pass) submitCommand（07 §3.3 事务） > Given 同 requestId 不同载荷 When 提交 Then REQUEST_ID_COLLISION [0.33ms]
+(pass) submitCommand（07 §3.3 事务） > Given 过期 expectedRevision When 提交 Then VERSION_CONFLICT 携当前版且不写数据 [0.17ms]
+(pass) submitCommand（07 §3.3 事务） > Given handler 校验失败 When 提交 Then 拒绝且无部分写入 [0.20ms]
+
+apps/electron/src/main/lib/review/stage-workflow.test.ts:
+(pass) 阶段推进（R07，修正误判 6） > Given 三阶段审核且时钟不前进 When 连续通过 Then 每个阶段任务仍有唯一 ID 并可终审 [1.78ms]
+(pass) 阶段推进（R07，修正误判 6） > Given 初审通过 When 决定 Then 创建终审任务且案卷不 decided [0.63ms]
+(pass) 阶段推进（R07，修正误判 6） > Given 终审阶段通过 When 决定 Then decided 且 finality=final [0.74ms]
+(pass) 阶段推进（R07，修正误判 6） > Given reviewer 尝试代签教师终审 When 提交 Then 拒绝且不写决定 [0.62ms]
+(pass) 阶段推进（R07，修正误判 6） > Given 传入别的模板定义 When 阶段决定 Then 拒绝跨模板与版本伪装 [0.40ms]
+(pass) 阶段推进（R07，修正误判 6） > Given 最终驳回 When 决定 Then decided（不自动待补件） [0.49ms]
+(pass) 阶段推进（R07，修正误判 6） > Given 退回补件 When 决定 Then awaiting-supplement 且补件请求创建 [0.50ms]
+(pass) 阶段推进（R07，修正误判 6） > Given 重复决定同任务 When 再提交 Then INVALID_TRANSITION [0.55ms]
+(pass) 补件多请求门控（06 §5.3） > Given 两个未结束请求 When 只满足其一 Then 不恢复；全部结束才恢复 [1.04ms]
+(pass) 补件回复与任务回流（G04/G05） > Given 退回补件 When 学生回复+判定满足 Then 原阶段任务回流（不是没有任务） [1.13ms]
+(pass) 补件回复与任务回流（G04/G05） > Given 判定不足 When 处理 Then 不恢复阶段也不回流任务 [0.68ms]
+(pass) 补件回复与任务回流（G04/G05） > Given 学生负责的补件 When 教师代回复 Then 拒绝（角色校验） [0.56ms]
+(pass) 角色安全收口（P0） > 学生或非来源阶段审核员不能代替来源审核人判定补件 [0.59ms]
+(pass) 角色安全收口（P0） > 未获得复核教师角色的本地 reviewer 不得自行维持或更改申诉结论 [0.86ms]
+(pass) 申诉更正与最终投影（R07） > Given 申诉更正 When resolve Then 追加关联决定且原决定被投影排除 [0.08ms]
+(pass) 申诉更正与最终投影（R07） > Given 仅阶段决定 When 投影 Then isFinal=false（报告不冒充终审） [0.05ms]
+(pass) 申诉更正与最终投影（R07） > Given 申诉流程 When resolveAppealV2 更正 Then 关联决定追加 [0.60ms]
+(pass) 补件不足后再回复（复查 §5.3） > Given insufficient When 再次回复+判定满足 Then 流程恢复 [1.20ms]
+(pass) 补件不足后再回复（复查 §5.3） > Given satisfied 但另一请求 insufficient When 门控 Then 不恢复（insufficient 计入未满足） [0.91ms]
+(pass) 申诉闭环（复查 §5.3-5） > Given 维持原判 When resolution Then 申诉 upheld 且案卷 decided [1.02ms]
+(pass) 申诉闭环（复查 §5.3-5） > Given 更正 When resolution Then 新决定 actor=复核人 且 finality=final [1.05ms]
+
+apps/electron/src/renderer/components/content-review/batch-ui-feedback.test.ts:
+(pass) 21 号本地 UI QA：反馈语义 > Electron IPC 包装信息不显示给用户，但保留真实业务拒绝原因 [0.16ms]
+(pass) 21 号本地 UI QA：反馈语义 > 补件完成后重新入队只展示本轮待审核，旧自动退回成为历史记录 [1.53ms]
+(pass) 21 号本地 UI QA：反馈语义 > 检查成功和业务批准不同；队列完成提示必须显示失败和待人工数 [0.20ms]
+
+ 143 pass
+ 0 fail
+ 889 expect() calls
+Ran 143 tests across 13 files. [598.00ms]

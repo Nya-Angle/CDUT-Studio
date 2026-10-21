@@ -9,7 +9,7 @@
  * 可正常加载（已实测）；本文件用隔离的 PROFER_CONFIG_DIR 保证不触碰真实用户配置。
  *
  * 覆盖点：
- * - REVIEW_MODEL_PROVIDERS 白名单常量：openai/custom/ollama 在内，anthropic/google/openai-responses 不在（openai-responses 按决策 #27 移出）
+ * - REVIEW_MODEL_PROVIDERS 白名单常量：openai/deepseek/custom/ollama 在内，anthropic/google/openai-responses 不在（openai-responses 按决策 #27 移出）
  * - REVIEW_MODEL_PROVIDER_REJECTED_NOTICE 文案与 chatCompletion 实际 throw 完全一致
  * - 白名单外 provider（anthropic/google）在任何网络调用前即 throw
  * - extractJson：纯 JSON / ```json 围栏（含无语言标记围栏）/ 解说文字包裹的最外层 {} → 解析成功；非 JSON / 空串 → undefined
@@ -49,17 +49,18 @@ function buildChannel(provider: ProviderType): Channel {
 }
 
 describe('模型出口白名单（REVIEW_MODEL_PROVIDERS）', () => {
-  test('Given 白名单常量 When 检查内容 Then 三种允许出口在内、anthropic/google/openai-responses 不在', () => {
-    // 允许：OpenAI 兼容线 + 本地私有线（openai-responses 已移出：网关只实现 chat completions 一条线）
+  test('Given 白名单常量 When 检查内容 Then 四种允许出口在内、anthropic/google/openai-responses 不在', () => {
+    // 允许：OpenAI/DeepSeek 兼容线 + 本地私有线（openai-responses 已移出：网关只实现 chat completions 一条线）
     expect(REVIEW_MODEL_PROVIDERS).toContain('openai')
+    expect(REVIEW_MODEL_PROVIDERS).toContain('deepseek')
     expect(REVIEW_MODEL_PROVIDERS).toContain('custom')
     expect(REVIEW_MODEL_PROVIDERS).toContain('ollama')
     // 拒绝：其他厂商协议与未实现的协议线
     expect(REVIEW_MODEL_PROVIDERS).not.toContain('anthropic')
     expect(REVIEW_MODEL_PROVIDERS).not.toContain('google')
     expect(REVIEW_MODEL_PROVIDERS).not.toContain('openai-responses')
-    // 白名单恰好三种（防误加）
-    expect(REVIEW_MODEL_PROVIDERS).toHaveLength(3)
+    // 白名单恰好四种（防误加）
+    expect(REVIEW_MODEL_PROVIDERS).toHaveLength(4)
   })
 
   test('Given 白名单外 provider When 调用 chatCompletion Then throw 精确等于 REVIEW_MODEL_PROVIDER_REJECTED_NOTICE（且不发网络请求）', async () => {

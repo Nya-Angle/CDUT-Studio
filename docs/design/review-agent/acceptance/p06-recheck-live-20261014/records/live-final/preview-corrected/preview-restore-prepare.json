@@ -1,0 +1,17 @@
+{
+  "id": "E06-PREVIEW-RESTORE-prepare",
+  "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+  "status": "FAIL",
+  "assertions": [
+    {
+      "name": "真实审核 owner 工作区合成文件被普通会话拒止",
+      "pass": true
+    },
+    {
+      "name": "真实扫描 PDF 已打开授权预览 Tab",
+      "pass": true
+    }
+  ],
+  "error": "Error: 真实运行条件未达到：!!document.querySelector(\".react-pdf__Page__canvas\")",
+  "finishedAt": "2026-10-14T16:15:18.051Z"
+}

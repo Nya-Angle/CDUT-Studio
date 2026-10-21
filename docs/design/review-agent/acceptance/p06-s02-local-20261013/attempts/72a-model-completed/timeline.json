@@ -1,0 +1,42 @@
+[
+  {
+    "at": "2026-10-13T13:03:30.499Z",
+    "event": "accepted-first",
+    "caseId": "case-1791896601149-wpxh9j",
+    "runId": "run-pi-mv6oz4xv-7g68p"
+  },
+  {
+    "at": "2026-10-13T13:03:33.446Z",
+    "event": "provider-reply-observed",
+    "caseId": "case-1791896601149-wpxh9j",
+    "runId": "run-pi-mv6oz4xv-7g68p",
+    "assistantReplies": 1,
+    "toolCalls": [
+      "review_read_documents"
+    ]
+  },
+  {
+    "at": "2026-10-13T13:03:33.481Z",
+    "event": "stopped-ledger",
+    "caseId": "case-1791896601149-wpxh9j",
+    "runId": "run-pi-mv6oz4xv-7g68p",
+    "status": "cancelled"
+  },
+  {
+    "at": "2026-10-13T13:03:34.313Z",
+    "event": "accepted-second",
+    "caseId": "case-1791896601149-wpxh9j",
+    "runId": "run-pi-mv6oz865-tskk0",
+    "mode": "update"
+  },
+  {
+    "at": "2026-10-13T13:03:42.592Z",
+    "event": "provider-reply-observed",
+    "caseId": "case-1791896601149-wpxh9j",
+    "runId": "run-pi-mv6oz865-tskk0",
+    "assistantReplies": 1,
+    "toolCalls": [
+      "review_submit_result"
+    ]
+  }
+]

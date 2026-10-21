@@ -1,0 +1,35 @@
+{
+  "name": "19-synchronous-fixed-runtime-build",
+  "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014",
+  "argv": [
+    "bun",
+    "node_modules/esbuild/bin/esbuild",
+    "scripts/qa/review-live-main.ts",
+    "--bundle",
+    "--platform=node",
+    "--format=cjs",
+    "--outfile=apps/electron/dist/live-main.cjs",
+    "--external:electron",
+    "--external:@earendil-works/pi-coding-agent",
+    "--external:@earendil-works/pi-agent-core",
+    "--external:@earendil-works/pi-ai",
+    "--define:__PROFER_BUILD_TARGET__=\"oss\""
+  ],
+  "startedAt": "2026-10-14T15:58:41.712604+00:00",
+  "environment": {
+    "NO_COLOR": "1"
+  },
+  "finishedAt": "2026-10-14T15:58:42.222179+00:00",
+  "exitCode": 0,
+  "files": {
+    "19-synchronous-fixed-runtime-build.stdout.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "19-synchronous-fixed-runtime-build.stderr.log": {
+      "sha256": "75e60688029fb0fd2bbd4b941d0808771d8f10f47748fcdaa4b1df7c75fe428e",
+      "bytes": 447
+    }
+  }
+}

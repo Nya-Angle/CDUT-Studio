@@ -1,0 +1,29 @@
+{
+  "name": "reboot-fault-held",
+  "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014",
+  "argv": [
+    "node",
+    "scripts/qa/review-live-io.mjs",
+    "reboot-still-faulted"
+  ],
+  "startedAt": "2026-10-14T16:18:15.063793+00:00",
+  "environment": {
+    "NO_COLOR": "1",
+    "QA_APPLICATION_SHA": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+    "QA_PROFILE_ROOT": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile",
+    "QA_REPORT_DIR": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/io-final/retry"
+  },
+  "finishedAt": "2026-10-14T16:18:15.169334+00:00",
+  "exitCode": 0,
+  "files": {
+    "reboot-fault-held.stdout.log": {
+      "sha256": "199a80073179dc8199f97b2d7c778a2c845a946474caa05490eb6ac67b8047dc",
+      "bytes": 72
+    },
+    "reboot-fault-held.stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  }
+}

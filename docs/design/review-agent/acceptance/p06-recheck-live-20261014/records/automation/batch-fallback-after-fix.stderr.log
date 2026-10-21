@@ -1,0 +1,10 @@
+
+apps/electron/src/main/lib/review/review-batch-case-fallback.p06.test.ts:
+(pass) P06 live batch semantic outcome with zero subjects > case tool result remains complete without subject IDs [2.41ms]
+(pass) P06 live batch semantic outcome with zero subjects > group tool result remains complete without subject IDs [0.22ms]
+(pass) P06 live batch semantic outcome with zero subjects > unsubmitted case result still fails closed [0.18ms]
+
+ 3 pass
+ 0 fail
+ 6 expect() calls
+Ran 3 tests across 1 file. [89.00ms]

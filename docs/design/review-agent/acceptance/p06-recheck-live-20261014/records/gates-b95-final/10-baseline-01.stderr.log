@@ -1,0 +1,8 @@
+
+apps/electron/src/main/lib/review/single-case-workspace.e2e.test.ts:
+(pass) 普通审核工作台单案完整链路 > 从 V1 建卷到补件与人工认定，额外模板职责未覆盖时拒绝整案通过并持久恢复 [52.08ms]
+
+ 1 pass
+ 0 fail
+ 29 expect() calls
+Ran 1 test across 1 file. [242.00ms]

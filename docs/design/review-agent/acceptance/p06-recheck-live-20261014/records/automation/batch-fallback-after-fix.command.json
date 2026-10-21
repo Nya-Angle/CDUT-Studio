@@ -1,0 +1,29 @@
+{
+  "name": "batch-fallback-after-fix",
+  "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014",
+  "argv": [
+    "bun",
+    "test",
+    "--isolate",
+    "apps/electron/src/main/lib/review/review-batch-case-fallback.p06.test.ts"
+  ],
+  "startedAt": "2026-10-14T16:22:01.090815+00:00",
+  "environment": {
+    "NO_COLOR": "1",
+    "PROFER_CONFIG_DIR": "/tmp/p06-live-batch-fallback-probe-after",
+    "PROFER_USER_DATA_DIR": "/tmp/p06-live-batch-fallback-user-after"
+  },
+  "finishedAt": "2026-10-14T16:22:01.186191+00:00",
+  "exitCode": 0,
+  "files": {
+    "batch-fallback-after-fix.stdout.log": {
+      "sha256": "ce6bbf92d8b413eadcb211bee95ba89b321a757387b33e77c265b5b7577f43b5",
+      "bytes": 101
+    },
+    "batch-fallback-after-fix.stderr.log": {
+      "sha256": "986b87bd9ad28c62aeb4c1a43f75e760bf3d5a9085faf6884f22e199778cd40a",
+      "bytes": 506
+    }
+  }
+}

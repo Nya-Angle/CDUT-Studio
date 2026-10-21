@@ -1,0 +1,63 @@
+{
+  "id": "dual-fault",
+  "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+  "status": "PASS",
+  "assertions": [
+    {
+      "name": "真实 Main 已受理且当前授权有效",
+      "pass": true
+    },
+    {
+      "name": "owner 索引与 UUID journal 写入均拒止",
+      "pass": true
+    },
+    {
+      "name": "双持久状态失写事实保留",
+      "pass": true
+    },
+    {
+      "name": "故障中当前 Main 工具 fail-closed",
+      "pass": true
+    },
+    {
+      "name": "executor 已真正停止",
+      "pass": true
+    }
+  ],
+  "timeline": [
+    {
+      "at": "2026-10-14T16:17:18.446Z",
+      "event": "real-main-accepted",
+      "caseId": "case-1791994637788-3qhd0g",
+      "runId": "run-pi-mv8bc8b4-9ctd9",
+      "runStatus": "running",
+      "phase": "accepted"
+    },
+    {
+      "at": "2026-10-14T16:17:18.451Z",
+      "event": "real-outcome-under-dual-I/O-fault",
+      "callbackExecuted": true
+    },
+    {
+      "at": "2026-10-14T16:17:18.456Z",
+      "event": "actual-owner-index-and-journal-failures",
+      "indexWriteRejected": true,
+      "journalWriteRejected": true
+    },
+    {
+      "at": "2026-10-14T16:17:19.030Z",
+      "event": "actual-executor-inactive-observed"
+    },
+    {
+      "at": "2026-10-14T16:17:19.031Z",
+      "event": "ready-for-real-process-restart-with-fault-held",
+      "runStatus": "running",
+      "revokedAtPersisted": false
+    }
+  ],
+  "persisted": {
+    "runStatus": "running",
+    "revokedAtPersisted": false
+  },
+  "finishedAt": "2026-10-14T16:17:19.031Z"
+}

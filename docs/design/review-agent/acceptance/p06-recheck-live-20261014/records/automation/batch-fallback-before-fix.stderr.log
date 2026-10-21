@@ -1,0 +1,36 @@
+
+apps/electron/src/main/lib/review/review-batch-case-fallback.p06.test.ts:
+4 | 
+5 | describe('P06 live batch semantic outcome with zero subjects', () => {
+6 |   for (const scope of ['case', 'group'] as const) {
+7 |     test(`${scope} tool result remains complete without subject IDs`, async () => {
+8 |       const checks = await execute(scope, true)
+9 |       expect(checks).toHaveLength(1)
+                         ^
+error: expect(received).toHaveLength(expected)
+
+Expected length: 1
+Received length: 2
+
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-batch-case-fallback.p06.test.ts:9:22)
+(fail) P06 live batch semantic outcome with zero subjects > case tool result remains complete without subject IDs [2.50ms]
+4 | 
+5 | describe('P06 live batch semantic outcome with zero subjects', () => {
+6 |   for (const scope of ['case', 'group'] as const) {
+7 |     test(`${scope} tool result remains complete without subject IDs`, async () => {
+8 |       const checks = await execute(scope, true)
+9 |       expect(checks).toHaveLength(1)
+                         ^
+error: expect(received).toHaveLength(expected)
+
+Expected length: 1
+Received length: 2
+
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-batch-case-fallback.p06.test.ts:9:22)
+(fail) P06 live batch semantic outcome with zero subjects > group tool result remains complete without subject IDs [0.23ms]
+(pass) P06 live batch semantic outcome with zero subjects > unsubmitted case result still fails closed [0.14ms]
+
+ 1 pass
+ 2 fail
+ 4 expect() calls
+Ran 3 tests across 1 file. [79.00ms]

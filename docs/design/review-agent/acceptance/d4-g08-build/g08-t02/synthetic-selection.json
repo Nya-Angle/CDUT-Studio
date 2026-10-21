@@ -1,0 +1,120 @@
+{
+  "templateId": "g08-t02",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "lost-item-a",
+      "subjectId": "lost-a",
+      "title": "合成物品甲本人认领",
+      "businessType": "g08-lost-item",
+      "scenario": "self",
+      "scenarioSource": {
+        "sourceId": "controlled-selection",
+        "sourceVersionId": "g08-t02-selection-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "valuable",
+          "applicability": "applicable",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t02-selection-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "dispute",
+          "applicability": "not-applicable",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t02-selection-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "card",
+          "applicability": "unknown",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t02-selection-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "sensitive",
+          "applicability": "not-applicable",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t02-selection-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "venue",
+          "applicability": "unknown",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t02-selection-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "handover",
+          "applicability": "unknown",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t02-selection-v1",
+          "decidedBy": "undetermined"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "lost-item-b",
+      "subjectId": "lost-b",
+      "title": "合成物品乙代领争议",
+      "businessType": "g08-lost-item",
+      "scenario": "proxy",
+      "scenarioSource": {
+        "sourceId": "controlled-selection",
+        "sourceVersionId": "g08-t02-selection-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "valuable",
+          "applicability": "unknown",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t02-selection-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "dispute",
+          "applicability": "applicable",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t02-selection-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "card",
+          "applicability": "not-applicable",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t02-selection-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "sensitive",
+          "applicability": "unknown",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t02-selection-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "venue",
+          "applicability": "unknown",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t02-selection-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "handover",
+          "applicability": "not-applicable",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t02-selection-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

@@ -60,6 +60,19 @@ describe('applyModelDiscoveryResult', () => {
       { id: 'brand-new', name: '新模型', enabled: false, source: 'fetched' },
     ])
   })
+
+  test('Given 用户为模型配置上下文与输出上限 When 刷新模型清单 Then 保留本地 token 参数', () => {
+    const configured: ChannelModel[] = [
+      { id: 'deepseek-flash', name: 'DeepSeek Flash', enabled: true, context1m: false, contextWindow: 400_000, maxTokens: 32_000, source: 'manual' },
+    ]
+    const discovered: ChannelModel[] = [
+      { id: 'deepseek-flash', name: 'DeepSeek Flash', enabled: true },
+    ]
+
+    expect(applyModelDiscoveryResult(configured, result(true, discovered))).toEqual([
+      { id: 'deepseek-flash', name: 'DeepSeek Flash', enabled: true, context1m: false, contextWindow: 400_000, maxTokens: 32_000, source: 'fetched' },
+    ])
+  })
 })
 
 describe('buildModelDiscoveryAttemptKey', () => {

@@ -1,0 +1,5 @@
+bun test v1.4.0 (34cbb9a40)
+[审核模板] 已发布: pi-review-submit-same-turn@1
+[审核模板] 已发布: pi-review-submit-next-turn@1
+[审核模板] 已发布: pi-review-submit-inherit-reads@1
+[审核模板] 已发布: pi-review-submit-reconcile-reads@1

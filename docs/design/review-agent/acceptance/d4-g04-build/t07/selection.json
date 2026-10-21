@@ -1,0 +1,64 @@
+{
+  "templateId": "d4-g04-t07",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "object-a",
+      "subjectId": "subject-a",
+      "title": "校园临时动火作业安全许可 合成对象 A",
+      "businessType": "g04-hot-workpoint",
+      "scenario": "planned",
+      "scenarioSource": {
+        "sourceId": "src-synthetic",
+        "sourceVersionId": "synthetic-t07-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "contractor",
+          "applicability": "applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t07-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "night",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t07-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "object-b",
+      "subjectId": "subject-b",
+      "title": "校园临时动火作业安全许可 合成对象 B",
+      "businessType": "g04-hot-workpoint",
+      "scenario": "emergency",
+      "scenarioSource": {
+        "sourceId": "src-synthetic",
+        "sourceVersionId": "synthetic-t07-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "contractor",
+          "applicability": "unknown",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t07-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "night",
+          "applicability": "applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t07-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

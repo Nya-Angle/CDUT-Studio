@@ -98,6 +98,23 @@ const PROVIDER_SELECT_OPTIONS = PROVIDER_OPTIONS.map((p) => {
   return { value: p, label, icon }
 })
 
+function formatModelTokenLimit(value: number | undefined): string | undefined {
+  if (value === undefined || !Number.isFinite(value) || value <= 0) return undefined
+  return value >= 1_000 && value % 1_000 === 0
+    ? `${value / 1_000}k`
+    : value.toLocaleString()
+}
+
+function modelTokenLimitsLabel(model: ChannelModel): string | undefined {
+  const contextWindow = formatModelTokenLimit(model.contextWindow)
+  const maxTokens = formatModelTokenLimit(model.maxTokens)
+  if (!contextWindow && !maxTokens) return undefined
+  return [
+    contextWindow ? `上下文 ${contextWindow}` : undefined,
+    maxTokens ? `输出 ${maxTokens}` : undefined,
+  ].filter(Boolean).join(' · ')
+}
+
 /** 各供应商的 Chat 端点路径，用于 Base URL 预览 */
 const PROVIDER_CHAT_PATHS: Record<ProviderType, string> = {
   anthropic: '/v1/messages',
@@ -867,10 +884,15 @@ export function ChannelForm({ channel, onSaved, onAgentEligibilityChange, onCanc
                   className="flex items-center gap-2 px-4 py-2.5 group"
                 >
                   <CheckCircle2 size={14} className="text-emerald-500 flex-shrink-0" />
-                  <span className="text-sm text-foreground flex-1">
-                    {model.name}
-                    {model.name !== model.id && (
-                      <span className="text-muted-foreground ml-1">({model.id})</span>
+                  <span className="flex-1 min-w-0">
+                    <span className="block truncate text-sm text-foreground">
+                      {model.name}
+                      {model.name !== model.id && (
+                        <span className="text-muted-foreground ml-1">({model.id})</span>
+                      )}
+                    </span>
+                    {modelTokenLimitsLabel(model) && (
+                      <span className="block text-xs text-muted-foreground">{modelTokenLimitsLabel(model)}</span>
                     )}
                   </span>
                   <Model1MToggle model={model} provider={provider} onToggle={handleToggleModel1M} />
@@ -955,10 +977,15 @@ export function ChannelForm({ channel, onSaved, onAgentEligibilityChange, onCanc
                   onClick={() => handleToggleModel(model.id)}
                 >
                   <Plus size={14} className="text-muted-foreground flex-shrink-0" />
-                  <span className="text-sm text-foreground flex-1">
-                    {model.name}
-                    {model.name !== model.id && (
-                      <span className="text-muted-foreground ml-1">({model.id})</span>
+                  <span className="flex-1 min-w-0">
+                    <span className="block truncate text-sm text-foreground">
+                      {model.name}
+                      {model.name !== model.id && (
+                        <span className="text-muted-foreground ml-1">({model.id})</span>
+                      )}
+                    </span>
+                    {modelTokenLimitsLabel(model) && (
+                      <span className="block text-xs text-muted-foreground">{modelTokenLimitsLabel(model)}</span>
                     )}
                   </span>
                   <Model1MToggle model={model} provider={provider} onToggle={handleToggleModel1M} />

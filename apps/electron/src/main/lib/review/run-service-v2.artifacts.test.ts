@@ -17,7 +17,10 @@ afterAll(() => rmSync(CONFIG_DIR, { recursive: true, force: true }))
 
 const template = (() => {
   ensureBuiltinTemplateDrafts({ getTemplate, saveDraft })
-  return getTemplate('document-checklist-v2', 1)!
+  const base = getTemplate('document-checklist-v2', 1)!
+  // 新目录里的默认文本检查模板只有人工任务阶段。R03 要验证逐个 auto-check 节点
+  // 的产物/失败/续跑，必须显式构造带 auto-check 阶段的合成运行图。
+  return { ...base, stages: [{ id: 'auto-check', name: '合成节点产物验证', kind: 'auto-check' as const, executorRole: 'system' as const }] }
 })()
 const caseV2: ReviewCaseV2 = { id: 'case-art-1', templateId: template.templateId, templateVersion: 1, title: '产物测试', objectType: 'document', caseFields: {}, subjects: [], documents: [], stage: 'submitted', revision: 1, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
 const ALL: NodeKind[] = ['register', 'parse', 'ocr', 'extract', 'bind', 'plan', 'check', 'calculate', 'verify', 'summarize', 'task']

@@ -1,0 +1,119 @@
+{
+  "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+  "scope": "真实 Electron/Main/Pi，隔离诊断入口，未替换 provider 或 executor",
+  "results": [
+    {
+      "id": "E03",
+      "status": "PASS",
+      "timeline": [
+        {
+          "at": "2026-10-14T16:08:45.308Z",
+          "event": "real-old-ACK",
+          "caseId": "case-1791975357071-nm4od9",
+          "runId": "run-pi-mv8b18d7-ctjrf",
+          "runStatus": "running",
+          "phase": "accepted"
+        },
+        {
+          "at": "2026-10-14T16:08:45.323Z",
+          "event": "real-stop-pending-window-hit",
+          "stopEntered": true,
+          "stopPending": true,
+          "actualExecutorFinished": false
+        },
+        {
+          "at": "2026-10-14T16:08:45.331Z",
+          "event": "restart-busy-rejected",
+          "accepted": false,
+          "error": "Error: Error invoking remote method 'review-v2:start-background-pi-review': Error: 该案卷正在启动或停止，请稍后再试"
+        },
+        {
+          "at": "2026-10-14T16:08:46.051Z",
+          "event": "real-stop-released",
+          "caseId": "case-1791975357071-nm4od9",
+          "runId": "run-pi-mv8b18d7-ctjrf",
+          "runStatus": "cancelled",
+          "completedAt": "2026-10-14T16:08:45.316Z",
+          "phase": "incomplete"
+        },
+        {
+          "at": "2026-10-14T16:08:46.149Z",
+          "event": "immediate-restart-accepted",
+          "caseId": "case-1791975357071-nm4od9",
+          "runId": "run-pi-mv8b190z-yiwmw",
+          "runStatus": "running",
+          "phase": "accepted"
+        }
+      ],
+      "assertions": [
+        {
+          "name": "真实 Main stopAndWait Promise pending",
+          "pass": true
+        },
+        {
+          "name": "Renderer stop Promise 同时 pending",
+          "pass": true
+        },
+        {
+          "name": "pending 窗口 restart 实际 busy 拒绝",
+          "pass": true
+        },
+        {
+          "name": "释放 stop 后旧轮 cancelled",
+          "pass": true
+        },
+        {
+          "name": "释放后立即 restart accepted/running",
+          "pass": true
+        },
+        {
+          "name": "旧指派撤销并拒绝工具",
+          "pass": true
+        },
+        {
+          "name": "新 run 与新指派一致且允许当前工具",
+          "pass": true
+        },
+        {
+          "name": "新轮仍可正常停止",
+          "pass": true
+        }
+      ],
+      "startedAt": "2026-10-14T16:08:44.798Z",
+      "pendingWitness": {
+        "stopEntered": true,
+        "stopPending": true,
+        "actualExecutorFinished": false
+      },
+      "oldAssignment": {
+        "run": "cancelled",
+        "assignmentFound": true,
+        "revoked": true,
+        "toolAllowed": false
+      },
+      "newAssignment": {
+        "run": "running",
+        "assignmentFound": true,
+        "revoked": false,
+        "toolAllowed": true
+      },
+      "cleanup": {
+        "caseId": "case-1791975357071-nm4od9",
+        "runId": "run-pi-mv8b190z-yiwmw",
+        "runStatus": "cancelled",
+        "completedAt": "2026-10-14T16:08:46.775Z",
+        "phase": "incomplete"
+      },
+      "finishedAt": "2026-10-14T16:08:46.809Z"
+    },
+    {
+      "id": "E04",
+      "status": "FAIL",
+      "timeline": [],
+      "assertions": [],
+      "startedAt": "2026-10-14T16:08:46.809Z",
+      "error": "Error: Inspected target navigated or closed",
+      "finishedAt": "2026-10-14T16:08:47.033Z"
+    }
+  ]
+}

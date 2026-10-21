@@ -1,0 +1,29 @@
+{
+  "name": "startup-io-after-fix",
+  "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014",
+  "argv": [
+    "bun",
+    "test",
+    "--isolate",
+    "--timeout",
+    "30000",
+    "apps/electron/src/main/lib/review/review-startup-io-recovery.p06.test.ts"
+  ],
+  "startedAt": "2026-10-14T15:09:16.229731+00:00",
+  "environment": {
+    "NO_COLOR": "1"
+  },
+  "finishedAt": "2026-10-14T15:09:16.472389+00:00",
+  "exitCode": 0,
+  "files": {
+    "startup-io-after-fix.stdout.log": {
+      "sha256": "25cd3472a5c42d7e3c0437750171618d78d1d3d18a68721ff8511f2d48d665fb",
+      "bytes": 1252
+    },
+    "startup-io-after-fix.stderr.log": {
+      "sha256": "d6a16af201d0221bfe625e5e79f52ed40313b0e08cd49b428e583f1eec159caa",
+      "bytes": 2479
+    }
+  }
+}

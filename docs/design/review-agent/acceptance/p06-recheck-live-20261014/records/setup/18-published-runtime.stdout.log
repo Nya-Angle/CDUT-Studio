@@ -1,0 +1,25 @@
+@profer/electron dev: [vite]   VITE v6.4.3  ready in 233 ms
+@profer/electron dev: [electron] [app] Debugger listening on ws://127.0.0.1:9230/SESSION_e2807b680d4f
+@profer/electron dev: [electron] [app] DevTools listening on ws://127.0.0.1:9222/devtools/browser/SESSION_8e1e1ce53f83
+@profer/electron dev: [electron] [app] [审核后台] 可信运行回调落盘失败: case=case-1791975357085-tbbbrx, run=run-pi-mv8ab09h-od977, assignment=ASSIGNMENT_07920b99087b Error: EACCES: permission denied, open '/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile/config/review-cases/case-1791975357085-tbbbrx/runs-v2/run-pi-mv8ab09h-od977.json.tmp'
+@profer/electron dev: [electron] [app]   code: 'EACCES',
+@profer/electron dev: [electron] [app] [Agent 编排] 撤销审核指派失败: sessionId=SESSION_883fdba2af07 Error: EACCES: permission denied, open '/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile/config/review-cases/case-1791975357085-tbbbrx/runs-v2/run-pi-mv8ab09h-od977.json.tmp'
+@profer/electron dev: [electron] [app]   code: 'EACCES',
+@profer/electron dev: [electron] [app] [Agent 会话] 写入索引文件失败: Error: EACCES: permission denied, open '/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile/config/agent-sessions.json.tmp'
+@profer/electron dev: [electron] [app]   code: 'EACCES',
+@profer/electron dev: [electron] [app] [Agent 会话] 写入索引文件失败: Error: EACCES: permission denied, open '/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile/config/agent-sessions.json.tmp'
+@profer/electron dev: [electron] [app]   code: 'EACCES',
+@profer/electron dev: [electron] [app] [审核后台] 可信运行回调落盘失败: case=case-1791975357085-tbbbrx, run=run-pi-mv8ab09h-od977, assignment=ASSIGNMENT_07920b99087b Error: EACCES: permission denied, open '/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile/config/review-cases/case-1791975357085-tbbbrx/runs-v2/run-pi-mv8ab09h-od977.json.tmp'
+@profer/electron dev: [electron] [app]   code: 'EACCES',
+@profer/electron dev: [electron] [app] [审核后台] V2 运行状态持久化失败: case=case-1791975357085-tbbbrx, run=run-pi-mv8ab09h-od977, assignment=ASSIGNMENT_07920b99087b Error: EACCES: permission denied, open '/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile/config/review-cases/case-1791975357085-tbbbrx/runs-v2/run-pi-mv8ab09h-od977.json.tmp'
+@profer/electron dev: [electron] [app]   code: 'EACCES',
+@profer/electron dev: [electron] [app] [审核后台] 指派撤销未持久化（已进程内隔离）失败: case=case-1791975357085-tbbbrx, run=run-pi-mv8ab09h-od977, assignment=ASSIGNMENT_07920b99087b Error: EACCES: permission denied, open '/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile/config/review-agent-assignments.json.tmp'
+@profer/electron dev: [electron] [app]   code: 'EACCES',
+@profer/electron dev: [electron] [app]   path: '/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile/config/review-agent-assignments.json.tmp'
+@profer/electron dev: [electron] [app] bunx electron . exited with code 1
+@profer/electron dev: [electron] [preload] bun run watch:preload exited with code SIGTERM
+@profer/electron dev: [electron] [main] bun run watch:main exited with code SIGTERM
+@profer/electron dev: [electron] error: script "dev:electron" exited with code 1
+@profer/electron dev: [electron] bun run dev:electron exited with code 1
+@profer/electron dev: [vite] error: script "dev:vite" exited with code 143
+@profer/electron dev: [vite] bun run dev:vite exited with code SIGTERM

@@ -329,6 +329,9 @@ export function AboutSettings(): React.ReactElement {
 
         {/* 3. Shell 环境卡片（仅 Windows） */}
         <ShellEnvironmentCard />
+
+        {/* 核心研发团队（GitHub Contributors 风格头像画廊） */}
+        <TeamCreditsCard />
       </SettingsSection>
     </div>
   )

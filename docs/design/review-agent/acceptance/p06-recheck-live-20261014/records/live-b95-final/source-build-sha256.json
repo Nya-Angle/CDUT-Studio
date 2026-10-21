@@ -1,0 +1,16 @@
+{
+  "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+  "codeTreeSha": "bfcb5863a4d20c2d2a5c95c0a94a25d94b38cf33",
+  "capturedAt": "2026-10-14T16:40:09.189000+00:00",
+  "sha256": {
+    "apps/electron/src/main/lib/agent-orchestrator.ts": "da124fb068f5b2cb5590044938e93b5101814a161c4384ac5c32237bff26b259",
+    "apps/electron/src/main/lib/review/review-agent-assignment.ts": "75a89169c185242695a766731c4f53507d18709ea33a62cbdf2ffd833fffa404",
+    "apps/electron/src/main/lib/review/pi-case-review-service.ts": "8e28a4ee7ee0d2412542209a27af1faa513500a9a68cecb063528dc0d4e61774",
+    "apps/electron/src/main/lib/review/review-pi-admission.ts": "58763939f76efffe41c14074528b74b1d60cfc83b9140b49fd9f10144304e200",
+    "apps/electron/src/main/lib/review/run-store-v2.ts": "9a2e460502fdf69dbf48cae9a2b69d4f7dde67be6d2fd6082fccccb161126a00",
+    "apps/electron/src/main/lib/review/v2-executor-factory.ts": "14fc43ca20a39dcbb72f11f8cf2a9c73041ea07e2b78ec173e4e2925bf2d58fc",
+    "apps/electron/dist/main.cjs": "57092485ef46d837c8af49685bc656c7e7254a99ce7b5ab960f80326dd03276c",
+    "apps/electron/dist/live-main.cjs": "8bd34f856236d2031c6db63dd4a5df6c593ad6cf9c3c7ffd9e61f63ff2556ab1",
+    "apps/electron/dist/preload.cjs": "ac1e8bc1e9b718ff62b5d5ec175b978d126decddc1cb76af4dd1084d5f73ceed"
+  }
+}

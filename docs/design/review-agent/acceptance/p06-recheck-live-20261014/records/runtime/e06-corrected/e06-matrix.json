@@ -1,0 +1,101 @@
+{
+  "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+  "status": "PARTIAL",
+  "rows": [
+    {
+      "id": "E06-PI-READ-TOOL",
+      "status": "PASS",
+      "assertions": [
+        {
+          "name": "普通 create/list/meta 正常",
+          "pass": true
+        },
+        {
+          "name": "真实模型实际发起 read 工具",
+          "pass": true
+        },
+        {
+          "name": "普通会话工具读取后已释放",
+          "pass": true
+        }
+      ],
+      "startedAt": "2026-10-14T15:24:06.837Z",
+      "toolCalls": [
+        "Read"
+      ],
+      "finishedAt": "2026-10-14T15:24:12.149Z"
+    },
+    {
+      "id": "E06-PI-PERMISSION-DENY-RECOVER",
+      "status": "FAIL",
+      "assertions": [],
+      "startedAt": "2026-10-14T15:24:12.149Z",
+      "error": "Error: 真实运行条件未达到：(async()=>{const p=await window.electronAPI.getPendingRequests();const r=p.permissions.find(r=>r.sessionId===\"SESSION_fdef22948df2\");return r?{requestId:r.requestId",
+      "finishedAt": "2026-10-14T15:25:12.248Z"
+    },
+    {
+      "id": "E06-PI-STOP-IN-FLIGHT",
+      "status": "PASS",
+      "assertions": [
+        {
+          "name": "普通发送实际处于进行中",
+          "pass": true
+        },
+        {
+          "name": "普通停止释放 executor",
+          "pass": true
+        }
+      ],
+      "startedAt": "2026-10-14T15:25:12.249Z",
+      "finishedAt": "2026-10-14T15:25:12.605Z"
+    },
+    {
+      "id": "E06-DESKTOP-TEXT-PREVIEW",
+      "status": "FAIL",
+      "assertions": [
+        {
+          "name": "真实 Main 授权读取与 Renderer 预览 Tab",
+          "pass": true
+        },
+        {
+          "name": "真实 Renderer Shadow DOM 显示合成文件内容",
+          "pass": true
+        }
+      ],
+      "startedAt": "2026-10-14T15:25:12.605Z",
+      "error": "Error: 可用真实按钮缺失：材料审核",
+      "finishedAt": "2026-10-14T15:25:13.180Z"
+    },
+    {
+      "id": "E06-PROVIDER-INVENTORY",
+      "status": "PASS",
+      "providers": [
+        {
+          "provider": "deepseek",
+          "modelCount": 1
+        }
+      ],
+      "scope": "只记录 provider 种类与可用模型数量，不输出渠道 ID/密钥"
+    },
+    {
+      "id": "E06-CLAUDE",
+      "status": "NOT-RUN",
+      "reason": "隔离授权 profile 仅复制已有 Pi 渠道；没有 Claude runtime/provider 的授权测试配置"
+    },
+    {
+      "id": "E06-POCKET-RELAY",
+      "status": "BLOCKED",
+      "reason": "P05-RELAY-ROUTE-01 与 P05-POCKET-FIFO-01 保留；无真实多 viewer/ticket 或独立目标验收权限"
+    },
+    {
+      "id": "E06-WINDOWS-MACOS",
+      "status": "NOT-RUN",
+      "reason": "当前设备为 Linux；需对应平台独立 profile 与原生构建"
+    },
+    {
+      "id": "E06-PDF-OFFICE-RESTORE",
+      "status": "NOT-RUN",
+      "reason": "本次完成文本预览子集；扫描 PDF/Office/多窗口/应用恢复完整矩阵需独立原件回执证据"
+    }
+  ]
+}

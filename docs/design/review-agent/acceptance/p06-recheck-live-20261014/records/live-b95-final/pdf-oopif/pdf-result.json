@@ -1,0 +1,29 @@
+{
+  "id": "E06-SCAN-PDF",
+  "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+  "status": "PASS",
+  "assertions": [
+    {
+      "name": "真实 Main PDF 准备 IPC 返回受控 URL",
+      "pass": true
+    },
+    {
+      "name": "真实 PDF Renderer Tab 已打开",
+      "pass": true
+    },
+    {
+      "name": "真实 PDF iframe 导航已完成",
+      "pass": true
+    },
+    {
+      "name": "真实 PDF 页面已绘制 canvas",
+      "pass": true
+    }
+  ],
+  "canvas": {
+    "width": 600,
+    "height": 800,
+    "rendered": true
+  },
+  "finishedAt": "2026-10-14T16:36:13.929Z"
+}

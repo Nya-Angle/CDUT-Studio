@@ -1,0 +1,54 @@
+{
+  "id": "dual-fault",
+  "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+  "status": "FAIL",
+  "assertions": [
+    {
+      "name": "真实 Main 已受理且当前授权有效",
+      "pass": true
+    },
+    {
+      "name": "owner 索引与 UUID journal 写入均拒止",
+      "pass": true
+    },
+    {
+      "name": "双持久状态失写事实保留",
+      "pass": true
+    },
+    {
+      "name": "故障中当前 Main 工具 fail-closed",
+      "pass": true
+    },
+    {
+      "name": "executor 已真正停止",
+      "pass": false
+    }
+  ],
+  "timeline": [
+    {
+      "at": "2026-10-14T16:15:48.040Z",
+      "event": "real-main-accepted",
+      "caseId": "case-1791975357085-tbbbrx",
+      "runId": "run-pi-mv8baajk-3wl3k",
+      "runStatus": "running",
+      "phase": "accepted"
+    },
+    {
+      "at": "2026-10-14T16:15:48.045Z",
+      "event": "real-outcome-under-dual-I/O-fault",
+      "callbackExecuted": true
+    },
+    {
+      "at": "2026-10-14T16:15:48.056Z",
+      "event": "actual-owner-index-and-journal-failures",
+      "indexWriteRejected": true,
+      "journalWriteRejected": true
+    }
+  ],
+  "persisted": {
+    "runStatus": "running",
+    "revokedAtPersisted": false
+  },
+  "error": "AssertionError [ERR_ASSERTION]: executor 已真正停止",
+  "finishedAt": "2026-10-14T16:15:48.061Z"
+}

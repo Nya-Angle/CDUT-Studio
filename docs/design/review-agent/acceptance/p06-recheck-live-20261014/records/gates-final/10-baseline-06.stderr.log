@@ -1,0 +1,17 @@
+
+apps/electron/src/main/lib/skin-manager-service.test.ts:
+(pass) 皮肤安装的 Windows 保留设备名防护 > Given skin id con When installing Then the package is rejected for cross-platform safety [1.21ms]
+(pass) 皮肤安装的 Windows 保留设备名防护 > Given skin id prn When installing Then the package is rejected for cross-platform safety [0.16ms]
+(pass) 皮肤安装的 Windows 保留设备名防护 > Given skin id aux When installing Then the package is rejected for cross-platform safety [0.14ms]
+(pass) 皮肤安装的 Windows 保留设备名防护 > Given skin id nul When installing Then the package is rejected for cross-platform safety [0.13ms]
+(pass) 皮肤安装的 Windows 保留设备名防护 > Given skin id com1 When installing Then the package is rejected for cross-platform safety [0.13ms]
+(pass) 皮肤安装的 Windows 保留设备名防护 > Given skin id lpt9 When installing Then the package is rejected for cross-platform safety [0.12ms]
+(pass) 皮肤安装的 Windows 保留设备名防护 > Given assets/con.png When installing Then it is rejected because Windows also blocks reserved names with extensions [0.45ms]
+(pass) 皮肤安装的 Windows 保留设备名防护 > Given a normal skin When installing Then reserved-name guard does not block it [1.59ms]
+(pass) 皮肤预览图体积上限 > Given preview.png 超过 2 MB When installing Then it is rejected [3.58ms]
+(pass) 皮肤预览图体积上限 > Given preview.png 在限额内 When installing Then it is accepted [0.54ms]
+
+ 10 pass
+ 0 fail
+ 20 expect() calls
+Ran 10 tests across 1 file. [65.00ms]

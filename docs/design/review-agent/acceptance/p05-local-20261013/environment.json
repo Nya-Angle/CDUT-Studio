@@ -1,0 +1,44 @@
+{
+  "started_at_utc": "2026-10-12T17:50:29.134652+00:00",
+  "worktree": "/home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013",
+  "artifacts": "/home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013-artifacts",
+  "head_sha": "df0c0d5740d4522c2ea4663c8e8b93a497a70b7f",
+  "frozen_code_sha": "ce992f90880ecde1954e925b63585692a085f621",
+  "branch": "feat/review-owned-background-sessions",
+  "checkout": "detached at fetched branch HEAD",
+  "initial_git_status": "",
+  "os": "PRETTY_NAME=\"Ubuntu 26.04.1 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"26.04\"\nVERSION=\"26.04.1 LTS (Resolute Raccoon)\"\nVERSION_CODENAME=resolute\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=resolute\nLOGO=ubuntu-logo\n",
+  "uname": "Linux Bot 7.0.0-38-generic #38-Ubuntu SMP PREEMPT_DYNAMIC Fri Sep  4 09:10:14 UTC 2026 x86_64 GNU/Linux",
+  "architecture": "x86_64",
+  "bun_version": "1.4.0",
+  "node_version": "v22.23.2",
+  "bun_executable": "/home/miku/.nvm/versions/node/v22.23.2/bin/bun",
+  "node_executable": "/home/miku/.nvm/versions/node/v22.23.2/bin/node",
+  "environment_overrides": {
+    "ELECTRON_SKIP_BINARY_DOWNLOAD": "1",
+    "PROFER_CONFIG_DIR": "/home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013-artifacts/profile/config",
+    "PROFER_USER_DATA_DIR": "/home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013-artifacts/profile/user-data",
+    "PROFER_DEV_INSTANCE": "p05-local-acceptance-20261013",
+    "CI": "true",
+    "NO_COLOR": "1"
+  },
+  "pocket": "NOT-RUN; patch not applied",
+  "production_relay": "BLOCKED / NOT-RUN",
+  "live_01_to_08": "NOT-RUN",
+  "input_documents": [
+    {
+      "path": "docs/design/review-agent/32-p05-stage-acceptance-and-local-gates.md",
+      "sha256": "e82970b804ec15b7448bbe32fae909ebb06080e9cf0e3d21bbc5a8f785968722"
+    },
+    {
+      "path": "docs/design/review-agent/30-background-session-handoff.md",
+      "sha256": "9fc11c54042ff3260b7de20877eb071de011bc7155ed5616c0f030bbe5da918f"
+    },
+    {
+      "path": "docs/design/review-agent/29-background-session-preflight-audit.md",
+      "sha256": "5dcd86acfbd8a093892ba60329ecc2e8fe203166b60a9dc08ffe68cbfa1ce468"
+    }
+  ],
+  "finished_at_utc": "2026-10-12T17:52:41.671852+00:00",
+  "final_git_status": ""
+}

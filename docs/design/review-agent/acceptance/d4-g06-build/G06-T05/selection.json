@@ -1,0 +1,218 @@
+{
+  "templateId": "g06-t05",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "g06-t05-test-1",
+      "subjectId": "g06-t05-subject-1",
+      "title": "学术活动及成果公开前保密合规核验合成对象1",
+      "businessType": "g06-disclosure-action",
+      "scenario": "br-01",
+      "scenarioSource": {
+        "sourceId": "src-axis-br-01",
+        "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "br-02",
+          "applicability": "applicable",
+          "sourceId": "src-axis-br-02",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br-04",
+          "applicability": "unknown",
+          "sourceId": "src-axis-br-04",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "c-01",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-c-01",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-02",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-c-02",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-03",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-c-03",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-04",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-c-04",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-05",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-c-05",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-06",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-c-06",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-07",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-c-07",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-08",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-c-08",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-09",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-c-09",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-10",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-c-10",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-11",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-c-11",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "g06-t05-test-2",
+      "subjectId": "g06-t05-subject-2",
+      "title": "学术活动及成果公开前保密合规核验合成对象2",
+      "businessType": "g06-disclosure-action",
+      "scenario": "br-03",
+      "scenarioSource": {
+        "sourceId": "src-axis-br-03",
+        "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "br-02",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-br-02",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br-04",
+          "applicability": "applicable",
+          "sourceId": "src-axis-br-04",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-01",
+          "applicability": "unknown",
+          "sourceId": "src-axis-c-01",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "c-02",
+          "applicability": "unknown",
+          "sourceId": "src-axis-c-02",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "c-03",
+          "applicability": "unknown",
+          "sourceId": "src-axis-c-03",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "c-04",
+          "applicability": "unknown",
+          "sourceId": "src-axis-c-04",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "c-05",
+          "applicability": "unknown",
+          "sourceId": "src-axis-c-05",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "c-06",
+          "applicability": "unknown",
+          "sourceId": "src-axis-c-06",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "c-07",
+          "applicability": "unknown",
+          "sourceId": "src-axis-c-07",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "c-08",
+          "applicability": "unknown",
+          "sourceId": "src-axis-c-08",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "c-09",
+          "applicability": "unknown",
+          "sourceId": "src-axis-c-09",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "c-10",
+          "applicability": "unknown",
+          "sourceId": "src-axis-c-10",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "c-11",
+          "applicability": "unknown",
+          "sourceId": "src-axis-c-11",
+          "sourceVersionId": "g06-t05-v01-d0062108a34b73e4",
+          "decidedBy": "undetermined"
+        }
+      ]
+    }
+  ]
+}

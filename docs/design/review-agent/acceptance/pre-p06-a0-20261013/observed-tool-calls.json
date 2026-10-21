@@ -1,0 +1,8 @@
+{
+  "scope": "synthetic success case transcript; observed calls only, not full offered tool manifest",
+  "observedCalls": {
+    "review_read_documents": 3,
+    "review_inspect_original": 1,
+    "review_submit_result": 8
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "name": "05-main",
+  "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron",
+  "argv": [
+    "bun",
+    "run",
+    "build:main"
+  ],
+  "startedAt": "2026-10-14T16:51:20.342583+00:00",
+  "environment": {
+    "NO_COLOR": "1",
+    "PROFER_CONFIG_DIR": "/tmp/p06-live-gates-ascgmznf/config",
+    "PROFER_USER_DATA_DIR": "/tmp/p06-live-gates-ascgmznf/user-data",
+    "CI": "true"
+  },
+  "workingTreeDirty": true,
+  "qaSourceSha256": {},
+  "finishedAt": "2026-10-14T16:51:20.822069+00:00",
+  "exitCode": 0,
+  "files": {
+    "05-main.stdout.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "05-main.stderr.log": {
+      "sha256": "e289a02f251fe3bec183d2f0190675580196deb14f30db0f58ffe180f8839151",
+      "bytes": 722
+    }
+  }
+}

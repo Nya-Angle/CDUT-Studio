@@ -1,0 +1,10 @@
+file:///home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/scripts/qa/review-live-cdp.mjs:34
+    throw new Error('真实运行条件未达到：' + expression.slice(0, 180))
+          ^
+
+Error: 真实运行条件未达到：document.body.innerText.includes("待我处理")
+    at Object.poll (file:///home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/scripts/qa/review-live-cdp.mjs:34:11)
+    at async ensureReviewPage (file:///home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/scripts/qa/review-live-cdp.mjs:68:3)
+    at async file:///home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/scripts/qa/review-live-enter.mjs:2:29
+
+Node.js v22.23.2

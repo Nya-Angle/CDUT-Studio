@@ -1,0 +1,148 @@
+{
+  "templateId": "g03-t12",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "item-a",
+      "subjectId": "g03-t12-subject-a",
+      "title": "SYNTHETIC 体育场馆集体活动借用对象A",
+      "businessType": "g03-sports-slot",
+      "scenario": "p-indoor",
+      "scenarioSource": {
+        "sourceId": "synthetic-choice",
+        "sourceVersionId": "synthetic-g03-t12-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "c-student-group",
+          "applicability": "applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t12-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-paid-event",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t12-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-multiple-slots",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t12-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-high-risk",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t12-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-revised",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t12-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-external",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t12-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-delegated",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t12-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-training",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t12-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "item-b",
+      "subjectId": "g03-t12-subject-b",
+      "title": "SYNTHETIC 体育场馆集体活动借用对象B",
+      "businessType": "g03-sports-slot",
+      "scenario": "p-outdoor",
+      "scenarioSource": {
+        "sourceId": "synthetic-choice",
+        "sourceVersionId": "synthetic-g03-t12-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "c-student-group",
+          "applicability": "unknown",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t12-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "c-paid-event",
+          "applicability": "applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t12-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-multiple-slots",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t12-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-high-risk",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t12-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-revised",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t12-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-external",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t12-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-delegated",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t12-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-training",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t12-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

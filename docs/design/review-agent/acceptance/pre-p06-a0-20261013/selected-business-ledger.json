@@ -1,0 +1,115 @@
+[
+  {
+    "id": "run-pi-mv5pp0lj-xcf8h",
+    "caseId": "case-1791837343752-ytuzj1",
+    "status": "completed",
+    "startedAt": "2026-10-12T20:35:50.983Z",
+    "completedAt": "2026-10-12T20:37:25.350Z",
+    "coverage": {
+      "documents": [
+        {
+          "documentVersionId": "doc-1791837343764-4rpvxu-v1",
+          "status": "read"
+        }
+      ],
+      "plannedChecks": 1,
+      "completedChecks": 1,
+      "effectiveVerdicts": 1,
+      "pendingChecks": 0
+    },
+    "checks": [
+      {
+        "checkId": "check-section-all-budget-case-case",
+        "ruleId": "section-all-budget",
+        "target": {
+          "scope": "case",
+          "subjectIds": []
+        },
+        "status": "compliant",
+        "reason": "整案预算在申请文本中已明确给出且唯一：总预算100元，金额具体、无歧义，满足整案预算栏目已填写且可核读的要求。",
+        "sourceRefs": [
+          {
+            "caseId": "case-1791837343752-ytuzj1",
+            "documentVersionId": "doc-1791837343764-4rpvxu-v1",
+            "parseRevision": 1,
+            "location": {
+              "kind": "paragraph",
+              "index": 0
+            },
+            "quote": "总预算100元"
+          }
+        ],
+        "executedBy": "semantic",
+        "executedAt": "2026-10-12T20:37:12.168Z"
+      }
+    ]
+  },
+  {
+    "id": "run-pi-mv5pr3hm-no53o",
+    "caseId": "case-1791837343788-1pj6nh",
+    "status": "failed",
+    "startedAt": "2026-10-12T20:37:28.042Z",
+    "completedAt": "2026-10-12T20:38:07.807Z",
+    "coverage": {
+      "documents": [
+        {
+          "documentVersionId": "doc-1791837343793-vx074y-v1",
+          "status": "read"
+        }
+      ],
+      "plannedChecks": 1,
+      "completedChecks": 0,
+      "effectiveVerdicts": 0,
+      "pendingChecks": 1
+    },
+    "checks": [
+      {
+        "checkId": "check-section-all-budget-case-case",
+        "ruleId": "section-all-budget",
+        "target": {
+          "scope": "case",
+          "subjectIds": []
+        },
+        "status": "execution-failed",
+        "reason": "Pi Agent 未提交此项检查结果",
+        "sourceRefs": [],
+        "executedBy": "semantic",
+        "executedAt": "2026-10-12T20:38:07.807Z"
+      }
+    ]
+  },
+  {
+    "id": "run-pi-mv5przqf-7trbp",
+    "caseId": "case-1791837343781-lqcytg",
+    "status": "cancelled",
+    "startedAt": "2026-10-12T20:38:09.831Z",
+    "completedAt": "2026-10-12T20:38:10.233Z",
+    "coverage": {
+      "documents": [
+        {
+          "documentVersionId": "doc-1791837343785-pp7i3a-v1",
+          "status": "read"
+        }
+      ],
+      "plannedChecks": 1,
+      "completedChecks": 0,
+      "effectiveVerdicts": 0,
+      "pendingChecks": 1
+    },
+    "checks": [
+      {
+        "checkId": "check-section-all-budget-case-case",
+        "ruleId": "section-all-budget",
+        "target": {
+          "scope": "case",
+          "subjectIds": []
+        },
+        "status": "execution-failed",
+        "reason": "Pi Agent 未提交此项检查结果",
+        "sourceRefs": [],
+        "executedBy": "semantic",
+        "executedAt": "2026-10-12T20:38:10.233Z"
+      }
+    ]
+  }
+]

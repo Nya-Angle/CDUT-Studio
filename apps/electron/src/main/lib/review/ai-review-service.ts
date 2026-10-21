@@ -299,7 +299,52 @@ function parseOutline(raw: unknown): RuleOutlineItem[] {
     ...item,
     id: item.id || `outline-ai-${index + 1}`,
     generatedBy: 'ai',
+    ...(item.constraint === undefined || item.constraint === null
+      ? { constraint: undefined }
+      : isValidRuleConstraint(item.constraint)
+        ? { constraint: item.constraint }
+        : (console.warn(`[审核专区] 丢弃无效规则约束：${item.title}`), { constraint: undefined })),
   }))
+}
+
+function isIsoDate(value: unknown): value is string {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
+  const parsed = new Date(`${value}T00:00:00.000Z`)
+  return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value
+}
+
+function isValidRuleConstraint(value: unknown): value is NonNullable<RuleOutlineItem['constraint']> {
+  if (!value || typeof value !== 'object') return false
+  const constraint = value as Record<string, unknown>
+  const finite = (candidate: unknown): candidate is number => typeof candidate === 'number' && Number.isFinite(candidate)
+  switch (constraint.kind) {
+    case 'score-value': {
+      const condition = constraint.appliesWhen
+      return finite(constraint.value) && !!condition && typeof condition === 'object' && (() => {
+        const appliesWhen = condition as Record<string, unknown>
+        return typeof appliesWhen.field === 'string' && /^[\p{L}_][\p{L}\p{N}_.-]*$/u.test(appliesWhen.field)
+          && ((typeof appliesWhen.equals === 'string' || finite(appliesWhen.equals)) || (typeof appliesWhen.includes === 'string' && appliesWhen.includes.length > 0))
+      })()
+    }
+    case 'level-mapping':
+      return !!constraint.levels && typeof constraint.levels === 'object' && !Array.isArray(constraint.levels)
+        && Object.keys(constraint.levels as Record<string, unknown>).length > 0
+        && Object.values(constraint.levels as Record<string, unknown>).every(finite)
+        && (constraint.levelKeywords === undefined || (!!constraint.levelKeywords && typeof constraint.levelKeywords === 'object' && !Array.isArray(constraint.levelKeywords) && Object.entries(constraint.levelKeywords as Record<string, unknown>).every(([key, item]) => key.length > 0 && typeof item === 'string' && item.length > 0)))
+    case 'date-range':
+      return (constraint.dateFrom === undefined || isIsoDate(constraint.dateFrom))
+        && (constraint.dateTo === undefined || isIsoDate(constraint.dateTo))
+        && (constraint.dateFrom !== undefined || constraint.dateTo !== undefined)
+    case 'required-evidence':
+      return Array.isArray(constraint.requiredEvidenceTypes) && constraint.requiredEvidenceTypes.length > 0
+        && constraint.requiredEvidenceTypes.every((item) => typeof item === 'string' && item.trim().length > 0)
+    case 'max-score': case 'amount-limit':
+      return finite(constraint.value)
+    case 'mutual-exclusion':
+      return typeof constraint.exclusionGroup === 'string' && constraint.exclusionGroup.trim().length > 0
+    default:
+      return false
+  }
 }
 
 /**
@@ -336,6 +381,12 @@ export async function generateRuleOutline(
     const pack = requireRulePack(reviewCase, request.rulePackId)
     const ruleText = renderRuleDocument(reviewCase, pack.documentId)
     const domain = domainPromptParts(resolveDomainPack(reviewCase.domainPackId))
+    const ruleSourceCase = { ...reviewCase, documents: reviewCase.documents.filter((document) => document.id === pack.documentId) }
+    const { parts: ruleImages, dropped: droppedRuleImages } = collectVisionImages(ruleSourceCase, [])
+    for (const dropped of droppedRuleImages) console.warn(`[审核专区] 规则大纲: ${dropped.fileName} ${dropped.reason}`)
+    const ruleImageNote = ruleImages.length > 0
+      ? `\n\n【依据扫描页】另附 ${ruleImages.length} 张依据页图像；请连同提取文本核对图表、扫描内容与版式。`
+      : ''
     const messages: ReviewChatMessage[] = [
       {
         role: 'system',
@@ -343,12 +394,17 @@ export async function generateRuleOutline(
           `${domain.role}。${domain.guideline}` +
           '请从给定的依据文件中提取审核规则大纲，' +
           `每条给出 category（建议取值：${domain.categories}；依据文件确有其他类别的，可自定义简短中文类别）、` +
-          'title、summary、anchors（对象数组，documentId 与 blockId 必须原样引用文中方括号标记的 ID）。' +
-          '只输出 JSON 数组，不要任何解释文字。',
+          'title、summary、constraint、anchors（对象数组，documentId 与 blockId 必须原样引用文中方括号标记的 ID）。' +
+          'constraint 必须是可结构化表达的约束对象，否则为 null；不得猜测或补全原文未明确的数值、日期、等级与材料要求。' +
+          '支持 constraint：score-value（必须带 appliesWhen:{field,equals 或 includes}）、level-mapping（levels 等级到数值；多等级分值必须合并为一条）、date-range（dateFrom/dateTo，YYYY-MM-DD）、required-evidence（requiredEvidenceTypes）、max-score（value）、amount-limit（value）、mutual-exclusion（exclusionGroup）。' +
+          '多个“等级→分值”映射必须优先使用 level-mapping，禁止拆成多个无条件 score-value；只有原文明示某一适用类别/条件的固定分值时才用 score-value。' +
+          'constraint=null 用于原则性、语义性或无法确定结构的规则。输出 JSON 数组，每条对象必须含 category,title,summary,constraint,anchors；不要输出解释文字。',
       },
       {
         role: 'user',
-        content: `规则包：${pack.name}（${pack.academicYear}，${pack.version}）\n\n规则文档：\n${ruleText}\n\n${buildSourceRegistry(reviewCase)}`,
+        content: ruleImages.length > 0
+          ? [{ type: 'text', text: `规则包：${pack.name}（${pack.academicYear}，${pack.version}）\n\n规则文档：\n${ruleText}\n\n${buildSourceRegistry(reviewCase)}${ruleImageNote}` }, ...ruleImages]
+          : `规则包：${pack.name}（${pack.academicYear}，${pack.version}）\n\n规则文档：\n${ruleText}\n\n${buildSourceRegistry(reviewCase)}`,
       },
     ]
     const text = await chatCompletion(resolved.channel, messages, { maxTokens: MAX_TOKENS })

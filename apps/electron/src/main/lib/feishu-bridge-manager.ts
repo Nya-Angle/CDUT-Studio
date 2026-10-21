@@ -18,6 +18,7 @@ import { FeishuBridge } from './feishu-bridge'
 import { getFeishuMultiBotConfig, getFeishuBotById } from './feishu-config'
 import { getSettings } from './settings-service'
 import { resolveSessionMirrorBot } from './feishu/session-mirror'
+import { isReviewOwnedOrDeletedAgentSessionId } from './agent-session-manager'
 
 class FeishuBridgeManager {
   /** botId → Bridge 实例 */
@@ -128,6 +129,7 @@ class FeishuBridgeManager {
 
   /** 为桌面端 Profer Session 创建或恢复飞书镜像群。 */
   async ensureSessionMirror(session: AgentSessionMeta): Promise<void> {
+    if (isReviewOwnedOrDeletedAgentSessionId(session.id)) return
     const config = getFeishuMultiBotConfig()
     const bot = resolveSessionMirrorBot(getSettings().feishuSessionMirror, config.bots)
     if (!bot) return
@@ -143,6 +145,7 @@ class FeishuBridgeManager {
 
   /** 在 Agent 运行前创建 Session 镜像群里的流式卡片。 */
   async startSessionMirrorRun(session: AgentSessionMeta): Promise<void> {
+    if (isReviewOwnedOrDeletedAgentSessionId(session.id)) return
     const mirrorSettings = getSettings().feishuSessionMirror
     if (mirrorSettings?.mode !== 'stream') return
 
@@ -157,6 +160,7 @@ class FeishuBridgeManager {
   }
 
   stopSessionMirrorRun(sessionId: string): void {
+    if (isReviewOwnedOrDeletedAgentSessionId(sessionId)) return
     for (const bridge of this.bridges.values()) {
       bridge.stopSessionMirrorRun(sessionId)
     }

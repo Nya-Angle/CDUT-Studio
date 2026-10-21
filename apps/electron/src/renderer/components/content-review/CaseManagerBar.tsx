@@ -1,20 +1,20 @@
 /**
- * CaseManagerBar — 左栏顶部的「案卷管理」条（内容审核专区的入口）
+ * ReviewContextBar — 审核工作台上方的唯一任务上下文条
  *
  * 拆掉「唯一入口 = 载入演示案卷」的入口墙，提供四件事：
  * 1. 案卷选择器：列出已存储案卷（标题 + 领域包 + 材料数 + 演示标记），点击切换
  * 2. 新建案卷：打开 CreateCaseDialog
- * 3. 导入材料：按角色（依据/待审/证明）走系统选择框导入到当前案卷
- * 4. 领域包切换 + 删除案卷（删除需二次确认，演示案卷不可删除）
+ * 3. 审核类型切换 + 删除案卷（删除需二次确认，演示案卷不可删除）
+ * 材料按角色在左/中栏各自导入，不在上下文条放全局入口。
  *
  * 数据来源：reviewCaseListAtom（列表）/ reviewCaseAtom（当前案卷）；
  * 所有写入都经 use-review-actions，本组件不直接调用 window.reviewAPI。
  */
 
 import * as React from 'react'
-import { useAtomValue } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { toast } from 'sonner'
-import { Check, ChevronDown, FilePlus2, FolderOpen, Layers, Plus, Trash2, Upload } from 'lucide-react'
+import { Check, ChevronDown, FolderOpen, Layers, MoreHorizontal, Plus, Trash2, Undo2 } from 'lucide-react'
 import { Button } from '@profer/ui/primitives/button'
 import { ConfirmDialog } from '@profer/ui/primitives/confirm-dialog'
 import {
@@ -26,22 +26,13 @@ import {
   DropdownMenuTrigger,
 } from '@profer/ui/primitives/dropdown-menu'
 import { DEFAULT_DOMAIN_PACK_ID, BUILTIN_DOMAIN_PACKS, resolveDomainPack } from '@profer/shared'
-import type { ReviewCaseSummary, SourceDocument } from '@profer/shared'
-import { reviewCaseAtom, reviewCaseListAtom } from '@/atoms/review-atoms'
+import type { ReviewCaseSummary } from '@profer/shared'
+import { reviewCaseAtom, reviewCaseListAtom, reviewExecutionAtom, reviewWorkspaceAggregateAtom, reviewWorkspaceSectionAtom, reviewWorkspaceTemplateAtom } from '@/atoms/review-atoms'
 import { cn } from '@/lib/utils'
 import { CreateCaseDialog } from './CreateCaseDialog'
-import { REVIEW_DOCUMENT_ROLE_LABELS } from './use-review-actions'
+import { NativeManualItemDialog } from './NativeManualItemDialog'
+import { templatesRefreshAtom } from './V2CasePanel'
 import type { ReviewActions } from './use-review-actions'
-
-/** 导入材料三个角色的区分说明（用户需要看懂该导哪一份） */
-const IMPORT_ROLE_HINTS: Record<SourceDocument['role'], string> = {
-  rule: '评分细则、管理办法等判定标准，作为 AI 审核的比对基准（显示在左栏「审核依据」）',
-  application: '学生申报表、合同正文等待审核的材料，审核条目从中识别（显示在中栏）',
-  evidence: '获奖证书、票据、附件等佐证材料，用于核对申报内容是否属实（显示在中栏证据卡）',
-}
-
-/** 导入角色顺序（与三栏展示顺序一致） */
-const IMPORT_ROLES: SourceDocument['role'][] = ['rule', 'application', 'evidence']
 
 /**
  * 取列表行的领域包名。
@@ -56,33 +47,65 @@ interface CaseManagerBarProps {
   actions: ReviewActions
 }
 
-export function CaseManagerBar({ actions }: CaseManagerBarProps): React.ReactElement {
+export function ReviewContextBar({ actions }: CaseManagerBarProps): React.ReactElement {
   const currentCase = useAtomValue(reviewCaseAtom)
   const caseList = useAtomValue(reviewCaseListAtom)
+  const execution = useAtomValue(reviewExecutionAtom)
+  const activeTemplate = useAtomValue(reviewWorkspaceTemplateAtom)
+  const nativeAggregate = useAtomValue(reviewWorkspaceAggregateAtom)
+  const templateRefresh = useAtomValue(templatesRefreshAtom)
+  const setWorkspaceSection = useSetAtom(reviewWorkspaceSectionAtom)
 
   const [createOpen, setCreateOpen] = React.useState(false)
+  const [manualItemOpen, setManualItemOpen] = React.useState(false)
+  const [manualItemCaseId, setManualItemCaseId] = React.useState<string | null>(null)
   const [deleteOpen, setDeleteOpen] = React.useState(false)
-  const [importing, setImporting] = React.useState(false)
+  const [restoreOpen, setRestoreOpen] = React.useState(false)
+  const [restoreTarget, setRestoreTarget] = React.useState<{ caseId: string; title: string; revision: number } | null>(null)
+  const [archivedCases, setArchivedCases] = React.useState<Array<{ caseId: string; title: string; revision: number }>>([])
   const [switchingPack, setSwitchingPack] = React.useState(false)
+  const [templateVersions, setTemplateVersions] = React.useState<import('@profer/shared').TemplateVersion[]>([])
+  const [savingReviewSetup, setSavingReviewSetup] = React.useState(false)
 
   const currentPack = resolveDomainPack(currentCase?.domainPackId ?? DEFAULT_DOMAIN_PACK_ID)
+
+  React.useEffect(() => {
+    let active = true
+    void actions.listArchivedCases().then(cases => { if (active) setArchivedCases(cases) })
+    return () => { active = false }
+  }, [actions, caseList])
+
+  React.useEffect(() => {
+    let active = true
+    void window.reviewAPI.listTemplateVersionsV2().then((versions) => {
+      if (active) setTemplateVersions(versions)
+    }).catch((error) => console.error('[辅助审核] 读取已发布模板失败', error))
+    return () => { active = false }
+  }, [templateRefresh])
+
+  const publishedTemplates = React.useMemo(() => {
+    const latestByTemplate = new Map<string, import('@profer/shared').TemplateVersion>()
+    for (const template of [...templateVersions].filter((item) => item.status === 'published').sort((a, b) => b.version - a.version)) {
+      if (!latestByTemplate.has(template.templateId)) latestByTemplate.set(template.templateId, template)
+    }
+    return [...latestByTemplate.values()]
+  }, [templateVersions])
+  const publishedTemplateVersions = React.useMemo(
+    () => templateVersions.filter((item) => item.status === 'published'),
+    [templateVersions],
+  )
+  const latestTemplates = React.useMemo(() => {
+    const latestByTemplate = new Map<string, import('@profer/shared').TemplateVersion>()
+    for (const template of [...templateVersions].sort((a, b) => b.version - a.version)) {
+      if (!latestByTemplate.has(template.templateId)) latestByTemplate.set(template.templateId, template)
+    }
+    return [...latestByTemplate.values()]
+  }, [templateVersions])
+  const draftTemplateCount = latestTemplates.filter((template) => template.status === 'draft').length
 
   const handleSelectCase = (caseId: string): void => {
     if (caseId === currentCase?.id) return
     void actions.selectCase(caseId)
-  }
-
-  const handleImport = async (role: SourceDocument['role']): Promise<void> => {
-    if (importing) return
-    setImporting(true)
-    try {
-      const document = await actions.importDocument(role)
-      if (document) {
-        toast.success(`已导入${REVIEW_DOCUMENT_ROLE_LABELS[role]}：${document.fileName}`)
-      }
-    } finally {
-      setImporting(false)
-    }
   }
 
   const handlePackChange = async (packId: string): Promise<void> => {
@@ -106,196 +129,202 @@ export function CaseManagerBar({ actions }: CaseManagerBarProps): React.ReactEle
     const ok = await actions.deleteCase(target.id)
     if (ok) {
       setDeleteOpen(false)
-      toast.success(`已删除案卷：${target.title}`)
+      toast.success(`已移出当前案卷：${target.title}`, { description: '包含 V2 业务记录的案卷已归档并保留历史数据。' })
+    }
+  }
+
+  const handleRestore = async (): Promise<void> => {
+    const target = restoreTarget
+    if (!target) return
+    const ok = await actions.restoreArchivedCase(target.caseId, target.revision)
+    if (ok) {
+      setRestoreOpen(false)
+      setRestoreTarget(null)
+      setArchivedCases(current => current.filter(item => item.caseId !== target.caseId))
+      toast.success(`已恢复原生案卷：「${target.title}」`, {
+        description: '恢复为草稿；原审核运行和审批结论保留为历史，必须重新核验。',
+      })
+    } else {
+      void actions.listArchivedCases().then(setArchivedCases)
+    }
+  }
+
+  // Native-first unbound draft must not present an inferred default as
+  // formally installed/published Case policy or immutable CanonicalPlan.
+  const nativeUnbound = !!currentCase && nativeAggregate?.caseV2.id === currentCase.id &&
+    nativeAggregate.caseV2.templateId === 'pending-template-v3'
+  const selectedTemplate = nativeUnbound ? '' : currentCase?.reviewTemplate
+    ? `${currentCase.reviewTemplate.templateId}@${currentCase.reviewTemplate.version}`
+    : activeTemplate ? `${activeTemplate.templateId}@${activeTemplate.version}` : ''
+  const activeTemplateIsInLatestList = activeTemplate
+    ? publishedTemplates.some((item) => item.templateId === activeTemplate.templateId && item.version === activeTemplate.version)
+    : true
+
+  const handleTemplateChange = async (value: string): Promise<void> => {
+    if (!currentCase) return
+    const template = value
+      ? publishedTemplateVersions.find((item) => `${item.templateId}@${item.version}` === value)
+      : undefined
+    if (value && !template) {
+      toast.error('所选模板版本不可用，请刷新后重试')
+      return
+    }
+    setSavingReviewSetup(true)
+    try {
+      const ok = await actions.updateReviewSetup({ reviewTemplate: template ? { templateId: template.templateId, version: template.version } : null })
+      if (ok) toast.success(template ? `已载入「${template.name}」v${template.version}` : '已恢复按审核类型自动选择模板')
+    } finally {
+      setSavingReviewSetup(false)
     }
   }
 
   const demoUndeletable = currentCase?.isDemo === true
+  const nativeHumanDraft = !!currentCase && nativeAggregate?.caseV2.id === currentCase.id &&
+    nativeAggregate.receiptLog[0]?.type === 'CreateNativeWorkspaceCaseV3' &&
+    nativeAggregate.caseV2.stage === 'draft' &&
+    !nativeAggregate.canonicalPlan && !nativeAggregate.d2RuntimePlan
+  const addHumanItem = (): void => {
+    if (!currentCase) return
+    setManualItemCaseId(currentCase.id)
+    setManualItemOpen(true)
+  }
+  // A visible case switch closes the previous form instead of retargeting
+  // the prior source selection to a new Case.
+  React.useEffect(() => {
+    if (manualItemOpen && currentCase?.id !== manualItemCaseId) setManualItemOpen(false)
+  }, [currentCase?.id, manualItemCaseId, manualItemOpen])
 
   return (
-    <section className="shrink-0 border-b border-border/60 bg-card/40 px-3 py-3">
-      <div className="flex items-center justify-between px-1 pb-2">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">案卷管理</p>
+    <section className="shrink-0 border-b border-border/60 bg-card/40 px-3 py-2">
+      <div className="flex items-center gap-2 px-1">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button type="button" aria-label="选择审核任务" className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-1 py-1 text-left hover:bg-muted/50">
+              <FolderOpen size={14} className="shrink-0 text-blue-500" />
+              <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">{currentCase ? `${currentCase.applicant} · ${currentCase.academicYear} · ${currentCase.title}` : '选择审核任务'}</span>
+              <ChevronDown size={14} className="shrink-0 opacity-60" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-[320px]">
+            <DropdownMenuLabel>审核任务（{caseList.length}）</DropdownMenuLabel>
+            {caseList.map((summary) => (
+              <DropdownMenuItem key={summary.id} onSelect={() => handleSelectCase(summary.id)} className="flex items-start gap-2">
+                <Check size={14} className={cn('mt-0.5 shrink-0', summary.id === currentCase?.id ? 'opacity-100' : 'opacity-0')} />
+                <span className="min-w-0 flex-1"><span className="block truncate text-sm">{summary.title}</span><span className="mt-0.5 block truncate text-xs text-muted-foreground">{resolveSummaryPackName(summary)} · {summary.documentCount} 份材料</span></span>
+              </DropdownMenuItem>
+            ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onSelect={() => setCreateOpen(true)}><Plus size={14} />新建审核项目</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <span className="shrink-0 text-xs text-muted-foreground">{currentCase ? `${currentCase.documents.length} 份材料 · ${executionLabel(execution.status)}` : '未选择审核任务'}</span>
         <Button
           type="button"
-          variant="outline"
           size="sm"
-          className="h-7 gap-1.5 px-2 text-[13px]"
+          className="h-7 shrink-0 gap-1.5 px-2 text-xs"
+          title="新建项目并选择审核模板"
           onClick={() => setCreateOpen(true)}
         >
-          <Plus size={13} />
-          新建案卷
+          <Plus size={13} />新建审核项目
         </Button>
-      </div>
-
-      <div className="space-y-2 rounded-lg bg-card p-2.5 shadow-sm">
-        {/* 案卷选择器 */}
+        <Button type="button" size="sm" variant="outline" className="h-7 shrink-0 gap-1.5 px-2 text-xs"
+          disabled={!nativeHumanDraft || demoUndeletable}
+          title={nativeHumanDraft
+            ? '从本案当前有效的真实申报材料中人工建立待审事项'
+            : '请选择未冻结的原生 V3 草稿案卷，传统案卷不能使用此原生写入口'}
+          onClick={addHumanItem}>
+          <Plus size={13}/>人工登记事项
+        </Button>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              aria-label="选择案卷"
-              className="flex w-full items-center gap-2 rounded-md border border-surface-border/60 bg-input/40 px-2.5 py-1.5 text-left shadow-xs transition-[border-color,box-shadow,background-color] duration-150 hover:border-surface-border-strong hover:bg-input-hover/50 focus:border-focus focus:bg-input focus:outline-none focus:ring-4 focus:ring-focus/15"
-            >
-              <FolderOpen size={14} className="shrink-0 text-blue-500" />
-              <span className="min-w-0 flex-1 truncate text-[13px] font-medium text-foreground">
-                {currentCase?.title ?? '选择案卷'}
-              </span>
-              {currentCase?.isDemo && (
-                <span className="shrink-0 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
-                  演示
-                </span>
-              )}
-              <ChevronDown size={14} className="shrink-0 opacity-60" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-[300px]">
-            <DropdownMenuLabel>
-              已存储案卷（{caseList.length}）
-            </DropdownMenuLabel>
-            {caseList.length === 0 ? (
-              <div className="px-2 py-3 text-xs leading-5 text-muted-foreground">
-                暂无案卷。可点「新建案卷」创建，或用顶栏「载入演示案卷」查看演示数据。
-              </div>
-            ) : (
-              caseList.map((summary) => (
-                <DropdownMenuItem
-                  key={summary.id}
-                  onSelect={() => handleSelectCase(summary.id)}
-                  className="flex items-start gap-2"
-                >
-                  <Check
-                    size={14}
-                    className={cn('mt-0.5 shrink-0', summary.id === currentCase?.id ? 'opacity-100' : 'opacity-0')}
-                  />
-                  <span className="min-w-0 flex-1">
-                    <span className="flex items-center gap-1.5">
-                      <span
-                        className={cn(
-                          'truncate text-[13px]',
-                          summary.id === currentCase?.id ? 'font-medium text-foreground' : 'text-foreground/90',
-                        )}
-                      >
-                        {summary.title}
-                      </span>
-                      {summary.isDemo && (
-                        <span className="shrink-0 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
-                          演示
-                        </span>
-                      )}
-                    </span>
-                    <span className="mt-0.5 block truncate text-[11px] text-muted-foreground">
-                      {resolveSummaryPackName(summary)} · {summary.documentCount} 份材料
-                    </span>
-                  </span>
-                </DropdownMenuItem>
-              ))
-            )}
+          <DropdownMenuTrigger asChild><Button type="button" variant="ghost" size="icon-sm" aria-label="更多审核操作" title="更多审核操作"><MoreHorizontal size={15} /></Button></DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="max-h-[65vh] w-[300px] overflow-y-auto">
+            <DropdownMenuItem onSelect={() => setCreateOpen(true)}><Plus size={14} />新建审核项目</DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => void actions.loadDemoCase()}><FolderOpen size={14} />载入示例数据</DropdownMenuItem>
             <DropdownMenuSeparator />
-            {/* 删除：次要位置，且必须二次确认 */}
-            <DropdownMenuItem
-              className="gap-2 text-destructive focus:text-destructive"
-              disabled={!currentCase || demoUndeletable}
-              onSelect={() => setDeleteOpen(true)}
-            >
-              <Trash2 size={14} />
-              删除当前案卷
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        {demoUndeletable && (
-          <p className="px-0.5 text-[11px] leading-4 text-muted-foreground">演示案卷为内置样例，不可删除。</p>
-        )}
-
-        {/* 导入材料（三个角色） */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="h-7 w-full gap-1.5 px-2 text-[13px]"
-              disabled={!currentCase || importing}
-            >
-              <Upload size={13} />
-              {importing ? '导入中…' : '导入材料'}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-[340px]">
-            <DropdownMenuLabel>选择材料角色</DropdownMenuLabel>
-            {IMPORT_ROLES.map((role) => (
-              <DropdownMenuItem
-                key={role}
-                onSelect={() => void handleImport(role)}
-                className="flex items-start gap-2"
-              >
-                <FilePlus2 size={14} className="mt-0.5 shrink-0 text-muted-foreground" />
-                <span className="min-w-0 flex-1">
-                  <span className="block text-[13px] text-foreground">
-                    导入{REVIEW_DOCUMENT_ROLE_LABELS[role]}
-                  </span>
-                  <span className="mt-0.5 block text-[11px] leading-4 text-muted-foreground">
-                    {IMPORT_ROLE_HINTS[role]}
-                  </span>
-                </span>
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        {/* 领域包切换 */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              aria-label="切换审核领域包"
-              disabled={!currentCase || switchingPack}
-              className="flex w-full items-center gap-2 rounded-md border border-surface-border/60 bg-input/40 px-2.5 py-1.5 text-left shadow-xs transition-[border-color,box-shadow,background-color] duration-150 hover:border-surface-border-strong hover:bg-input-hover/50 focus:border-focus focus:bg-input focus:outline-none focus:ring-4 focus:ring-focus/15 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <Layers size={14} className="shrink-0 text-amber-500" />
-              <span className="min-w-0 flex-1 truncate text-[13px] text-foreground">{currentPack.name}</span>
-              <ChevronDown size={14} className="shrink-0 opacity-60" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-[340px]">
-            <DropdownMenuLabel>审核领域包（切换规则类别与问题类型）</DropdownMenuLabel>
+            <DropdownMenuLabel>已归档案卷（{archivedCases.length}）</DropdownMenuLabel>
+            {archivedCases.length === 0
+              ? <DropdownMenuItem disabled>暂无已归档案卷</DropdownMenuItem>
+              : archivedCases.map((item) => (
+                <DropdownMenuItem key={item.caseId} onSelect={() => {
+                  setRestoreTarget(item)
+                  setRestoreOpen(true)
+                }}><Undo2 size={14} />恢复：{item.title}</DropdownMenuItem>
+              ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel>高级操作</DropdownMenuLabel>
             {BUILTIN_DOMAIN_PACKS.map((pack) => (
-              <DropdownMenuItem
-                key={pack.id}
-                onSelect={() => void handlePackChange(pack.id)}
-                className="flex items-start gap-2"
-              >
-                <Check
-                  size={14}
-                  className={cn('mt-0.5 shrink-0', pack.id === currentPack.id ? 'opacity-100' : 'opacity-0')}
-                />
-                <span className="min-w-0 flex-1">
-                  <span className="block text-[13px] font-medium text-foreground">{pack.name}</span>
-                  <span className="mt-0.5 block text-[11px] leading-4 text-muted-foreground">{pack.description}</span>
-                </span>
-              </DropdownMenuItem>
+              <DropdownMenuItem key={pack.id} disabled={!currentCase || switchingPack} onSelect={() => void handlePackChange(pack.id)}><Layers size={14} />审核类型：{pack.name}</DropdownMenuItem>
             ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="text-destructive focus:text-destructive" disabled={!currentCase || demoUndeletable} onSelect={() => setDeleteOpen(true)}><Trash2 size={14} />归档 / 移除审核任务</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-
+      <div className="mt-2 rounded-md border border-border/50 bg-background/50 px-3 py-2" key={currentCase?.id ?? 'no-case'}>
+        <div className="flex flex-wrap items-center gap-2">
+          <label htmlFor="review-case-template" className="shrink-0 text-xs font-semibold text-foreground">本案审核模板</label>
+          <select
+            id="review-case-template"
+            aria-label="载入审核模板到本案"
+            disabled={!currentCase || savingReviewSetup}
+            value={selectedTemplate}
+            onChange={(event) => void handleTemplateChange(event.target.value)}
+            className="min-w-48 flex-1 rounded-md border border-input bg-background px-2.5 py-1.5 text-xs text-foreground"
+          >
+            <option value="">{nativeUnbound ? '原生草稿 · 尚未绑定正式模板' : `按审核类型自动选择（${activeTemplate?.name ?? '默认模板'}）`}</option>
+            {publishedTemplates.length > 0 && <optgroup label="已发布 · 可载入">{publishedTemplates.map((template) => (
+              <option key={`${template.templateId}@${template.version}`} value={`${template.templateId}@${template.version}`}>{template.name} · v{template.version}</option>
+            ))}</optgroup>}
+            {activeTemplate && !activeTemplateIsInLatestList && <optgroup label="本案当前版本 · 仅保留在此案"><option value={`${activeTemplate.templateId}@${activeTemplate.version}`}>{activeTemplate.name} · v{activeTemplate.version}（历史版本）</option></optgroup>}
+          </select>
+          <Button type="button" size="sm" variant="outline" className="h-7 shrink-0 px-2 text-xs" onClick={() => setWorkspaceSection('templates')}>模板库</Button>
+        </div>
+        <p className="mt-1 text-xs leading-4 text-muted-foreground">
+          {currentCase
+            ? nativeUnbound
+              ? '本案是未绑定正式政策的原生草稿：可以导入原件、人工登记事项，不能将候选模板/规则当成正式审核计划或自动审批。'
+              : `已发布 ${publishedTemplates.length} 套可载入 · ${draftTemplateCount} 套草稿/范本需先配置并发布。正式审核仍需独立 Plan 来源与权限核验。`
+            : '请先选择或新建审核任务；草稿和参考范本需配置并发布后才会出现在这里。'}
+        </p>
+      </div>
       {/* 新建案卷对话框 */}
-      <CreateCaseDialog open={createOpen} onOpenChange={setCreateOpen} onCreate={actions.createCase} />
+      <CreateCaseDialog open={createOpen} onOpenChange={setCreateOpen} templates={publishedTemplates} onCreate={actions.createCase} />
+      <NativeManualItemDialog open={manualItemOpen} onOpenChange={setManualItemOpen}
+        caseId={manualItemCaseId} actions={actions} />
+
+      {/* 原生恢复必须由用户明确确认；不会复活历史运行或决定。 */}
+      <ConfirmDialog
+        open={restoreOpen}
+        onOpenChange={setRestoreOpen}
+        title="恢复已归档案卷"
+        description={restoreTarget
+          ? `确认恢复「${restoreTarget.title}」？案卷将返回草稿阶段；历史运行、证据及决定保留供审计，但不恢复原先的审批有效性。`
+          : '请先选择已归档案卷。'}
+        confirmLabel="恢复并重新审核"
+        onConfirm={handleRestore}
+      />
 
       {/* 删除二次确认 */}
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title="删除案卷"
+        title="移除当前案卷"
         description={
           currentCase
-            ? `确认删除「${currentCase.title}」？该案卷的材料、规则大纲与审核记录会一并移除，且无法恢复。`
-            : '确认删除该案卷？'
+            ? `确认移除「${currentCase.title}」？已有 V2 业务记录的案卷将软归档并保留材料、运行及历史回执；仅未迁移的纯 V1 草稿仍按旧版规则删除。`
+            : '确认移除当前案卷？'
         }
-        confirmLabel="删除"
+        confirmLabel="移除"
         onConfirm={handleDelete}
       />
     </section>
   )
+}
+
+/** 兼容旧回归入口；普通审核页面使用 ReviewContextBar。 */
+export const CaseManagerBar = ReviewContextBar
+
+function executionLabel(status: import('@/atoms/review-atoms').ReviewExecutionViewState['status']): string {
+  const labels: Record<typeof status, string> = { idle: '待审核', preparing: '准备中', running: '审核中', 'awaiting-input': '待补充', completed: '已完成', partial: '部分完成', failed: '未完成', cancelled: '已取消' }
+  return labels[status]
 }

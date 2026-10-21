@@ -1,0 +1,21 @@
+
+apps/electron/src/main/lib/agent-orchestrator-permission-wiring.p06.test.ts:
+
+# Unhandled error between tests
+-------------------------------
+50 | configureAgentSessionProjectionPublisher(eventBus)
+51 | // 目录失效发布器单例：ipc.ts / remote-service.ts / workspace-watcher.ts 共享同一 revision 序列，
+52 | // 保证 Pocket 按 (catalog, workspaceSlug) 去重时看到的 revision 单调可信。
+53 | export const agentCatalogInvalidationPublisher = new AgentCatalogInvalidationPublisher(eventBus)
+54 | const adapter = new PiAgentAdapter()
+55 | const orchestrator = new AgentOrchestrator(adapter, eventBus)
+                              ^
+ReferenceError: Cannot access 'AgentOrchestrator' before initialization.
+      at /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/agent-service.ts:55:26
+-------------------------------
+
+
+ 0 pass
+ 1 fail
+ 1 error
+Ran 1 test across 1 file. [256.00ms]

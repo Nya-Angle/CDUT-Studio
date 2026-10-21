@@ -1,0 +1,176 @@
+{
+  "templateId": "g03-t02",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "item-a",
+      "subjectId": "g03-t02-subject-a",
+      "title": "SYNTHETIC 部门会议室与会议用途预约对象A",
+      "businessType": "g03-meeting-slot",
+      "scenario": "p-school-office",
+      "scenarioSource": {
+        "sourceId": "synthetic-choice",
+        "sourceVersionId": "synthetic-g03-t02-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "c-international",
+          "applicability": "applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-classified",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-leader-attends",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-social-science",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-high-risk",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-hybrid",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-multiple-slots",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-revision",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-fee",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-delegated",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "item-b",
+      "subjectId": "g03-t02-subject-b",
+      "title": "SYNTHETIC 部门会议室与会议用途预约对象B",
+      "businessType": "g03-meeting-slot",
+      "scenario": "p-department",
+      "scenarioSource": {
+        "sourceId": "synthetic-choice",
+        "sourceVersionId": "synthetic-g03-t02-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "c-international",
+          "applicability": "unknown",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "c-classified",
+          "applicability": "applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-leader-attends",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-social-science",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-high-risk",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-hybrid",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-multiple-slots",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-revision",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-fee",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-delegated",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t02-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

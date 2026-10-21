@@ -1,0 +1,35 @@
+[配置] 已创建 SDK 配置目录: /tmp/review-startup-io-AcwJ7N/sdk-config
+[审核模板] 已发布: startup-SESSION_5a36834f066b@1
+[配置] 已创建 Agent 会话目录: /tmp/review-startup-io-AcwJ7N/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/review-startup-io-AcwJ7N/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/review-startup-io-AcwJ7N/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/review-startup-io-AcwJ7N/agent-workspaces/default/SESSION_e61e5ba41989
+[Agent 会话] 已创建会话: 合成 owner (SESSION_e61e5ba41989)
+[审核模板] 已发布: startup-SESSION_09cf85b98328@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-startup-io-AcwJ7N/agent-workspaces/default/SESSION_8fda405eab52
+[Agent 会话] 已创建会话: 合成 owner (SESSION_8fda405eab52)
+[审核模板] 已发布: startup-SESSION_8045cd269480@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-startup-io-AcwJ7N/agent-workspaces/default/SESSION_51d711521d9f
+[Agent 会话] 已创建会话: 合成 owner (SESSION_51d711521d9f)
+[审核模板] 已发布: bg-probe-template-886a8943@1
+[审核模板] 已发布: bg-probe-template-c35d6a20@1
+[审核模板] 已发布: bg-probe-template-290c89ee@1
+[审核模板] 已发布: bg-probe-template-d5b81317@1
+[审核模板] 已发布: bg-probe-template-e15bbca4@1
+[审核模板] 已发布: bg-probe-template-09fa9d35@1
+[审核模板] 已发布: bg-probe-template-926259a0@1
+[审核模板] 已发布: bg-probe-template-ec237568@1
+[审核模板] 已发布: bg-probe-template-29efd8cf@1
+[审核模板] 已发布: bg-probe-template-f83337a4@1
+[审核模板] 已发布: bg-probe-template-84431410@1
+[审核模板] 已发布: bg-probe-template-5a5fcac0@1
+[审核模板] 已发布: bg-probe-template-20c6a9b1@1
+[审核模板] 已发布: bg-probe-template-6b1d9ab4@1
+[审核模板] 已发布: bg-probe-template-39fb7106@1
+[审核模板] 已发布: bg-probe-template-891ff9f1@1
+[审核模板] 已发布: bg-probe-template-384f307b@1
+[审核模板] 已发布: bg-probe-template-fff0d946@1
+[审核模板] 已发布: bg-probe-template-ad2c3763@1
+[审核模板] 已发布: bg-probe-template-604bbba6@1
+R1_EQUIV_HOOK_CONTROLLER witness_reads=2 stale_rejected=true
+R1_EQUIV_HOOK_HOOK witness_reads=2 stale_rejected=true

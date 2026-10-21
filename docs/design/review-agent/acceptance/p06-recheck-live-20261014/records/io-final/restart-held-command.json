@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-14T16:18:00.163769+00:00",
+  "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+  "operation": "SIGKILL isolated Electron Main then launch fresh process with I/O fault held",
+  "oldMainPid": 973527,
+  "runOriginalMode": "0400",
+  "configAndRunDirMode": "0500",
+  "ownerJournalMode": "0400",
+  "straceSha256": "044e3fe13ae66d1bbeb10dee4f34bc2ac019920efb876c9a458672e6ab38b4dd"
+}

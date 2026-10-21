@@ -27,6 +27,9 @@ export function applyModelDiscoveryResult(
       // 1M 勾选是用户显式设置，远端发现只负责「清单里有哪些模型」，
       // 不能因为重新拉取就把它洗掉。
       ...(previous?.context1m !== undefined && { context1m: previous.context1m }),
+      // token 上限由用户配置，远端清单刷新不得覆盖本地运行参数。
+      ...(previous?.contextWindow !== undefined && { contextWindow: previous.contextWindow }),
+      ...(previous?.maxTokens !== undefined && { maxTokens: previous.maxTokens }),
       source: 'fetched' as const,
     }
   })

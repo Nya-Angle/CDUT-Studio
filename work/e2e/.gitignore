@@ -1,0 +1,3 @@
+# E2E 运行期配置根与临时产物，不入库（每次由 setup-config.mjs 重建）
+config/
+*.log

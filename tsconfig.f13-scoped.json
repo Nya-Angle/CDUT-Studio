@@ -1,0 +1,14 @@
+{
+  "extends": "./apps/electron/tsconfig.json",
+  "include": [
+    "apps/electron/src/preload/index.ts",
+    "apps/electron/src/renderer/vite-env.d.ts",
+    "apps/electron/src/main/lib/review/review-v3-t05-appeal-actions.ts",
+    "apps/electron/src/main/lib/review/review-v3-f13-appeal-flow.ts",
+    "apps/electron/src/main/lib/review/review-v3-f13-appeal-flow.test.ts",
+    "apps/electron/src/renderer/components/content-review/review-v3-f13-appeal-history.ts",
+    "apps/electron/src/renderer/components/content-review/review-v3-f13-appeal-history.test.ts",
+    "apps/electron/src/renderer/components/content-review/ReviewV3F13AppealHistory.tsx",
+    "apps/electron/src/renderer/components/content-review/ReviewV3T05HumanWorkflow.tsx"
+  ]
+}

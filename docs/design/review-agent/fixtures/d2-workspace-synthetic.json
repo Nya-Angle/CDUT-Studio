@@ -1,0 +1,313 @@
+{
+  "schemaVersion": 1,
+  "workspaceId": "d2-synthetic",
+  "revision": 1,
+  "definitions": {
+    "modules": [
+      {
+        "moduleId": "text-structure",
+        "version": 1,
+        "name": "文本章节核对",
+        "purpose": "核对文档约定的章节结构",
+        "scope": "当前申请中已明确指定的审核对象",
+        "source": {
+          "kind": "synthetic",
+          "note": "D0.5 合成案例，非成都理工大学或其他学校的现行规则"
+        },
+        "limits": "材料预审不等于行政批准，不得对不相关对象复用资格结论",
+        "tasks": [
+          {
+            "id": "structure",
+            "title": "章节完整性",
+            "requirement": "核对提交文本是否包含摘要、正文及结论；不可读时保留待核状态",
+            "completion": "记录独立局部状态、可追溯依据与未完成原因",
+            "limits": "本责任不产生正式批准或拒批"
+          }
+        ],
+        "parameters": []
+      },
+      {
+        "moduleId": "agent-authorization",
+        "version": 1,
+        "name": "代理权限范围核验",
+        "purpose": "判断代理授权是否覆盖当事人及本次操作",
+        "scope": "当前申请中已明确指定的审核对象",
+        "source": {
+          "kind": "synthetic",
+          "note": "D0.5 合成案例，非成都理工大学或其他学校的现行规则"
+        },
+        "limits": "材料预审不等于行政批准，不得对不相关对象复用资格结论",
+        "tasks": [
+          {
+            "id": "authorization",
+            "title": "当前动作授权",
+            "requirement": "核对授权是否覆盖 {{action}} 动作、对象和有效期限；其他操作授权不得移用",
+            "completion": "记录独立局部状态、可追溯依据与未完成原因",
+            "limits": "本责任不产生正式批准或拒批"
+          }
+        ],
+        "parameters": [
+          {
+            "key": "action",
+            "description": "当前独立申请操作"
+          }
+        ]
+      },
+      {
+        "moduleId": "family-relationship",
+        "version": 1,
+        "name": "家属关系材料核验",
+        "purpose": "核对家属卡申请关系与证据",
+        "scope": "当前申请中已明确指定的审核对象",
+        "source": {
+          "kind": "synthetic",
+          "note": "D0.5 合成案例，非成都理工大学或其他学校的现行规则"
+        },
+        "limits": "材料预审不等于行政批准，不得对不相关对象复用资格结论",
+        "tasks": [
+          {
+            "id": "relation",
+            "title": "关系证明",
+            "requirement": "核对申请人、拟持卡人与关联教职工的关系；关联教职工已故时不可机械等同于无资格",
+            "completion": "记录独立局部状态、可追溯依据与未完成原因",
+            "limits": "本责任不产生正式批准或拒批"
+          }
+        ],
+        "parameters": []
+      },
+      {
+        "moduleId": "temporary-person",
+        "version": 1,
+        "name": "临时服务人员事实核验",
+        "purpose": "核对服务事实与人员对应关系",
+        "scope": "当前申请中已明确指定的审核对象",
+        "source": {
+          "kind": "synthetic",
+          "note": "D0.5 合成案例，非成都理工大学或其他学校的现行规则"
+        },
+        "limits": "材料预审不等于行政批准，不得对不相关对象复用资格结论",
+        "tasks": [
+          {
+            "id": "service-link",
+            "title": "服务人员归属",
+            "requirement": "核对具体服务人员与接收单位、服务期的关联；存在派遣协议不等于该人员已经获批卡资格",
+            "completion": "记录独立局部状态、可追溯依据与未完成原因",
+            "limits": "本责任不产生正式批准或拒批"
+          }
+        ],
+        "parameters": []
+      },
+      {
+        "moduleId": "archive-open-status",
+        "version": 1,
+        "name": "档案开放状态核验",
+        "purpose": "区分档案目录可见与开放授权",
+        "scope": "当前申请中已明确指定的审核对象",
+        "source": {
+          "kind": "synthetic",
+          "note": "D0.5 合成案例，非成都理工大学或其他学校的现行规则"
+        },
+        "limits": "材料预审不等于行政批准，不得对不相关对象复用资格结论",
+        "tasks": [
+          {
+            "id": "open-state",
+            "title": "开放状态",
+            "requirement": "目录可见不等于馆方确认档案已开放；缺少可信开放记录须待人工核验",
+            "completion": "记录独立局部状态、可追溯依据与未完成原因",
+            "limits": "本责任不产生正式批准或拒批"
+          }
+        ],
+        "parameters": []
+      }
+    ],
+    "templates": [
+      {
+        "templateId": "text-review",
+        "version": 1,
+        "name": "普通文本结构核对（合成）",
+        "purpose": "按明确要求检查单篇文章章节",
+        "limits": "只提供编辑性核对意见，不作行政审批",
+        "source": {
+          "kind": "synthetic",
+          "note": "D0.5 合成案例，非成都理工大学或其他学校的现行规则"
+        },
+        "modules": [
+          {
+            "id": "text",
+            "moduleId": "text-structure",
+            "version": 1
+          }
+        ],
+        "localTasks": []
+      },
+      {
+        "templateId": "special-campus-card",
+        "version": 1,
+        "name": "特殊校园卡资格预审（合成）",
+        "purpose": "对家属卡和临时服务人员卡进行分支材料预审",
+        "limits": "不得将亲属或服务事实代替校方资格决定",
+        "source": {
+          "kind": "synthetic",
+          "note": "D0.5 合成案例，非成都理工大学或其他学校的现行规则"
+        },
+        "scenarios": [
+          "family",
+          "temporary-service"
+        ],
+        "modules": [
+          {
+            "id": "family-relation",
+            "moduleId": "family-relationship",
+            "version": 1,
+            "scenario": "family"
+          },
+          {
+            "id": "family-agent",
+            "moduleId": "agent-authorization",
+            "version": 1,
+            "scenario": "family",
+            "bindings": {
+              "action": "家属卡代办"
+            }
+          },
+          {
+            "id": "service-link",
+            "moduleId": "temporary-person",
+            "version": 1,
+            "scenario": "temporary-service"
+          },
+          {
+            "id": "service-agent",
+            "moduleId": "agent-authorization",
+            "version": 1,
+            "scenario": "temporary-service",
+            "bindings": {
+              "action": "临时人员卡代办"
+            }
+          }
+        ],
+        "localTasks": [
+          {
+            "id": "school-decision",
+            "title": "正式校方资格",
+            "requirement": "现有材料只能用于预审，学校制度有效性和发卡批准需由有权限部门认定",
+            "completion": "记录独立局部状态、可追溯依据与未完成原因",
+            "limits": "本责任不产生正式批准或拒批"
+          }
+        ]
+      },
+      {
+        "templateId": "archive-access",
+        "version": 1,
+        "name": "档案利用逐操作预审（合成）",
+        "purpose": "同一申请内按档案件与操作分别核验",
+        "limits": "查阅、摘录、复制、外借不得相互继承授权",
+        "source": {
+          "kind": "synthetic",
+          "note": "D0.5 合成案例，非成都理工大学或其他学校的现行规则"
+        },
+        "modules": [
+          {
+            "id": "item-1-read",
+            "moduleId": "agent-authorization",
+            "version": 1,
+            "objectKey": "item-1/read",
+            "bindings": {
+              "action": "查阅"
+            }
+          },
+          {
+            "id": "item-1-copy",
+            "moduleId": "agent-authorization",
+            "version": 1,
+            "objectKey": "item-1/copy",
+            "bindings": {
+              "action": "复制"
+            }
+          },
+          {
+            "id": "item-1-open",
+            "moduleId": "archive-open-status",
+            "version": 1,
+            "objectKey": "item-1"
+          }
+        ],
+        "localTasks": []
+      }
+    ]
+  },
+  "sources": [
+    {
+      "sourceId": "synthetic-source",
+      "kind": "synthetic",
+      "label": "合成样本材料",
+      "verification": "content-checked",
+      "applicability": "request-scope",
+      "note": "仅验证 D2 技术执行，不代表任何学校正式政策"
+    },
+    {
+      "sourceId": "school-policy-unverified",
+      "kind": "policy-candidate",
+      "label": "校本制度待确认",
+      "verification": "unverified",
+      "applicability": "unknown",
+      "note": "资格与学校审批仍需有权部门核验"
+    }
+  ],
+  "sourceBindings": [
+    {
+      "checkId": "text-review@1:module/text/structure",
+      "sourceIds": [
+        "synthetic-source"
+      ]
+    },
+    {
+      "checkId": "special-campus-card@1:local/school-decision",
+      "sourceIds": [
+        "school-policy-unverified"
+      ]
+    },
+    {
+      "checkId": "special-campus-card@1:module/family-relation/relation",
+      "sourceIds": [
+        "synthetic-source"
+      ]
+    },
+    {
+      "checkId": "special-campus-card@1:module/family-agent/authorization",
+      "sourceIds": [
+        "synthetic-source"
+      ]
+    },
+    {
+      "checkId": "special-campus-card@1:module/service-link/service-link",
+      "sourceIds": [
+        "synthetic-source"
+      ]
+    },
+    {
+      "checkId": "special-campus-card@1:module/service-agent/authorization",
+      "sourceIds": [
+        "synthetic-source"
+      ]
+    },
+    {
+      "checkId": "archive-access@1:module/item-1-read/authorization",
+      "sourceIds": [
+        "synthetic-source"
+      ]
+    },
+    {
+      "checkId": "archive-access@1:module/item-1-copy/authorization",
+      "sourceIds": [
+        "synthetic-source"
+      ]
+    },
+    {
+      "checkId": "archive-access@1:module/item-1-open/open-state",
+      "sourceIds": [
+        "synthetic-source"
+      ]
+    }
+  ]
+}

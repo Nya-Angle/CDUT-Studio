@@ -37,6 +37,7 @@ export function aggregateRatings(ratings: RatingEntry[], rubric: RubricSpec, fil
   for (const rating of scoped) {
     const naDimensions: string[] = []
     const missingDimensions: string[] = []
+    const invalidDimensions: string[] = []
     // 权重归一化基础：block 策略下 N/A 不重归一（直接阻断）；exclude 策略剔除后重归一
     let weightedSum = 0
     let weightBase = 0
@@ -50,12 +51,15 @@ export function aggregateRatings(ratings: RatingEntry[], rubric: RubricSpec, fil
       if (raw === 'N/A') {
         naDimensions.push(dimension.id)
         naCount += 1
-        if (naStrategy === 'exclude') continue
+        if (naStrategy === 'exclude' || naStrategy === 'exclude-renormalize') continue
         // block：N/A 视为不可评，阻断整体
         continue
       }
-      const clamped = Math.min(dimension.max, Math.max(dimension.min, raw))
-      weightedSum += clamped * dimension.weight
+      if (!Number.isFinite(raw) || raw < dimension.min || raw > dimension.max) {
+        invalidDimensions.push(dimension.id)
+        continue
+      }
+      weightedSum += raw * dimension.weight
       weightBase += dimension.weight
       // block 策略：N/A 出现即阻断
       if (naStrategy === 'block' && naDimensions.length > 0) continue
@@ -65,8 +69,9 @@ export function aggregateRatings(ratings: RatingEntry[], rubric: RubricSpec, fil
       perJudge.push({ actor: rating.actor, total: Number.NaN, naDimensions, missingDimensions })
       continue
     }
-    if (missingDimensions.length > 0) {
-      blocked.push(`评委 ${rating.actor} 缺评维度（${missingDimensions.join('、')}）`)
+    if (missingDimensions.length > 0 || invalidDimensions.length > 0) {
+      if (missingDimensions.length) blocked.push(`评委 ${rating.actor} 缺评维度（${missingDimensions.join('、')}）`)
+      if (invalidDimensions.length) blocked.push(`评委 ${rating.actor} 存在超出量表范围的维度（${invalidDimensions.join('、')}）`)
       perJudge.push({ actor: rating.actor, total: Number.NaN, naDimensions, missingDimensions })
       continue
     }
@@ -77,7 +82,7 @@ export function aggregateRatings(ratings: RatingEntry[], rubric: RubricSpec, fil
   // 唯一票检查（同 actor 同阶段重复）
   const seen = new Set<string>()
   for (const rating of scoped) {
-    const key = `${rating.stageId}:${rating.actor}`
+    const key = `${rating.stageId}:${rating.actor}:${rating.round}`
     if (seen.has(key)) blocked.push(`评委 ${rating.actor} 在 ${rating.stageId} 存在重复票（唯一票约束）`)
     seen.add(key)
   }
@@ -86,7 +91,8 @@ export function aggregateRatings(ratings: RatingEntry[], rubric: RubricSpec, fil
   const minJudges = rubric.minEffectiveJudges ?? 1
   if (valid.length < minJudges) blocked.push(`有效评委 ${valid.length} 人，低于最低人数 ${minJudges}`)
 
-  const average = valid.length > 0 ? Number((valid.reduce((sum, entry) => sum + entry.total, 0) / valid.length).toFixed(rubric.totalPrecision ?? 2)) : null
+  const average = blocked.length === 0 && valid.length > 0
+    ? Number((valid.reduce((sum, entry) => sum + entry.total, 0) / valid.length).toFixed(rubric.totalPrecision ?? 2)) : null
   return { perJudge, average, effectiveJudges: valid.length, naCount, missingCount, blocked }
 }
 

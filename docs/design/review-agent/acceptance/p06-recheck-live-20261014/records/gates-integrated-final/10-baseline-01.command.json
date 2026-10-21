@@ -1,0 +1,51 @@
+{
+  "name": "10-baseline-01",
+  "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014",
+  "argv": [
+    "bun",
+    "test",
+    "--isolate",
+    "--timeout",
+    "30000",
+    "apps/electron/src/main/lib/review/single-case-workspace.e2e.test.ts"
+  ],
+  "startedAt": "2026-10-14T16:52:47.334705+00:00",
+  "environment": {
+    "NO_COLOR": "1",
+    "PROFER_CONFIG_DIR": "/tmp/p06-live-gates-ascgmznf/config",
+    "PROFER_USER_DATA_DIR": "/tmp/p06-live-gates-ascgmznf/user-data",
+    "CI": "true"
+  },
+  "workingTreeDirty": true,
+  "qaSourceSha256": {
+    "scripts/qa/review-live-archive.py": "1a0a239677efc5fbcf1cc6e31b1c9c1fed83adb1661a0ce249e4d2877911dc1d",
+    "scripts/qa/review-live-e05.mjs": "fb5068796c0693134fec09d436d02ae1efacc372998b99f0a91a30dab3e5ae0e",
+    "scripts/qa/review-live-cleanup.py": "1cc984e0f649346d900ea549f596c0bc0428ee8db39fe23caabfba2a4b14333a",
+    "scripts/qa/review-live-launch.py": "9e4c9b9e85e529bb37c9616adaada034e2f35e2f1fff0c972136070d58338db0",
+    "scripts/qa/review-live-enter.mjs": "2a50b4369b26ee8042a6802269326d3b33c73e1e723db1b08dc1e0c503ebbf28",
+    "scripts/qa/review-live-bootstrap.mjs": "10133abcd09309e5e404f34b6954bd59c806c63f9f60ba452f25610faee9cdd0",
+    "scripts/qa/review-live-races.mjs": "e69846e010c042838ccf3b8aa34ab4f175e75e50ce8a5cc89504d26928d56b00",
+    "scripts/qa/review-live-gates.py": "6487b13580a745a75415e0d05f268f6bc5d85306f4bf862db1475e3e5fecbe6d",
+    "scripts/qa/review-live-command.py": "64db23f0a248e6bd315a6563c676d4715888d3b1dbc7a74063226b15ee5e3224",
+    "scripts/qa/review-live-batch.mjs": "f7b28b16d6387053f7cacc097dd8d978c4397c6baf77fad4652423145df86c71",
+    "scripts/qa/review-live-preview-restore.mjs": "f44218e85a77da53be1522d7975c13b0dcf516ffc97f40f892572f400feaa756",
+    "scripts/qa/review-live-cdp.mjs": "08bfe9c801a08ff9c9bff9938d9c89c5e59eb7e89c40adff28cedfb857682aef",
+    "scripts/qa/review-live-pdf.mjs": "f38d14dd15c98badcd79b928dc014d255f1464a90f11348da16b78b4abef0d10",
+    "scripts/qa/review-live-e06.mjs": "eba7b4496ee83711095fe0fbacbdee5539203aaaf3655f844e177801eabdf5ae",
+    "scripts/qa/review-live-io.mjs": "4571d30eac750b863b62714dac22123f0678caa49f5ddd8213fd39c04d7e3052",
+    "scripts/qa/review-live-main.ts": "a8d308921c429a9f72d89109736b32a1d0e952ed19c1e619096b3cb88964bbeb"
+  },
+  "finishedAt": "2026-10-14T16:52:47.631868+00:00",
+  "exitCode": 0,
+  "files": {
+    "10-baseline-01.stdout.log": {
+      "sha256": "3213a797e11b2d0426d9cface82be7d63da947fd6e39bbd7b600eb34db230341",
+      "bytes": 1534
+    },
+    "10-baseline-01.stderr.log": {
+      "sha256": "3aa4dbaadfaebd000cd957bf6221d0aad87ddb5fe340c396770ae7a21436d99c",
+      "bytes": 306
+    }
+  }
+}
