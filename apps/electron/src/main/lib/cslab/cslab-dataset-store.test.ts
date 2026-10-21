@@ -5,7 +5,7 @@
  */
 
 import { afterAll, beforeAll, describe, expect, test } from 'bun:test'
-import { mkdtempSync, rmSync, statSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, statSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { CsLabLab } from '@profer/shared'
@@ -159,5 +159,55 @@ describe('persistDigitizedFigure', () => {
     const fig = listAssets(lab.id).find((asset) => asset.uri === result.figUri)
     expect(fig?.format).toBe('png')
     expect(result.rowCount).toBe(2)
+  })
+})
+
+describe('exportAssetTableToFile', () => {
+  test('CSV 走 RowGroup 流式写出并保留 BOM 与列序', async () => {
+    const { persistDigitizedFigure } = await import('./cslab-dataset-store')
+    const { exportAssetTableToFile } = await import('./cslab-iron-cage')
+
+    const result = await persistDigitizedFigure({
+      labId: lab.id,
+      title: 'CSV 导出',
+      sourceUri: '',
+      imageDataUrl: PNG_DATA_URL,
+      calibration: CALIBRATION,
+      series: [
+        { label: 'A', points: [[0, 0], [1, 1], [2, 2]] },
+        { label: 'B', points: [[0, 10], [1, 11], [2, 12]] },
+      ],
+    })
+
+    const csvPath = join(rootDir, 'export-test.csv')
+    const exported = await exportAssetTableToFile(lab.id, result.tableUri, 'csv', csvPath)
+    expect(exported.success).toBe(true)
+    expect(exported.format).toBe('csv')
+
+    const text = readFileSync(csvPath, 'utf8')
+    expect(text.charCodeAt(0)).toBe(0xfeff)
+    const lines = text.replace(/^\uFEFF/, '').trimEnd().split('\n')
+    expect(lines[0]).toBe('x,y1,y2')
+    expect(lines[1]).toBe('0,0,10')
+    expect(lines[3]).toBe('2,2,12')
+  })
+
+  test('Parquet 导出为原始只读副本', async () => {
+    const { persistDigitizedFigure } = await import('./cslab-dataset-store')
+    const { exportAssetTableToFile } = await import('./cslab-iron-cage')
+
+    const result = await persistDigitizedFigure({
+      labId: lab.id,
+      title: 'Parquet 导出',
+      sourceUri: '',
+      imageDataUrl: PNG_DATA_URL,
+      calibration: CALIBRATION,
+      series: [{ label: 'A', points: [[0, 0], [1, 1]] }],
+    })
+
+    const parquetPath = join(rootDir, 'export-test.parquet')
+    const exported = await exportAssetTableToFile(lab.id, result.tableUri, 'parquet', parquetPath)
+    expect(exported.success).toBe(true)
+    expect(statSync(parquetPath).size).toBeGreaterThan(0)
   })
 })

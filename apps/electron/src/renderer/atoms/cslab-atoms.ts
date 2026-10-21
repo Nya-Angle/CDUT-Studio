@@ -37,7 +37,12 @@ import type {
   CsLabHpcMfaRequest,
   CsLabMolAsset,
   CsLabAtomSiteSelection,
+  CsLabPaneViewType,
+  CsLabPlotDocument,
+  CsLabPlotSummary,
 } from '@profer/shared'
+
+export type { CsLabPaneViewType }
 import type { CsLabAssetDragPayload } from '@/components/cdut-science/cslab-dnd'
 
 export interface CsLabClientAuthState {
@@ -91,7 +96,7 @@ export const cslabAssetsAtom = atom<CsLabAssetSummary[]>([])
 
 export type CsLabPaneId = 'pane-1' | 'pane-2' | 'pane-3' | 'pane-4'
 export type CsLabSplitLayout = 'single' | 'split-vertical' | 'split-horizontal' | 'grid-4'
-export type CsLabPaneViewType = 'empty' | 'table' | 'manuscript' | 'pdf' | 'dag' | 'mol'
+export type CsLabDatasetDisplayMode = 'split' | 'strip' | 'table'
 
 export interface CsLabPaneState {
   id: CsLabPaneId
@@ -101,12 +106,20 @@ export interface CsLabPaneState {
   literatureUri?: string
   /** 分子/晶体窗格对应的 mol 资产 URI。 */
   molUri?: string
+  /** 图表/图像窗格对应的图片资产 URI。 */
+  figureUri?: string
+  /** 数据窗格的展示模式（曲线 / 表格 / 分屏）。 */
+  datasetDisplayMode?: CsLabDatasetDisplayMode
+  /** 数据窗格当前可见的通道 key；缺省表示全部显示。 */
+  activeSeriesKeys?: string[]
   /** DAG 窗格对应的 Canvas 相对路径。 */
   canvasRelPath?: string
   /** 打开 Canvas 时的磁盘 mtime（冲突检测基线）。 */
   canvasMtimeMs?: number
   /** PDF 窗格首次定位页码（1 起）。 */
   pdfInitialPage?: number
+  /** 出版图窗格对应的绘图文档标识。 */
+  plotId?: string
 }
 
 export const CSLAB_PANE_IDS: CsLabPaneId[] = ['pane-1', 'pane-2', 'pane-3', 'pane-4']
@@ -166,6 +179,17 @@ export const cslabPaneMolAtom = atom<Record<CsLabPaneId, CsLabMolAsset | null>>(
   emptyRecord(() => null),
 )
 
+/** 每窗格的出版绘图文档载荷。 */
+export const cslabPanePlotsAtom = atom<Record<CsLabPaneId, CsLabPlotDocument | null>>(
+  emptyRecord(() => null),
+)
+
+/** 当前实验室的出版图列表（左侧资产导航使用）。 */
+export const cslabPlotListAtom = atom<CsLabPlotSummary[]>([])
+
+/** 当前激活的绘图文档（抽屉与导出共享）。 */
+export const cslabActivePlotAtom = atom<CsLabPlotDocument | null>(null)
+
 /** Zotero 同步状态（文献库可用性、批注计数与监听状态）。 */
 export const cslabZoteroStatusAtom = atom<CsLabZoteroStatus | null>(null)
 
@@ -224,6 +248,10 @@ export type CsLabDrawerMode =
   | 'tools'
   | 'share'
   | 'hpc'
+  | 'fit'
+  | 'symmetry'
+  | 'pxrd'
+  | 'isosurface'
 
 export interface CsLabPdfSelection {
   literatureUri: string
@@ -289,3 +317,11 @@ export const cslabHpcMfaAtom = atom<CsLabHpcMfaRequest | null>(null)
 
 /** 最近一次 3D 原子拾取（供谱带高亮与后续 Agent 上下文）。 */
 export const cslabAtomSelectionAtom = atom<CsLabAtomSiteSelection | null>(null)
+
+// ===== 文件能力动作种子 =====
+
+/** 从数据集动作栏进入工具抽屉时携带的数据表绝对路径。 */
+export const cslabToolSeedAtom = atom<{ path: string; label: string } | null>(null)
+
+/** 从数据集动作栏进入实验批次抽屉时预选的资产。 */
+export const cslabRunSeedAtom = atom<{ assetUri: string; title: string } | null>(null)

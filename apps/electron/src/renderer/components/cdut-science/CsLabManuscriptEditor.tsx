@@ -38,6 +38,8 @@ import {
   AlertCircle,
   FileText,
   Clock,
+  ChevronDown,
+  Link2,
 } from 'lucide-react'
 import type { CsLabCapsule, CsLabManuscript } from '@profer/shared'
 import { cn } from '@/lib/utils'
@@ -149,6 +151,8 @@ export function CsLabManuscriptEditor({
     React.useState<Exclude<CsLabSuggestionPersona, 'human'>>('Methodology_Reviewer')
   const [reviewBusy, setReviewBusy] = React.useState(false)
   const [suggestions, setSuggestions] = React.useState<CsLabCollectedSuggestion[]>([])
+  const [reviewMenuOpen, setReviewMenuOpen] = React.useState(false)
+  const [capsuleMenuOpen, setCapsuleMenuOpen] = React.useState(false)
 
   const lastDirtyRef = React.useRef<boolean | null>(null)
   const lastTitleRef = React.useRef<string | null>(null)
@@ -469,6 +473,102 @@ export function CsLabManuscriptEditor({
 
           {/* 快速保存 / 另存为操作组 */}
           <div className="flex items-center gap-1.5">
+            <div className="relative">
+              <button
+                type="button"
+                disabled={!editor || reviewBusy}
+                onClick={() => {
+                  setCapsuleMenuOpen(false)
+                  setReviewMenuOpen((value) => !value)
+                }}
+                className="inline-flex h-6 items-center gap-1 rounded border border-cslab-accent/40 bg-cslab-accent/10 px-2 text-[11px] font-medium text-cslab-accent transition-colors hover:bg-cslab-accent/15 disabled:cursor-not-allowed disabled:opacity-50"
+                title="选择 AI 审稿专家，对正文生成修订与旁注"
+              >
+                {reviewBusy ? (
+                  <Loader2 size={10} className="animate-spin" />
+                ) : (
+                  <Sparkles size={10} />
+                )}
+                AI 审稿专家体检
+                <ChevronDown size={10} />
+              </button>
+              {reviewMenuOpen && (
+                <div className="absolute right-0 top-full z-40 mt-1 w-56 rounded-lg border border-cslab-border bg-cslab-elevated py-1 shadow-subtle">
+                  {CSLAB_REVIEWER_PERSONAS.map((persona) => {
+                    const meta = CSLAB_PERSONA_META[persona]
+                    return (
+                      <button
+                        key={persona}
+                        type="button"
+                        onClick={() => {
+                          setReviewMenuOpen(false)
+                          setReviewPersona(persona)
+                          void handleAiReview(persona)
+                        }}
+                        className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-[11px] text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-800"
+                      >
+                        <span
+                          className="inline-block size-2 rounded-full"
+                          style={{ background: meta.color }}
+                        />
+                        {meta.title}
+                      </button>
+                    )
+                  })}
+                  <div className="my-1 h-px bg-cslab-border" />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setReviewMenuOpen(false)
+                      handleLocalCheck()
+                    }}
+                    className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-[11px] text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                  >
+                    <CheckCircle2 size={10} />
+                    本地确定性体检
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="relative">
+              <button
+                type="button"
+                disabled={manuscript.capsules.length === 0}
+                onClick={() => {
+                  setReviewMenuOpen(false)
+                  setCapsuleMenuOpen((value) => !value)
+                }}
+                className="inline-flex h-6 items-center gap-1 rounded border border-zinc-300 bg-white px-2 text-[11px] font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+                title="查看已保存胶囊的数据血缘"
+              >
+                <Link2 size={10} />
+                胶囊血缘
+                <ChevronDown size={10} />
+              </button>
+              {capsuleMenuOpen && (
+                <div className="absolute right-0 top-full z-40 mt-1 max-h-64 w-60 overflow-auto rounded-lg border border-cslab-border bg-cslab-elevated py-1 shadow-subtle">
+                  {manuscript.capsules.map((capsule) => (
+                    <button
+                      key={capsule.id}
+                      type="button"
+                      onClick={() => {
+                        setCapsuleMenuOpen(false)
+                        onCapsuleClick(capsule.id)
+                      }}
+                      className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-[11px] text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-800"
+                    >
+                      <Link2 size={10} className="shrink-0 text-cslab-accent" />
+                      <span className="min-w-0 flex-1 truncate">{capsule.label}</span>
+                      <span className="shrink-0 font-mono tabular-nums text-cslab-muted">
+                        {capsule.value}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <button
               type="button"
               onClick={() => void handleSave()}

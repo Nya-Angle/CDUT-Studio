@@ -313,3 +313,143 @@ export function buildMillerPlane(
     twoTheta: Number.isFinite(twoTheta) ? twoTheta : undefined,
   }
 }
+
+export interface EnumerateReflectionsOptions {
+  /** 最大扫描指数；默认 8，硬上限 12。 */
+  maxIndex?: number
+  wavelengthAngstrom?: number
+  minTwoTheta?: number
+  maxTwoTheta?: number
+  /** 返回条数上限，默认 120。 */
+  limit?: number
+}
+
+/**
+ * 枚举晶胞在给定 2θ 区间内可能出现的晶面族。
+ *
+ * 性能红线：
+ * - 先用 Bragg 下限 dMin = λ / (2·sin θmax) 截断 h/k/l 扫描立方体；
+ * - 每个候选先算 d 并做区间判定，再分配结果对象；
+ * - 默认扫描量在万组以内，纯同步耗时保持在毫秒级。
+ *
+ * 红线：这是按晶胞几何枚举出的「可能反射」，不含结构因子/强度，
+ * 仅用于谱图晶面标注，绝不冒充实测峰位。
+ */
+export function enumerateReflections(
+  cell: Pick<CsLabCrystalCell, 'a' | 'b' | 'c' | 'alpha' | 'beta' | 'gamma'>,
+  options: EnumerateReflectionsOptions = {},
+): CsLabXrdReflection[] {
+  const maxIndex = Math.max(1, Math.min(12, Math.round(options.maxIndex ?? 8)))
+  const minTwoTheta = Math.max(0, options.minTwoTheta ?? 0)
+  const maxTwoTheta = Math.min(180, options.maxTwoTheta ?? 90)
+  if (!(maxTwoTheta > minTwoTheta)) return []
+
+  const wavelength = options.wavelengthAngstrom ?? CSLAB_XRAY_WAVELENGTHS['Cu-Kα']
+  if (!(wavelength > 0)) return []
+
+  const dMin = wavelength / (2 * Math.sin((maxTwoTheta / 2) * DEG))
+  if (!(dMin > 0) || !Number.isFinite(dMin)) return []
+
+  const hMax = Math.min(maxIndex, Math.max(1, Math.ceil(cell.a / dMin)))
+  const kMax = Math.min(maxIndex, Math.max(1, Math.ceil(cell.b / dMin)))
+  const lMax = Math.min(maxIndex, Math.max(1, Math.ceil(cell.c / dMin)))
+
+  const results: CsLabXrdReflection[] = []
+  const seen = new Set<string>()
+
+  for (let h = 0; h <= hMax; h += 1) {
+    for (let k = -kMax; k <= kMax; k += 1) {
+      for (let l = -lMax; l <= lMax; l += 1) {
+        if (h === 0 && k === 0 && l === 0) continue
+        const key = canonicalKey(h, k, l)
+        if (seen.has(key)) continue
+        const d = dSpacing(cell, h, k, l)
+        if (!Number.isFinite(d) || d < dMin) continue
+        const twoTheta = twoThetaFromD(d, wavelength)
+        if (!Number.isFinite(twoTheta)) continue
+        if (twoTheta < minTwoTheta || twoTheta > maxTwoTheta) continue
+        seen.add(key)
+        results.push({ h, k, l, d, twoTheta, delta: 0 })
+      }
+    }
+  }
+
+  results.sort(
+    (left, right) =>
+      left.twoTheta - right.twoTheta ||
+      [left.h, left.k, left.l].filter((value) => value < 0).length -
+        [right.h, right.k, right.l].filter((value) => value < 0).length ||
+      right.d - left.d,
+  )
+
+  const limit = Math.max(0, Math.round(options.limit ?? 120))
+  return results.slice(0, limit)
+}
+
+export interface CsLabCellBasis {
+  ax: [number, number, number]
+  bx: [number, number, number]
+  cx: [number, number, number]
+  volume: number
+}
+
+/** 实空间基矢（a 沿 x 轴的标准取向），供结构解析与多面体计算复用。 */
+export function cellBasis(
+  cell: Pick<CsLabCrystalCell, 'a' | 'b' | 'c' | 'alpha' | 'beta' | 'gamma'>,
+): CsLabCellBasis {
+  const { ax, bx, vectorC, volume } = realBasis(cell)
+  return {
+    ax: [ax[0], ax[1], ax[2]],
+    bx: [bx[0], bx[1], bx[2]],
+    cx: [vectorC[0], vectorC[1], vectorC[2]],
+    volume,
+  }
+}
+
+/** 分数坐标 -> 笛卡尔坐标（Å）。 */
+export function fractionalToCartesian(
+  cell: Pick<CsLabCrystalCell, 'a' | 'b' | 'c' | 'alpha' | 'beta' | 'gamma'>,
+  fractional: readonly [number, number, number],
+): [number, number, number] {
+  const { ax, bx, cx } = cellBasis(cell)
+  return [
+    fractional[0] * ax[0] + fractional[1] * bx[0] + fractional[2] * cx[0],
+    fractional[0] * ax[1] + fractional[1] * bx[1] + fractional[2] * cx[1],
+    fractional[0] * ax[2] + fractional[1] * bx[2] + fractional[2] * cx[2],
+  ]
+}
+
+/** 笛卡尔坐标 -> 分数坐标；晶胞奇异时返回 null。 */
+export function cartesianToFractional(
+  cell: Pick<CsLabCrystalCell, 'a' | 'b' | 'c' | 'alpha' | 'beta' | 'gamma'>,
+  cartesian: readonly [number, number, number],
+): [number, number, number] | null {
+  const { ax, bx, cx } = cellBasis(cell)
+  const inverse = invert3([ax, bx, cx])
+  if (!inverse) return null
+  return [
+    inverse[0]![0]! * cartesian[0] + inverse[0]![1]! * cartesian[1] + inverse[0]![2]! * cartesian[2],
+    inverse[1]![0]! * cartesian[0] + inverse[1]![1]! * cartesian[1] + inverse[1]![2]! * cartesian[2],
+    inverse[2]![0]! * cartesian[0] + inverse[2]![1]! * cartesian[1] + inverse[2]![2]! * cartesian[2],
+  ]
+}
+
+/** 周期最小镜像距离（Å）；用于等价原子去重与近邻搜索。 */
+export function periodicDistance(
+  cell: Pick<CsLabCrystalCell, 'a' | 'b' | 'c' | 'alpha' | 'beta' | 'gamma'>,
+  left: readonly [number, number, number],
+  right: readonly [number, number, number],
+): number {
+  const delta: [number, number, number] = [
+    left[0] - right[0],
+    left[1] - right[1],
+    left[2] - right[2],
+  ]
+  // 最小镜像：先把分数差折叠到 [-0.5, 0.5]
+  for (let i = 0; i < 3; i += 1) {
+    const value = delta[i]!
+    delta[i] = value - Math.round(value)
+  }
+  const cart = fractionalToCartesian(cell, delta)
+  return Math.hypot(cart[0], cart[1], cart[2])
+}

@@ -7,7 +7,7 @@
 
 import * as React from 'react'
 import { useSetAtom } from 'jotai'
-import { ArrowUpRight, Loader2, Lock, Plus, Search, X } from 'lucide-react'
+import { ArrowUpRight, Loader2, Lock, Plus, Search, Sparkles, X } from 'lucide-react'
 import type { CsLabLab } from '@profer/shared'
 import { detectIsMac, detectIsWindows } from '@profer/ui'
 import { cn } from '@/lib/utils'
@@ -42,6 +42,7 @@ export function CsLabPreparationView(): React.ReactElement {
   const [openingId, setOpeningId] = React.useState<string | null>(null)
   const [error, setError] = React.useState<string | null>(null)
   const [createOpen, setCreateOpen] = React.useState(false)
+  const [demoLoading, setDemoLoading] = React.useState(false)
 
   const refresh = React.useCallback(async (): Promise<void> => {
     setLoading(true)
@@ -89,6 +90,20 @@ export function CsLabPreparationView(): React.ReactElement {
   const handleCreated = async (lab: CsLabLab): Promise<void> => {
     await refresh()
     await handleOpen(lab)
+  }
+
+  const handleCreateDemo = async (): Promise<void> => {
+    if (demoLoading) return
+    setDemoLoading(true)
+    setError(null)
+    try {
+      const result = await window.electronAPI.cslab.createDemoLab()
+      await handleCreated(result.lab)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '演示实验室创建失败')
+    } finally {
+      setDemoLoading(false)
+    }
   }
 
   // 锁定必须同时清空主进程内存会话，否则再次进入会被自动放行
@@ -186,6 +201,15 @@ export function CsLabPreparationView(): React.ReactElement {
               </span>
               <button
                 type="button"
+                onClick={() => void handleCreateDemo()}
+                disabled={demoLoading || !!openingId}
+                className="inline-flex items-center gap-1 rounded-full border border-cslab-border px-2.5 py-1 text-[11px] font-medium text-cslab-muted transition-colors hover:border-cslab-accent/40 hover:text-cslab-accent disabled:cursor-wait disabled:opacity-60"
+              >
+                {demoLoading ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                演示实验室
+              </button>
+              <button
+                type="button"
                 onClick={() => setCreateOpen(true)}
                 className="inline-flex items-center gap-1 rounded-full bg-cslab-accent px-2.5 py-1 text-[11px] font-medium text-white transition-colors hover:bg-cslab-accentHover"
               >
@@ -217,14 +241,25 @@ export function CsLabPreparationView(): React.ReactElement {
                   : '尝试更换关键词，或清空搜索查看全部实验室。'}
               </p>
               {labs.length === 0 && (
-                <button
-                  type="button"
-                  onClick={() => setCreateOpen(true)}
-                  className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-cslab-accent px-3.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-cslab-accentHover"
-                >
-                  <Plus size={13} />
-                  新建实验室
-                </button>
+                <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setCreateOpen(true)}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-cslab-accent px-3.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-cslab-accentHover"
+                  >
+                    <Plus size={13} />
+                    新建实验室
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void handleCreateDemo()}
+                    disabled={demoLoading}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-cslab-border px-3.5 py-1.5 text-xs font-medium text-cslab-muted transition-colors hover:border-cslab-accent/40 hover:text-cslab-accent disabled:opacity-60"
+                  >
+                    {demoLoading ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} />}
+                    一键创建演示实验室
+                  </button>
+                </div>
               )}
             </div>
           ) : (

@@ -11,6 +11,8 @@ import type {
   CsLabDagJobsCancelledEvent,
   CsLabHpcJobEvent,
   CsLabHpcMfaRequest,
+  CsLabPlotUpdatedEvent,
+  CsLabStructureFocusedEvent,
   CsLabShareStatusEvent,
   CsLabVaultChangedEvent,
   CsLabZoteroStatusEvent,
@@ -37,6 +39,8 @@ export interface CsLabEventHandlers {
   onShareStatus?: (event: CsLabShareStatusEvent) => void
   onHpcJob?: (event: CsLabHpcJobEvent) => void
   onHpcMfa?: (event: CsLabHpcMfaRequest) => void
+  onPlotUpdated?: (event: CsLabPlotUpdatedEvent) => void
+  onStructureFocused?: (event: CsLabStructureFocusedEvent) => void
 }
 
 export function useCsLabEvents(labId: string | null, handlers: CsLabEventHandlers = {}): void {
@@ -127,6 +131,16 @@ export function useCsLabEvents(labId: string | null, handlers: CsLabEventHandler
       handlersRef.current.onHpcMfa?.(event)
     })
 
+    const offPlotUpdated = window.electronAPI.cslab.onPlotUpdated((event) => {
+      if (event.labId !== labId) return
+      handlersRef.current.onPlotUpdated?.(event)
+    })
+
+    const offStructureFocused = window.electronAPI.cslab.onStructureFocused((event) => {
+      if (event.labId !== labId) return
+      handlersRef.current.onStructureFocused?.(event)
+    })
+
     return () => {
       offProgress()
       offAsset()
@@ -140,6 +154,8 @@ export function useCsLabEvents(labId: string | null, handlers: CsLabEventHandler
       offShareStatus()
       offHpcJob()
       offHpcMfa()
+      offPlotUpdated()
+      offStructureFocused?.()
     }
   }, [labId, setProgress, setStale, setToolProgress, setZoteroStatus, setShareStatus, setHpcJobs, setHpcMfa])
 }

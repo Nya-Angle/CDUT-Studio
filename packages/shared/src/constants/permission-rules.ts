@@ -17,12 +17,23 @@ export function isCanonicalAgentTool(toolName: string, canonicalName: string): b
 }
 
 /**
+ * CSLab 只读科学计算工具：纯计算/文件读取，不写文件、不改画板，免逐次确认。
+ */
+export const CSLAB_READ_ONLY_SCIENCE_TOOLS: readonly string[] = [
+  'cslab_list_lab_tools',
+  'cslab_analyze_crystal',
+  'cslab_simulate_pxrd',
+  'cslab_fit_peaks',
+  'cslab_focus_structure',
+]
+
+/**
  * CSLab 实验室 Python 工具由 pi-cslab-tools 动态装配。
- * 执行类工具必须逐次确认；只读的 cslab_list_lab_tools 不在此列。
+ * 执行类工具必须逐次确认；只读科学计算工具与 cslab_list_lab_tools 不在此列。
  */
 export function isCsLabExecutionTool(toolName: string): boolean {
   const name = toolName.trim()
-  return name.startsWith('cslab_') && name !== 'cslab_list_lab_tools'
+  return name.startsWith('cslab_') && !CSLAB_READ_ONLY_SCIENCE_TOOLS.includes(name)
 }
 
 /** 始终安全的工具（免询问） */
@@ -51,6 +62,11 @@ export const SAFE_TOOLS: readonly string[] = [
   'TodoRead',        // Todo 列表读取
   'TodoWrite',       // Todo 列表写入（无安全风险）
   'TaskOutput',      // 后台任务输出
+  // CSLab 只读科学计算：不写文件、不改画板，免询问
+  'cslab_analyze_crystal',
+  'cslab_simulate_pxrd',
+  'cslab_fit_peaks',
+  'cslab_focus_structure',
   // 注意：AskUserQuestion 不在此列表 — 由 canUseTool 拦截并展示交互式 UI
 ]
 

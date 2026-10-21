@@ -26,21 +26,37 @@ import {
   type CsLabAssetSummary,
   type CsLabAtomSiteSelection,
   type CsLabCrystalCell,
+  type CsLabIsoMesh,
   type CsLabMillerPlane,
   type CsLabMolAsset,
+  type CsLabPolyhedron,
   type CsLabTableSeries,
 } from '@profer/shared'
 import { cn } from '@/lib/utils'
 import { Atom as AtomIcon, Box, Loader2, Ruler, Triangle } from 'lucide-react'
 import { CsLabSpectrumStrip } from './CsLabSpectrumStrip'
 import { findVibrationalBands } from './cslab-vibrational'
-import { buildPluginSpec, DrawMillerPlane } from './cslab-molstar-state'
+import {
+  buildPluginSpec,
+  DrawCrystalPolyhedra,
+  DrawIsoSurface,
+  DrawMillerPlane,
+} from './cslab-molstar-state'
 
 interface CsLabMolstarViewerProps {
   labId: string
   asset: CsLabMolAsset
   onToast: (kind: 'info' | 'success' | 'error', text: string) => void
   onAtomSelection?: (selection: CsLabAtomSiteSelection) => void
+  /** 配位多面体（由 VESTA 工作台计算）。 */
+  polyhedra?: CsLabPolyhedron[]
+  /** 正/负相位等值面网格。 */
+  isoPositive?: CsLabIsoMesh | null
+  isoNegative?: CsLabIsoMesh | null
+  /** 超胞倍数（1-3）。 */
+  supercellRange?: { na: number; nb: number; nc: number }
+  /** 外部指定的 Miller 晶面（VESTA 工作台）。 */
+  externalPlane?: CsLabMillerPlane | null
 }
 
 type LoadState = 'idle' | 'loading' | 'ready' | 'error'
@@ -56,10 +72,18 @@ export function CsLabMolstarViewer({
   asset,
   onToast,
   onAtomSelection,
+  polyhedra,
+  isoPositive,
+  isoNegative,
+  supercellRange,
+  externalPlane,
 }: CsLabMolstarViewerProps): React.ReactElement {
   const containerRef = React.useRef<HTMLDivElement | null>(null)
   const pluginRef = React.useRef<PluginContext | null>(null)
   const planeRef = React.useRef<string | null>(null)
+  const polyhedraRef = React.useRef<string | null>(null)
+  const isoPositiveRef = React.useRef<string | null>(null)
+  const isoNegativeRef = React.useRef<string | null>(null)
   const [ready, setReady] = React.useState(false)
   const [state, setState] = React.useState<LoadState>('idle')
   const [supercell, setSupercell] = React.useState(true)
@@ -85,6 +109,10 @@ export function CsLabMolstarViewer({
     () => (selection ? findVibrationalBands(selection.element) : []),
     [selection],
   )
+
+  React.useEffect(() => {
+    if (externalPlane !== undefined) setPlane(externalPlane)
+  }, [externalPlane])
 
   // ===== 初始化 / 销毁 =====
   React.useEffect(() => {
@@ -226,7 +254,11 @@ export function CsLabMolstarViewer({
                 name: 'symmetry',
                 params: {
                   ijkMin: Vec3.create(0, 0, 0),
-                  ijkMax: Vec3.create(1, 1, 1),
+                  ijkMax: Vec3.create(
+                    Math.max(1, Math.min(3, Math.round(supercellRange?.na ?? 2))) - 1,
+                    Math.max(1, Math.min(3, Math.round(supercellRange?.nb ?? 2))) - 1,
+                    Math.max(1, Math.min(3, Math.round(supercellRange?.nc ?? 2))) - 1,
+                  ),
                   mergeBySymmetry: true,
                   dynamicBonds: undefined,
                 },
@@ -278,7 +310,18 @@ export function CsLabMolstarViewer({
     return () => {
       cancelled = true
     }
-  }, [ready, asset.uri, asset.text, asset.format, asset.title, supercell, onToast])
+  }, [
+    ready,
+    asset.uri,
+    asset.text,
+    asset.format,
+    asset.title,
+    supercell,
+    supercellRange?.na,
+    supercellRange?.nb,
+    supercellRange?.nc,
+    onToast,
+  ])
 
   // ===== 原子拾取（逆向联动） =====
   React.useEffect(() => {
@@ -372,6 +415,97 @@ export function CsLabMolstarViewer({
       cancelled = true
     }
   }, [ready, plane, cell, onToast])
+
+  // ===== 配位多面体 =====
+  React.useEffect(() => {
+    const plugin = pluginRef.current
+    if (!ready || !plugin) return
+    let cancelled = false
+
+    const apply = async (): Promise<void> => {
+      try {
+        const update = plugin.state.data.build()
+        if (polyhedraRef.current) update.delete(polyhedraRef.current)
+        let nextRef: string | null = null
+        if (polyhedra && polyhedra.length > 0) {
+          const vertices: number[] = []
+          const faces: number[] = []
+          let vertexOffset = 0
+          for (const polyhedron of polyhedra) {
+            vertices.push(...polyhedron.vertices)
+            for (const face of polyhedron.faces) faces.push(face + vertexOffset)
+            vertexOffset += polyhedron.vertices.length / 3
+          }
+          const node = update.toRoot().apply(DrawCrystalPolyhedra, {
+            vertices,
+            faces,
+            color: 0x4a90d9,
+            opacity: 0.45,
+          })
+          nextRef = node.ref
+        }
+        await update.commit()
+        if (!cancelled) polyhedraRef.current = nextRef
+      } catch (error) {
+        console.error('[CSLab Mol*] 配位多面体绘制失败:', error)
+      }
+    }
+
+    void apply()
+    return () => {
+      cancelled = true
+    }
+  }, [ready, polyhedra])
+
+  // ===== 等值面（增量更新） =====
+  React.useEffect(() => {
+    const plugin = pluginRef.current
+    if (!ready || !plugin) return
+    let cancelled = false
+
+    const applyMesh = async (
+      mesh: CsLabIsoMesh | null | undefined,
+      reference: React.MutableRefObject<string | null>,
+      color: number,
+      label: string,
+    ): Promise<void> => {
+      const update = plugin.state.data.build()
+      if (!mesh || mesh.indices.length < 3) {
+        if (reference.current) update.delete(reference.current)
+        await update.commit()
+        reference.current = null
+        return
+      }
+      const maxTriangles = 40_000
+      const triangleCount = Math.min(mesh.triangleCount, maxTriangles)
+      const vertexCount = triangleCount * 3
+      const positions = Array.from(mesh.positions.slice(0, vertexCount * 3))
+      const normals = Array.from(mesh.normals.slice(0, vertexCount * 3))
+      const indices = Array.from(mesh.indices.slice(0, vertexCount))
+      const params = { positions, normals, indices, color, label }
+      if (reference.current) {
+        update.to(reference.current).update(params)
+      } else {
+        const node = update.toRoot().apply(DrawIsoSurface, params)
+        reference.current = node.ref
+      }
+      await update.commit()
+    }
+
+    const apply = async (): Promise<void> => {
+      try {
+        await applyMesh(isoPositive, isoPositiveRef, 0xf2c94c, 'Isosurface (+)')
+        if (!cancelled) await applyMesh(isoNegative, isoNegativeRef, 0x5da8d8, 'Isosurface (-)')
+      } catch (error) {
+        console.error('[CSLab Mol*] 等值面绘制失败:', error)
+      }
+    }
+
+    void apply()
+    return () => {
+      cancelled = true
+    }
+  }, [ready, isoPositive, isoNegative])
 
   // ===== 谱图数据 =====
   React.useEffect(() => {

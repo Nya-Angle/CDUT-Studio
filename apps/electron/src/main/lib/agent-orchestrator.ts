@@ -129,6 +129,7 @@ import { pauseActivePiHarnessRun, settlePiHarnessRun, startPiHarnessRun } from '
 import type { CommandExecutionResult } from './command-execution'
 import { createCommandExecutionLedger } from './pi-execution-ledger'
 import { getSettings } from './settings-service'
+import { getCsLabPromptLabInfo } from './cslab/cslab-science'
 import { buildSystemPrompt, buildDynamicContext } from './agent-prompt-builder'
 import { buildPiTaskPrompt } from './pi-task-prompt'
 import { ensurePresetSystemReady, getAgentPresetByReference, presetReferenceForId } from './agent-preset-manager'
@@ -1690,6 +1691,10 @@ export class AgentOrchestrator {
         'TaskOutput',
         'ListMcpResourcesTool',
         'ReadMcpResourceTool',
+        // CSLab 只读科学计算：纯计算/读取，不产生文件或画板副作用
+        'cslab_analyze_crystal',
+        'cslab_simulate_pxrd',
+        'cslab_fit_peaks',
       ])
       const DEFERRED_OR_PROACTIVE_TOOLS = new Set([
         'REPL',
@@ -1941,6 +1946,7 @@ export class AgentOrchestrator {
         shellPreference,
       })
       const promptShellPath = piRuntimeEnv.shellPath
+      const cslabLabInfo = sessionMeta?.cslabLabId ? await getCsLabPromptLabInfo(sessionMeta.cslabLabId) : undefined
       const baseSystemPrompt = buildSystemPrompt({
         workspaceName: workspace?.name,
         workspaceSlug,
@@ -1971,6 +1977,8 @@ export class AgentOrchestrator {
         studyCognition: isStudyClass ? describeCognitionForPrompt(readStudentCognition(sessionId)) : undefined,
         // 索引模式使用 <conversation_memory> 替代 transcript 路径
         contextMode: indexMode ? 'index' : 'classic',
+        cslabLabBound: Boolean(sessionMeta?.cslabLabId),
+        cslabLabInfo,
         })
       // Pi 没有 Claude preset；普通任务只携带核心规则，低频 SOP 按任务与实际工具恢复。
       // 必须先压缩纯基础 Prompt，再追加附加目录和 preset 自定义段，避免标题截取误删后置上下文。

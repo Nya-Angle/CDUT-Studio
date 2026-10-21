@@ -1,6 +1,8 @@
 import { describe, expect, test } from 'bun:test'
 import {
+  SAFE_TOOLS,
   hasDangerousPowerShellStructure,
+  isCsLabExecutionTool,
   isSafePowerShellCommand,
 } from './permission-rules'
 
@@ -25,5 +27,22 @@ describe('PowerShell permission rules', () => {
     expect(hasDangerousPowerShellStructure('Get-Process | Select-Object Name')).toBe(true)
     expect(hasDangerousPowerShellStructure('Get-Item $(Get-Location)')).toBe(true)
     expect(hasDangerousPowerShellStructure('Get-ChildItem > out.txt')).toBe(true)
+  })
+})
+
+describe('CSLab 科学工具权限分级', () => {
+  test('Given 只读科学计算工具 When 判定 Then 免逐次审批且进入安全白名单', () => {
+    for (const toolName of ['cslab_analyze_crystal', 'cslab_simulate_pxrd', 'cslab_fit_peaks']) {
+      expect(isCsLabExecutionTool(toolName)).toBe(false)
+      expect(SAFE_TOOLS).toContain(toolName)
+    }
+    expect(isCsLabExecutionTool('cslab_list_lab_tools')).toBe(false)
+  })
+
+  test('Given 会写文件或改画板的工具 When 判定 Then 仍视为执行类工具', () => {
+    expect(isCsLabExecutionTool('cslab_render_plot')).toBe(true)
+    expect(isCsLabExecutionTool('cslab_export_figure')).toBe(true)
+    expect(SAFE_TOOLS).not.toContain('cslab_render_plot')
+    expect(SAFE_TOOLS).not.toContain('cslab_export_figure')
   })
 })

@@ -12,6 +12,8 @@ import { CSLAB_CELL_MIME } from './cslab-dnd'
 interface CsLabIronCageTableProps {
   payload: CsLabTablePayload
   onCellClick?: (cell: CsLabCellRef) => void
+  /** 与曲线联动时高亮的预览行索引。 */
+  highlightRowIndex?: number
 }
 
 function formatCell(value: CsLabCellValue): string {
@@ -44,8 +46,15 @@ function buildCellRef(payload: CsLabTablePayload, columnIndex: number, rowIndex:
 export function CsLabIronCageTable({
   payload,
   onCellClick,
+  highlightRowIndex,
 }: CsLabIronCageTableProps): React.ReactElement {
   const [copied, setCopied] = React.useState(false)
+  const highlightRowRef = React.useRef<HTMLTableRowElement | null>(null)
+
+  React.useEffect(() => {
+    if (highlightRowIndex == null) return
+    highlightRowRef.current?.scrollIntoView({ block: 'nearest' })
+  }, [highlightRowIndex])
 
   const handleCopy = async (): Promise<void> => {
     try {
@@ -115,7 +124,15 @@ export function CsLabIronCageTable({
           </thead>
           <tbody>
             {payload.rows.map((row, rowIndex) => (
-              <tr key={rowIndex} className="group">
+              <tr
+                key={rowIndex}
+                ref={highlightRowIndex === rowIndex ? highlightRowRef : undefined}
+                className={
+                  highlightRowIndex === rowIndex
+                    ? 'group bg-cslab-accent/10'
+                    : 'group'
+                }
+              >
                 <td className="border-b border-cslab-border/60 px-3 py-1.5 text-[10px] tabular-nums text-cslab-muted/70">
                   {rowIndex + 1}
                 </td>

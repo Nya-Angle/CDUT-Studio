@@ -206,6 +206,7 @@ import {
 import { startScheduler, stopScheduler } from './lib/automation-scheduler'
 import { startPlanningReminderScheduler, stopPlanningReminderScheduler } from './lib/planning-reminder-scheduler'
 import { destroyPlanningWindow } from './lib/planning-window'
+import { destroyCsLabAgentWindow } from './lib/cslab/cslab-window-manager'
 import { getWindowFrameColor, updateWindowFrameAppearance } from './lib/titlebar-overlay'
 import { feishuBridgeManager } from './lib/feishu-bridge-manager'
 import { getFeishuMultiBotConfig } from './lib/feishu-config'
@@ -838,6 +839,8 @@ function createWindow(): void {
   mainWindow.on('closed', () => {
     mainWindow = null
     setMainWindow(null)
+    // 助理窗口与主窗口生命周期强绑定，避免成为无主孤儿窗口
+    destroyCsLabAgentWindow()
     browserController.dispose()
     yanhuExpressManager.dispose()
     yanhuPetWindowManager.dispose()
@@ -1209,6 +1212,8 @@ app.on('before-quit', () => {
   stopPlanningReminderScheduler()
   // 销毁规划窗口
   destroyPlanningWindow()
+  // 销毁科学助理独立窗口
+  destroyCsLabAgentWindow()
   // 停止移动端版远程服务
   stopRemoteService()
   // 停止 Agent Fabric 本地服务

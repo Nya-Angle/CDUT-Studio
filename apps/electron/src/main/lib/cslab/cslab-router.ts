@@ -26,6 +26,8 @@ import type {
   CsLabTablePayload,
   CsLabCellValue,
   CsLabAssetSummary,
+  CsLabAssetDataUrl,
+  CsLabAssetFileInfo,
   CsLabCapsuleLineage,
   CsLabPythonCapability,
   CsLabDocxImportResult,
@@ -35,6 +37,8 @@ import type {
   CsLabLiteratureSearchInput,
   CsLabPlotDigitizeInput,
   CsLabDigitizedFigureInput,
+  CsLabTableExportFormat,
+  CsLabTableExportResult,
   CsLabToolProfile,
   CsLabZoteroDiscovery,
   CsLabZoteroStatus,
@@ -47,7 +51,28 @@ import type {
   CsLabUpdateRunInput,
   CsLabCustomToolRunInput,
   CsLabSessionLabBinding,
+  CsLabAgentContext,
+  CsLabPlotUndoResult,
+  CsLabFitRequest,
+  CsLabSmoothRequest,
+  CsLabPlotDocument,
+  CsLabPlotExportOptions,
+  CsLabPxrdOptions,
+  CsLabPlotExportResult,
+  CsLabDemoLabResult,
 } from '@profer/shared'
+import { createDemoLab } from './cslab-demo'
+import {
+  analyzeCrystalAsset,
+  exportFigure,
+  fitPeaks as fitPeaksService,
+  getVolumeGrid,
+  listPlots,
+  loadPlot,
+  savePlot,
+  simulatePxrdAsset,
+  smoothSeries as smoothSeriesService,
+} from './cslab-science'
 import { CSLAB_IPC_CHANNELS } from './cslab-types'
 import { csLabService } from './cslab-service'
 import {
@@ -65,10 +90,14 @@ import {
   openLab,
 } from './cslab-manager'
 import {
+  exportAssetTableToFile,
+  getAssetEntity,
   getAssetTable,
   getTableCell,
   ingestFiles,
   listAssets,
+  resolveAssetPath,
+  resolveDerivedTableUri,
 } from './cslab-iron-cage'
 import { checkStaleness, getCapsuleLineage, updateCapsule } from './cslab-capsule'
 import {
@@ -87,6 +116,12 @@ import {
 import { runOoxmlTask } from './cslab-ooxml'
 import { getPythonCapability } from './cslab-python'
 import { broadcastCsLabEvent } from './cslab-events'
+import { restorePlotUndoSnapshot } from './cslab-plot-history'
+import {
+  getCsLabAgentWindowContext,
+  openCsLabAgentWindow,
+  sendCsLabAgentContext,
+} from './cslab-window-manager'
 import {
   discoverZotero,
   getZoteroStatus,
@@ -237,6 +272,66 @@ function asObject(value: unknown, label: string): Record<string, unknown> {
   return value as Record<string, unknown>
 }
 
+/** 图片资产允许的扩展名 -> MIME；未知扩展名直接拒绝。 */
+const CSLAB_IMAGE_MIME: Record<string, string> = {
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.svg': 'image/svg+xml',
+  '.gif': 'image/gif',
+  '.bmp': 'image/bmp',
+  '.avif': 'image/avif',
+}
+
+/** DataURL 大小上限：32MB，与计划保持一致。 */
+const CSLAB_IMAGE_MAX_BYTES = 32 * 1024 * 1024
+
+function sniffPngSize(buffer: Buffer): { width: number; height: number } | null {
+  if (buffer.length < 24) return null
+  if (buffer.readUInt32BE(0) !== 0x89504e47) return null
+  return { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) }
+}
+
+function sniffGifSize(buffer: Buffer): { width: number; height: number } | null {
+  if (buffer.length < 10) return null
+  const header = buffer.toString('ascii', 0, 6)
+  if (header !== 'GIF87a' && header !== 'GIF89a') return null
+  return { width: buffer.readUInt16LE(6), height: buffer.readUInt16LE(8) }
+}
+
+function sniffJpegSize(buffer: Buffer): { width: number; height: number } | null {
+  if (buffer.length < 4 || buffer[0] !== 0xff || buffer[1] !== 0xd8) return null
+  let offset = 2
+  while (offset + 9 < buffer.length) {
+    if (buffer[offset] !== 0xff) {
+      offset += 1
+      continue
+    }
+    const marker = buffer[offset + 1]!
+    // SOF0..SOF15（排除 DHT/JPG/DAC）携带画幅尺寸。
+    if (marker >= 0xc0 && marker <= 0xcf && marker !== 0xc4 && marker !== 0xc8 && marker !== 0xcc) {
+      return {
+        height: buffer.readUInt16BE(offset + 5),
+        width: buffer.readUInt16BE(offset + 7),
+      }
+    }
+    const length = buffer.readUInt16BE(offset + 2)
+    if (length < 2) return null
+    offset += 2 + length
+  }
+  return null
+}
+
+function sniffImageSize(buffer: Buffer): { width: number; height: number } | null {
+  return sniffPngSize(buffer) ?? sniffGifSize(buffer) ?? sniffJpegSize(buffer)
+}
+
+function toSafeFileName(value: string, fallback: string): string {
+  const cleaned = value.replace(/[\\/:*?"<>|]/g, '_').trim()
+  return cleaned || fallback
+}
+
 /** CSLab 共享盘事件出口：统一广播状态、资产与胶囊陈旧。 */
 function createShareSink(): CsLabShareWatcherSink {
   return {
@@ -311,6 +406,11 @@ export function registerCsLabIpc(): void {
 
   // ===== 实验室沙箱 =====
   ipcMain.handle(CSLAB_IPC_CHANNELS.LIST_LABS, async (): Promise<CsLabLab[]> => listLabs())
+
+  ipcMain.handle(
+    CSLAB_IPC_CHANNELS.CREATE_DEMO_LAB,
+    async (): Promise<CsLabDemoLabResult> => createDemoLab(),
+  )
 
   ipcMain.handle(
     CSLAB_IPC_CHANNELS.CREATE_LAB,
@@ -428,6 +528,95 @@ export function registerCsLabIpc(): void {
         asString(record.column, '列标识'),
         asNumber(record.rowIndex, '行索引'),
       )
+    },
+  )
+
+  ipcMain.handle(
+    CSLAB_IPC_CHANNELS.RESOLVE_DERIVED_TABLE,
+    async (_event, input: unknown): Promise<string | null> => {
+      const record = asObject(input, '派生表查询参数')
+      return resolveDerivedTableUri(
+        asString(record.labId, '实验室标识'),
+        asString(record.uri, '资产 URI'),
+      )
+    },
+  )
+
+  ipcMain.handle(
+    CSLAB_IPC_CHANNELS.GET_ASSET_FILE_INFO,
+    async (_event, input: unknown): Promise<CsLabAssetFileInfo> => {
+      const record = asObject(input, '资产路径参数')
+      const labId = asString(record.labId, '实验室标识')
+      const uri = asString(record.uri, '资产 URI')
+      const entity = getAssetEntity(labId, uri)
+      if (!entity) throw new Error('资产不存在')
+      const path = resolveAssetPath(labId, uri)
+      if (!path) throw new Error('该资产没有可定位的本地文件')
+      return { path, name: entity.title }
+    },
+  )
+
+  ipcMain.handle(
+    CSLAB_IPC_CHANNELS.GET_ASSET_DATA_URL,
+    async (_event, input: unknown): Promise<CsLabAssetDataUrl> => {
+      const record = asObject(input, '资产图像参数')
+      const labId = asString(record.labId, '实验室标识')
+      const uri = asString(record.uri, '资产 URI')
+      const entity = getAssetEntity(labId, uri)
+      if (!entity) throw new Error('资产不存在')
+      const extension = extname(entity.relPath ?? entity.title).toLowerCase()
+      const mime = CSLAB_IMAGE_MIME[extension]
+      if (!mime) throw new Error('该资产不是可预览的图片格式')
+      const path = resolveAssetPath(labId, uri)
+      if (!path) throw new Error('该资产没有可定位的本地文件')
+
+      const stat = await fs.stat(path)
+      if (stat.size > CSLAB_IMAGE_MAX_BYTES) {
+        throw new Error('图片超过 32MB 上限，请先离线降采样后再导入')
+      }
+      const buffer = await fs.readFile(path)
+      const size = sniffImageSize(buffer)
+      return {
+        dataUrl: `data:${mime};base64,${buffer.toString('base64')}`,
+        mime,
+        bytes: buffer.length,
+        width: size?.width,
+        height: size?.height,
+      }
+    },
+  )
+
+  ipcMain.handle(
+    CSLAB_IPC_CHANNELS.EXPORT_TABLE,
+    async (event, input: unknown): Promise<CsLabTableExportResult> => {
+      const record = asObject(input, '数据表导出参数')
+      const labId = asString(record.labId, '实验室标识')
+      const tableUri = asString(record.tableUri, '数据表 URI')
+      const format = record.format
+      if (format !== 'parquet' && format !== 'csv') throw new Error('导出格式无效')
+
+      const entity = getAssetEntity(labId, tableUri)
+      if (!entity || entity.layerType !== 'table') throw new Error('只允许导出本实验室的数据表')
+
+      const extension = format === 'parquet' ? 'parquet' : 'csv'
+      const win = BrowserWindow.fromWebContents(event.sender)
+      const result = await dialog.showSaveDialog(win || (undefined as never), {
+        title: format === 'parquet' ? '导出 Parquet 数据表' : '导出 CSV 数据表',
+        defaultPath: `${toSafeFileName(entity.title, '数据表')}.${extension}`,
+        filters:
+          format === 'parquet'
+            ? [{ name: 'Apache Parquet (*.parquet)', extensions: ['parquet'] }]
+            : [{ name: 'CSV 表格 (*.csv)', extensions: ['csv'] }],
+      })
+      if (result.canceled || !result.filePath) {
+        return {
+          success: false,
+          path: '',
+          format: format as CsLabTableExportFormat,
+          message: '已取消导出',
+        }
+      }
+      return exportAssetTableToFile(labId, tableUri, format, result.filePath)
     },
   )
 
@@ -1489,6 +1678,88 @@ export function registerCsLabIpc(): void {
     )
   })
 
+  // ===== 科学引擎：晶体分析 / PXRD / 拟合 / 出版绘图 =====
+  ipcMain.handle(CSLAB_IPC_CHANNELS.ANALYZE_CRYSTAL, async (_event, input: unknown) => {
+    const record = asObject(input, '晶体分析参数')
+    return analyzeCrystalAsset({
+      labId: asString(record.labId, '实验室标识'),
+      uri: asString(record.uri, '结构资产 URI'),
+      tolerance: typeof record.tolerance === 'number' ? record.tolerance : undefined,
+    })
+  })
+
+  ipcMain.handle(CSLAB_IPC_CHANNELS.SIMULATE_PXRD, async (_event, input: unknown) => {
+    const record = asObject(input, 'PXRD 参数')
+    return simulatePxrdAsset({
+      labId: asString(record.labId, '实验室标识'),
+      uri: asString(record.uri, '结构资产 URI'),
+      options: (record.options ?? {}) as CsLabPxrdOptions,
+    })
+  })
+
+  ipcMain.handle(CSLAB_IPC_CHANNELS.FIT_PEAKS, async (_event, input: unknown) =>
+    fitPeaksService(input as CsLabFitRequest),
+  )
+
+  ipcMain.handle(CSLAB_IPC_CHANNELS.SMOOTH_SERIES, async (_event, input: unknown) =>
+    smoothSeriesService(input as CsLabSmoothRequest),
+  )
+
+  ipcMain.handle(CSLAB_IPC_CHANNELS.GET_VOLUME_GRID, async (_event, input: unknown) => {
+    const record = asObject(input, '体数据参数')
+    return getVolumeGrid({
+      labId: asString(record.labId, '实验室标识'),
+      uri: asString(record.uri, '体数据资产 URI'),
+      maxDimension: typeof record.maxDimension === 'number' ? record.maxDimension : undefined,
+    })
+  })
+
+  ipcMain.handle(CSLAB_IPC_CHANNELS.SAVE_PLOT, async (_event, input: unknown) => {
+    const record = asObject(input, '绘图保存参数')
+    return savePlot({
+      labId: asString(record.labId, '实验室标识'),
+      plot: record.plot as CsLabPlotDocument,
+    })
+  })
+
+  ipcMain.handle(CSLAB_IPC_CHANNELS.LIST_PLOTS, async (_event, labId: unknown) =>
+    listPlots(asString(labId, '实验室标识')),
+  )
+
+  ipcMain.handle(CSLAB_IPC_CHANNELS.LOAD_PLOT, async (_event, input: unknown) => {
+    const record = asObject(input, '绘图读取参数')
+    return loadPlot({
+      labId: asString(record.labId, '实验室标识'),
+      plotId: asString(record.plotId, '绘图标识'),
+    })
+  })
+
+  ipcMain.handle(
+    CSLAB_IPC_CHANNELS.EXPORT_FIGURE,
+    async (event, input: unknown): Promise<CsLabPlotExportResult> => {
+      const record = asObject(input, '绘图导出参数')
+      const labId = asString(record.labId, '实验室标识')
+      const plot = record.plot as CsLabPlotDocument
+      const options = record.options as CsLabPlotExportOptions
+      if (!plot || !options) throw new Error('绘图导出参数不完整')
+      if (!['svg', 'pdf', 'png', 'tiff'].includes(options.format)) throw new Error('导出格式无效')
+
+      const extension = options.format
+      const win = BrowserWindow.fromWebContents(event.sender)
+      const result = await dialog.showSaveDialog(win || (undefined as never), {
+        title: '导出出版级图',
+        defaultPath: options.fileName ?? `${plot.id}.${extension}`,
+        filters: [
+          { name: `${options.format.toUpperCase()} 图像`, extensions: [extension] },
+        ],
+      })
+      if (result.canceled || !result.filePath) {
+        throw new Error('已取消导出')
+      }
+      return exportFigure({ labId, plot, options, targetPath: result.filePath })
+    },
+  )
+
   // ===== 学术审稿 =====
   ipcMain.handle(CSLAB_IPC_CHANNELS.REVIEW_SUGGEST, async (_event, input: unknown) => {
     const record = asObject(input, '审稿参数')
@@ -1534,6 +1805,72 @@ export function registerCsLabIpc(): void {
       message: '已解除实验室绑定',
     } satisfies CsLabSessionLabBinding
   })
+
+  // ===== 科学助理独立窗口 =====
+  ipcMain.handle(CSLAB_IPC_CHANNELS.OPEN_AGENT_WINDOW, async (_event, input: unknown) => {
+    const record = asObject(input, '助理窗口参数')
+    const context = record.context ? asAgentContext(record.context) : undefined
+    return openCsLabAgentWindow({
+      labId: asString(record.labId, '实验室标识'),
+      focusSessionId: typeof record.focusSessionId === 'string' && record.focusSessionId.trim()
+        ? record.focusSessionId
+        : undefined,
+      context,
+    })
+  })
+
+  ipcMain.handle(CSLAB_IPC_CHANNELS.SEND_TO_AGENT_WINDOW, async (_event, input: unknown) => {
+    const context = asAgentContext(input)
+    if (!getLab(context.labId)) throw new Error('实验室不存在')
+    return sendCsLabAgentContext(context)
+  })
+
+  ipcMain.handle(CSLAB_IPC_CHANNELS.GET_AGENT_WINDOW_CONTEXT, async (_event, windowId: unknown) =>
+    getCsLabAgentWindowContext(asString(windowId, '窗口标识')),
+  )
+
+  ipcMain.handle(CSLAB_IPC_CHANNELS.UNDO_PLOT_UPDATE, async (_event, input: unknown) => {
+    const record = asObject(input, '绘图撤销参数')
+    const labId = asString(record.labId, '实验室标识')
+    const plotId = asString(record.plotId, '绘图标识')
+    const plot = await restorePlotUndoSnapshot({
+      labId,
+      plotId,
+      undoToken: asString(record.undoToken, '撤销令牌'),
+    })
+    if (!plot) throw new Error('撤销快照不存在或已过期')
+    broadcastCsLabEvent(CSLAB_IPC_CHANNELS.ON_PLOT_UPDATED, { labId, plot, source: 'user' })
+    return { labId, plotId, plot } satisfies CsLabPlotUndoResult
+  })
+}
+
+/** 校验并规范化助理上下文，避免渲染层透传任意对象。 */
+function asAgentContext(value: unknown): CsLabAgentContext {
+  const record = asObject(value, '助理上下文参数')
+  const source = record.source
+  if (source !== 'plot-roi' && source !== 'asset' && source !== 'manual') {
+    throw new Error('助理上下文来源无效')
+  }
+  const roi = record.roi && typeof record.roi === 'object'
+    ? (record.roi as Record<string, unknown>)
+    : null
+  return {
+    labId: asString(record.labId, '实验室标识'),
+    source,
+    prompt: asString(record.prompt, '提示词'),
+    assetUri: typeof record.assetUri === 'string' ? record.assetUri : undefined,
+    plotId: typeof record.plotId === 'string' ? record.plotId : undefined,
+    plotTitle: typeof record.plotTitle === 'string' ? record.plotTitle : undefined,
+    roi: roi
+      ? {
+          xMin: asNumber(roi.xMin, 'ROI 起点'),
+          xMax: asNumber(roi.xMax, 'ROI 终点'),
+          yMin: typeof roi.yMin === 'number' ? roi.yMin : undefined,
+          yMax: typeof roi.yMax === 'number' ? roi.yMax : undefined,
+        }
+      : undefined,
+    createdAt: typeof record.createdAt === 'number' ? record.createdAt : Date.now(),
+  }
 }
 
 function asProfile(value: unknown): CsLabToolProfile {

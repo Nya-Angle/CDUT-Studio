@@ -7,10 +7,12 @@
  * - ZSTD 依赖 Node 22.15+ 的 zlib.zstdCompressSync；不可用时自动回退 Snappy。
  */
 
-import { promises as fs } from 'node:fs'
+import { promises as fs, createWriteStream } from 'node:fs'
+import { finished } from 'node:stream/promises'
+import type { Writable } from 'node:stream'
 import type { CsLabCellValue, CsLabColumn, CsLabTableSeries } from '@profer/shared'
 import { parquetWriteBuffer } from 'hyparquet-writer'
-import { asyncBufferFromFile, parquetReadObjects } from 'hyparquet'
+import { asyncBufferFromFile, parquetReadObjects, parquetScan } from 'hyparquet'
 import { compressors } from 'hyparquet-compressors'
 import type { ParsedDataset } from './cslab-formats/types'
 
@@ -288,5 +290,108 @@ export async function readDatasetSeries(
     ),
     totalRows,
     downsampled: true,
+  }
+}
+
+/** CSV 分块写入行数：避免单次拼接超大字符串。 */
+const CSV_FLUSH_ROWS = 2000
+
+function csvCell(value: unknown): string {
+  if (value == null) return ''
+  let text: string
+  if (typeof value === 'number') {
+    text = Number.isFinite(value) ? String(value) : ''
+  } else if (typeof value === 'bigint') {
+    text = value.toString()
+  } else if (value instanceof Date) {
+    text = value.toISOString()
+  } else if (typeof value === 'object') {
+    try {
+      text = JSON.stringify(value)
+    } catch {
+      text = String(value)
+    }
+  } else {
+    text = String(value)
+  }
+  return /[",\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
+}
+
+function waitForDrain(stream: Writable): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const cleanup = (): void => {
+      stream.off('drain', onDrain)
+      stream.off('error', onError)
+    }
+    const onDrain = (): void => {
+      cleanup()
+      resolve()
+    }
+    const onError = (error: Error): void => {
+      cleanup()
+      reject(error)
+    }
+    stream.once('drain', onDrain)
+    stream.once('error', onError)
+  })
+}
+
+async function writeWithBackpressure(stream: Writable, text: string): Promise<void> {
+  if (!stream.write(text)) await waitForDrain(stream)
+}
+
+/**
+ * 将数据表按 RowGroup 流式导出为 CSV。
+ *
+ * 红线：
+ * - 逐 RowGroup 读取列式数组，绝不调用 parquetReadObjects 全量载入；
+ * - 以固定行数分块格式化并写入 createWriteStream，显式处理背压；
+ * - 绝不把全量数据拼成一个大字符串。
+ */
+export async function writeDatasetCsvStream(
+  parquetPath: string,
+  columns: CsLabColumn[],
+  outPath: string,
+): Promise<{ rows: number; bytes: number }> {
+  if (columns.length === 0) throw new Error('数据表没有可导出的列')
+  const keys = columns.map((column) => column.key)
+  const file = await asyncBufferFromFile(parquetPath)
+  const scan = await parquetScan({ file, columns: keys, compressors })
+  const stream = createWriteStream(outPath, { encoding: 'utf8' })
+  let writtenRows = 0
+
+  try {
+    await writeWithBackpressure(stream, `\uFEFF${keys.map((key) => csvCell(key)).join(',')}\n`)
+
+    for (const range of scan.ranges) {
+      const rowCount = range.rowEnd - range.rowStart
+      if (rowCount <= 0) continue
+      const arrays = await Promise.all(
+        keys.map((key) =>
+          scan.readColumn({ column: key, rowStart: range.rowStart, rowEnd: range.rowEnd }),
+        ),
+      )
+
+      for (let start = 0; start < rowCount; start += CSV_FLUSH_ROWS) {
+        const end = Math.min(rowCount, start + CSV_FLUSH_ROWS)
+        const lines: string[] = []
+        for (let row = start; row < end; row += 1) {
+          lines.push(arrays.map((data) => csvCell(data?.[row])).join(','))
+        }
+        await writeWithBackpressure(stream, `${lines.join('\n')}\n`)
+        writtenRows += end - start
+      }
+      // 当前 RowGroup 处理完毕即释放列数组，避免内存随文件行数增长。
+      arrays.length = 0
+    }
+
+    stream.end()
+    await finished(stream)
+    const stat = await fs.stat(outPath)
+    return { rows: writtenRows, bytes: stat.size }
+  } catch (error) {
+    stream.destroy()
+    await fs.rm(outPath, { force: true }).catch(() => undefined)
+    throw error
   }
 }

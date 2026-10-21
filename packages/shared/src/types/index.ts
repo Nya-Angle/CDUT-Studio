@@ -97,3 +97,5 @@ export * from './pdf'
 
 // CDUT Science (CSLab) 相关类型
 export * from './cslab'
+export * from './cslab-origin-types'
+export * from './cslab-vesta-types'

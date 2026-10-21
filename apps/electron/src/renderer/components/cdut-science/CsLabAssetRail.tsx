@@ -26,6 +26,7 @@ import type {
   CsLabCellRef,
   CsLabLayerType,
   CsLabManuscriptSummary,
+  CsLabPlotSummary,
 } from '@profer/shared'
 import { cn } from '@/lib/utils'
 import { cslabAssetDragAtom } from '@/atoms/cslab-atoms'
@@ -40,11 +41,13 @@ import {
 interface CsLabAssetRailProps {
   assets: CsLabAssetSummary[]
   manuscripts: CsLabManuscriptSummary[]
+  plotList?: CsLabPlotSummary[]
   activeAssetUri: string | null
   activeManuscriptUri: string | null
   loading: boolean
   onSelectAsset: (asset: CsLabAssetSummary) => void
   onSelectManuscript: (manuscript: CsLabManuscriptSummary) => void
+  onSelectPlot?: (plotId: string) => void
   onCreateManuscript: () => void
   onAppendCellToManuscript: (
     manuscript: CsLabManuscriptSummary,
@@ -85,11 +88,13 @@ function formatBytes(bytes?: number): string {
 export function CsLabAssetRail({
   assets,
   manuscripts,
+  plotList,
   activeAssetUri,
   activeManuscriptUri,
   loading,
   onSelectAsset,
   onSelectManuscript,
+  onSelectPlot,
   onCreateManuscript,
   onAppendCellToManuscript,
 }: CsLabAssetRailProps): React.ReactElement {
@@ -247,6 +252,34 @@ export function CsLabAssetRail({
             </section>
           )
         })}
+
+        {plotList && plotList.length > 0 ? (
+          <section className="mt-3">
+            <div className="flex items-center gap-1.5 px-2 pb-1">
+              <ImageIcon size={11} className="text-cslab-muted" />
+              <span className="text-[10px] uppercase tracking-[0.16em] text-cslab-muted">
+                出版图
+              </span>
+              <span className="ml-auto text-[10px] tabular-nums text-cslab-muted/70">
+                {plotList.length}
+              </span>
+            </div>
+            <ul className="space-y-0.5">
+              {plotList.slice(0, 40).map((plot) => (
+                <li key={plot.id}>
+                  <button
+                    type="button"
+                    onClick={() => onSelectPlot?.(plot.id)}
+                    className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-cslab-muted transition-colors hover:bg-cslab-surface/70 hover:text-cslab-text"
+                  >
+                    <ImageIcon size={11} className="shrink-0 text-cslab-muted/70" />
+                    <span className="min-w-0 flex-1 truncate text-[12px]">{plot.title}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
         <section className="mt-4">
           <div className="flex items-center gap-1.5 px-2 pb-1">

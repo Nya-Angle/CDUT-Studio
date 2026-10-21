@@ -23,6 +23,18 @@ declare module 'pdfjs-dist/build/pdf.worker.min.mjs' {
   export default worker
 }
 
+// Vite Worker 构造器导入：避免打包后 file:// 下模块 Worker 路径差异
+declare module '*?worker' {
+  const WorkerFactory: new () => Worker
+  export default WorkerFactory
+}
+
+// WGSL 着色器原文导入
+declare module '*.wgsl?raw' {
+  const content: string
+  export default content
+}
+
 // 附件临时 base64 缓存（用于发送前暂存数据）
 interface Window {
   __pendingAttachmentData?: Map<string, string>

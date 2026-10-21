@@ -132,16 +132,25 @@ export {
   CSLAB_XRAY_WAVELENGTHS,
   assignReflections,
   buildMillerPlane,
+  cartesianToFractional,
+  cellBasis,
   cellCenter,
   cellMaxLength,
   cellVolume,
   dSpacing,
+  enumerateReflections,
+  fractionalToCartesian,
   parseCifLattice,
+  periodicDistance,
   planeBasis,
   reciprocalNormal,
   twoThetaFromD,
 } from './cslab-crystal'
-export type { AssignReflectionsOptions } from './cslab-crystal'
+export type {
+  AssignReflectionsOptions,
+  CsLabCellBasis,
+  EnumerateReflectionsOptions,
+} from './cslab-crystal'
 // CSLab 审稿旁注一维避障排程
 export { buildConnectorPath, calculateMarginaliaLayout } from './cslab-marginalia'
 export type {
@@ -158,3 +167,103 @@ export type {
   CsLabSuggestionPlan,
   CsLabSuggestionSlice,
 } from './cslab-track-changes'
+// CSLab 科学引擎：结构解析 / 对称性 / PXRD / 拟合 / 多面体 / 体数据 / 等值面
+export {
+  CSLAB_ATOMIC_MASSES,
+  CSLAB_ATOMIC_NUMBERS,
+  CSLAB_CROMER_MANN,
+} from './cslab-scattering-data'
+export type { CsLabCromerMann } from './cslab-scattering-data'
+export {
+  CSLAB_SPACE_GROUPS,
+  findSpaceGroupByHm,
+  findSpaceGroupByNumber,
+} from './cslab-space-group-data'
+export {
+  analyzeCrystalStructure,
+  analyzeCrystalText,
+  buildStructureFromText,
+  computeCrystalDensity,
+  formatCrystalFormula,
+  parseStructureText,
+} from './cslab-analysis'
+export { CsLabCifParseError, normalizeElement, parseCif, tokenizeCif } from './cslab-cif'
+export { CsLabPoscarParseError, parsePoscar } from './cslab-poscar'
+export { CsLabXyzParseError, parseXyz } from './cslab-xyz'
+export {
+  CSLAB_SPACE_GROUP_SEEDS,
+  CsLabSymmetryError,
+  buildCrystalStructure,
+  cellSignature,
+  composeOperations,
+  detectSpaceGroup,
+  expandAtoms,
+  generateSpaceGroupOperations,
+  parseSymmetryOperationXyz,
+  siteSymmetryOrder,
+  systematicAbsence,
+} from './cslab-symmetry'
+export type { ExpandAtomsOptions } from './cslab-symmetry'
+export {
+  atomicFormFactor,
+  dFromTwoTheta,
+  lorentzPolarization,
+  reflectionMultiplicity,
+  reflectionTwoTheta,
+  simulatePxrd,
+} from './cslab-pxrd'
+export type { CsLabFormFactorResult } from './cslab-pxrd'
+export {
+  aslsBaseline,
+  centroid,
+  fitPeaks,
+  fwhmFromCurve,
+  gaussian,
+  integrateTrapezoid,
+  levenbergMarquardt,
+  lorentzian,
+  polynomialBaseline,
+  profileArea,
+  profileAt,
+  pseudoVoigt,
+  smoothSeries,
+} from './cslab-fitting'
+export type {
+  LevenbergMarquardtOptions,
+  LevenbergMarquardtResult,
+} from './cslab-fitting'
+export { buildNeighborList, buildPolyhedra } from './cslab-polyhedra'
+export {
+  CsLabVolumeParseError,
+  downsampleGrid,
+  gridSlice,
+  parseChgcar,
+  parseCube,
+  parseLocpot,
+  sampleGrid,
+} from './cslab-volume'
+export { extractIsosurfaceCpu, sampleVolume } from './cslab-isosurface'
+export {
+  JOURNAL_PRESETS,
+  axisFraction,
+  computePlotLayout,
+  createPlotDocument,
+  defaultAxisConfig,
+  detectAxisBreakSegments,
+  formatMetric,
+  niceTicks,
+  normalizePlotDocument,
+  parseScientificText,
+  scaleInverse,
+  scaleValue,
+} from './cslab-plot-doc'
+export type { CreatePlotDocumentInput } from './cslab-plot-doc'
+export {
+  __axisTickValues,
+  __scaleValue,
+  describeAxisRange,
+  hasEditableText,
+  hasEmbeddedImage,
+  renderPlotSvg,
+  svgToDataUrl,
+} from './cslab-plot-svg'

@@ -11,6 +11,7 @@ import {
   cellCenter,
   cellVolume,
   dSpacing,
+  enumerateReflections,
   parseCifLattice,
   reciprocalNormal,
   twoThetaFromD,
@@ -81,6 +82,39 @@ describe('晶面间距与 2θ', () => {
   test('容差外无匹配（诚实返回空数组）', () => {
     const matches = assignReflections(20, cell, { maxIndex: 6, toleranceDeg: 0.05 })
     expect(matches).toEqual([])
+  })
+})
+
+describe('晶面枚举（Bragg 截断）', () => {
+  const cell = parseCifLattice(RUTILE_CIF)!
+
+  test('按 2θ 区间返回升序晶面并命中 rutile (110)', () => {
+    const list = enumerateReflections(cell, {
+      maxIndex: 12,
+      minTwoTheta: 20,
+      maxTwoTheta: 60,
+      limit: 40,
+    })
+    expect(list.length).toBeGreaterThan(0)
+    expect(list.length).toBeLessThanOrEqual(40)
+    expect(list.every((item) => item.twoTheta >= 20 && item.twoTheta <= 60)).toBe(true)
+    for (let index = 1; index < list.length; index += 1) {
+      expect(list[index]!.twoTheta).toBeGreaterThanOrEqual(list[index - 1]!.twoTheta)
+    }
+    const rutile110 = list.find((item) => item.h === 1 && item.k === 1 && item.l === 0)
+    expect(rutile110).toBeTruthy()
+    expect(close(rutile110!.twoTheta, 27.44, 0.1)).toBe(true)
+  })
+
+  test('正反晶面族去重且不返回 (000)', () => {
+    const list = enumerateReflections(cell, { maxIndex: 12, limit: 500 })
+    expect(list.some((item) => item.h === 0 && item.k === 0 && item.l === 0)).toBe(false)
+    const keys = list.map((item) => {
+      const sign =
+        item.h > 0 || (item.h === 0 && (item.k > 0 || (item.k === 0 && item.l > 0))) ? 1 : -1
+      return `${item.h * sign},${item.k * sign},${item.l * sign}`
+    })
+    expect(new Set(keys).size).toBe(keys.length)
   })
 })
 

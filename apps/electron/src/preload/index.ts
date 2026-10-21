@@ -98,8 +98,30 @@ import {
   type CsLabHpcJobEvent,
   type CsLabMolAsset,
   type CsLabTableSeries,
+  type CsLabAssetDataUrl,
+  type CsLabAssetFileInfo,
+  type CsLabTableExportFormat,
+  type CsLabTableExportResult,
   type CsLabReviewRequest,
   type CsLabReviewResult,
+  type CsLabCrystalAnalysis,
+  type CsLabPxrdPattern,
+  type CsLabPxrdOptions,
+  type CsLabFitRequest,
+  type CsLabFitResult,
+  type CsLabSmoothRequest,
+  type CsLabVolumeGrid,
+  type CsLabPlotDocument,
+  type CsLabPlotSummary,
+  type CsLabPlotExportOptions,
+  type CsLabPlotExportResult,
+  type CsLabPlotUpdatedEvent,
+  type CsLabDemoLabResult,
+  type CsLabAgentContext,
+  type CsLabStructureFocusedEvent,
+  type CsLabAgentWindowInput,
+  type CsLabAgentWindowRef,
+  type CsLabPlotUndoResult,
 } from '@profer/shared'
 import type {
   RuntimeStatus,
@@ -1690,6 +1712,7 @@ export interface ElectronAPI {
     /** 实验室沙箱 */
     listLabs: () => Promise<CsLabLab[]>
     createLab: (input: CsLabCreateLabInput) => Promise<CsLabLab>
+    createDemoLab: () => Promise<CsLabDemoLabResult>
     openLab: (labId: string) => Promise<CsLabLabSnapshot>
     getLabSnapshot: (labId: string) => Promise<CsLabLabSnapshot>
 
@@ -1703,6 +1726,14 @@ export interface ElectronAPI {
       column: string
       rowIndex: number
     }) => Promise<CsLabCellValue>
+    resolveDerivedTable: (input: { labId: string; uri: string }) => Promise<string | null>
+    getAssetFileInfo: (input: { labId: string; uri: string }) => Promise<CsLabAssetFileInfo>
+    getAssetDataUrl: (input: { labId: string; uri: string }) => Promise<CsLabAssetDataUrl>
+    exportTable: (input: {
+      labId: string
+      tableUri: string
+      format: CsLabTableExportFormat
+    }) => Promise<CsLabTableExportResult>
 
     /** 论文与活体胶囊 */
     listManuscripts: (labId: string) => Promise<CsLabManuscriptSummary[]>
@@ -1875,6 +1906,45 @@ export interface ElectronAPI {
       maxPoints?: number
     }) => Promise<CsLabTableSeries | null>
 
+    /** 科学引擎：晶体分析 / PXRD / 拟合 / 体数据 */
+    analyzeCrystal: (input: {
+      labId: string
+      uri: string
+      tolerance?: number
+    }) => Promise<CsLabCrystalAnalysis>
+    simulatePxrd: (input: {
+      labId: string
+      uri: string
+      options?: CsLabPxrdOptions
+    }) => Promise<CsLabPxrdPattern>
+    fitPeaks: (input: CsLabFitRequest) => Promise<CsLabFitResult>
+    smoothSeries: (input: CsLabSmoothRequest) => Promise<{ x: number[]; y: number[] }>
+    getVolumeGrid: (input: {
+      labId: string
+      uri: string
+      maxDimension?: number
+    }) => Promise<CsLabVolumeGrid>
+
+    /** 出版绘图 */
+    savePlot: (input: { labId: string; plot: CsLabPlotDocument }) => Promise<CsLabPlotSummary>
+    listPlots: (labId: string) => Promise<CsLabPlotSummary[]>
+    loadPlot: (input: { labId: string; plotId: string }) => Promise<CsLabPlotDocument | null>
+    exportFigure: (input: {
+      labId: string
+      plot: CsLabPlotDocument
+      options: CsLabPlotExportOptions
+    }) => Promise<CsLabPlotExportResult>
+
+    /** 科学助理独立窗口 */
+    openAgentWindow: (input: CsLabAgentWindowInput) => Promise<CsLabAgentWindowRef | null>
+    sendToAgentWindow: (input: CsLabAgentContext) => Promise<{ delivered: boolean }>
+    getAgentWindowContext: (windowId: string) => Promise<CsLabAgentContext | null>
+    undoPlotUpdate: (input: {
+      labId: string
+      plotId: string
+      undoToken: string
+    }) => Promise<CsLabPlotUndoResult>
+
     /** 学术审稿 */
     reviewManuscript: (input: CsLabReviewRequest) => Promise<CsLabReviewResult>
 
@@ -1891,6 +1961,9 @@ export interface ElectronAPI {
     onShareStatus: (handler: (event: CsLabShareStatusEvent) => void) => () => void
     onHpcJob: (handler: (event: CsLabHpcJobEvent) => void) => () => void
     onHpcMfa: (handler: (event: CsLabHpcMfaRequest) => void) => () => void
+    onPlotUpdated: (handler: (event: CsLabPlotUpdatedEvent) => void) => () => void
+    onAgentContext: (handler: (context: CsLabAgentContext) => void) => () => void
+    onStructureFocused: (handler: (event: CsLabStructureFocusedEvent) => void) => () => void
   }
 
   // ===== CDUT 专区 · 智联万站（Yanhu Express）内置浏览器 =====
@@ -4079,6 +4152,7 @@ const electronAPI: ElectronAPI = {
     listLabs: () => ipcRenderer.invoke(CSLAB_IPC_CHANNELS.LIST_LABS),
     createLab: (input: CsLabCreateLabInput) =>
       ipcRenderer.invoke(CSLAB_IPC_CHANNELS.CREATE_LAB, input),
+    createDemoLab: () => ipcRenderer.invoke(CSLAB_IPC_CHANNELS.CREATE_DEMO_LAB),
     openLab: (labId: string) => ipcRenderer.invoke(CSLAB_IPC_CHANNELS.OPEN_LAB, labId),
     getLabSnapshot: (labId: string) =>
       ipcRenderer.invoke(CSLAB_IPC_CHANNELS.GET_LAB_SNAPSHOT, labId),
@@ -4090,6 +4164,14 @@ const electronAPI: ElectronAPI = {
       ipcRenderer.invoke(CSLAB_IPC_CHANNELS.GET_ASSET_TABLE, input),
     getTableCell: (input: { labId: string; tableUri: string; column: string; rowIndex: number }) =>
       ipcRenderer.invoke(CSLAB_IPC_CHANNELS.GET_TABLE_CELL, input),
+    resolveDerivedTable: (input: { labId: string; uri: string }) =>
+      ipcRenderer.invoke(CSLAB_IPC_CHANNELS.RESOLVE_DERIVED_TABLE, input),
+    getAssetFileInfo: (input: { labId: string; uri: string }) =>
+      ipcRenderer.invoke(CSLAB_IPC_CHANNELS.GET_ASSET_FILE_INFO, input),
+    getAssetDataUrl: (input: { labId: string; uri: string }) =>
+      ipcRenderer.invoke(CSLAB_IPC_CHANNELS.GET_ASSET_DATA_URL, input),
+    exportTable: (input: { labId: string; tableUri: string; format: CsLabTableExportFormat }) =>
+      ipcRenderer.invoke(CSLAB_IPC_CHANNELS.EXPORT_TABLE, input),
 
     listManuscripts: (labId: string) =>
       ipcRenderer.invoke(CSLAB_IPC_CHANNELS.LIST_MANUSCRIPTS, labId),
@@ -4281,6 +4363,39 @@ const electronAPI: ElectronAPI = {
     getTableSeries: (input: { labId: string; tableUri: string; maxPoints?: number }) =>
       ipcRenderer.invoke(CSLAB_IPC_CHANNELS.GET_TABLE_SERIES, input),
 
+    // ===== 科学引擎 =====
+    analyzeCrystal: (input: { labId: string; uri: string; tolerance?: number }) =>
+      ipcRenderer.invoke(CSLAB_IPC_CHANNELS.ANALYZE_CRYSTAL, input),
+    simulatePxrd: (input: { labId: string; uri: string; options?: CsLabPxrdOptions }) =>
+      ipcRenderer.invoke(CSLAB_IPC_CHANNELS.SIMULATE_PXRD, input),
+    fitPeaks: (input: CsLabFitRequest) => ipcRenderer.invoke(CSLAB_IPC_CHANNELS.FIT_PEAKS, input),
+    smoothSeries: (input: CsLabSmoothRequest) =>
+      ipcRenderer.invoke(CSLAB_IPC_CHANNELS.SMOOTH_SERIES, input),
+    getVolumeGrid: (input: { labId: string; uri: string; maxDimension?: number }) =>
+      ipcRenderer.invoke(CSLAB_IPC_CHANNELS.GET_VOLUME_GRID, input),
+
+    // ===== 出版绘图 =====
+    savePlot: (input: { labId: string; plot: CsLabPlotDocument }) =>
+      ipcRenderer.invoke(CSLAB_IPC_CHANNELS.SAVE_PLOT, input),
+    listPlots: (labId: string) => ipcRenderer.invoke(CSLAB_IPC_CHANNELS.LIST_PLOTS, labId),
+    loadPlot: (input: { labId: string; plotId: string }) =>
+      ipcRenderer.invoke(CSLAB_IPC_CHANNELS.LOAD_PLOT, input),
+    exportFigure: (input: {
+      labId: string
+      plot: CsLabPlotDocument
+      options: CsLabPlotExportOptions
+    }) => ipcRenderer.invoke(CSLAB_IPC_CHANNELS.EXPORT_FIGURE, input),
+
+    // ===== 科学助理独立窗口 =====
+    openAgentWindow: (input: CsLabAgentWindowInput) =>
+      ipcRenderer.invoke(CSLAB_IPC_CHANNELS.OPEN_AGENT_WINDOW, input),
+    sendToAgentWindow: (input: CsLabAgentContext) =>
+      ipcRenderer.invoke(CSLAB_IPC_CHANNELS.SEND_TO_AGENT_WINDOW, input),
+    getAgentWindowContext: (windowId: string) =>
+      ipcRenderer.invoke(CSLAB_IPC_CHANNELS.GET_AGENT_WINDOW_CONTEXT, windowId),
+    undoPlotUpdate: (input: { labId: string; plotId: string; undoToken: string }) =>
+      ipcRenderer.invoke(CSLAB_IPC_CHANNELS.UNDO_PLOT_UPDATE, input),
+
     // ===== 学术审稿 =====
     reviewManuscript: (input: CsLabReviewRequest) =>
       ipcRenderer.invoke(CSLAB_IPC_CHANNELS.REVIEW_SUGGEST, input),
@@ -4348,6 +4463,21 @@ const electronAPI: ElectronAPI = {
       const listener = (_event: unknown, payload: CsLabHpcMfaRequest): void => handler(payload)
       ipcRenderer.on(CSLAB_IPC_CHANNELS.ON_HPC_MFA, listener)
       return () => ipcRenderer.removeListener(CSLAB_IPC_CHANNELS.ON_HPC_MFA, listener)
+    },
+    onPlotUpdated: (handler: (event: CsLabPlotUpdatedEvent) => void) => {
+      const listener = (_event: unknown, payload: CsLabPlotUpdatedEvent): void => handler(payload)
+      ipcRenderer.on(CSLAB_IPC_CHANNELS.ON_PLOT_UPDATED, listener)
+      return () => ipcRenderer.removeListener(CSLAB_IPC_CHANNELS.ON_PLOT_UPDATED, listener)
+    },
+    onStructureFocused: (handler: (event: CsLabStructureFocusedEvent) => void) => {
+      const listener = (_event: unknown, payload: CsLabStructureFocusedEvent): void => handler(payload)
+      ipcRenderer.on(CSLAB_IPC_CHANNELS.ON_STRUCTURE_FOCUSED, listener)
+      return () => ipcRenderer.removeListener(CSLAB_IPC_CHANNELS.ON_STRUCTURE_FOCUSED, listener)
+    },
+    onAgentContext: (handler: (context: CsLabAgentContext) => void) => {
+      const listener = (_event: unknown, payload: CsLabAgentContext): void => handler(payload)
+      ipcRenderer.on(CSLAB_IPC_CHANNELS.ON_AGENT_CONTEXT, listener)
+      return () => ipcRenderer.removeListener(CSLAB_IPC_CHANNELS.ON_AGENT_CONTEXT, listener)
     },
   },
 

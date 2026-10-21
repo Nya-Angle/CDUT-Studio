@@ -7,7 +7,7 @@
  * 使用 useStore() 直接操作 atoms，避免 React 订阅。
  */
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { agentGoalsAtom, hydrateAgentGoalsAtom, mergeAgentGoalAtom } from '@/atoms/goal-atoms'
 import { unstable_batchedUpdates } from 'react-dom'
 import { useStore } from 'jotai'
@@ -358,8 +358,17 @@ function payloadToLegacyEvents(payload: AgentStreamPayload): AgentEvent[] {
   }
 }
 
-export function useGlobalAgentListeners(): void {
+export interface UseGlobalAgentListenersOptions {
+  /**
+   * 是否在挂载时重绑所有活跃 Agent 流。主窗口保持 true；
+   * 科学助理等次级窗口必须传 false，否则会抢走主窗口正在运行的其它会话流事件。
+   */
+  restoreActiveStreams?: boolean
+}
+
+export function useGlobalAgentListeners(options: UseGlobalAgentListenersOptions = {}): void {
   const store = useStore()
+  const restoreActiveStreamsRef = useRef(options.restoreActiveStreams !== false)
 
   useEffect(() => {
     let effectActive = true
@@ -1293,30 +1302,35 @@ export function useGlobalAgentListeners(): void {
       (sessionId) => store.get(agentStreamingStatesAtom).get(sessionId) !== undefined,
     )
 
-    window.electronAPI.restoreActiveAgentStreams()
-      .then((sessionIds) => {
-        store.set(agentStreamingStatesAtom, (prev) => {
-          let next: Map<string, AgentStreamState> | null = null
-          for (const sessionId of sessionIds) {
-            const current = (next ?? prev).get(sessionId)
-            if (current?.running || current?.backgroundWaiting) continue
-            if (!next) next = new Map(prev)
-            next.set(sessionId, {
-              running: true,
-              content: '',
-              toolActivities: [],
-              startedAt: undefined,
-            })
-          }
-          return next ?? prev
+    if (restoreActiveStreamsRef.current) {
+      window.electronAPI.restoreActiveAgentStreams()
+        .then((sessionIds) => {
+          store.set(agentStreamingStatesAtom, (prev) => {
+            let next: Map<string, AgentStreamState> | null = null
+            for (const sessionId of sessionIds) {
+              const current = (next ?? prev).get(sessionId)
+              if (current?.running || current?.backgroundWaiting) continue
+              if (!next) next = new Map(prev)
+              next.set(sessionId, {
+                running: true,
+                content: '',
+                toolActivities: [],
+                startedAt: undefined,
+              })
+            }
+            return next ?? prev
+          })
+          // 占位已写好，此时派发暂存的终态才能通过竞态保护并完成收尾副作用。
+          restoreTerminalGate.settle()
         })
-        // 占位已写好，此时派发暂存的终态才能通过竞态保护并完成收尾副作用。
-        restoreTerminalGate.settle()
-      })
-      .catch((error) => {
-        console.error('[Agent] 刷新后恢复活跃流失败:', error)
-        restoreTerminalGate.settle()
-      })
+        .catch((error) => {
+          console.error('[Agent] 刷新后恢复活跃流失败:', error)
+          restoreTerminalGate.settle()
+        })
+    } else {
+      // 次级窗口不参与活跃流重绑，直接放行暂存终态，避免闸门永久阻塞。
+      restoreTerminalGate.settle()
+    }
 
     // ===== 2. 流式完成 =====
     const handleStreamComplete = (data: AgentStreamCompletePayload): void => {

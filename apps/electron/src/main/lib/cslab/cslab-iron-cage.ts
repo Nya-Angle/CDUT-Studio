@@ -14,9 +14,12 @@ import JSZip from 'jszip'
 import type {
   CsLabAssetSummary,
   CsLabCellValue,
+  CsLabColumn,
   CsLabIngestProgress,
   CsLabIngestResult,
   CsLabLayerType,
+  CsLabTableExportFormat,
+  CsLabTableExportResult,
   CsLabTablePayload,
 } from '@profer/shared'
 import {
@@ -51,7 +54,7 @@ import {
   assertLabId,
 } from './cslab-paths'
 import { buildCsLabUri, parseCsLabUri } from './cslab-uri'
-import { readDatasetCell, readDatasetPreview, writeDatasetParquet, writeDatasetPreview } from './cslab-columnar'
+import { readDatasetCell, readDatasetPreview, writeDatasetCsvStream, writeDatasetParquet, writeDatasetPreview } from './cslab-columnar'
 import { parseDelimitedText } from './cslab-formats/header-data-separator'
 import { parseMatLevel5, isMatV73, isMatLevel5 } from './cslab-formats/mat-level5'
 import { parseSpc } from './cslab-formats/spc'
@@ -60,7 +63,7 @@ import { parseBrukerBrmlXml, parseBrukerRaw, parseRigakuRas, parseXrdXml } from 
 import { sniffFormat } from './cslab-formats/sniff'
 import { CsLabUnsupportedFormatError, type ParsedDataset } from './cslab-formats/types'
 import { tryParseWithPython } from './cslab-python'
-import { getMolFormat, ingestMolAsset } from './cslab-mol'
+import { getMolFormat, getVolumeFormat, ingestMolAsset } from './cslab-mol'
 
 const MAX_FILE_BYTES = 512 * 1024 * 1024
 
@@ -300,8 +303,8 @@ export async function ingestFiles(
         continue
       }
 
-      // 分子/晶体结构：只读入笼为 mol 资产，不进入仪器数据解析流水线。
-      if (getMolFormat(fileName)) {
+      // 分子/晶体结构或体数据：只读入笼为 mol 资产，不进入仪器数据解析流水线。
+      if (getMolFormat(fileName) || getVolumeFormat(fileName)) {
         emit('copy')
         const molResult = await ingestMolAsset(labId, sourcePath)
         emit('done', molResult.message)
@@ -560,6 +563,70 @@ export async function getTableCell(
 /** 供胶囊血缘与测试使用的实体查询。 */
 export function getAssetEntity(labIdInput: string, uri: string): CsLabEntityRecord | null {
   return getEntityByUri(labDb(assertLabId(labIdInput)), uri)
+}
+
+/**
+ * 原始文件 -> 派生数据表 URI。
+ *
+ * 只沿已落库的 derived_from 血缘边与同名数据表兜底，不在渲染层猜 URI。
+ * table 资产直接返回自身；无法解析的 raw 返回 null。
+ */
+export function resolveDerivedTableUri(labIdInput: string, uri: string): string | null {
+  const labId = assertLabId(labIdInput)
+  const db = labDb(labId)
+  const entity = getEntityByUri(db, uri)
+  if (!entity || entity.labId !== labId) return null
+  if (entity.layerType === 'table') return entity.uri
+  if (entity.layerType !== 'raw') return null
+  return findTableUriFromRaw(db, entity.uri, entity.title) ?? null
+}
+
+function parseTableColumns(columnsJson: string): CsLabColumn[] {
+  try {
+    const parsed = JSON.parse(columnsJson) as unknown
+    if (!Array.isArray(parsed)) return []
+    return parsed.filter(
+      (item): item is CsLabColumn =>
+        !!item && typeof item === 'object' && typeof (item as CsLabColumn).key === 'string',
+    )
+  } catch {
+    return []
+  }
+}
+
+/** 导出只读数据表：parquet 直接复制原件，csv 走 RowGroup 流式写出。 */
+export async function exportAssetTableToFile(
+  labIdInput: string,
+  tableUri: string,
+  format: CsLabTableExportFormat,
+  targetPath: string,
+): Promise<CsLabTableExportResult> {
+  const labId = assertLabId(labIdInput)
+  const db = labDb(labId)
+  const entity = getEntityByUri(db, tableUri)
+  if (!entity || entity.labId !== labId || entity.layerType !== 'table') {
+    throw new Error('只允许导出本实验室的数据表资产')
+  }
+  const table = getTable(db, tableUri)
+  if (!table) throw new Error('数据表记录不存在')
+
+  const sourcePath = resolveLabRelativePath(labId, table.parquetRelPath)
+  if (format === 'parquet') {
+    await fs.copyFile(sourcePath, targetPath)
+  } else if (format === 'csv') {
+    const columns = parseTableColumns(table.columnsJson)
+    if (columns.length === 0) throw new Error('数据表缺少列定义，无法导出 CSV')
+    await writeDatasetCsvStream(sourcePath, columns, targetPath)
+  } else {
+    throw new Error('不支持的数据表导出格式')
+  }
+
+  return {
+    success: true,
+    path: targetPath,
+    format,
+    message: `已导出 ${entity.title}`,
+  }
 }
 
 /** 校验文件是否仍保持只读（测试 / 巡检使用）。 */

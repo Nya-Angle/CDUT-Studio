@@ -28,6 +28,8 @@ import {
 interface CsLabToolsPanelProps {
   labId: string
   onToast: (kind: 'info' | 'success' | 'error', text: string) => void
+  /** 从数据集动作栏进入时携带的数据表绝对路径。 */
+  initialPath?: string | null
 }
 
 const ENGINE_LABEL: Record<string, string> = {
@@ -49,7 +51,37 @@ function signature(tool: CsLabCustomTool): string {
   return `${tool.name}(${params})${tool.returns ? ` -> ${tool.returns}` : ''}`
 }
 
-export function CsLabToolsPanel({ labId, onToast }: CsLabToolsPanelProps): React.ReactElement {
+/** 生成参数 JSON：先套用函数默认值，再把数据表路径注入最匹配的字符串参数。 */
+function buildArgsText(tool: CsLabCustomTool, path?: string | null): string {
+  const args: Record<string, unknown> = {}
+  for (const param of tool.params) {
+    if (param.defaultValue === undefined) continue
+    const raw = param.defaultValue.trim()
+    if (param.jsonType === 'number' || param.jsonType === 'integer') {
+      const value = Number(raw)
+      if (Number.isFinite(value)) args[param.name] = value
+    } else if (param.jsonType === 'boolean') {
+      args[param.name] = raw === 'True' || raw === 'true'
+    } else if (raw.startsWith("'") || raw.startsWith('"')) {
+      args[param.name] = raw.slice(1, -1)
+    }
+  }
+
+  if (path) {
+    const target = tool.params.find(
+      (param) =>
+        param.jsonType === 'string' && /path|file|data|input/i.test(param.name),
+    )
+    args[target?.name ?? 'path'] = path
+  }
+  return JSON.stringify(args, null, 2)
+}
+
+export function CsLabToolsPanel({
+  labId,
+  onToast,
+  initialPath,
+}: CsLabToolsPanelProps): React.ReactElement {
   const [scan, setScan] = useAtom(cslabCustomToolsAtom)
   const [runtime, setRuntime] = useAtom(cslabToolRuntimeAtom)
   const [progress] = useAtom(cslabToolDepsProgressAtom)
@@ -62,6 +94,20 @@ export function CsLabToolsPanel({ labId, onToast }: CsLabToolsPanelProps): React
   const [sessions, setSessions] = React.useState<AgentSessionMeta[]>([])
   const [sessionId, setSessionId] = React.useState('')
   const [message, setMessage] = React.useState<string | null>(null)
+  const seedAppliedRef = React.useRef('')
+
+  React.useEffect(() => {
+    if (!initialPath) {
+      seedAppliedRef.current = ''
+      return
+    }
+    const tool = scan?.tools.find((item) => item.name === selectedTool)
+    if (!tool) return
+    const key = `${initialPath}|${tool.name}`
+    if (seedAppliedRef.current === key) return
+    seedAppliedRef.current = key
+    setArgsText(buildArgsText(tool, initialPath))
+  }, [initialPath, scan, selectedTool])
 
   const refreshRuntime = React.useCallback(async (): Promise<void> => {
     try {
@@ -214,6 +260,14 @@ export function CsLabToolsPanel({ labId, onToast }: CsLabToolsPanelProps): React
 
   return (
     <div className="space-y-4">
+      {initialPath && (
+        <section className="rounded-xl border border-cslab-accent/30 bg-cslab-accent/5 px-3 py-2">
+          <p className="text-[10px] font-medium text-cslab-accent">已注入当前数据表路径</p>
+          <p className="mt-0.5 truncate font-mono text-[10px] text-cslab-muted" title={initialPath}>
+            {initialPath}
+          </p>
+        </section>
+      )}
       <section className="rounded-xl border border-cslab-border bg-cslab-elevated/70 p-3">
         <div className="flex flex-wrap items-center gap-2">
           <span className="inline-flex items-center gap-1 rounded-full border border-cslab-border px-2 py-0.5 text-[10px] text-cslab-muted">
@@ -296,20 +350,7 @@ export function CsLabToolsPanel({ labId, onToast }: CsLabToolsPanelProps): React
               type="button"
               onClick={() => {
                 setSelectedTool(tool.name)
-                const defaults: Record<string, unknown> = {}
-                for (const param of tool.params) {
-                  if (param.defaultValue === undefined) continue
-                  const raw = param.defaultValue.trim()
-                  if (param.jsonType === 'number' || param.jsonType === 'integer') {
-                    const value = Number(raw)
-                    if (Number.isFinite(value)) defaults[param.name] = value
-                  } else if (param.jsonType === 'boolean') {
-                    defaults[param.name] = raw === 'True' || raw === 'true'
-                  } else if (raw.startsWith("'") || raw.startsWith('"')) {
-                    defaults[param.name] = raw.slice(1, -1)
-                  }
-                }
-                setArgsText(JSON.stringify(defaults, null, 2))
+                setArgsText(buildArgsText(tool, initialPath))
                 setRunResult(null)
               }}
               className={cn(

@@ -7,8 +7,20 @@
 
 import * as React from 'react'
 import type { Editor } from '@tiptap/core'
-import { Atom, BookOpen, FileText, Loader2, Maximize2, Table2, Workflow, X } from 'lucide-react'
+import {
+  Atom,
+  BookOpen,
+  FileText,
+  Image as ImageIcon,
+  Loader2,
+  Maximize2,
+  Sigma,
+  Table2,
+  Workflow,
+  X,
+} from 'lucide-react'
 import type {
+  CsLabAssetSummary,
   CsLabCanvasDocument,
   CsLabCanvasWriteResult,
   CsLabCapsule,
@@ -21,11 +33,13 @@ import type {
 import { canvasTitleFromRelPath } from '@profer/shared'
 import { cn } from '@/lib/utils'
 import type { CsLabPaneState, CsLabPdfSelection } from '@/atoms/cslab-atoms'
-import { CsLabIronCageTable } from './CsLabIronCageTable'
+import { CsLabDatasetView } from './CsLabDatasetView'
+import { CsLabFigureView } from './CsLabFigureView'
 import { CsLabManuscriptEditor } from './CsLabManuscriptEditor'
 import { CsLabPdfViewer } from './CsLabPdfViewer'
 import { CsLabDagCanvas } from './CsLabDagCanvas'
-import { CsLabMolstarViewer } from './CsLabMolstarViewer'
+import { CsLabOriginPlotPane } from './CsLabOriginPlotPane'
+import { CsLabVestaCrystalPane } from './crystal/CsLabVestaCrystalPane'
 import {
   CSLAB_ASSET_MIME,
   hasDragType,
@@ -44,6 +58,7 @@ interface CsLabStagePaneProps {
   literature: CsLabLiteratureItem | null
   canvas: CsLabCanvasDocument | null
   mol: CsLabMolAsset | null
+  figureAsset?: CsLabAssetSummary | null
   initialPage?: number
   loading: boolean
   saving: boolean
@@ -69,7 +84,11 @@ interface CsLabStagePaneProps {
   onPdfSelection: (selection: CsLabPdfSelection) => void
   onDropAsset: (payload: CsLabAssetDragPayload) => void
   onCanvasSaved: (document: CsLabCanvasDocument, result: CsLabCanvasWriteResult) => void
-  onToast: (kind: 'info' | 'success' | 'error', text: string) => void
+  onToast: (
+    kind: 'info' | 'success' | 'error',
+    text: string,
+    action?: { label: string; path: string },
+  ) => void
 }
 
 export function CsLabStagePane({
@@ -83,6 +102,7 @@ export function CsLabStagePane({
   literature,
   canvas,
   mol,
+  figureAsset,
   initialPage,
   loading,
   saving,
@@ -117,7 +137,11 @@ export function CsLabStagePane({
             : '推演画布'
           : pane.viewType === 'mol'
             ? mol?.title ?? '分子与晶体'
-            : '空窗格'
+            : pane.viewType === 'figure'
+              ? figureAsset?.title ?? title ?? '科研图表'
+              : pane.viewType === 'origin-plot'
+                ? title ?? '出版绘图'
+                : '空窗格'
 
   return (
     <section
@@ -154,6 +178,10 @@ export function CsLabStagePane({
           <Workflow size={11} className="shrink-0 text-cslab-muted" />
         ) : pane.viewType === 'mol' ? (
           <Atom size={11} className="shrink-0 text-cslab-muted" />
+        ) : pane.viewType === 'figure' ? (
+          <ImageIcon size={11} className="shrink-0 text-cslab-muted" />
+        ) : pane.viewType === 'origin-plot' ? (
+          <Sigma size={11} className="shrink-0 text-cslab-muted" />
         ) : (
           <FileText size={11} className="shrink-0 text-cslab-muted" />
         )}
@@ -197,7 +225,16 @@ export function CsLabStagePane({
             正在载入…
           </div>
         ) : pane.viewType === 'table' && table ? (
-          <CsLabIronCageTable payload={table} onCellClick={onCellClick} />
+          <CsLabDatasetView
+            labId={labId}
+            pane={pane}
+            table={table}
+            title={title}
+            onCellClick={onCellClick}
+            onToast={onToast}
+          />
+        ) : pane.viewType === 'figure' && figureAsset ? (
+          <CsLabFigureView labId={labId} asset={figureAsset} onToast={onToast} />
         ) : pane.viewType === 'manuscript' && manuscript ? (
           <CsLabManuscriptEditor
             labId={labId}
@@ -229,7 +266,9 @@ export function CsLabStagePane({
             onToast={onToast}
           />
         ) : pane.viewType === 'mol' && mol ? (
-          <CsLabMolstarViewer labId={labId} asset={mol} onToast={onToast} />
+          <CsLabVestaCrystalPane labId={labId} asset={mol} onToast={onToast} />
+        ) : pane.viewType === 'origin-plot' ? (
+          <CsLabOriginPlotPane labId={labId} pane={pane} onToast={onToast} />
         ) : (
           <div className="flex h-full items-center justify-center p-4">
             <div

@@ -1,0 +1,25 @@
+# CDUT Science demo: SrTiO3 perovskite (Pm-3m asymmetric unit)
+# 仅用于演示空间群识别、Wyckoff 展开与理论 PXRD。
+data_srtio3_demo
+_chemical_name_mineral 'Strontium titanate'
+_chemical_formula_sum 'Sr Ti O3'
+_cell_length_a 3.905
+_cell_length_b 3.905
+_cell_length_c 3.905
+_cell_angle_alpha 90.0
+_cell_angle_beta 90.0
+_cell_angle_gamma 90.0
+_symmetry_space_group_name_H-M 'P m -3 m'
+_symmetry_Int_Tables_number 221
+
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+_atom_site_U_iso_or_equiv
+Sr1 Sr 0.0000 0.0000 0.0000 1.0 0.0060
+Ti1 Ti 0.5000 0.5000 0.5000 1.0 0.0050
+O1  O  0.5000 0.5000 0.0000 1.0 0.0080

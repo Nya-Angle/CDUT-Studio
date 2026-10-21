@@ -127,6 +127,7 @@ import { requestCdutMutationConfirm } from '../cdut/cdut-mutation-guard'
 import { cdutDemoService } from '../cdut/cdut-demo/demo-service'
 import { buildPiStudyTools } from '../study/study-tools'
 import { buildPiCsLabTools } from './pi-cslab-tools'
+import { buildCsLabScienceTools } from '../cslab/cslab-scientific-tools'
 
 type PiSdk = typeof import('@earendil-works/pi-coding-agent')
 
@@ -2202,6 +2203,13 @@ export async function buildPiBuiltinTools(
     tools.push(...buildPiCsLabTools(sdk, { sessionId: ctx.sessionId, getPermissionMode: ctx.getPermissionMode }))
   } catch (error) {
     console.error('[Pi 桥接] 注入 CSLab 科研工具失败:', error)
+  }
+
+  // 15.1 CSLab 科学引擎工具（晶体分析 / PXRD / 拟合 / 出版绘图）
+  try {
+    tools.push(...buildCsLabScienceTools(sdk, { sessionId: ctx.sessionId }))
+  } catch (error) {
+    console.error('[Pi 桥接] 注入 CSLab 科学引擎工具失败:', error)
   }
 
   const cloudTools = buildProferCloudTools(sdk, ctx)

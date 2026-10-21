@@ -5,6 +5,8 @@
  * 覆盖：授权遥测（历史契约）+ 实验室沙箱 / 数据铁笼 / 活体胶囊 / 论文文稿。
  */
 
+import type { CsLabPlotDocument } from './cslab-origin-types'
+
 export const CSLAB_IPC_CHANNELS = {
   // ===== 授权与遥测（历史契约，保留） =====
   VERIFY_KEY: 'cslab:verify-key',
@@ -20,6 +22,7 @@ export const CSLAB_IPC_CHANNELS = {
   // ===== 实验室沙箱 =====
   LIST_LABS: 'cslab:list-labs',
   CREATE_LAB: 'cslab:create-lab',
+  CREATE_DEMO_LAB: 'cslab:create-demo-lab',
   OPEN_LAB: 'cslab:open-lab',
   GET_LAB_SNAPSHOT: 'cslab:get-lab-snapshot',
 
@@ -28,6 +31,10 @@ export const CSLAB_IPC_CHANNELS = {
   LIST_ASSETS: 'cslab:list-assets',
   GET_ASSET_TABLE: 'cslab:get-asset-table',
   GET_TABLE_CELL: 'cslab:get-table-cell',
+  RESOLVE_DERIVED_TABLE: 'cslab:resolve-derived-table',
+  GET_ASSET_FILE_INFO: 'cslab:get-asset-file-info',
+  GET_ASSET_DATA_URL: 'cslab:get-asset-data-url',
+  EXPORT_TABLE: 'cslab:export-table',
 
   // ===== 论文与胶囊 =====
   LIST_MANUSCRIPTS: 'cslab:list-manuscripts',
@@ -134,12 +141,29 @@ export const CSLAB_IPC_CHANNELS = {
   GET_MOL_ASSET: 'cslab:get-mol-asset',
   GET_TABLE_SERIES: 'cslab:get-table-series',
 
+  // ===== 科学引擎：晶体分析 / PXRD / 拟合 / 出版绘图 =====
+  ANALYZE_CRYSTAL: 'cslab:analyze-crystal',
+  SIMULATE_PXRD: 'cslab:simulate-pxrd',
+  FIT_PEAKS: 'cslab:fit-peaks',
+  SMOOTH_SERIES: 'cslab:smooth-series',
+  GET_VOLUME_GRID: 'cslab:get-volume-grid',
+  SAVE_PLOT: 'cslab:save-plot',
+  LIST_PLOTS: 'cslab:list-plots',
+  LOAD_PLOT: 'cslab:load-plot',
+  EXPORT_FIGURE: 'cslab:export-figure',
+
   // ===== 学术审稿（Phase 4） =====
   REVIEW_SUGGEST: 'cslab:review-suggest',
 
   // ===== 会话级实验室绑定 =====
   BIND_SESSION_LAB: 'cslab:bind-session-lab',
   UNBIND_SESSION_LAB: 'cslab:unbind-session-lab',
+
+  // ===== 科学助理独立窗口 =====
+  OPEN_AGENT_WINDOW: 'cslab:open-agent-window',
+  SEND_TO_AGENT_WINDOW: 'cslab:send-to-agent-window',
+  GET_AGENT_WINDOW_CONTEXT: 'cslab:get-agent-window-context',
+  UNDO_PLOT_UPDATE: 'cslab:undo-plot-update',
 
   // ===== 主进程 -> 渲染进程事件 =====
   ON_INGEST_PROGRESS: 'cslab:on-ingest-progress',
@@ -154,6 +178,9 @@ export const CSLAB_IPC_CHANNELS = {
   ON_SHARE_STATUS: 'cslab:on-share-status',
   ON_HPC_JOB: 'cslab:on-hpc-job',
   ON_HPC_MFA: 'cslab:on-hpc-mfa',
+  ON_PLOT_UPDATED: 'cslab:on-plot-updated',
+  ON_AGENT_CONTEXT: 'cslab:on-agent-context',
+  ON_STRUCTURE_FOCUSED: 'cslab:on-structure-focused',
 } as const
 
 export type CsLabChannelKey = keyof typeof CSLAB_IPC_CHANNELS
@@ -224,6 +251,76 @@ export type CsLabLayerType =
 
 export type CsLabLabStatus = '运行中' | '调试中' | '筹建中'
 
+// ===== 文件类型驱动能力模型 =====
+
+/** 舞台窗格视图类型：由资产能力解析器决定，而不是由文件扩展名直接写死。 */
+export type CsLabPaneViewType =
+  | 'empty'
+  | 'table'
+  | 'manuscript'
+  | 'pdf'
+  | 'dag'
+  | 'mol'
+  | 'figure'
+  | 'origin-plot'
+
+export type CsLabCapabilityKind =
+  | 'dataset'
+  | 'figure'
+  | 'molecule'
+  | 'literature'
+  | 'manuscript'
+  | 'canvas'
+  | 'generic'
+
+export type CsLabFileAction =
+  | 'open-dataset'
+  | 'open-figure'
+  | 'open-structure'
+  | 'open-literature'
+  | 'open-manuscript'
+  | 'open-canvas'
+  | 'link-crystal'
+  | 'run-tool'
+  | 'export-table'
+  | 'link-run'
+  | 'digitize-plot'
+  | 'verify-formula'
+  | 'ai-review'
+  | 'capsule-lineage'
+  | 'open-origin-plot'
+  | 'analyze-crystal'
+  | 'simulate-pxrd'
+
+export interface CsLabFileCapability {
+  kind: CsLabCapabilityKind
+  defaultView: CsLabPaneViewType
+  actions: CsLabFileAction[]
+}
+
+export type CsLabTableExportFormat = 'parquet' | 'csv'
+
+export interface CsLabTableExportResult {
+  success: boolean
+  path: string
+  format: CsLabTableExportFormat
+  message?: string
+}
+
+export interface CsLabAssetFileInfo {
+  path: string
+  name: string
+}
+
+export interface CsLabAssetDataUrl {
+  dataUrl: string
+  mime: string
+  bytes: number
+  /** 仅 PNG/JPEG/GIF 可从文件头无损嗅探；未知格式省略。 */
+  width?: number
+  height?: number
+}
+
 export interface CsLabLab {
   id: string
   code: string
@@ -243,6 +340,13 @@ export interface CsLabCreateLabInput {
   tags?: string[]
   /** 自定义实验室根目录；缺省落在 ~/.cdutai/cslab-workspaces/{labId}。 */
   rootPath?: string
+}
+
+/** 演示实验室创建结果（含预生成出版图）。 */
+export interface CsLabDemoLabResult {
+  lab: CsLabLab
+  assets: CsLabAssetSummary[]
+  plotId?: string
 }
 
 export interface CsLabAssetSummary {
@@ -1105,6 +1209,49 @@ export interface CsLabSessionLabBinding {
   message: string
 }
 
+// ===== Phase 5：科学助理独立窗口 =====
+
+/** 绘图 ROI 选区（数据坐标）。 */
+export interface CsLabAgentPlotRoi {
+  xMin: number
+  xMax: number
+  yMin?: number
+  yMax?: number
+}
+
+/** 主窗口 -> 助理窗口的上下文载荷。 */
+export interface CsLabAgentContext {
+  labId: string
+  source: 'plot-roi' | 'asset' | 'manual'
+  /** 预填到输入框的提示词（不自动发送）。 */
+  prompt: string
+  assetUri?: string
+  plotId?: string
+  plotTitle?: string
+  roi?: CsLabAgentPlotRoi
+  createdAt: number
+}
+
+/** 打开助理窗口的入参。 */
+export interface CsLabAgentWindowInput {
+  labId: string
+  focusSessionId?: string
+  context?: CsLabAgentContext
+}
+
+/** 打开助理窗口的结果。 */
+export interface CsLabAgentWindowRef {
+  windowId: string
+  labId: string
+}
+
+/** 绘图撤销结果。 */
+export interface CsLabPlotUndoResult {
+  labId: string
+  plotId: string
+  plot: CsLabPlotDocument
+}
+
 // ===== Phase 4：局域网仪器共享盘 =====
 
 export type CsLabShareKind = 'unc' | 'local' | 'webdav'
@@ -1301,7 +1448,14 @@ export interface CsLabHpcJobEvent {
 
 // ===== Phase 4：晶体结构与谱图 =====
 
-export type CsLabMolFormat = 'cif' | 'pdb'
+export type CsLabMolFormat =
+  | 'cif'
+  | 'pdb'
+  | 'poscar'
+  | 'xyz'
+  | 'cube'
+  | 'chgcar'
+  | 'locpot'
 
 export interface CsLabMolAsset {
   uri: string
@@ -1391,4 +1545,29 @@ export interface CsLabReviewResult {
   suggestions: CsLabReviewSuggestion[]
   message: string
   elapsedMs?: number
+}
+
+/** 主进程 -> 渲染进程：聚焦展示 3D 晶体视窗事件。 */
+export interface CsLabStructureFocusedEvent {
+  labId: string
+  uri: string
+  title?: string
+  supercell?: { na: number; nb: number; nc: number }
+  highlightPolyhedra?: boolean
+}
+
+/** 注入 Agent 系统提示词的实验室资产与环境上下文。 */
+export interface CsLabPromptAssetSummary {
+  uri: string
+  title: string
+  layerType: string
+  format?: string
+}
+
+export interface CsLabPromptLabInfo {
+  labId: string
+  labName: string
+  vaultDir?: string
+  structures: readonly CsLabPromptAssetSummary[]
+  plots: readonly { id: string; title: string }[]
 }

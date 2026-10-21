@@ -321,6 +321,8 @@ export interface AppSettings {
   mainWindowState?: MainWindowState
   /** 规划中心独立窗口状态（大小、位置、是否最大化） */
   planningWindowState?: MainWindowState
+  /** 科学助理独立窗口状态（大小、位置、是否最大化） */
+  scienceAgentWindowState?: MainWindowState
   /** 是否开机自启动（默认 false） */
   autoLaunch?: boolean
   /** 是否已通过版本号连击解锁开发者模式。 */

@@ -18,6 +18,8 @@ import type {
   CsLabMolAsset,
   CsLabMolFormat,
   CsLabTableSeries,
+  CsLabVolumeAsset,
+  CsLabVolumeFormat,
 } from '@profer/shared'
 import {
   findEntityByShaAndLayer,
@@ -39,12 +41,29 @@ const MOL_EXTENSIONS: Record<string, CsLabMolFormat> = {
   '.cif': 'cif',
   '.pdb': 'pdb',
   '.ent': 'pdb',
+  '.vasp': 'poscar',
+  '.poscar': 'poscar',
+  '.contcar': 'poscar',
+  '.xyz': 'xyz',
+}
+
+const VOLUME_EXTENSIONS: Record<string, CsLabVolumeFormat> = {
+  '.cube': 'cube',
+  '.cub': 'cube',
+  '.chgcar': 'chgcar',
+  '.locpot': 'locpot',
 }
 
 const MAX_MOL_TEXT_BYTES = 32 * 1024 * 1024
+const MAX_VOLUME_TEXT_BYTES = 256 * 1024 * 1024
 
 export function getMolFormat(fileName: string): CsLabMolFormat | null {
   return MOL_EXTENSIONS[extname(fileName).toLowerCase()] ?? null
+}
+
+/** 体数据格式（Cube / CHGCAR / LOCPOT）。 */
+export function getVolumeFormat(fileName: string): CsLabVolumeFormat | null {
+  return VOLUME_EXTENSIONS[extname(fileName).toLowerCase()] ?? null
 }
 
 function labDb(labId: string) {
@@ -77,8 +96,8 @@ export async function ingestMolAsset(
 ): Promise<CsLabIngestResult> {
   const labId = assertLabId(labIdInput)
   const fileName = basename(sourcePath)
-  const format = getMolFormat(fileName)
-  if (!format) throw new Error(`不是受支持的结构文件：${fileName}`)
+  const format = getMolFormat(fileName) ?? getVolumeFormat(fileName)
+  if (!format) throw new Error(`不是受支持的结构/体数据文件：${fileName}`)
 
   const timestamp = new Date().toISOString().replace(/[-:TZ.]/g, '').slice(0, 14)
   const nonce = randomUUID().slice(0, 6)
@@ -151,6 +170,34 @@ export async function getMolAsset(
   const stat = await fs.stat(absPath)
   if (stat.size > MAX_MOL_TEXT_BYTES) {
     throw new Error('结构文件超过 32MB 文本上限，暂不支持在 3D 视图中打开')
+  }
+  const buffer = await fs.readFile(absPath)
+  return {
+    uri: entity.uri,
+    labId,
+    title: entity.title,
+    format,
+    text: buffer.toString('utf-8'),
+    bytes: buffer.length,
+  }
+}
+
+/** 读取已登记的体数据资产文本（Cube / CHGCAR / LOCPOT）。 */
+export async function getVolumeAsset(
+  labIdInput: string,
+  uri: string,
+): Promise<CsLabVolumeAsset | null> {
+  const labId = assertLabId(labIdInput)
+  const entity = getEntityByUri(labDb(labId), uri)
+  if (!entity || entity.layerType !== 'mol' || entity.labId !== labId) return null
+  if (!entity.relPath) return null
+  const format = getVolumeFormat(entity.relPath)
+  if (!format) return null
+
+  const absPath = resolveLabRelativePath(labId, entity.relPath)
+  const stat = await fs.stat(absPath)
+  if (stat.size > MAX_VOLUME_TEXT_BYTES) {
+    throw new Error('体数据文件超过 256MB 文本上限，暂不支持在等值面视图中打开')
   }
   const buffer = await fs.readFile(absPath)
   return {

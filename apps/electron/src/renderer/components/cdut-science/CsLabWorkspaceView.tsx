@@ -23,6 +23,7 @@ import {
   Network,
   RefreshCw,
   Server,
+  Sparkles,
   Upload,
   Wrench,
 } from 'lucide-react'
@@ -36,6 +37,8 @@ import type {
   CsLabManuscript,
   CsLabManuscriptSummary,
   CsLabMolAsset,
+  CsLabPlotUpdatedEvent,
+  CsLabStructureFocusedEvent,
   CsLabTablePayload,
 } from '@profer/shared'
 import { detectIsMac, detectIsWindows } from '@profer/ui'
@@ -53,16 +56,20 @@ import {
   cslabManuscriptsAtom,
   cslabPaneCanvasesAtom,
   cslabPaneLiteratureAtom,
+  cslabPanePlotsAtom,
+  cslabPlotListAtom,
   cslabPaneLoadingAtom,
   cslabPaneManuscriptsAtom,
   cslabPaneMolAtom,
   cslabPaneTablesAtom,
   cslabPanesAtom,
+  cslabRunSeedAtom,
   cslabSnapshotAtom,
   cslabSplitLayoutAtom,
   cslabStaleCapsulesAtom,
   cslabTileTargetAtom,
   cslabToastAtom,
+  cslabToolSeedAtom,
   cslabZoteroStatusAtom,
   type CsLabPaneId,
   type CsLabPaneState,
@@ -70,6 +77,7 @@ import {
   type CsLabSplitLayout,
 } from '@/atoms/cslab-atoms'
 import { CsLabAssetRail } from './CsLabAssetRail'
+import { resolveAssetCapability } from './cslab-capability'
 import { CsLabSlideDrawer } from './CsLabSlideDrawer'
 import { CsLabSplitControls } from './CsLabSplitControls'
 import { CsLabStageGrid } from './CsLabStageGrid'
@@ -128,6 +136,10 @@ function emptyPane(id: CsLabPaneId): CsLabPaneState {
     assetUri: undefined,
     manuscriptUri: undefined,
     literatureUri: undefined,
+    molUri: undefined,
+    figureUri: undefined,
+    datasetDisplayMode: undefined,
+    activeSeriesKeys: undefined,
     canvasRelPath: undefined,
     canvasMtimeMs: undefined,
     pdfInitialPage: undefined,
@@ -201,11 +213,15 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
   const [activePaneId, setActivePaneId] = useAtom(cslabActivePaneIdAtom)
   const [layout, setLayout] = useAtom(cslabSplitLayoutAtom)
   const [paneTables, setPaneTables] = useAtom(cslabPaneTablesAtom)
+  const [panePlots, setPanePlots] = useAtom(cslabPanePlotsAtom)
+  const [plotList, setPlotList] = useAtom(cslabPlotListAtom)
   const [paneManuscripts, setPaneManuscripts] = useAtom(cslabPaneManuscriptsAtom)
   const [paneLiterature, setPaneLiterature] = useAtom(cslabPaneLiteratureAtom)
   const [paneCanvases, setPaneCanvases] = useAtom(cslabPaneCanvasesAtom)
   const [paneMol, setPaneMol] = useAtom(cslabPaneMolAtom)
   const [zoteroStatus, setZoteroStatus] = useAtom(cslabZoteroStatusAtom)
+  const [toolSeed, setToolSeed] = useAtom(cslabToolSeedAtom)
+  const [runSeed, setRunSeed] = useAtom(cslabRunSeedAtom)
   const [paneLoading, setPaneLoading] = useAtom(cslabPaneLoadingAtom)
   const [assetDrag, setAssetDrag] = useAtom(cslabAssetDragAtom)
   const [tileTarget, setTileTarget] = useAtom(cslabTileTargetAtom)
@@ -218,6 +234,9 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
   const setToast = useSetAtom(cslabToastAtom)
   const setSnapshot = useSetAtom(cslabSnapshotAtom)
   const toast = useAtomValue(cslabToastAtom)
+  /** AI 写回后的撤销浮条状态（10 秒自动消失）。 */
+  const [undoState, setUndoState] = React.useState<{ token: string; plotId: string } | null>(null)
+  const undoTimerRef = React.useRef<number | null>(null)
 
   const [loading, setLoading] = React.useState(true)
   const [savingPanes, setSavingPanes] = React.useState<Record<CsLabPaneId, boolean>>(
@@ -262,6 +281,34 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
     const timer = window.setTimeout(() => setToast(null), 4200)
     return () => window.clearTimeout(timer)
   }, [toast, setToast])
+
+  // 组件卸载时清理撤销浮条定时器
+  React.useEffect(() => {
+    return () => {
+      if (undoTimerRef.current) window.clearTimeout(undoTimerRef.current)
+    }
+  }, [])
+
+  const handleUndoPlot = React.useCallback(async (): Promise<void> => {
+    if (!undoState) return
+    const snapshot = undoState
+    setUndoState(null)
+    if (undoTimerRef.current) {
+      window.clearTimeout(undoTimerRef.current)
+      undoTimerRef.current = null
+    }
+    try {
+      const result = await window.electronAPI.cslab.undoPlotUpdate({
+        labId,
+        plotId: snapshot.plotId,
+        undoToken: snapshot.token,
+      })
+      setPanePlots((previous) => ({ ...previous, [activePaneId]: result.plot }))
+      showToast('success', '已撤销 AI 对图表的修改')
+    } catch (error) {
+      showToast('error', error instanceof Error ? error.message : '撤销失败')
+    }
+  }, [activePaneId, labId, setPanePlots, showToast, undoState])
 
   const patchPane = React.useCallback(
     (paneId: CsLabPaneId, patch: Partial<CsLabPaneState>): void => {
@@ -313,6 +360,31 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
     [layout, setActivePaneId, setLayout],
   )
 
+  const openPlotInPane = React.useCallback(
+    async (paneId: CsLabPaneId, plotId: string): Promise<void> => {
+      setPaneLoading((previous) => ({ ...previous, [paneId]: true }))
+      try {
+        const plot = await window.electronAPI.cslab.loadPlot({ labId, plotId })
+        if (!plot) throw new Error('绘图文档不存在')
+        setPanePlots((previous) => ({ ...previous, [paneId]: plot }))
+        patchPane(paneId, {
+          viewType: 'origin-plot',
+          plotId,
+          assetUri: undefined,
+          manuscriptUri: undefined,
+          literatureUri: undefined,
+          figureUri: undefined,
+          molUri: undefined,
+        })
+      } catch (error) {
+        showToast('error', error instanceof Error ? error.message : '绘图读取失败')
+      } finally {
+        setPaneLoading((previous) => ({ ...previous, [paneId]: false }))
+      }
+    },
+    [labId, patchPane, setPaneLoading, setPanePlots, showToast],
+  )
+
   const openTableInPane = React.useCallback(
     async (paneId: CsLabPaneId, uri: string): Promise<void> => {
       patchPane(paneId, {
@@ -320,6 +392,10 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
         assetUri: uri,
         manuscriptUri: undefined,
         literatureUri: undefined,
+        figureUri: undefined,
+        molUri: undefined,
+        datasetDisplayMode: 'split',
+        activeSeriesKeys: undefined,
       })
       setPaneManuscripts((previous) => ({ ...previous, [paneId]: null }))
       setPaneLiterature((previous) => ({ ...previous, [paneId]: null }))
@@ -338,6 +414,34 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
       }
     },
     [labId, patchPane, setPaneCanvases, setPaneLiterature, setPaneLoading, setPaneManuscripts, setPaneTables, showToast],
+  )
+
+  const openFigureInPane = React.useCallback(
+    (paneId: CsLabPaneId, asset: CsLabAssetSummary): void => {
+      patchPane(paneId, {
+        viewType: 'figure',
+        assetUri: asset.uri,
+        figureUri: asset.uri,
+        manuscriptUri: undefined,
+        literatureUri: undefined,
+        molUri: undefined,
+      })
+      setPaneTables((previous) => ({ ...previous, [paneId]: null }))
+      setPaneManuscripts((previous) => ({ ...previous, [paneId]: null }))
+      setPaneLiterature((previous) => ({ ...previous, [paneId]: null }))
+      setPaneCanvases((previous) => ({ ...previous, [paneId]: null }))
+      setPaneMol((previous) => ({ ...previous, [paneId]: null }))
+      setPaneLoading((previous) => ({ ...previous, [paneId]: false }))
+    },
+    [
+      patchPane,
+      setPaneCanvases,
+      setPaneLiterature,
+      setPaneLoading,
+      setPaneManuscripts,
+      setPaneMol,
+      setPaneTables,
+    ],
   )
 
   const openManuscriptInPane = React.useCallback(
@@ -552,8 +656,30 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
 
   const openAssetInPane = React.useCallback(
     async (paneId: CsLabPaneId, asset: CsLabAssetSummary): Promise<void> => {
+      const capability = resolveAssetCapability(asset)
+      if (capability.kind === 'figure') {
+        openFigureInPane(paneId, asset)
+        return
+      }
       if (asset.layerType === 'table') {
         await openTableInPane(paneId, asset.uri)
+        return
+      }
+      if (asset.layerType === 'raw') {
+        // 原始仪器文件优先穿透到 derived_from 血缘表；没有可解析数据才回落元数据抽屉。
+        try {
+          const derivedTableUri = await window.electronAPI.cslab.resolveDerivedTable({
+            labId,
+            uri: asset.uri,
+          })
+          if (derivedTableUri) {
+            await openTableInPane(paneId, derivedTableUri)
+            return
+          }
+        } catch (error) {
+          showToast('error', error instanceof Error ? error.message : '派生数据表解析失败')
+        }
+        setDrawer({ open: true, mode: 'asset', title: asset.title, assetUri: asset.uri })
         return
       }
       if (asset.layerType === 'doc') {
@@ -587,6 +713,7 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
         return
       }
       if (asset.layerType === 'proto' || asset.layerType === 'run') {
+        setRunSeed(null)
         setDrawer({ open: true, mode: 'runs', title: '实验规程与批次' })
         return
       }
@@ -596,7 +723,19 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
       }
       setDrawer({ open: true, mode: 'asset', title: asset.title, assetUri: asset.uri })
     },
-    [labId, manuscripts, openCanvasInPane, openLiteratureInPane, openManuscriptInPane, openMolInPane, openTableInPane, setDrawer, showToast],
+    [
+      labId,
+      manuscripts,
+      openCanvasInPane,
+      openFigureInPane,
+      openLiteratureInPane,
+      openManuscriptInPane,
+      openMolInPane,
+      openTableInPane,
+      setDrawer,
+      setRunSeed,
+      showToast,
+    ],
   )
 
   const openDragPayloadInPane = React.useCallback(
@@ -687,6 +826,8 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
     setActivePaneId('pane-1')
     setStaleCapsules(new Set<string>())
     setDrawer({ open: false, mode: 'asset' })
+    setToolSeed(null)
+    setRunSeed(null)
     setAssetDrag(null)
     setTileTarget(null)
     bootstrappedLabRef.current = null
@@ -701,8 +842,10 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
     setPaneManuscripts,
     setPaneTables,
     setPanes,
+    setRunSeed,
     setStaleCapsules,
     setTileTarget,
+    setToolSeed,
     setZoteroStatus,
   ])
 
@@ -797,7 +940,72 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
     onZoteroSynced: React.useCallback(() => {
       void refreshAssets().catch(() => undefined)
     }, [refreshAssets]),
+    onStructureFocused: React.useCallback(
+      async (event: CsLabStructureFocusedEvent) => {
+        if (event.labId !== labId) return
+        try {
+          const latestAssets = await window.electronAPI.cslab.listAssets(labId)
+          setAssets(latestAssets)
+          const target = latestAssets.find((item) => item.uri === event.uri)
+          if (target) {
+            await openMolInPane(activePaneId, target)
+            showToast('success', `AI 助理已在 VESTA 视窗中展开《${target.title}》`)
+          } else {
+            showToast('error', '未能定位目标晶体资产')
+          }
+        } catch (err) {
+          showToast('error', err instanceof Error ? err.message : '打开晶体视窗失败')
+        }
+      },
+      [activePaneId, labId, openMolInPane, setAssets, showToast],
+    ),
+    onPlotUpdated: React.useCallback(
+      (event: CsLabPlotUpdatedEvent) => {
+        setPlotList((previous) => {
+          const next = previous.filter((item) => item.id !== event.plot.id)
+          next.unshift({
+            id: event.plot.id,
+            title: event.plot.title,
+            updatedAt: event.plot.updatedAt,
+            presetId: event.plot.presetId,
+          })
+          return next
+        })
+        setPanePlots((previous) => ({ ...previous, [activePaneId]: event.plot }))
+        setPanes((previous) => ({
+          ...previous,
+          [activePaneId]: {
+            ...previous[activePaneId],
+            viewType: 'origin-plot',
+            plotId: event.plot.id,
+          },
+        }))
+        // 仅 Agent 写回且存在旧版本时才提供撤销入口。
+        if (event.source === 'agent' && event.undoToken) {
+          setUndoState({ token: event.undoToken, plotId: event.plot.id })
+          if (undoTimerRef.current) window.clearTimeout(undoTimerRef.current)
+          undoTimerRef.current = window.setTimeout(() => {
+            undoTimerRef.current = null
+            setUndoState(null)
+          }, 10_000)
+        }
+      },
+      [activePaneId, setPanePlots, setPanes, setPlotList],
+    ),
   })
+
+  React.useEffect(() => {
+    let cancelled = false
+    void window.electronAPI.cslab
+      .listPlots(labId)
+      .then((items) => {
+        if (!cancelled) setPlotList(items)
+      })
+      .catch(() => undefined)
+    return () => {
+      cancelled = true
+    }
+  }, [labId, setPlotList])
 
   // 首次进入时读取 Zotero 状态（只做轻量探测，不复制数据库）。
   React.useEffect(() => {
@@ -1588,6 +1796,30 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
         <div className="titlebar-no-drag relative ml-auto flex items-center gap-1.5">
           <button
             type="button"
+            onClick={() => {
+              const plot = panePlots[activePaneId]
+              void window.electronAPI.cslab.openAgentWindow({
+                labId,
+                context: plot
+                  ? {
+                      labId,
+                      source: 'asset',
+                      prompt: `我当前正在查看绘图《${plot.title}》（plotId=${plot.id}）。请先读取该绘图，等待我的进一步分析要求。`,
+                      plotId: plot.id,
+                      plotTitle: plot.title,
+                      createdAt: Date.now(),
+                    }
+                  : undefined,
+              })
+            }}
+            className="inline-flex items-center gap-1 rounded-lg px-2 py-1.5 text-[11px] text-cslab-muted transition-colors hover:bg-cslab-surface hover:text-cslab-text"
+            title="呼出科学助理"
+          >
+            <Sparkles size={12} />
+            科学助理
+          </button>
+          <button
+            type="button"
             onClick={() => setDrawer({ open: true, mode: 'zotero', title: 'Zotero 文献同步' })}
             className="inline-flex items-center gap-1 rounded-lg px-2 py-1.5 text-[11px] text-cslab-muted transition-colors hover:bg-cslab-surface hover:text-cslab-text"
             title={zoteroStatus?.message ?? 'Zotero 文献同步'}
@@ -1614,7 +1846,10 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
           <button
             type="button"
             title="实验规程与批次"
-            onClick={() => setDrawer({ open: true, mode: 'runs', title: '实验规程与批次' })}
+            onClick={() => {
+              setRunSeed(null)
+              setDrawer({ open: true, mode: 'runs', title: '实验规程与批次' })
+            }}
             className="inline-flex items-center gap-1 rounded-lg px-2 py-1.5 text-[11px] text-cslab-muted transition-colors hover:bg-cslab-surface hover:text-cslab-text"
           >
             <FlaskConical size={12} />
@@ -1632,7 +1867,10 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
           <button
             type="button"
             title="科研工具运行时"
-            onClick={() => setDrawer({ open: true, mode: 'tools', title: '科研工具运行时' })}
+            onClick={() => {
+              setToolSeed(null)
+              setDrawer({ open: true, mode: 'tools', title: '科研工具运行时' })
+            }}
             className="inline-flex items-center gap-1 rounded-lg px-2 py-1.5 text-[11px] text-cslab-muted transition-colors hover:bg-cslab-surface hover:text-cslab-text"
           >
             <Wrench size={12} />
@@ -1719,11 +1957,13 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
         <CsLabAssetRail
           assets={assets}
           manuscripts={manuscripts}
+          plotList={plotList}
           activeAssetUri={activeAssetUri}
           activeManuscriptUri={activeManuscriptUri}
           loading={loading}
           onSelectAsset={(asset) => void openAssetInPane(activePaneId, asset)}
           onSelectManuscript={(summary) => void openManuscriptInPane(activePaneId, summary)}
+          onSelectPlot={(plotId) => void openPlotInPane(activePaneId, plotId)}
           onCreateManuscript={() => void createManuscript()}
           onAppendCellToManuscript={(summary, cellRef) =>
             void handleAppendCellToManuscript(summary, cellRef)
@@ -1806,6 +2046,7 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
               literature={paneLiterature}
               canvases={paneCanvases}
               mols={paneMol}
+              assets={assets}
               loading={paneLoading}
               saving={savingPanes}
               staleCapsuleIds={staleCapsules}
@@ -1868,12 +2109,17 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
             drawer.mode === 'share' ||
             drawer.mode === 'hpc'
           }
-          onClose={() => setDrawer((previous) => ({ ...previous, open: false }))}
+          onClose={() => {
+            setDrawer((previous) => ({ ...previous, open: false }))
+            setToolSeed(null)
+            setRunSeed(null)
+          }}
         >
           {drawer.mode === 'runs' && (
             <CsLabRunTimeline
               labId={labId}
               assets={assets}
+              seedAssetUri={runSeed?.assetUri ?? null}
               onOpenAsset={(uri) => {
                 const asset = assets.find((item) => item.uri === uri)
                 if (asset) {
@@ -1897,7 +2143,13 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
               onToast={showToast}
             />
           )}
-          {drawer.mode === 'tools' && <CsLabToolsPanel labId={labId} onToast={showToast} />}
+          {drawer.mode === 'tools' && (
+            <CsLabToolsPanel
+              labId={labId}
+              initialPath={toolSeed?.path ?? null}
+              onToast={showToast}
+            />
+          )}
           {drawer.mode === 'share' && (
             <CsLabNetworkSharePanel
               labId={labId}
@@ -2197,6 +2449,20 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
               仪器文件将计算 SHA-256 并解析为数据表；.docx 将导入为文稿
             </p>
           </div>
+        </div>
+      )}
+
+      {undoState && (
+        <div className="absolute right-6 top-16 z-50 flex items-center gap-2 rounded-xl border border-cslab-border bg-cslab-elevated px-3 py-1.5 text-xs shadow-subtle">
+          <Sparkles size={12} className="text-cslab-accent" />
+          <span className="text-cslab-text">AI 助理已更新图表</span>
+          <button
+            type="button"
+            onClick={() => void handleUndoPlot()}
+            className="font-semibold text-cslab-accent hover:underline"
+          >
+            撤销
+          </button>
         </div>
       )}
 

@@ -32,6 +32,8 @@ import { cslabProtocolsAtom, cslabRunsAtom } from '@/atoms/cslab-atoms'
 interface CsLabRunTimelineProps {
   labId: string
   assets: CsLabAssetSummary[]
+  /** 从数据集动作栏进入时预选的资产 URI。 */
+  seedAssetUri?: string | null
   onOpenAsset: (uri: string) => void
   onToast: (kind: 'info' | 'success' | 'error', text: string) => void
 }
@@ -124,6 +126,7 @@ function dayKey(timestamp: number): string {
 export function CsLabRunTimeline({
   labId,
   assets,
+  seedAssetUri,
   onOpenAsset,
   onToast,
 }: CsLabRunTimelineProps): React.ReactElement {
@@ -175,6 +178,13 @@ export function CsLabRunTimeline({
     // 只在切换实验室时重新载入。
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [labId])
+
+  // 从数据集动作栏进入时，预选资产并展开第一个批次的关联面板（不自动提交）。
+  React.useEffect(() => {
+    if (!seedAssetUri) return
+    setLinkAssetUri(seedAssetUri)
+    setLinkRunId((current) => current ?? runs[0]?.uri ?? null)
+  }, [seedAssetUri, runs])
 
   const selectedProtocol = protocols.find((protocol) => protocol.uri === runProtocolUri) ?? null
   const filteredRuns =

@@ -469,6 +469,10 @@ interface SystemPromptContext {
   studyCognition?: string
   /** 当前会话上下文模式；缺省按 classic 处理。 */
   contextMode?: AgentContextMode
+  /** 当前会话是否绑定了 CSLab 实验室；为 true 时注入科学引擎推理规范。 */
+    cslabLabBound?: boolean
+  /** CSLab 实验室环境与现存资产上下文 */
+  cslabLabInfo?: import('@profer/shared').CsLabPromptLabInfo
 }
 
 interface WorkspacePromptPaths {
@@ -1127,6 +1131,68 @@ When entering plan mode (EnterPlanMode), the plan file must be written into the 
  * 12. <user_information>
  * 并在末尾附加近因语言与推理隔离提醒（RECENCY_LANGUAGE_REMINDER）。
  */
+/** CSLab 科学专区推理与出版绘图规范（仅绑定实验室时注入）。 */
+function buildCsLabScienceBlock(ctx: SystemPromptContext): string {
+  if (!ctx.cslabLabBound) return ''
+  const info = ctx.cslabLabInfo
+
+  const structuresText = info && info.structures.length > 0
+    ? info.structures.map((s) => `- [结构/${s.format ?? 'cif'}] ${s.title} (${s.uri})`).join('\n')
+    : '- (当前暂无已登记的晶体结构文件，可使用 cslab_create_structure 录入)'
+
+  const plotsText = info && info.plots.length > 0
+    ? info.plots.map((p) => `- [绘图/plot] ${p.title} (plotId: ${p.id})`).join('\n')
+    : '- (当前暂无已保存的出版绘图)'
+
+  const labName = info?.labName || 'CDUT Science 实验室'
+  const labId = info?.labId || 'unknown'
+  const vaultDir = info?.vaultDir || 'vault'
+
+  return `<cslab_science>
+You are operating within a CDUT Science (CSLab) laboratory environment. This software natively integrates two professional scientific visualization and analysis engines: the Origin 2D Publication Plotting Engine and the VESTA 3D Crystal & Molecular Structure Engine.
+
+# Laboratory Environment & Active Assets
+- Laboratory Name: ${labName}
+- Laboratory ID: ${labId}
+- Vault Directory: ${vaultDir}
+- Available Crystal & Structure Assets:
+${structuresText}
+- Available Plot Documents:
+${plotsText}
+
+# Dual Engine Architecture (Origin × VESTA)
+
+## 1. VESTA 3D Crystal & Molecular Engine
+The frontend UI natively mounts a full WebGL/Mol* 3D crystal viewport (CsLabVestaCrystalPane).
+- **Capabilities**: 3D interactive unit cell rendering, supercell lattice expansion, coordination polyhedra detection, Miller plane slicing, and kinematic PXRD simulation.
+- **When to Use \`cslab_create_structure\`**:
+  * When the user asks to generate, build, or modify a crystal unit cell (e.g. perovskites, rutile, diamond, MOFs, defects).
+  * Format: Standard CIF 1.1 or POSCAR text. The asset is automatically verified, hashed, and locked into the Iron Cage (\`vault/figures/\`).
+- **When to Use \`cslab_focus_structure\`**:
+  * Immediately after creating a new structure, or when the user asks to view/inspect an existing crystal asset.
+  * Arguments: \`uri\`, optional \`supercell: { na, nb, nc }\`, and optional \`highlightPolyhedra: true\`.
+  * Effect: Directly commands the frontend main stage to display the interactive 3D crystal.
+- **CRITICAL NEGATIVE CONSTRAINT**:
+  * NEVER attempt to write Python scripts (e.g. matplotlib, PIL) or generate static 2D images in scratch directories to simulate 3D crystal unit cells. The native WebGL/Mol* viewport is the only authorized crystal presentation channel.
+
+## 2. Origin 2D Publication Plotting Engine
+The frontend UI natively mounts an Origin-grade 2D vector plotting canvas (CsLabOriginPlotPane).
+- **Capabilities**: Multi-peak deconvolution (Gaussian/Lorentzian), baseline correction (AsLS), publication styling, and dual-axis visualization.
+- **When to Use \`cslab_fit_peaks\`**:
+  * To deconvolve overlapping experimental spectra or XRD peaks within specified ROI bounds (\`xMin\`/\`xMax\`).
+- **When to Use \`cslab_render_plot\`**:
+  * To append fitted curves or update plot layers. Automatically hot-reloads the frontend canvas and issues a 10-second undo token.
+- **When to Use \`cslab_export_figure\`**:
+  * To export publication-grade figures (SVG/PDF/TIFF at 300+ DPI) with journal presets (Nature 89mm, Science 55mm, APS 86mm).
+
+# Data Honesty & Crystallographic Integrity
+- Never invent space groups, Wyckoff positions, or reflection indices.
+- Always report when a space group degrades to P1 or when atomic scattering factors are missing.
+- Note that simulated PXRD is a kinematic approximation, not a Rietveld refinement.
+- When generating a crystal structure, verify that fractional coordinates and cell dimensions (a, b, c, alpha, beta, gamma) conform strictly to space group symmetry.
+</cslab_science>`
+}
+
 export function buildSystemPrompt(ctx: SystemPromptContext): string {
   const profile = getUserProfile()
   const userName = profile.userName || 'User'
@@ -1159,8 +1225,9 @@ export function buildSystemPrompt(ctx: SystemPromptContext): string {
     buildSubagentsBlock(ctx, capabilityMounted),
     buildUserRulesBlock(workspacePaths),
     buildSkillsBlock(workspacePaths),
+    buildCsLabScienceBlock(ctx),
     buildUserInformationBlock(ctx, userName, workspacePaths),
-  ]
+  ].filter((block) => block.length > 0)
 
   return [...xmlBlocks, RECENCY_LANGUAGE_REMINDER].join('\n\n')
 }

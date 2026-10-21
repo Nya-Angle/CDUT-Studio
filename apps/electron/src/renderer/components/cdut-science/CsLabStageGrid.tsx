@@ -5,6 +5,7 @@
 import * as React from 'react'
 import type { Editor } from '@tiptap/core'
 import type {
+  CsLabAssetSummary,
   CsLabCanvasDocument,
   CsLabCanvasWriteResult,
   CsLabCapsule,
@@ -34,6 +35,7 @@ interface CsLabStageGridProps {
   literature: Record<CsLabPaneId, CsLabLiteratureItem | null>
   canvases: Record<CsLabPaneId, CsLabCanvasDocument | null>
   mols: Record<CsLabPaneId, CsLabMolAsset | null>
+  assets: CsLabAssetSummary[]
   loading: Record<CsLabPaneId, boolean>
   saving: Record<CsLabPaneId, boolean>
   staleCapsuleIds: Set<string>
@@ -66,7 +68,11 @@ interface CsLabStageGridProps {
     document: CsLabCanvasDocument,
     result: CsLabCanvasWriteResult,
   ) => void
-  onToast: (kind: 'info' | 'success' | 'error', text: string) => void
+  onToast: (
+    kind: 'info' | 'success' | 'error',
+    text: string,
+    action?: { label: string; path: string },
+  ) => void
 }
 
 const LAYOUT_CLASS: Record<CsLabSplitLayout, string> = {
@@ -92,6 +98,7 @@ export function CsLabStageGrid({
   literature,
   canvases,
   mols,
+  assets,
   loading,
   saving,
   staleCapsuleIds,
@@ -120,6 +127,10 @@ export function CsLabStageGrid({
       {/* 所有窗格保持挂载，仅通过 hidden 控制可见性，避免切换布局时销毁编辑器/丢失未保存内容。 */}
       {CSLAB_PANE_IDS.map((paneId) => {
         const pane = panes[paneId]
+        const figureAsset =
+          pane.viewType === 'figure' && pane.assetUri
+            ? assets.find((asset) => asset.uri === pane.assetUri) ?? null
+            : null
         return (
           <CsLabStagePane
             key={paneId}
@@ -139,6 +150,7 @@ export function CsLabStageGrid({
             literature={literature[paneId]}
             canvas={canvases[paneId]}
             mol={mols[paneId]}
+            figureAsset={figureAsset}
             initialPage={pane.pdfInitialPage}
             loading={loading[paneId]}
             saving={saving[paneId]}

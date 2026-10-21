@@ -137,6 +137,8 @@ function hasEnabledModel(
 const isDetachedPreviewWindow = new URLSearchParams(window.location.search).get('window') === 'detached-preview'
 const isAgentPreviewWindow = new URLSearchParams(window.location.search).get('window') === 'agent-preview'
 const isPlanningWindow = new URLSearchParams(window.location.search).get('window') === 'planning'
+// CDUT Science 科学助理独立伴生窗口
+const isScienceAgentWindow = new URLSearchParams(window.location.search).get('window') === 'science-agent'
 // 智联万站 · 桌宠「砚小龙」独立透明子窗口
 const isYanhuPetWindow = new URLSearchParams(window.location.search).get('window') === 'yanhu-pet'
 
@@ -623,8 +625,8 @@ function UiScaleInitializer(): null {
  * 全局挂载，永不销毁。确保 Agent 流式事件、权限请求
  * 在页面切换时不丢失。
  */
-function AgentListenersInitializer(): null {
-  useGlobalAgentListeners()
+function AgentListenersInitializer({ restoreActiveStreams = true }: { restoreActiveStreams?: boolean }): null {
+  useGlobalAgentListeners({ restoreActiveStreams })
   // CDUT 特区账户全局水合：让聊天中的 CDUT 学籍证件照（本地已保存头像）随时可渲染
   useCdutAccountHydration()
   // 浏览器列里文件预览的划词由主进程转投过来，落进与预览面板同一个引用 atom
@@ -1115,6 +1117,28 @@ if (isDetachedPreviewWindow) {
         <PlanningWindowApp />
         <ProferToaster position="top-right" offset={96} />
       </React.StrictMode>
+    )
+  })
+} else if (isScienceAgentWindow) {
+  // ===== CDUT Science 科学助理独立窗口 =====
+  const params = new URLSearchParams(window.location.search)
+  const labId = params.get('labId') ?? ''
+  const windowId = params.get('windowId') ?? ''
+  const focusSessionId = params.get('focusSessionId') ?? undefined
+  import('./components/cdut-science/agent-window/ScienceAgentWindowView').then(({ ScienceAgentWindowView }) => {
+    ReactDOM.createRoot(document.getElementById('root')!).render(
+      <React.StrictMode>
+        <ThemeInitializer />
+        <AgentSettingsInitializer />
+        <MarkdownFontSizeInitializer />
+        <UiScaleInitializer />
+        {/* 次级窗口不重绑活跃流，避免抢走主窗口其它会话的流式事件 */}
+        <AgentListenersInitializer restoreActiveStreams={false} />
+        <TooltipProvider delayDuration={200}>
+          <ScienceAgentWindowView labId={labId} windowId={windowId} focusSessionId={focusSessionId} />
+        </TooltipProvider>
+        <ProferToaster position="top-right" offset={96} />
+      </React.StrictMode>,
     )
   })
 } else if (isYanhuPetWindow) {
