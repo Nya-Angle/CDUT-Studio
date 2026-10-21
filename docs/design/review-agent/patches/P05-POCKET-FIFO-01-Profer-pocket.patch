@@ -1,0 +1,159 @@
+# P05-POCKET-FIFO-01 upstream commit 95e79f11003006f4386b7f96540fa61f45bdd965
+# Requires Profer-pocket checkout at that revision or compatible source.
+diff --git a/src/renderer/pocket/ws-client.ts b/src/renderer/pocket/ws-client.ts
+--- a/src/renderer/pocket/ws-client.ts
++++ b/src/renderer/pocket/ws-client.ts
+@@ -377,39 +377,48 @@
+           payload: msg.payload,
+         })
+         break
+-      case 'command_result':
+-        this.resolveCommandResult(msg)
+-        this.onCommandResult?.(msg)
+-        break
+-    }
+-  }
+-
+-  private resolveCommandResult(msg: CommandResultMessage): void {
+-    const id = (msg.commandId || msg.requestId) as string | undefined
+-    if (id && this.completedCommands.has(id)) return
+-    // 旧版服务端会把 resume_agent_events 当未知指令返回 command_result；
+-    // 它没有对应 pending command，不能落入 FIFO 兜底误消费其他业务请求。
+-    if (id && id === this.resumeCommandId) {
+-      this.resumeCommandId = null
+-      return
+-    }
+-    if (id && this.pendingCommands.has(id)) {
+-      const pending = this.pendingCommands.get(id)!
+-      this.pendingCommands.delete(id)
+-      this.completedCommands.add(id)
+-      if (msg.ok) pending.resolve(msg.data)
+-      else pending.reject(new Error(msg.conflict?.code ? `${msg.conflict.code}: ${msg.error || '指令失败'}` : (msg.error || '指令失败')))
+-      return
+-    }
+-    // 无 requestId 时用 FIFO 兜底（兼容）
+-    const fallback = this.pendingCommands.entries().next().value as [string, { resolve: (r: unknown) => void; reject: (e: Error) => void }] | undefined
+-    if (fallback) {
+-      const [fid, pending] = fallback
+-      this.pendingCommands.delete(fid)
+-      this.completedCommands.add(fid)
+-      if (msg.ok) pending.resolve(msg.data)
+-      else pending.reject(new Error(msg.conflict?.code ? `${msg.conflict.code}: ${msg.error || '指令失败'}` : (msg.error || '指令失败')))
+-    }
++      case 'command_result': {
++        // Unmatched or stale replies must never mutate Remote Store state.
++        const accepted = this.resolveCommandResult(msg)
++        if (accepted) this.onCommandResult?.(accepted)
++        break
++      }
++    }
++  }
++
++  private resolveCommandResult(msg: CommandResultMessage): CommandResultMessage | null {
++    // Prefer transport commandId. The business requestId (permission/AskUser)
++    // is not a safe fallback when an explicit commandId is present but unknown.
++    const id = typeof msg.commandId === 'string' && msg.commandId.length > 0
++      ? msg.commandId
++      : typeof msg.requestId === 'string' && msg.requestId.length > 0 ? msg.requestId : null
++    if (id && this.completedCommands.has(id)) return null
++    // A legacy server may respond to resume_agent_events as a command.
++    if (id && id === this.resumeCommandId) {
++      this.resumeCommandId = null
++      return null
++    }
++    if (id) {
++      const pending = this.pendingCommands.get(id)
++      if (!pending) return null // Never consume a different pending command.
++      this.pendingCommands.delete(id)
++      this.completedCommands.add(id)
++      if (msg.ok) pending.resolve(msg.data)
++      else pending.reject(new Error(msg.conflict?.code ? `${msg.conflict.code}: ${msg.error || '指令失败'}` : (msg.error || '指令失败')))
++      return { ...msg, commandId: id }
++    }
++    // Legacy ID-less replies are ambiguous with concurrent requests.
++    // Only allow FIFO compatibility with exactly one outstanding command.
++    if (this.pendingCommands.size !== 1) return null
++    const fallback = this.pendingCommands.entries().next().value as [string, { resolve: (r: unknown) => void; reject: (e: Error) => void }] | undefined
++    if (!fallback) return null
++    const [fid, pending] = fallback
++    this.pendingCommands.delete(fid)
++    this.completedCommands.add(fid)
++    if (msg.ok) pending.resolve(msg.data)
++    else pending.reject(new Error(msg.conflict?.code ? `${msg.conflict.code}: ${msg.error || '指令失败'}` : (msg.error || '指令失败')))
++    // Also normalize the Remote Store callback to the settled command.
++    return { ...msg, commandId: fid, requestId: null }
+   }
+ 
+   private rejectAllPending(err: Error): void {
+diff --git a/src/renderer/pocket/ws-client.test.ts b/src/renderer/pocket/ws-client.test.ts
+--- a/src/renderer/pocket/ws-client.test.ts
++++ b/src/renderer/pocket/ws-client.test.ts
+@@ -65,3 +65,68 @@
+     expect(payload).toEqual({ type: 'get_agent_runtime_contexts' })
+   })
+ })
++
++describe('P05-POCKET-FIFO-01 unmatched command_result safety', () => {
++  type Pending = { resolve: (result: unknown) => void; reject: (error: Error) => void }
++  function fixture() {
++    const delivered: string[] = []
++    const settled: string[] = []
++    const rejected: string[] = []
++    const client = new WsClient({
++      url: 'ws://127.0.0.1/ws', token: 'local-only',
++      onCommandResult: result => delivered.push(result.commandId),
++    })
++    const probe = client as unknown as {
++      pendingCommands: Map<string, Pending>
++      handleMessage: (value: unknown) => void
++    }
++    const add = (id: string) => probe.pendingCommands.set(id, {
++      resolve: value => settled.push(id + ':' + String(value)),
++      reject: error => rejected.push(id + ':' + error.message),
++    })
++    const recv = (value: Record<string, unknown>) => probe.handleMessage({ kind: 'command_result', ...value })
++    return { probe, delivered, settled, rejected, add, recv }
++  }
++
++  test('nonmatching commandId and business requestId do not settle or notify Remote Store', () => {
++    const f = fixture()
++    f.add('a-command')
++    f.add('b-command')
++    f.recv({ commandId: 'foreign-viewer-command', requestId: 'a-command', ok: true, data: 'leak' })
++    f.recv({ commandId: 'old-reconnect-command', requestId: null, ok: true, data: 'stale' })
++    expect(f.settled).toEqual([])
++    expect(f.delivered).toEqual([])
++    expect(f.probe.pendingCommands.size).toBe(2)
++    f.recv({ commandId: 'b-command', requestId: 'business-shared', ok: true, data: 'right-b' })
++    f.recv({ commandId: 'a-command', requestId: 'business-shared', ok: true, data: 'right-a' })
++    expect(f.settled).toEqual(['b-command:right-b', 'a-command:right-a'])
++    expect(f.delivered).toEqual(['b-command', 'a-command'])
++    f.recv({ commandId: 'a-command', requestId: null, ok: true, data: 'duplicate' })
++    expect(f.delivered).toEqual(['b-command', 'a-command'])
++  })
++
++  test('ID-less legacy response is only allowed with one pending and normalizes store commandId', () => {
++    const f = fixture()
++    f.add('first')
++    f.add('second')
++    f.recv({ commandId: '', requestId: null, ok: true, data: 'ambiguous' })
++    expect(f.settled).toEqual([])
++    expect(f.delivered).toEqual([])
++    f.recv({ commandId: 'first', requestId: null, ok: true, data: 'first-value' })
++    f.recv({ commandId: '', requestId: null, ok: true, data: 'last-value' })
++    expect(f.settled).toEqual(['first:first-value', 'second:last-value'])
++    expect(f.delivered).toEqual(['first', 'second'])
++  })
++
++  test('matched error affects only its pending command; unsolicited errors do nothing', () => {
++    const f = fixture()
++    f.add('correct')
++    f.add('other')
++    f.recv({ commandId: 'foreign-error', requestId: null, ok: false, error: 'foreign denied' })
++    expect(f.rejected).toEqual([])
++    f.recv({ commandId: 'correct', requestId: null, ok: false, error: 'expected rejection' })
++    expect(f.rejected).toEqual(['correct:expected rejection'])
++    expect(f.probe.pendingCommands.has('other')).toBe(true)
++    expect(f.delivered).toEqual(['correct'])
++  })
++})

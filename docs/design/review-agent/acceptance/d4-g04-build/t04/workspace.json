@@ -1,0 +1,2989 @@
+{
+  "schemaVersion": 1,
+  "workspaceId": "d4-g04-t04-author",
+  "revision": 1,
+  "definitions": {
+    "modules": [
+      {
+        "moduleId": "g04-t04-scope",
+        "version": 1,
+        "name": "实验项目安全风险评估审核 scope",
+        "purpose": "原文独立责任逐对象审查",
+        "scope": "g04-project-hazard",
+        "limits": "禁止跨对象借证、跳过阶段、冒充正式审批",
+        "source": {
+          "kind": "user-request",
+          "note": "完整 C 原文 G04-T04_正式业务模板_MD_v0.1.md SHA256:868a37e073411ebe9aa3d5b7c5def22e8737caefb7c5b013df270f57b1059658，非正式校本审批政策"
+        },
+        "tasks": [
+          {
+            "id": "r02",
+            "title": "本模板仅审项目/方案版次，不审批单人门禁、个人准入、专项危作或实验室建设",
+            "requirement": "### `R-02`｜本模板仅审项目/方案版次，不审批单人门禁、个人准入、专项危作或实验室建设\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-01`；条件：`application_object not project/protocol`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。T03/T05/T07与T04分别路由；不得把个人许可当项目安全审核。 B原始规则依据：CD01第9—11条；F04/F05；M01/M03。\n- **证据与替代**：优先追溯 `F-04, F-05`；材料槽 `MS-01, MS-03`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `NOT_APPLICABLE + ROUTE_OUT`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-SCOPE`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`AUTO`；如需专家/有权机构则登记待核任务。原B特别提醒：个人有培训合格证≠项目安全论证通过。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf)；重点检查 `ISS-SCOPE` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r05",
+            "title": "项目类型决定教学/科研/学位/大创归口及前置时点，而不是新模板",
+            "requirement": "### `R-05`｜项目类型决定教学/科研/学位/大创归口及前置时点，而不是新模板\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-01/ST-02`；条件：`project_type any known`。Cross-school reference: not binding on CDUT unless explicitly configured and verified.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。教学/科研/学位/大创在统一模板内分支，归口按学校配置。 B原始规则依据：U01/U02/U03；F03/F14/F48；M02。\n- **证据与替代**：优先追溯 `F-03, F-14, F-48`；材料槽 `MS-02`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `POLICY_UNRESOLVED`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-ROUTE`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`CONFIG+LOOKUP`；如需专家/有权机构则登记待核任务。原B特别提醒：别校大创“申报时审核”不可对CDUT自动设超期惩罚。\n- **来源 / 流程测试线索**：[U01](https://sysbc.sdust.edu.cn/info/1064/2502.htm), [U02](https://sysbc.sdust.edu.cn/info/1014/2413.htm), [U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf)；重点检查 `ISS-ROUTE` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r07",
+            "title": "申请时当前政策版本须匹配学校及生效日期",
+            "requirement": "### `R-07`｜申请时当前政策版本须匹配学校及生效日期\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-01`；条件：`policy_id/effective_date is selected`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。校规应在本案生效日期适用且学校匹配；废止2016规则。 B原始规则依据：CD01/U01/U03；F06/F48。\n- **证据与替代**：优先追溯 `F-06, F-48`；材料槽 `基于字段与可信底账，按适用场景选择证据组（非必传全部证明）`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `POLICY_UNRESOLVED`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-POLICY`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`CONFIG`；如需专家/有权机构则登记待核任务。原B特别提醒：不可把其他高校5位专家、某月截止或表格结构设成本校强制。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf), [U01](https://sysbc.sdust.edu.cn/info/1064/2502.htm), [U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf)；重点检查 `ISS-POLICY` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r08",
+            "title": "申报表/核心论证可采取经学校认可的OA或正式PDF/文档载体",
+            "requirement": "### `R-08`｜申报表/核心论证可采取经学校认可的OA或正式PDF/文档载体\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02`；条件：`initial/form_submission`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。完整论证正文/OA合法载体可替固定申请表；本校未核固定表式。 B原始规则依据：CD01/U02/U03；F49/M01。\n- **证据与替代**：优先追溯 `F-49`；材料槽 `MS-01`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `RETURN_FOR_CORRECTION only when substantive content missing`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-SUBMISSION`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`AUTO+CONFIG`；如需专家/有权机构则登记待核任务。原B特别提醒：**本校是否必须固定表名未查到**：满足论证内容时不按“缺本校表”拒绝。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf), [U02](https://sysbc.sdust.edu.cn/info/1014/2413.htm), [U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf)；重点检查 `ISS-SUBMISSION` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r09",
+            "title": "实验方案须足以辨识项目及主要技术安全要素，不能只有空表标题",
+            "requirement": "### `R-09`｜实验方案须足以辨识项目及主要技术安全要素，不能只有空表标题\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02/ST-04`；条件：`project_lab_scope confirmed`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。方案含项目技术步骤、实施条件、设备/时段等实质内容。 B原始规则依据：CD01第10条、U03；F12/F20/F21；M03。\n- **证据与替代**：优先追溯 `F-12, F-20, F-21`；材料槽 `MS-03`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `RETURN_FOR_CORRECTION or PROFESSIONAL_REVIEW_PENDING`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-PLAN`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`AUTO+EXPERT`；如需专家/有权机构则登记待核任务。原B特别提醒：实验工艺合理与否不能由模型凭关键词裁断。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf), [U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf)；重点检查 `ISS-PLAN` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r11",
+            "title": "风险分析要覆盖实施场所及设备，风险源与实际房间类别/条件对应",
+            "requirement": "### `R-11`｜风险分析要覆盖实施场所及设备，风险源与实际房间类别/条件对应\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-04`；条件：`rooms and equipments present`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。项目实验室场地等级与设备条件查验；实验室A-D不能冒充项目等级。 B原始规则依据：CD01第8/10条、U03第9条；F10/11/20/23；M07/M08。\n- **证据与替代**：优先追溯 `F-10`；材料槽 `MS-07, MS-08`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `AUTHORITY_LOOKUP_PENDING / EXPERT_REVIEW_PENDING`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-LAB-FIT`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`LOOKUP+EXPERT`；如需专家/有权机构则登记待核任务。原B特别提醒：不可用实验室A-D等级直接计算项目高低风险。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf), [U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf)；重点检查 `ISS-LAB-FIT` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r13",
+            "title": "危险源触发相应个人防护、通风、监测、消防、应急设施条件",
+            "requirement": "### `R-13`｜危险源触发相应个人防护、通风、监测、消防、应急设施条件\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-04`；条件：`hazards trigger specific facilities/PPE`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。逐危险源映射通风、防护、消防、PPE，实质适配由专业审核。 B原始规则依据：CD01第16/18/21条、U01；F23-26；M05/M07。\n- **证据与替代**：优先追溯 `F-23`；材料槽 `MS-05, MS-07`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `EXPERT_REVIEW_PENDING`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-CONTROLS`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`LOOKUP+EXPERT`；如需专家/有权机构则登记待核任务。原B特别提醒：材料有描述不等于真实设施已合规。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf), [U01](https://sysbc.sdust.edu.cn/info/1064/2502.htm)；重点检查 `ISS-CONTROLS` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r14",
+            "title": "涉及废弃物的项目应有分类暂存及处理说明并符合校规",
+            "requirement": "### `R-14`｜涉及废弃物的项目应有分类暂存及处理说明并符合校规\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02/ST-04`；条件：`waste_generated=true`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。按有害废物类型触发处置安排；none时NOT_APPLICABLE。 B原始规则依据：CD01第17条、U01；F28；M21。\n- **证据与替代**：优先追溯 `F-28`；材料槽 `MS-21`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `RETURN_FOR_CORRECTION or EXPERT_REVIEW_PENDING`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-WASTE`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`CONFIG+EXPERT`；如需专家/有权机构则登记待核任务。原B特别提醒：未产生该类废物的项目不强制危废转运合同。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf), [U01](https://sysbc.sdust.edu.cn/info/1064/2502.htm)；重点检查 `ISS-WASTE` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r16",
+            "title": "依法需要的辐射、特种设备等资质只在对应危险源触发",
+            "requirement": "### `R-16`｜依法需要的辐射、特种设备等资质只在对应危险源触发\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-04`；条件：`specific statutory hazard=true`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。依法触发辐射/特种设备/特定场地证照，查合法范围及有效期。 B原始规则依据：CD01第15/18条、U03附表；F18/F33/F50；M09/M10/M26。\n- **证据与替代**：优先追溯 `F-18, F-33, F-50`；材料槽 `MS-09, MS-10, MS-26`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `AUTHORITY_LOOKUP_PENDING / RULE_REJECTED`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-LICENCE`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`LAW+LOOKUP`；如需专家/有权机构则登记待核任务。原B特别提醒：外部许可缺失与不能读取许可证原文需区分；不强制无关证件。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf), [U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf)；重点检查 `ISS-LICENCE` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r17",
+            "title": "场地被正式暂停或存在危及安全的隐患状态不得依旧版审查结果恢复实验",
+            "requirement": "### `R-17`｜场地被正式暂停或存在危及安全的隐患状态不得依旧版审查结果恢复实验\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-04/ST-08`；条件：`room suspension status relevant`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。场地权威停用/重大隐患未解除时不得输出“可实施”。 B原始规则依据：CD01第30条；F24/F41；M19。\n- **证据与替代**：优先追溯 `F-24, F-41`；材料槽 `MS-19`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `RULE_REJECTED for implementation / AUTHORITY_LOOKUP_PENDING`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-SUSPENDED`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`LOOKUP+AUTHORITY`；如需专家/有权机构则登记待核任务。原B特别提醒：模型不能把照片上“安全良好”替代现场恢复许可。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf)；重点检查 `ISS-SUSPENDED` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r18",
+            "title": "风险等级用于分流时必须带`grade_subject`及`grade_scale_id`",
+            "requirement": "### `R-18`｜风险等级用于分流时必须带`grade_subject`及`grade_scale_id`\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-01/ST-04`；条件：`risk grade supplied or needed`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。grade_subject + scale_id同源一致，实验室级与项目级分离。 B原始规则依据：CD01第8条、U01第4条、U03第10条；F11/F22。\n- **证据与替代**：优先追溯 `F-11, F-22`；材料槽 `基于字段与可信底账，按适用场景选择证据组（非必传全部证明）`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `POLICY_UNRESOLVED or EVIDENCE_CONFLICT`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-RISK-GRADE`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`CONFIG+AUTO`；如需专家/有权机构则登记待核任务。原B特别提醒：实验室A类 ≠ 项目A类，项目“高/低”≠另一学校的“三四级”。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf), [U01](https://sysbc.sdust.edu.cn/info/1064/2502.htm), [U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf)；重点检查 `ISS-RISK-GRADE` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r20",
+            "title": "项目工艺重大参数变化和原风险源不同，须按实际制度重新评估",
+            "requirement": "### `R-20`｜项目工艺重大参数变化和原风险源不同，须按实际制度重新评估\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-06`；条件：`changed protocol or hazard facts`。Cross-school reference: not binding on CDUT unless explicitly configured and verified.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。跨历史版本查危险源/关键参数/场地变化；重大性由本校规则/专家裁决。 B原始规则依据：U03第11条、CN01、U01第18条；F05/F21/F44/F45；M17。\n- **证据与替代**：优先追溯 `F-05, F-21, F-44, F-45`；材料槽 `MS-17`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `CHANGE_REASSESSMENT_PENDING`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-CHANGE`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`AUTO+EXPERT`；如需专家/有权机构则登记待核任务。原B特别提醒：同项目编号、新文件名、旧评估“已批准”不能覆盖新技术风险。\n- **来源 / 流程测试线索**：[U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf), [CN01](https://sysglc.sdju.edu.cn/2026/0427/c4734a150111/page.htm), [U01](https://sysbc.sdust.edu.cn/info/1064/2502.htm)；重点检查 `ISS-CHANGE` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r21",
+            "title": "学校明确提交前置时点时，风险评估应先于项目实施；不同学校科研方案、开题、课程节点有差异",
+            "requirement": "### `R-21`｜学校明确提交前置时点时，风险评估应先于项目实施；不同学校科研方案、开题、课程节点有差异\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02/ST-04`；条件：`applicable pre-start rule confirmed`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。学校适用期限明确时核提交、自评、实施时间；不能抄外校截止。 B原始规则依据：CD01、U01第15条、U03第12条；F13/F34/F48。\n- **证据与替代**：优先追溯 `F-13, F-34, F-48`；材料槽 `基于字段与可信底账，按适用场景选择证据组（非必传全部证明）`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `POLICY_UNRESOLVED or RETURN_FOR_CORRECTION`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-TIMING`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`CONFIG+AUTO`；如需专家/有权机构则登记待核任务。原B特别提醒：本校未发现固定最迟多少日前，应不据外校日期驳回。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf), [U01](https://sysbc.sdust.edu.cn/info/1064/2502.htm), [U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf)；重点检查 `ISS-TIMING` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r23",
+            "title": "审批链必须经过该学校有权限的实验室/二级单位/专项专家/归口校级节点",
+            "requirement": "### `R-23`｜审批链必须经过该学校有权限的实验室/二级单位/专项专家/归口校级节点\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-04/ST-05`；条件：`approval route from verified policy`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。以本校核实的节点核房间负责人/学院/专家/学校等；未知不能猜。 B原始规则依据：CD01第10条、U01第16条、U03第10条；F31/F32/F35/F39。\n- **证据与替代**：优先追溯 `F-31, F-32, F-35, F-39`；材料槽 `基于字段与可信底账，按适用场景选择证据组（非必传全部证明）`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `POLICY_UNRESOLVED or AUTHORITY_LOOKUP_PENDING`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-CHAIN`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`CONFIG+LOOKUP`；如需专家/有权机构则登记待核任务。原B特别提醒：山东科大≥5专家和长安大学A室校审**不能跨校强制**。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf), [U01](https://sysbc.sdust.edu.cn/info/1064/2502.htm), [U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf)；重点检查 `ISS-CHAIN` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r28",
+            "title": "校内真正的通过或备案必须带实验项目对象、方案版本、场地和签署时间",
+            "requirement": "### `R-28`｜校内真正的通过或备案必须带实验项目对象、方案版本、场地和签署时间\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-07`；条件：`claims formal approval`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。批准记录必须来自校内授权决定，绑定项目/场地/方案版及时间。 B原始规则依据：CD01、U03/U01；F05/F10/F39/F42/F46；M25。\n- **证据与替代**：优先追溯 `F-05, F-10, F-39, F-42, F-46`；材料槽 `MS-25`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `AUTHORITY_LOOKUP_PENDING`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-APPROVAL`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`LOOKUP+AUTHORITY`；如需专家/有权机构则登记待核任务。原B特别提醒：模型不可制造“校方已经批准”结论。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf), [U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf), [U01](https://sysbc.sdust.edu.cn/info/1064/2502.htm)；重点检查 `ISS-APPROVAL` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r29",
+            "title": "专家数量、复评次数、审批层级按当地制度版本生效；无配置时等待规则",
+            "requirement": "### `R-29`｜专家数量、复评次数、审批层级按当地制度版本生效；无配置时等待规则\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-01/ST-05`；条件：`expert_count or re-review_limit required`。Cross-school reference: not binding on CDUT unless explicitly configured and verified.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。专家数/复评次数/审批路线必须校本配置；缺失应暂停对应规则。 B原始规则依据：U01≥5、U05≥3、U03高危房间层级；F06/F22/F35。\n- **证据与替代**：优先追溯 `F-06, F-22, F-35`；材料槽 `基于字段与可信底账，按适用场景选择证据组（非必传全部证明）`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `POLICY_UNRESOLVED`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-LOCAL-CONFIG`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`CONFIG`；如需专家/有权机构则登记待核任务。原B特别提醒：不应因不存在的“CDUT五专家规定”否决申请。\n- **来源 / 流程测试线索**：[U01](https://sysbc.sdust.edu.cn/info/1064/2502.htm), [U05](https://gzc.xzhmu.edu.cn/info/1037/1675.htm), [U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf)；重点检查 `ISS-LOCAL-CONFIG` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r33",
+            "title": "教学课程学期集中报送总台账应由单位或归口部门提供，不能向单人申请强加学院台账",
+            "requirement": "### `R-33`｜教学课程学期集中报送总台账应由单位或归口部门提供，不能向单人申请强加学院台账\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-03`；条件：`institutional course batch`。Cross-school reference: not binding on CDUT unless explicitly configured and verified.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。课程学院汇总表属于单位台账，不要求单项经办人重复提供。 B原始规则依据：U06/U02；F14/F48/M23。\n- **证据与替代**：优先追溯 `F-14, F-48`；材料槽 `MS-23`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `AUTHORITY_LOOKUP_PENDING if batch source unavailable`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-BATCH`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`CONFIG+LOOKUP`；如需专家/有权机构则登记待核任务。原B特别提醒：一名教师上传单项目不必有整学院汇总电子表。\n- **来源 / 流程测试线索**：[U06](https://jwc.hytc.edu.cn/info/1592/34547.htm), [U02](https://sysbc.sdust.edu.cn/info/1014/2413.htm)；重点检查 `ISS-BATCH` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r34",
+            "title": "特定学校允许不涉及重要危险源仅在线“否”申报；无该权威政策不能跳过安全论证",
+            "requirement": "### `R-34`｜特定学校允许不涉及重要危险源仅在线“否”申报；无该权威政策不能跳过安全论证\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-01`；条件：`hazard_declaration_first policy active`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。仅对应外校或配置承认的声明式免表路由；CDUT更广论证范围。 B原始规则依据：U08/U09、CD01；F06/F17/M24。\n- **证据与替代**：优先追溯 `F-06, F-17`；材料槽 `MS-24`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `NOT_APPLICABLE/ POLICY_UNRESOLVED`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-HNO`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`CONFIG`；如需专家/有权机构则登记待核任务。原B特别提醒：**CDUT项目风险审查不可默认“无风险免表”**。\n- **来源 / 流程测试线索**：[U08](https://www.cup.edu.cn/safety/tzgg/22ff546b54d144ada2d4060e44e218cc.htm), [U09](https://www.bmsgrade.sdu.edu.cn/info/1010/9094.htm), [CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf)；重点检查 `ISS-HNO` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          }
+        ]
+      },
+      {
+        "moduleId": "g04-t04-identity",
+        "version": 1,
+        "name": "实验项目安全风险评估审核 identity",
+        "purpose": "原文独立责任逐对象审查",
+        "scope": "g04-project-hazard",
+        "limits": "禁止跨对象借证、跳过阶段、冒充正式审批",
+        "source": {
+          "kind": "user-request",
+          "note": "完整 C 原文 G04-T04_正式业务模板_MD_v0.1.md SHA256:868a37e073411ebe9aa3d5b7c5def22e8737caefb7c5b013df270f57b1059658，非正式校本审批政策"
+        },
+        "tasks": [
+          {
+            "id": "r03",
+            "title": "教学课程任课教师和相应实验项目负责人承担本校项目安全第一责任",
+            "requirement": "### `R-03`｜教学课程任课教师和相应实验项目负责人承担本校项目安全第一责任\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02/ST-03`；条件：`CDUT & project_has_owner`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。项目安全第一责任人含教学任课教师；经办人可不同。 B原始规则依据：CD01第7条；F07/F08/F30；M13。\n- **证据与替代**：优先追溯 `F-07, F-08, F-30`；材料槽 `MS-13`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `AUTHORITY_LOOKUP_PENDING`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-OWNER`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`LOOKUP`；如需专家/有权机构则登记待核任务。原B特别提醒：学生代办并不当然失格；不能将经办账号与责任人误同一。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf)；重点检查 `ISS-OWNER` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r04",
+            "title": "实验室和项目负责人及所属教学科研单位应匹配真实管理边界",
+            "requirement": "### `R-04`｜实验室和项目负责人及所属教学科研单位应匹配真实管理边界\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02/ST-04`；条件：`room_list nonempty`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。核项目所在教学科研单位及实验室组织隶属；多房间逐个查。 B原始规则依据：CD01第7、10条；F07/F09/F10/F31；M07/M12。\n- **证据与替代**：优先追溯 `F-07, F-09, F-10, F-31`；材料槽 `MS-07, MS-12`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `AUTHORITY_LOOKUP_PENDING`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-ROOM-OWNER`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`LOOKUP`；如需专家/有权机构则登记待核任务。原B特别提醒：联合培养与跨房间需正式授权，不能靠系名相同放行。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf)；重点检查 `ISS-ROOM-OWNER` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r10",
+            "title": "具体危险源类别、特性、风险控制及现场处置措施由负责人辨识和提交",
+            "requirement": "### `R-10`｜具体危险源类别、特性、风险控制及现场处置措施由负责人辨识和提交\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02/ST-04`；条件：`hazard_type known or declared_none`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。负责人提交危险源辨识、风险分析、防范及现场处置；矛盾保留疑点。 B原始规则依据：CD01第7条、U01/U03；F17-19/F25/F27；M04-06。\n- **证据与替代**：优先追溯 `F-17, F-25, F-27`；材料槽 `MS-04`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `EVIDENCE_CONFLICT or EXPERT_REVIEW_PENDING`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-HAZARD`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`AUTO+EXPERT`；如需专家/有权机构则登记待核任务。原B特别提醒：某项含强电等危险源而危险分析写无，应先提示矛盾而非认定恶意造假。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf), [U01](https://sysbc.sdust.edu.cn/info/1064/2502.htm), [U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf)；重点检查 `ISS-HAZARD` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r15",
+            "title": "人员名单及培训方案需对应项目风险点；人员最终安全资格独立于T04",
+            "requirement": "### `R-15`｜人员名单及培训方案需对应项目风险点；人员最终安全资格独立于T04\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02/ST-08`；条件：`participants exist`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。人员清单与项目培训计划核对；真正个人资格引用T03而非代审。 B原始规则依据：CD01第11/25条、U11；F15/F29；M11/M22。\n- **证据与替代**：优先追溯 `F-15, F-29`；材料槽 `MS-11, MS-22`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `AUTHORITY_LOOKUP_PENDING`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-PERSON-TRAIN`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`LOOKUP`；如需专家/有权机构则登记待核任务。原B特别提醒：不应要求每人都交学生自己截图或把T03结果当T04结果。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf), [U11](https://swre.cugb.edu.cn/c/2025-09-15/833024.shtml)；重点检查 `ISS-PERSON-TRAIN` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r22",
+            "title": "负责人签字/责任承诺与具体项目版本绑定，纸件与有效电子签署可有校本等效",
+            "requirement": "### `R-22`｜负责人签字/责任承诺与具体项目版本绑定，纸件与有效电子签署可有校本等效\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02`；条件：`responsible_signature_due=true`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。项目第一责任人对当前版本签署；合法电子签等价。 B原始规则依据：U03附表、CD01第7条；F07/F30/M13。\n- **证据与替代**：优先追溯 `F-07, F-30`；材料槽 `MS-13`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `RETURN_FOR_CORRECTION / AUTHORITY_LOOKUP_PENDING`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-SIGNATURE`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`AUTO+LOOKUP`；如需专家/有权机构则登记待核任务。原B特别提醒：截图签名难识别时补证或核验，不直接判伪造。\n- **来源 / 流程测试线索**：[U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf), [CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf)；重点检查 `ISS-SIGNATURE` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r35",
+            "title": "版本改变、人员/场地及安全隐患状态变化后原审查的效力是否继续，需查生效规则与专业结论",
+            "requirement": "### `R-35`｜版本改变、人员/场地及安全隐患状态变化后原审查的效力是否继续，需查生效规则与专业结论\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-06/ST-08`；条件：`site/person/version/approval changed`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。已批准项目的效力需重核当前版、地点、人员与停用状态。 B原始规则依据：U03第11条、CN01、CD01第30条；F40-46/M17-19。\n- **证据与替代**：优先追溯 `F-40`；材料槽 `MS-17`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `CHANGE_REASSESSMENT_PENDING / IMPLEMENTATION_HOLD`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-CURRENT`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`LOOKUP+EXPERT`；如需专家/有权机构则登记待核任务。原B特别提醒：获批不意味着项目在所有时间地点永久许可。\n- **来源 / 流程测试线索**：[U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf), [CN01](https://sysglc.sdju.edu.cn/2026/0427/c4734a150111/page.htm), [CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf)；重点检查 `ISS-CURRENT` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          }
+        ]
+      },
+      {
+        "moduleId": "g04-t04-material",
+        "version": 1,
+        "name": "实验项目安全风险评估审核 material",
+        "purpose": "原文独立责任逐对象审查",
+        "scope": "g04-project-hazard",
+        "limits": "禁止跨对象借证、跳过阶段、冒充正式审批",
+        "source": {
+          "kind": "user-request",
+          "note": "完整 C 原文 G04-T04_正式业务模板_MD_v0.1.md SHA256:868a37e073411ebe9aa3d5b7c5def22e8737caefb7c5b013df270f57b1059658，非正式校本审批政策"
+        },
+        "tasks": [
+          {
+            "id": "r01",
+            "title": "CDUT2023办法第10条：凡在实验室开展实验项目，项目负责人向实验室所在教学科研单位提交安全论证材料",
+            "requirement": "### `R-01`｜CDUT2023办法第10条：凡在实验室开展实验项目，项目负责人向实验室所在教学科研单位提交安全论证材料\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-01/ST-02`；条件：`school=CDUT & project_at_school_lab=true`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。CD01第10条要求负责人提交项目安全论证；不能以低风险免表。 B原始规则依据：CD01；F01-03/F07/F09/F10；M01。\n- **证据与替代**：优先追溯 `F-01, F-07, F-09, F-10`；材料槽 `MS-01`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `RETURN_FOR_CORRECTION / POLICY_UNRESOLVED`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-MISSING-CORE`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`AUTO+LOOKUP`；如需专家/有权机构则登记待核任务。原B特别提醒：不以2016废止试行办法或“无危险源”学生声明免除本校论证。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf)；重点检查 `ISS-MISSING-CORE` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r06",
+            "title": "对特殊学校（CUP/山东大学）可按重要危险源是否涉及先“是/否”登记并决定是否上传评估表",
+            "requirement": "### `R-06`｜对特殊学校（CUP/山东大学）可按重要危险源是否涉及先“是/否”登记并决定是否上传评估表\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-01`；条件：`policy_scope=hazard_declaration_first`。Cross-school reference: not binding on CDUT unless explicitly configured and verified.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。当明确存在权威免上传政策才按声明路由；CDUT不得默认免项目论证。 B原始规则依据：U08/U09；F06/F17；M24。\n- **证据与替代**：优先追溯 `F-06, F-17`；材料槽 `MS-24`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `POLICY_UNRESOLVED`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-EXEMPTION`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`CONFIG`；如需专家/有权机构则登记待核任务。原B特别提醒：CDUT第10条更广，本地不能默认免交论证。\n- **来源 / 流程测试线索**：[U08](https://www.cup.edu.cn/safety/tzgg/22ff546b54d144ada2d4060e44e218cc.htm), [U09](https://www.bmsgrade.sdu.edu.cn/info/1010/9094.htm)；重点检查 `ISS-EXEMPTION` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r12",
+            "title": "应急处置可写在正式表格内或作为附件，若内容充分且校规允许则等价",
+            "requirement": "### `R-12`｜应急处置可写在正式表格内或作为附件，若内容充分且校规允许则等价\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02`；条件：`emergency_measures_required`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。审批表内完整应急段落或认可附件为EV-03等价组。 B原始规则依据：U04附表、CD01第7条；F27/M06。\n- **证据与替代**：优先追溯 `F-27`；材料槽 `MS-06`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `RETURN_FOR_CORRECTION if no substantive measures`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-EMERGENCY`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`AUTO+EXPERT`；如需专家/有权机构则登记待核任务。原B特别提醒：**没有额外命名为应急预案.pdf**不能直接误杀。\n- **来源 / 流程测试线索**：[U04](https://shg.chd.edu.cn/__local/0/13/E5/F4C4ADD78FF9271CCD8227CBF18_83AD9668_22BE7.pdf), [CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf)；重点检查 `ISS-EMERGENCY` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r19",
+            "title": "多场所/多危险源需分别建立评估发现与证据映射",
+            "requirement": "### `R-19`｜多场所/多危险源需分别建立评估发现与证据映射\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-04`；条件：`multiple rooms or hazards`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。逐房间/危险源输出finding；未经校本许可不自动拆分部分专业批准。 B原始规则依据：CD01第10条、U03附表；F10/F18-21；M04/M07。\n- **证据与替代**：优先追溯 `F-10, F-18`；材料槽 `MS-04, MS-07`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `EXPERT_REVIEW_PENDING; no implicit partial approval`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-MULTI-OBJECT`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`AUTO+EXPERT`；如需专家/有权机构则登记待核任务。原B特别提醒：能否部分批准须校本专业意见，不能由AI自作决定。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf), [U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf)；重点检查 `ISS-MULTI-OBJECT` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r25",
+            "title": "被正式审核为不可控/不同意实施的项目不得因上传补材料被模型自动改成通过",
+            "requirement": "### `R-25`｜被正式审核为不可控/不同意实施的项目不得因上传补材料被模型自动改成通过\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-05`；条件：`authority_decision=official_reject`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。正式否决保持生效直到新决定/有权重审；上传补件不能覆盖。 B原始规则依据：U01第17条、U03第13条、CD01第10条；F36/F39/F40。\n- **证据与替代**：优先追溯 `F-36, F-39, F-40`；材料槽 `基于字段与可信底账，按适用场景选择证据组（非必传全部证明）`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `AUTHORITY_REJECTED`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-REJECT`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`AUTHORITY`；如需专家/有权机构则登记待核任务。原B特别提醒：标注正式否决与可补材料缺项不同；重新申请需新审查。\n- **来源 / 流程测试线索**：[U01](https://sysbc.sdust.edu.cn/info/1064/2502.htm), [U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf), [CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf)；重点检查 `ISS-REJECT` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r31",
+            "title": "危险源清单无关的材料不能强制存在；明确需要的材料可被同等效力载体覆盖",
+            "requirement": "### `R-31`｜危险源清单无关的材料不能强制存在；明确需要的材料可被同等效力载体覆盖\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02`；条件：`conditional slot checked`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。只收本分支适用材料；同内容可在表内、章节或依法认可附件覆盖。 B原始规则依据：U03表格、U15不同类型表格、CD01第10条；F17/F49；M03-26。\n- **证据与替代**：优先追溯 `F-17, F-49`；材料槽 `MS-03`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `NOT_APPLICABLE or equivalent_pass`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-OVERREQUEST`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`AUTO+CONFIG`；如需专家/有权机构则登记待核任务。原B特别提醒：防范过度严格导致良性误杀。\n- **来源 / 流程测试线索**：[U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf), [U15](https://sysc.nwafu.edu.cn/zcfgB/xxwjB/cb54600e8ce043aa8f1a1ba8b1b41d4a.htm), [CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf)；重点检查 `ISS-OVERREQUEST` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r32",
+            "title": "权威系统不可达、现行校规字段未查明与材料确实缺失属三种不同问题",
+            "requirement": "### `R-32`｜权威系统不可达、现行校规字段未查明与材料确实缺失属三种不同问题\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-01/ST-04`；条件：`system lookup or policy unresolved`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。分开政策未知、接口不可达、真正的必交材料缺失。 B原始规则依据：CD01/U01/U02；F06/F16/F40；M20。\n- **证据与替代**：优先追溯 `F-06, F-16, F-40`；材料槽 `MS-20`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `POLICY_UNRESOLVED / AUTHORITY_LOOKUP_PENDING / RETURN_FOR_CORRECTION`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-SOURCE`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`LOOKUP`；如需专家/有权机构则登记待核任务。原B特别提醒：`LOOKUP_UNAVAILABLE`与`MISSING_REQUIRED_DOC`必须独立保留。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf), [U01](https://sysbc.sdust.edu.cn/info/1064/2502.htm), [U02](https://sysbc.sdust.edu.cn/info/1014/2413.htm)；重点检查 `ISS-SOURCE` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          }
+        ]
+      },
+      {
+        "moduleId": "g04-t04-authority",
+        "version": 1,
+        "name": "实验项目安全风险评估审核 authority",
+        "purpose": "原文独立责任逐对象审查",
+        "scope": "g04-project-hazard",
+        "limits": "禁止跨对象借证、跳过阶段、冒充正式审批",
+        "source": {
+          "kind": "user-request",
+          "note": "完整 C 原文 G04-T04_正式业务模板_MD_v0.1.md SHA256:868a37e073411ebe9aa3d5b7c5def22e8737caefb7c5b013df270f57b1059658，非正式校本审批政策"
+        },
+        "tasks": [
+          {
+            "id": "r24",
+            "title": "`专家意见=整改复评`应保持待整改/复评状态，不自动批准",
+            "requirement": "### `R-24`｜`专家意见=整改复评`应保持待整改/复评状态，不自动批准\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-05/ST-06`；条件：`official_review=rectification`。Cross-school reference: not binding on CDUT unless explicitly configured and verified.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。专家整改复评意见未闭环不得变项目已通过。 B原始规则依据：U01第17条、U03第14条；F36-38；M14/M18。\n- **证据与替代**：优先追溯 `F-36`；材料槽 `MS-14, MS-18`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `RECTIFICATION_PENDING`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-RECTIFICATION`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`LOOKUP+EXPERT`；如需专家/有权机构则登记待核任务。原B特别提醒：申请人改了附件≠有权部门复评完成。\n- **来源 / 流程测试线索**：[U01](https://sysbc.sdust.edu.cn/info/1064/2502.htm), [U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf)；重点检查 `ISS-RECTIFICATION` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r26",
+            "title": "专家及审批人的意见只有在其被正式授权且签署当前版时有效",
+            "requirement": "### `R-26`｜专家及审批人的意见只有在其被正式授权且签署当前版时有效\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-05`；条件：`reviewer judgement supplied`。Cross-school reference: not binding on CDUT unless explicitly configured and verified.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。审批人角色、资质、审批对象及方案版本都需校方核验。 B原始规则依据：U01/U03；F05/F35/F36/F39；M14/M16/M20。\n- **证据与替代**：优先追溯 `F-05, F-35, F-36, F-39`；材料槽 `MS-14, MS-16, MS-20`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `AUTHORITY_LOOKUP_PENDING`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-AUTHOR`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`LOOKUP+AUTHORITY`；如需专家/有权机构则登记待核任务。原B特别提醒：指导老师微信聊天不能代替校级正式批准。\n- **来源 / 流程测试线索**：[U01](https://sysbc.sdust.edu.cn/info/1064/2502.htm), [U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf)；重点检查 `ISS-AUTHOR` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r27",
+            "title": "未取得相应后续签批的**初次提交**，只能要求后续审批节点完成，不得说申请材料缺件",
+            "requirement": "### `R-27`｜未取得相应后续签批的**初次提交**，只能要求后续审批节点完成，不得说申请材料缺件\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02/ST-03`；条件：`initial_submission & downstream signatures absent`。Cross-school reference: not binding on CDUT unless explicitly configured and verified.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。后续单位、专家或校级意见尚未生成时不是学生初次上传缺件。 B原始规则依据：U03/U04、U02；F16/F31/F32/F39/F42。\n- **证据与替代**：优先追溯 `F-16, F-31, F-32, F-39, F-42`；材料槽 `基于字段与可信底账，按适用场景选择证据组（非必传全部证明）`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `WAITING_DOWNSTREAM_APPROVAL`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-FUTURE-DOC`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`AUTO`；如需专家/有权机构则登记待核任务。原B特别提醒：这是材料审查与审批效力最关键边界之一。\n- **来源 / 流程测试线索**：[U03](https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf), [U04](https://shg.chd.edu.cn/__local/0/13/E5/F4C4ADD78FF9271CCD8227CBF18_83AD9668_22BE7.pdf), [U02](https://sysbc.sdust.edu.cn/info/1014/2413.htm)；重点检查 `ISS-FUTURE-DOC` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          },
+          {
+            "id": "r30",
+            "title": "所有项目经批准后仍不能替代高危单次作业许可、人员准入和必要危险品交易手续",
+            "requirement": "### `R-30`｜所有项目经批准后仍不能替代高危单次作业许可、人员准入和必要危险品交易手续\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-08`；条件：`project review completed`。CDUT: CD01 only within the cited clauses; specific approval routes and thresholds CONFIG_UNVERIFIED.\n- **对象及原子判定**：项目/方案版本及被触发的房间、危险源或审批节点。T04批准不替T03人员准入/T05高危作业或外部许可。 B原始规则依据：CD01第9—11/13—18条、U11；F29/F46；M25。\n- **证据与替代**：优先追溯 `F-29, F-46`；材料槽 `MS-25`；`EV-01~EV-07`中的等价证据须由当前学校接受，权威记录优于未核验截图。\n- **不足、冲突与三值**：TRUE按事实记录本项检查结果；FALSE在已确定条件下执行 `IMPLEMENTATION_HOLD if dependencies pending`；UNKNOWN须区分证据模糊/本校政策不明/接口不可用，按`ISS-INDEPENDENT`追加问题，不猜测审核结论。\n- **人工/后续动作与权限**：`LOOKUP`；如需专家/有权机构则登记待核任务。原B特别提醒：安全审查通过不赋予无限权限。\n- **来源 / 流程测试线索**：[CD01](https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf), [U11](https://swre.cugb.edu.cn/c/2025-09-15/833024.shtml)；重点检查 `ISS-INDEPENDENT` 是否有正确阶段、证据和下一动作；不得当作D金标。",
+            "completion": "按本条原文的触发、证据、阶段与合法例外独立核查当前对象。TRUE/FALSE/UNKNOWN 分别处理；无权确认时输出待核。",
+            "limits": "不得用另一对象证明或申请人自述替代本对象可信授权；不得由模型签发校方/专业许可。"
+          }
+        ]
+      },
+      {
+        "moduleId": "g04-t04-section",
+        "version": 1,
+        "name": "实验项目安全风险评估审核 section",
+        "purpose": "原文独立责任逐对象审查",
+        "scope": "g04-project-hazard",
+        "limits": "禁止跨对象借证、跳过阶段、冒充正式审批",
+        "source": {
+          "kind": "user-request",
+          "note": "完整 C 原文 G04-T04_正式业务模板_MD_v0.1.md SHA256:868a37e073411ebe9aa3d5b7c5def22e8737caefb7c5b013df270f57b1059658，非正式校本审批政策"
+        },
+        "tasks": [
+          {
+            "id": "sec01",
+            "title": "模板元信息、范围与法规效力",
+            "requirement": "## 1. 模板元信息、范围与法规效力\n\n| 属性 | 值 |\n|---|---|\n| 业务 ID | `G04-T04` |\n| 模板名称 | 实验项目安全风险评估审核 |\n| 作者版 | `C-v0.1`；静态母版，非已发布 `TemplateVersion` |\n| 审核主对象 | `school_id + experiment_project_uid + protocol_version + lab_set + review_cycle`（**建议逻辑主键**，非学校现有数据库字段） |\n| 校本来源 | `CD01` 成都理工大学成理校发〔2023〕40号，2024-01-01起施行、2016试行办法废止；`CD-R2-07`补核 |\n| 外校参考 | `U01/U03/U04/U05/U06/U07/U08/U09/U15`等；仅用于条件分支设计，不作成都理工大学自动拒件条件 |\n| 入口对象 | 在校内实验室实施的教学、科研、学位/毕业设计、大创、竞赛等**实验项目及其当前方案版次** |\n| 不能代替 | G04-T03个人准入、G04-T05单次高风险操作、G04-T01门禁、G04-T07动火、危险品交易和实验室新建/改扩建设施论证 |\n| 完成含义 | 申请材料可预审 → 专业审查/签章 → 真实批准记录 → 实施前独立条件；AI只可建议，无法替代后两者 |\n\n**CDUT最小校本事实**（`CD01`第7/8/10/11/15—18/23/30/35条）：项目负责人（含任课教师）承担危险源辨识、风险评估、控制措施和现场处置责任；凡在实验室开展的实验项目应向实验室所在教学科研单位提交安全论证材料，分析实验场所、设备及项目安全要素；学校实验室A—D四级是**实验室风险级别**；学校可对危险场所暂停使用；现有研究**没有证明固定2026版申报表名、全校项目等级与校级专家人数**。这些事实在本模板中优先于已废止的`CD02`及所有外校参考。\n\n### 1.1 规则适用的前置校验\n\n每条规则先读取`school_policy_profile`：`school_id / organization_scope / policy_id / effective_from / effective_to / scope_rule / approval_route / approver_authorities / applicable_hazard_catalog / risk_scale_definitions / lead_time_rules / allowed_equivalence_groups / partial_authorization_policy / official_lookup_sources`。若版本或有效期不确定，设`POLICY_UNRESOLVED`，仅进行无争议的身份/材料提取，不借他校条款自动豁免，也不凭未证实期限拒件。`CDUT 2023第10条实质论证义务`是已核实的校本事实，但具体表式与细化审批链仍属于待配置。\n",
+            "completion": "独立核对本章 F、MS/M、BR、EV、Q、ST、非编号例外、权限和输出不变量；在 source-sections.json 可逐行找回全文。",
+            "limits": "章节目录不能代替逐字段程序校验；未取得校本效力的数值或授权不可自动判定。"
+          },
+          {
+            "id": "sec02",
+            "title": "业务独立性及不适用的申请",
+            "requirement": "## 2. 业务独立性及不适用的申请\n\n**审核问句**：这份项目最新实验方案是否经过对应学校的安全论证，并获得其适用的专业评估和有权部门审核？既有批准的效力范围与当前实验室及方案是否仍然相符？\n\n**明确排除**：个人考试合格证/门禁开通属于T03/T01；特定夜间危险操作许可属于T05；建设施工前设施技术论证属于独立建设管理；危险品采购属于另一交易审批；纯理论办公、资料查阅若未在本办法所称实验场所开展实验，应标`SCOPE_OUT`并说明理由，不能因缺危险源表驳回；事故救援上报不可等待项目审批。\n\n**一个科研课题不一定是一个实验项目**；多个房间、多个危险源和多参与人都可属于同一项目方案审批单元。允许对每个房间/危险源输出分项意见，但**只有本校权责人明确允许**才可产生部分项目正式许可，算法不得自行拆出“实验室A可开工”的决定。\n",
+            "completion": "独立核对本章 F、MS/M、BR、EV、Q、ST、非编号例外、权限和输出不变量；在 source-sections.json 可逐行找回全文。",
+            "limits": "章节目录不能代替逐字段程序校验；未取得校本效力的数值或授权不可自动判定。"
+          },
+          {
+            "id": "sec03",
+            "title": "参与角色、权责与权限链",
+            "requirement": "## 3. 参与角色、权责与权限链\n\n| 角色 | 在本模板负责的事实或动作 | 可读/签批边界 |\n|---|---|---|\n| 申请人/经办人 | 登记项目、上传材料；可能是研究生、教务秘书、科研人员 | 申报账号不自动成为项目安全第一责任人；代办须核权限 |\n| 项目负责人（含教学任课教师） | 危险源辨识、风险评估、防范措施及现场处置、版本确认 | `CD01`第7条：本校核心第一责任角色；真实对应身份查权威项目台账 |\n| 参与人员 | 实际参与实验，关联个人准入 | **不能用T04项目结论代替T03个人资格** |\n| 实验室/场地负责人 | 场所、设备、防护设施与人员训练等责任；按规则出具场地意见 | 是否为必经书面签字节点取校本审批路线，不自行推定 |\n| 实验室所在教学科研单位 | `CD01`第10条所定的安全论证提交方向 | 接收/审核与**校级最终批准**不是同义词 |\n| 项目业务归口部门 | 教学、学位、科研、大创的相关管理意见或台账 | 一类项目的办事路径不意味着审核其他类型的权限 |\n| 专业专家、技术安全组织 | 风险等级、措施充分性、专业现场核查、整改复评 | 有资格者签署真实结论，LLM不得代签、代验收 |\n| 有权审批/备案机构 | 依据本校实际路线形成正式决定与生效范围 | 只有可核验的工作流/公文结果才可设`APPROVED_*` |\n| 平台与档案操作人 | 归档、提醒、修改状态、版本记录、实施资格核验 | 平台执行日志不代表代替专业评审 |\n| 外部法定机关 | 当辐射、特种设备等适用法定许可时提供有效证照 | 校内项目评估不能替代依法要求的许可 |\n\n**代办与权责一致性**：`经办人`、`负责人`、`项目成员`、`实验室负责人`、`最终审批人`独立身份；官方变更、跨院联合与受托代办应查权威权限记录。未开放接口时进入待核，不武断认定伪造。\n",
+            "completion": "独立核对本章 F、MS/M、BR、EV、Q、ST、非编号例外、权限和输出不变量；在 source-sections.json 可逐行找回全文。",
+            "limits": "章节目录不能代替逐字段程序校验；未取得校本效力的数值或授权不可自动判定。"
+          },
+          {
+            "id": "sec04",
+            "title": "条件分支及互斥、叠加、未知逻辑",
+            "requirement": "## 4. 条件分支及互斥、叠加、未知逻辑\n\n处理顺序必须为：`政策生效与范围 → 操作类型 → 项目类别 → 房间/危险源/人员并行条件 → 当前阶段与专业审批节点 → 动态场地/版本状态 → 整体聚合`。\n\n**三值条件**：`TRUE`触发对应义务；`FALSE`仅在事实和适用规则确证后产生`NOT_APPLICABLE`；`UNKNOWN`产生带来源的`POLICY_UNRESOLVED`、`AUTHORITY_LOOKUP_PENDING`或`EVIDENCE_CONFLICT`，不得将未知默认为`false`从而走较宽松分支；不得将未知默认为真而要求全部危险源证书。\n\n| 分支ID | 名称 | 输入条件/触发 | 互斥/叠加关系 | FALSE / UNKNOWN 行为 | 关联字段 | 依据 |\n|---|---|---|---|---|---|---|\n| `BR-01` | 政策范围主入口 | school_id+policy_version+project_at_lab | 互斥：CDUT全部实验项目 / 经核实重要危险源项目 / 经核实先声明后材料 / 范围外 | TRUE进入、FALSE转范围外、UNKNOWN暂停政策选择 | F-06,F-10,F-17 | CD01,U03,U08,U09 |\n| `BR-02` | 办理动作 | F-04+historical_assessment | 互斥：初评 / 变更重评 / 整改复评 / 不变的年度或课程复核 | UNKNOWN查历史而不默认初评 | F-04,F-05,F-40,F-44 | U01,U03,CN01 |\n| `BR-03` | 项目归口类型 | F-03+F-14 | 教学/科研/学位/大创/竞赛多路条件，同一次项目按其真实归口 | 未知归口待确认，不强制单一教务部门 | F-03,F-07,F-09,F-14 | CD01,U01,U02,U06 |\n| `BR-04` | 危险源附加条件 | F-17+F-18+F-20 | 可叠加：生物/辐射/强电/特种设备/废物等 | 未知不默认为无危险源、转专业核查 | F-17,F-18,F-20,F-28,F-33 | CD01,CN01 |\n| `BR-05` | 实验室/项目等级差异 | F-11+F-22+F-06 | 房间等级与项目等级可同时存在，不能互推 | 校本项目等级未知→CONFIG_UNVERIFIED | F-06,F-11,F-22 | CD01,U01,U03,U07 |\n| `BR-06` | 场地数量/人员结构 | F-10+F-15 | 单房间/多房间；单人/多人，可组合 | 每房间/危险源输出finding；无授权不自动部分批准 | F-10,F-15,F-18 | CD01,U03 |\n| `BR-07` | 权限与后续节点 | F-16+F-31+F-32+F-35 | 提交/学院/专家/批准/执行，不同阶段节点必需性不同 | 未到阶段不缺件；权限未知待权威核证 | F-16,F-31,F-32,F-35,F-39 | CD01,U01,U03 |\n| `BR-08` | 整改与停用 | F-36+F-37+F-38+F-41 | 整改意见/完成证据/专家复评/房间暂停互相关联 | 未闭环阻止“实施”，非自动否认材料真实性 | F-36,F-37,F-38,F-41 | CD01,U01,U03,CD-R2-02 |\n\n**关键优先级**：BR-01先于BR-02/BR-04；BR-02只允许一个当前主操作（初评/变更/整改/保持不变复核），BR-03、BR-04、BR-06允许叠加；BR-07始终根据当前阶段判断材料形成时点；BR-08发现正式停用或有效否决时优先禁止“可实施”结论，即使其他分项合格。学生的“无重要危险源”声明不会使CDUT的第10条义务自动消失。\n",
+            "completion": "独立核对本章 F、MS/M、BR、EV、Q、ST、非编号例外、权限和输出不变量；在 source-sections.json 可逐行找回全文。",
+            "limits": "章节目录不能代替逐字段程序校验；未取得校本效力的数值或授权不可自动判定。"
+          },
+          {
+            "id": "sec05",
+            "title": "输入契约：四种不同可信层",
+            "requirement": "## 5. 输入契约：四种不同可信层\n\n| 类别 | 可接纳数据 | 权限/错误路径 | 主要字段与文件槽 |\n|---|---|---|---|\n| **申报事项** `application_item` | 项目及方案版本、动作初评/变更/整改、项目类型、危险源声明、实施场所与时段 | 申请人低信任声明；未证实的免表资格不能当权威 | `F-01~F-06/F-10/F-13/F-17/F-22/F-44~45`；多项目必须逐项记录 |\n| **申报材料** `application_documents` | 安全论证申请正文、当前实验方案、风险分析、措施、应急、人员/设备清单、项目负责人确认 | DOCX/结构化记录/图像PDF均可；缺实质内容才按当前阶段补正 | `MS-01/MS-03~06/MS-08/MS-11/MS-13/MS-17`及对应F |\n| **证明材料** `supporting_evidence` | 设备合格证、合法专项证照、课程立项或项目归口证明、专业整改证据 | 用户上传文件仍需验证来源、实体、时间/版本；OCR结果不自带官方可信性 | `MS-02/MS-09~10/MS-18/MS-21~22/MS-26` |\n| **校内/外部可信数据** `authoritative_records` | 项目责任人、实验室等级、场地现状、审批历史、人员准入、权责单位、证照有效性、整改台账 | 必须合法授权查询；接口不可达→`AUTHORITY_LOOKUP_PENDING`，不是申请人缺件 | `TD-01~TD-09`；`MS-07/MS-12/MS-14~16/MS-19~20/MS-23~25`只在相应阶段产生/使用 |\n\n**权威优先顺序**：现行有权机构明确编号的审批/核验记录与真实权威平台 > 已被校方核验的有效纸质批文 > 申请人自述和截图。来源优先级不能自动解决**两份均为权威但彼此矛盾**的证据，这应记`EVIDENCE_CONFLICT`并交人核对版本与更正。\n\n**文件再利用**：一个受权材料内同一章节可以同时证明多个事实，但每个事实必须有具体页码/段落/图片坐标与当前方案版本。接受扫描PDF时可调用OCR/视觉识别，必须保留OCR原始结果、置信度与证据锚点；未识别不等于原件无信息。\n",
+            "completion": "独立核对本章 F、MS/M、BR、EV、Q、ST、非编号例外、权限和输出不变量；在 source-sections.json 可逐行找回全文。",
+            "limits": "章节目录不能代替逐字段程序校验；未取得校本效力的数值或授权不可自动判定。"
+          },
+          {
+            "id": "sec06",
+            "title": "字段字典及条件必填规则",
+            "requirement": "## 6. 字段字典及条件必填规则\n\n继承B研究的50项`F-01~F-50`，保持编号含义并加入9项B-v0.2增量字段。下面的“状态”是**条件义务**，不是所有字段在申请提交时必填：`M`当前条件下必要、`C`条件触发、`S`可信记录读取、`L`审批后生成、`CFG`学校规则配置。所有文件均有证据位置引用。\n\n| 字段ID | B研究事实定义 | 来源/输入语义 | 适用阶段与条件 | 类型/敏感级 | 核对字段与证据 | 合法替代/时效 | 缺失/冲突处置 |\n|---|---|---|---|---|---|---|---|\n| `F-01` | **项目唯一标识**：风险评估的单一实验项目编号而非整个科研课题 | 申请表+学院项目登记/O级；申报事项 | 有项目唯一编号时必要；本校编号方案未查；提交 | `text` / `INTERNAL` | 字符串/可包含学院课号；与课程/立项及历史评估记录对照 | 校本允许临时草稿编号时可用临时ID；按项目延续；[CD01,U01,U03] | 无编号先核本校是否要求；重复编号需核是否同一项目 |\n| `F-02` | **项目名称及摘要**：明确安全评估覆盖的项目范围 | 负责人提交/O级；申报事项 | 受理时必要；提交 | `text` / `INTERNAL` | 标题与简短正文；对方案、风险表、签章及归档标题 | 官方项目更名/别名对应表；方案版本相关；[CD01,U03,U04] | 名称冲突先核更名记录 |\n| `F-03` | **项目类型**：教学科研毕业论文大创竞赛等类别 | 负责人和学校教务科研台账/O+S；申报事项 | 必要用于选择路线；提交 | `enum` / `INTERNAL` | 枚举含其他；与教学大纲/项目书/业务归口 | 正式项目台账覆盖自由文本分类；适用学年；[U01,U02,U03] | 不明项目类型待补或查询 |\n| `F-04` | **评估操作类型**：初评现有变更整改复评 | 申请人声明+历史记录/O+S；申报事项 | 必要；提交 | `enum` / `INTERNAL` | 枚举；关联旧评估批次 | 历史审批ID及变化日志；历史版本有效；[U01,U03,CN01] | 旧记录找不到待核查不猜初评 |\n| `F-05` | **项目实验方案版本**：被评估实验内容的固定版次与签署状态 | 申请方案/O级；申报事项 | 必要并需与历史对照；提交 | `text` / `INTERNAL` | 版本号或文件摘要；F02/F12/F20/M03/部门意见版本 | 正式更正的版本映射；本批唯一有效稿；[U03,CN01] | 多版本冲突补正并暂停直接通过 |\n| `F-06` | **所在学校及规章版本**：决定哪些项可免材料何处审批 | 学校策略S级；可信学校底账 | 必须在执行时确定；预审 | `reference` / `INTERNAL` | 学校ID、政策ID及生效时间；来源索引/申请提交时间 | 管理员验证后校本配置；依生效日期；[CD01,U01,U03] | 未配置不得自动按外校拒绝 |\n| `F-07` | **项目负责人身份**：第一安全责任人与申报项目绑定 | 学校人事/项目底账S级；可信学校底账 | 必需核验；资格核验 | `reference` / `RESTRICTED` | 内部UID加姓名；签署/M01/课程或科研负责人 | 学校认可的项目负责更替记录；项目当期；[CD01,U01,U03] | 经办学生与负责人不同属常态 |\n| `F-08` | **申报经办人及代办关系**：谁上传与谁负第一责任区分 | 系统提交日志S级；申报事项 | 若代办则条件必需；提交 | `reference` / `RESTRICTED` | 提交账号/授权关系；对负责人F07及委托权限 | 单位批量受理官方名单；授权有效期；[U02,U08,CD01] | 缺代办依据需核权限而非直接认项目虚假 |\n| `F-09` | **负责教学科研单位**：负责接收本校安全论证材料 | 学校组织台账S级；可信学校底账 | 必要；受理 | `reference` / `INTERNAL` | 部门/实验室归属码；与实验室F10及负责人F07一致 | 跨院联合归口正式批复；申请时有效；[CD01,U03] | 归属冲突交校内确认 |\n| `F-10` | **实验室或场所ID**：实验拟使用地点的真实场所 | 实验室空间系统S级；可信学校底账 | 实际在实验室实施时必要；资格核验 | `list` / `INTERNAL` | 校区楼宇房号列表；F05/M07/场地等级F11 | 学校批准的共享实验室编号；实验期内有效；[CD01,U03] | 仅模糊房间名应补正或核数据 |\n| `F-11` | **实验室类别与风险级别**：房间生化工程辐射等类别及A-D等级 | 校方分级分类台账S级；可信学校底账 | 如学校分级已建立则需引用；风险核验 | `enum` / `INTERNAL` | 类别及grade_scale_id；与F10、危险源F18、校规F06 | 有效期内台账；分级修订时间；[CD01,U03,CN01] | 绝不把房间A级误作项目A级 |\n| `F-12` | **实验过程概述**：实验目的技术路线关键步骤摘要 | 负责人编制/O级；申报材料 | 所辖项目申请核心信息；提交 | `longtext` / `INTERNAL` | DOCX/PDF/富文本；F05、F19/20、M03 | 经批准的研究方案对应章节；当前评估版本；[CD01,U03,U04] | 缺工序无法评价；补方案 |\n| `F-13` | **预计实施开始与结束**：项目拟发生时段非每一次操作许可 | 负责人/O级；申报事项 | 有明确使用时间时必要；提交 | `interval` / `INTERNAL` | 起止日期时间；与审批实际形成时间F42/实验室许可 | 校本安排表/课程学期；方案版次；[U03,U04] | 实施早于审批不按倒签补救 |\n| `F-14` | **立项课程或学位关联**：实验项目对应的教学科研任务 | 教务科研或开题底账S级；可信学校底账 | 相应项目类型触发；资格核验 | `reference` / `INTERNAL` | 课号/项目ID/论文选题ID；F02/F03/F07 | 学院盖章立项摘要或系统字段；学期/开题版本；[U01,U02,U08] | 非课程项目不强求课程编号 |\n| `F-15` | **项目人员名册**：参与项目的人员角色及受指导关系 | 负责人登记/O级；申报材料 | 参与人员实际存在时必要；提交 | `list` / `RESTRICTED` | 列表UID角色；人员资格系统和训练计划F29 | 官方管理系统参与人名单；随人员变更；[U01,U03] | 名单与方案不一致先核调整 |\n| `F-16` | **当前审批阶段**：区分草稿初审专家整改归档 | 审批工作流S级；可信学校底账 | 所有系统审核时必要；全周期 | `enum` / `I\n[后续原文见本模板 source-sections.json]",
+            "completion": "独立核对本章 F、MS/M、BR、EV、Q、ST、非编号例外、权限和输出不变量；在 source-sections.json 可逐行找回全文。",
+            "limits": "章节目录不能代替逐字段程序校验；未取得校本效力的数值或授权不可自动判定。"
+          },
+          {
+            "id": "sec07",
+            "title": "材料槽与等价证据组",
+            "requirement": "## 7. 材料槽与等价证据组\n\n`MS-01~MS-26`一一映射B研究`M-01~M-26`；这里使用**材料槽**而非要求上传固定文件。受理时必要的实质事实可由官方允许的单个文档/多个章节覆盖；后续审批产物不能在初次申报阶段提前要求。\n\n| 材料槽 | 功能/原B槽 | 提交或来源级别 | 条件、形成阶段 | 关联字段/接受格式 | 等价来源和时效 | 不能满足时的合理处理 |\n|---|---|---|---|---|---|---|\n| `MS-01` | **实验项目安全论证申请/审批表**：承载申请目标负责人项目场地方案等主表 | 申请人表单/O级；申报材料 | CDUT第10条要求论证材料；是否必须固定表名未证；提交 | DOCX/PDF/OA表格；F01~F13/F30/F49 | 官方允许的OA电子填报或充分论证正文；当前方案 | 缺本校固定表名不等于缺论证；正文缺关键事实则补正；[CD01,U03,U04] |\n| `MS-02` | **项目来源或归口证明**：支撑课程编号毕业设计大创科研来源 | 项目/课程归口S或官方单据O；证明材料/可信底账 | 对应项目类别、学校要求时条件需要；资格核验 | OA系统/项目书摘要；F03/F14/F07 | 可由教务科研系统直接查询；对应培养学年 | 科研独立课题不可要求本科课程证明；[U01,U02,U06] |\n| `MS-03` | **当前实验方案及工艺说明**：描述真实涉及的技术步骤材料设备和参数 | 负责人/O级；申报材料 | 实际开展实验项目必要；提交 | DOCX/PDF多页含图片；F05/F12/F18~21 | 经评估机构认可的方案章节；当前版 | 缺核心方案不能专业评估；[CD01,U03,U04] |\n| `MS-04` | **项目危险源识别与风险分析表**：列源种类特性影响风险 | 负责人/O级；申报材料 | 确有对应危险源时必需记录；无源亦说明场景；提交 | 表内表格/附件；F17~19/F20 | 正式危险源表或完善的方案章节；当前版 | 宣称无危险但方案含风险需专家核验；[CD01,U01,U03] |\n| `MS-05` | **项目防控措施与PPE安排**：把风险源对应控制措施实际落实计划 | 负责人/O级；申报材料 | 风险评估核心材料；提交 | 表格章节或独立PDF；F25/F26/F18 | 已有审批表专栏详尽可替代单独附件；当前版 | 措施空白补正；充分性非自动；[CD01,U03,U04] |\n| `MS-06` | **应急处置方案/现场处置**：发生风险时现场响应与联系体系 | 负责人/O级；申报材料 | 风险评估核心内容；提交 | 表单应急栏/独立预案；F27/F18 | U04允许应急栏内填写而非一律附PDF；当前版 | 完整栏内文本不可误杀缺独立附件；[CD01,U03,U04] |\n| `MS-07` | **实验场所与设施证明**：所用实验室位置分级安全设施台账 | 校方安全台账S级；可信学校底账或证明材料 | 涉及专门设施/危险级别时条件必要；审核 | 系统状态/检查单；F10/F11/F23/F24 | 授权场地台账比申请人照片更可信；实施期 | 房间不匹配或停用需官方核验；[CD01,U03] |\n| `MS-08` | **主要设备/试剂清单**：设备库存与工况危险属性 | 负责人表/资产系统O+S；申报材料或可信底账 | 使用对应设备/试剂时条件必要；提交 | Excel/PDF/系统清单；F20/F21/F18 | 方案表格足够可不另附表；当前版 | 数量冲突需核设备台账；[U01,U03,U04] |\n| `MS-09` | **设备定检及特种设备证照**：证明受管设备安全条件符合要求 | 设备台账/专业部门S级；可信学校底账或证明材料 | 特种设备和需定检设备触发；专业核验 | 证书/年度台账；F20/F24/F33 | 主管部门系统查验；证照有效期 | 无受管设备则NA；未核实不得自动放行；[CD01,U03] |\n| `MS-10` | **生物/辐射等法定许可**：法定许可主体与具体场所/类型 | 法定机构S级；可信学校底账或证明材料 | 触发法定特种许可时必要；专业/法定核验 | 许可编号+范围；F18/F33/F50 | 主管许可库优先；纸件作辅助；证照时间范围 | 与项目危险类别不匹配需法定确认；[CD01,U03] |\n| `MS-11` | **人员名单和培训准入关联**：项目参与者与人员资格对应 | 负责人列表O级+T03系统S级；申报材料或可信学校底账 | 多人实际参与时条件需要；提交+核验 | 名册/接口；F15/F29及T03记录 | 权威参训名单直接查询；人员在岗期 | 缺学生单独准入证扫描不必拒项目申请；[CD01,U01,U11] |\n| `MS-12` | **实验室负责人授权或意见**：证明该房间安全负责人已受理场地审查 | 单位或OA签批S级；审批过程数据 | 依校本签审节点触发；学院初审 | 签章/审批节点；F31/F10 | 签章纸件经权威核验；审批版本 | 初交时尚未生成不作为上传缺件；[U03,U04] |\n| `MS-13` | **项目负责人真实性承诺**：风险信息由第一责任人确认 | 负责人签名O级/后台S级；申报材料 | 正式申报时必要；提交 | 签名/有效电子签名；F07/F30/F05 | 已获学校承认的数字签名；对应版本 | 草稿无正式签名不应认为已失格；[CD01,U04] |\n| `MS-14` | **专家评估意见及专家名录**：专业机构对危险源和控制措施判定 | 校内专家审批S级；审批过程数据 | 本校规则触发专家时条件形成；专家评估 | 专家表/签字页；F35/F36/F22 | 学校正式评审纪要；本次评估 | 申请人不负责提前出具专家意见；[U01,U05] |\n| `MS-15` | **二级单位部门审核意见**：对本项目受理评估的正式节点 | 二级单位OA系统S级；审批过程数据 | 到对应审批节点才形成；学院审批 | 签章状态；F32/F16 | 带签名授权电子审批结果；针对方案版本 | 流程尚未走到此节点不是申请缺件；[CD01,U03] |\n| `MS-16` | **校级或业务归口审核备案记录**：特定风险及教学科研项目的进一步节点 | 职能部门OA系统S级；审批过程数据 | 学校风险路由触发时必要；归口审核/归档 | 电子盖章回执；F39/F06/F22 | 正式归口结果记录；本次审批版本 | 外校流程不应转为CDUT统一环节；[U01,U03,U06] |\n| `MS-17` | **变更对照与旧版审批档案**：证明旧方案与新版改动及权限影响 | 历史记录S级+新稿O级；申报材料与可信底账 | 已有项目变更时必要；变更申报 | 新旧版差异表；F04/F44/F45/F40 | 校方版本对比平台；变更生效时间 | 只有“项目名称没变”不足认定免重评；[U01,U03,CN01] |\n| `MS-18` | **整改通知与整改证明**：针对审查不合规提出整改完成及复评 \n[后续原文见本模板 source-sections.json]",
+            "completion": "独立核对本章 F、MS/M、BR、EV、Q、ST、非编号例外、权限和输出不变量；在 source-sections.json 可逐行找回全文。",
+            "limits": "章节目录不能代替逐字段程序校验；未取得校本效力的数值或授权不可自动判定。"
+          },
+          {
+            "id": "sec08",
+            "title": "审核事实、跨文件关系与时态",
+            "requirement": "## 8. 审核事实、跨文件关系与时态\n\n| 事实ID | 需要成立的事实 | 核对关系及失效条件 |\n|---|---|---|\n| `FACT-01` | 申报对象为某一实验项目的**当前方案版本** | F-01/F-02/F-05；方案与申请主表项目ID、版本同一；官方更名沿继承链处理 |\n| `FACT-02` | 负责人及归口教学科研单位真实匹配 | F-07/F-08/F-09/F-10/F-51；代办人与责任人分别核 |\n| `FACT-03` | 实验操作步骤、设备、危险源清单和安全措施/现场处置成闭环 | F-12/F-18~21/F-25/F-27；缺一环不能自动宣布风险可控 |\n| `FACT-04` | 风险等级按正确**主体与分级字典**定义 | F-06/F-11/F-22；实验室A-D是房间，不等于项目风险等级 |\n| `FACT-05` | 附加资格仅对适用的危险源触发 | F-18/F-28/F-33/F-50；合法机关与校本台账可用性单独记录 |\n| `FACT-06` | 每房间的设施/停用状态在**拟实施时点**有效 | F-10/F-24/F-41/F-53/F-54/F-55；旧安全检查照片不能覆盖后续停用 |\n| `FACT-07` | 正式评审权限、时间、方案版本一致 | F-16/F-31/F-32/F-35/F-36/F-39/F-42/F-46；微信同意不作正式结论 |\n| `FACT-08` | 当前版审批不存在有效撤销、正式否决或待整改 | F-37/F-38/F-40/F-44/F-45；正式历史按时间线排序 |\n| `FACT-09` | 实施前依赖T03、T05及特种许可，且不扩张T04审批效力 | F-29/F-50/F-58，按本校实际适用分支独立核验 |\n\n**时间比较次序**：政策实施日→项目方案`valid_from`→提交及负责人自评→校方评估与正式审批→实施/地点变化→停用/撤销/恢复事件。若历史审批覆盖`protocol_v1`而当前实际`protocol_v3`有危险源新增，则原批准不自动覆盖变化；“正式批准时间早于项目开始”也不能补救审批对象与方案版本不符。\n",
+            "completion": "独立核对本章 F、MS/M、BR、EV、Q、ST、非编号例外、权限和输出不变量；在 source-sections.json 可逐行找回全文。",
+            "limits": "章节目录不能代替逐字段程序校验；未取得校本效力的数值或授权不可自动判定。"
+          },
+          {
+            "id": "sec10",
+            "title": "输出契约、单元判定与多问题聚合",
+            "requirement": "## 10. 输出契约、单元判定与多问题聚合\n\n### 10.1 分项对象及审核职责\n\n一份申请包含`project_item[]`（**每个独立实验项目**各一项），每项下有`room_findings[]`、`hazard_findings[]`、`participant_dependencies[]`、`approval_node_findings[]`。每个findings包含`rule_id / triggered(true|false|unknown) / local_policy_source / fact_status / outcome / issue_code / evidence_refs[] / authority_ref / confidence_note / next_action`。`hazard`或`room`层通过**不是**项目范围的许可；若有任何重大待专业复核/停用/已否决，整体不得显示“可实施”。\n\n### 10.2 统一语义状态\n\n| 主状态/分项状态 | 精确定义 | 可自动设置 |\n|---|---|---|\n\n| `RECEIVED` | 提交已接收，不意味着有效 | 可保守标记待核；结果不等于否决 |\n| `FORM_PRECHECK_READY` | 本阶段所需的申请实质要素已齐备，但不是审批通过 | 系统可按证据分项建议；不得代签 |\n| `RETURN_FOR_CORRECTION` | 明确当前阶段适用的申报必需要素缺失且可补正 | 系统可按证据分项建议；不得代签 |\n| `EVIDENCE_CONFLICT` | 具有相互冲突且无法按可信优先级化解的证据 | 可保守标记待核；结果不等于否决 |\n| `AUTHORITY_LOOKUP_PENDING` | 权威身份/房间/历史/证照/审批底账需核实或接口不可达 | 可保守标记待核；结果不等于否决 |\n| `POLICY_UNRESOLVED` | 校本版本或适用范围/门槛未证实，禁止默认拒绝或免除 | 可保守标记待核；结果不等于否决 |\n| `EXPERT_REVIEW_PENDING` | 方案措施、场地安全性和重大变更须有资质专业判断 | 可保守标记待核；结果不等于否决 |\n| `WAITING_DOWNSTREAM_APPROVAL` | 前置材料齐备但正式审批节点尚未到达或未形成 | 可保守标记待核；结果不等于否决 |\n| `RECTIFICATION_PENDING` | 有权审查者要求整改且未完成有效复评 | 仅权威决定或人工记录 |\n| `AUTHORITY_REJECTED` | 具有真实效力的正式否决，旧版本不覆盖 | 仅权威决定或人工记录 |\n| `APPROVED_PENDING_IMPLEMENTATION` | 校方批准当前方案但实施资格/归档/其他独立许可有待完成 | 仅权威决定或人工记录 |\n| `EXECUTION_RECORDED` | 从权威系统获得合法实施/归档记录，不代表永久安全 | 仅权威决定或人工记录 |\n| `NOT_APPLICABLE` | 经权威规则确认某条条件未触发 | 系统可按证据分项建议；不得代签 |\n| `SCOPE_OUT` | 不属于本模板审核的申请对象 | 系统可按证据分项建议；不得代签 |\n| `WITHDRAWN_OR_EXPIRED` | 撤回、已过效力或被撤销；需具体权威依据 | 可保守标记待核；结果不等于否决 |\n| `CHANGE_REASSESSMENT_PENDING` | 关键变化或专业重大性未确认，现批复不能自动覆盖变化 | 可保守标记待核；结果不等于否决 |\n\n### 10.3 多状态聚合不是简单的优先级覆盖\n\n`application_state`保持当前流程位置，`findings[]`保留所有并存疑点，`implementation_readiness`独立为`NO_VALID_APPROVAL / HOLD / NOT_APPLICABLE / POSSIBLE_ONLY_AFTER_AUTHORITY_CONFIRMATION / AUTHORITY_CONFIRMED`。**聚合报告必须同时说明**：\n\n1. **已收到正式否决**：标记`AUTHORITY_REJECTED`为审批效力阻断，仍展示可能存在的资料不全与流程证据；补件不能覆盖否决。\n2. **正式暂停场地/证照无效**：即使T04项目自身形式完备或历史已批准，`implementation_readiness=HOLD`，保留场地逐项被停用的证据，不能以其它场地通过掩盖。\n3. **材料可补正与系统不可用并存**：同时输出`RETURN_FOR_CORRECTION`与`AUTHORITY_LOOKUP_PENDING`两个问题，不将系统故障指责申请人。\n4. **政策未知但事实齐备**：可给出`FORM_PRECHECK_READY`的条件性描述与`POLICY_UNRESOLVED`阻断；绝不宣布审批通过。\n5. **多项目批量导入**：每个项目单独状态；合法的部分“**预审**就绪”可以存在，专业/校本**部分正式批准**须有权威批准方案所覆盖的明确房间范围，系统不自作决定。\n6. **审批已完成但后续T03/T05/现场条件尚未确认**：`APPROVED_PENDING_IMPLEMENTATION`而非`EXECUTION_RECORDED`。只有真实权威记录才能使`APPROVED_PENDING_IMPLEMENTATION`或`EXECUTION_RECORDED`成立。\n\n### 10.4 建议交换数据结构（文档语义示意；**非已验证代码 JSON Schema**）\n\n```json\n{\n  \"template_id\": \"G04-T04\",\n  \"business_version\": \"C-v0.1\",\n  \"policy_profile\": {\"school_id\": \"CDUT\", \"policy_id\": \"CD01\", \"effective_status\": \"verified_core_with_unknown_local_details\"},\n  \"application_id\": \"<synthetic-uid>\",\n  \"review_phase\": \"ST-03\",\n  \"project_items\": [{\n    \"project_uid\": \"<synthetic-project>\", \"protocol_version\": \"v2\",\n    \"precheck_status\": \"FORM_PRECHECK_READY\",\n    \"authority_decision\": \"NOT_YET_ISSUED\",\n    \"implementation_readiness\": \"NO_VALID_APPROVAL\",\n    \"room_findings\": [{\"room_ref\": \"<synthetic-room>\", \"status\": \"AUTHORITY_L\n[后续原文见本模板 source-sections.json]",
+            "completion": "独立核对本章 F、MS/M、BR、EV、Q、ST、非编号例外、权限和输出不变量；在 source-sections.json 可逐行找回全文。",
+            "limits": "章节目录不能代替逐字段程序校验；未取得校本效力的数值或授权不可自动判定。"
+          },
+          {
+            "id": "sec11",
+            "title": "生命周期、变更、补正、撤回及审批权限",
+            "requirement": "## 11. 生命周期、变更、补正、撤回及审批权限\n\n| 阶段 | 状态入口 | 操作/应产生的事实 | 不得错误要求 | 跳转条件 |\n|---|---|---|---|---|\n\n| `ST-01` 受理范围与政策版本 | `RECEIVED` | 政策版本、场地、项目类型和`BR-01`范围（责任：系统/有权政策管理员） | 不要求本校未核实的统一表单名 | 范围和版本可识别，转ST-02；否则政策待核 |\n| `ST-02` 提交与负责人风险自评 | `RECEIVED` | 项目负责人确认方案、危险源、控制和应急；形成最初申报（责任：负责人/授权经办人） | 不得要求专家和校级批准文件 | 本阶段实质材料齐备→ST-03；缺本阶段真实要求→补正 |\n| `ST-03` 形式和主体资格核对 | `FORM_PRECHECK_READY` | 核身份、项目来源、完整性、等价证据及时间版本（责任：单位受理人员/系统建议） | 不可由系统代签二级单位 | 形成材料预审建议→ST-04/有权单位 |\n| `ST-04` 场地设施、危险源专业审查 | `EXPERT_REVIEW_PENDING` | 现场/专业场地适配、危险源核对、受限证照查验（责任：实验室/安全专家） | 不可仅据OCR宣告专业安全 | 专业结果由有权人员写入→ST-05 |\n| `ST-05` 有权单位/专家审查决定 | `WAITING_DOWNSTREAM_APPROVAL` | 正式审核、专家意见、需整改或否决（责任：本校正式授权审批人） | 不得把缺将来签字判初次缺件 | 需要整改→ST-06；正式通过→ST-07；否决留存 |\n| `ST-06` 整改复评/项目变更 | `RECTIFICATION_PENDING` | 逐整改项补证、对照新旧版、发起复评（责任：申请人及审查责任方） | 学生上传整改照片不等于复评已通过 | 权责部门复评通过→ST-05/ST-07；否决保留 |\n| `ST-07` 正式批准与档案记录 | `APPROVED_PENDING_IMPLEMENTATION` | 正式批准版本、地点、期限、部门签批时间及归档（责任：有权单位及系统执行人） | 未有批准记录不许生成批准结果 | 经权威签批核实→ST-08 |\n| `ST-08` 实施前状态复核及后续撤销 | `AUTHORITY_LOOKUP_PENDING` | 实施前查T03/T05、危险证照、场地停用与变更（责任：场地管理人/有权部门） | 批准方案不覆盖所有设备/人员/场地 | 实施允许须全条件真实满足；变更→ST-06或新周期 |\n\n### 11.1 补件与重审不抹除历史\n\n创建`SupplementRequest`必须含`origin_rule_id / missing_fact / accepted_equivalence / target_stage / due_policy`；申请人补交后只到`RESPONDED`，不能直接置`SATISFIED`；由指定审核者核覆盖后重新运行受影响规则，保留原始页码、旧版文件哈希、补件前后差分。**学校未证实的补正时限不自行填一个天数**。\n\n### 11.2 撤回、到期、政策修订与正式否决\n\n申请人撤回则原审核周期关闭、结果不再表述为待许可；已经生成的真实决定不被删除而记录`revocation_event`。正式否决应由权威新决定更正或新审核周期改变，不因替换扫描材料而重置。若政策在项目生命周期中更新，应按学校公布的过渡条款和业务触发时点判断，未查到过渡条款时`POLICY_UNRESOLVED`；如项目/人员/场地/危险源状态已改变，重评或继续效力交权责人确认。\n",
+            "completion": "独立核对本章 F、MS/M、BR、EV、Q、ST、非编号例外、权限和输出不变量；在 source-sections.json 可逐行找回全文。",
+            "limits": "章节目录不能代替逐字段程序校验；未取得校本效力的数值或授权不可自动判定。"
+          },
+          {
+            "id": "sec12",
+            "title": "合法例外、替代证据与人工权限边界",
+            "requirement": "## 12. 合法例外、替代证据与人工权限边界\n\n- **更名/身份连续性**：人员或项目名称发生官方更正，核`project_uid + effective_date + rename_map`；不得单看字符串拒绝。\n- **跨单位、共享房间**：对每个房间所属教学科研单位逐个核，缺校本跨院路由时待确认，不自动认定未授权。\n- **电子签与扫描签字**：校内认可的有效电子签与完成范围一致的签章可作为等价组`EV-04/EV-06`，否则核签章效力而不直接判伪造。\n- **申请人和责任人分离**：学生受托经办、院系集中提交可以合法存在，但责任人确认不能省略。\n- **无重要危险源声明**：仅在学校已正式配置允许的场景可以免独立上传风险表；对CDUT实验室项目仍需安全论证实质内容（第10条）。\n- **应急/危险源和安全措施无需重复文档**：正文中完整可追溯内容经学校认可，可以覆盖多材料槽；只写“详见附件”但无附件不够。\n- **现场安全专业性**：设备是否可用、风险控制是否充分、专家意见是否妥当、是否属于重要变更等，只由资质部门判断；模型可做证据识别与矛盾预警。\n- **校本暂缺配置**：真实CDUT表式、签批路线、专家数量、复评次数、OA状态、特殊许可细则和校内接口仍未证实；不把这些“空白”转成强制拒件。\n",
+            "completion": "独立核对本章 F、MS/M、BR、EV、Q、ST、非编号例外、权限和输出不变量；在 source-sections.json 可逐行找回全文。",
+            "limits": "章节目录不能代替逐字段程序校验；未取得校本效力的数值或授权不可自动判定。"
+          },
+          {
+            "id": "sec13",
+            "title": "校本/跨校策略与版本配置",
+            "requirement": "## 13. 校本/跨校策略与版本配置\n\n| 配置参数 | CDUT现阶段事实/取值 | 候选跨校分支 | 未证实处理 |\n|---|---|---|---|\n| `scope_rule` | `ALL_LAB_PROJECTS_REQUIRES_SUBSTANTIVE_SAFETY_JUSTIFICATION`（CD01第10条） | U03仅重要危险源、U08/U09声明式 | 未识别学校返回`POLICY_UNRESOLVED` |\n| `owner_definition` | 项目安全第一责任人为项目负责人（含任课教师） | 具体类型导师/经办代理制度 | 未确认证件或权限时`AUTHORITY_LOOKUP_PENDING` |\n| `lab_grade_scheme` | 实验室A—D级（CD01第8条） | 外校同字母不一定同涵义 | 必含`grade_subject=laboratory` |\n| `project_grade_scheme` | `CONFIG_UNVERIFIED` | 山东科大高/低、南通大学数字等级 | 不能把实验室A-D直接映射项目高低 |\n| `mandated_form_name` | `CONFIG_UNVERIFIED` | U03/U04已存在真实表格 | 允许实质论证，不以没固定PDF为独立否决 |\n| `expert_required/count` | `CONFIG_UNVERIFIED` | U01高风险原则≥5，U05表格≥3 | 未知时不得要求“5人” |\n| `approval_route` | 已知负责人向实验室所在教学科研单位提交 | U03房间分级路由、U06教学归口 | 更细审批节点待配置且不得代签 |\n| `rectification_limit` | `CONFIG_UNVERIFIED` | U01固定复评次数等 | 不按外校次数拒绝 |\n| `replacement_signature_policy` | `CONFIG_UNVERIFIED` | 允许校内受权电子签、核验纸签 | 未核实保持签章来源核验 |\n| `facility_suspend_record` | CD01第30条有暂停机制；接口不明 | 校内检查及整改台账 | 不可达则实施资格HOLD/权威待核 |\n| `special_project_owner_rule` | **仅**2025特定省级创新性实验项目立项负责人需在职教师（CD-R2-04） | 其他项目按其立项类别 | 不可推广为全部风险项目必由在职教师领题 |\n| `implementation_dependencies` | T03/T05和法定证照等需分别查 | 其它学校可增加专项前置 | T04不能直接改变T03/T05状态 |\n\n**效力优先级**：适用法律及生效校本规章 > 有权单位发布的现行细则/正式校级实施文件 > 业务系统合法最新配置 > 经核验的学院实施规则（只对其范围） > 其他高校官方作为设计参考 > 申请人个人陈述。文件之间冲突时不能凭网页更新时间或文件名自动选择，须由政策管理员确认正式有效性。\n",
+            "completion": "独立核对本章 F、MS/M、BR、EV、Q、ST、非编号例外、权限和输出不变量；在 source-sections.json 可逐行找回全文。",
+            "limits": "章节目录不能代替逐字段程序校验；未取得校本效力的数值或授权不可自动判定。"
+          },
+          {
+            "id": "sec14",
+            "title": "官方来源与事实、推断界线",
+            "requirement": "## 14. 官方来源与事实、推断界线\n\n下列来源编号与B源索引同名；`CD02`是历史资料且**已废止**。所有跨校来源用于规则覆盖与条件设计，不直接代表CDUT政策。来源、原件缺口及访问状态应详见B阶段`04_官方来源与差异登记.md`以及`07_本校定向补证第二轮_20261011.md`。\n\n| 来源ID | 原始官方链接/定位 | 在本模板中的效力 |\n|---|---|---|\n| `CD-R2-01` | https://gz.cdut.edu.cn/jgsehz/nsjgjzz.htm | 本校补证（职责/实施事实，非新增强制表单） |\n| `CD-R2-02` | https://mee.cdut.edu.cn/info/1050/3437.htm | 本校补证（职责/实施事实，非新增强制表单） |\n| `CD-R2-03` | https://energy.cdut.edu.cn/info/1277/5441.htm | 本校补证（职责/实施事实，非新增强制表单） |\n| `CD-R2-04` | https://aao.cdut.edu.cn/info/1171/6620.htm | 本校补证（职责/实施事实，非新增强制表单） |\n| `CD-R2-05` | https://gz.cdut.edu.cn/info/1042/2701.htm | 本校补证（职责/实施事实，非新增强制表单） |\n| `CD-R2-06` | https://gz.cdut.edu.cn/index.htm | 本校补证（职责/实施事实，非新增强制表单） |\n| `CD-R2-07` | https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf | 本校补证（职责/实施事实，非新增强制表单） |\n| `CD01` | https://gz.cdut.edu.cn/__local/7/87/9D/8AD8CCD1A99607DFA7C053FA5E9_5E88AC4A_E9D3A.pdf | 本校正式法规性依据 |\n| `CD02` | https://gz.cdut.edu.cn/info/1040/1149.htm | 已废止历史 |\n| `CD03` | https://gz.cdut.edu.cn/zcfg/xjzc.htm | 本校官方辅助证据，须核业务适用性 |\n| `CD04` | https://cece.cdut.edu.cn/info/1003/8943.htm | 本校官方辅助证据，须核业务适用性 |\n| `CD05` | https://gz.cdut.edu.cn/info/1042/2701.htm | 本校官方辅助证据，须核业务适用性 |\n| `CN01` | https://sysglc.sdju.edu.cn/2026/0427/c4734a150111/page.htm | 官方跨校事实对照/实验室检查，不直接约束CDUT |\n| `U01` | https://sysbc.sdust.edu.cn/info/1064/2502.htm | 官方跨校事实对照/实验室检查，不直接约束CDUT |\n| `U02` | https://sysbc.sdust.edu.cn/info/1014/2413.htm | 官方跨校事实对照/实验室检查，不直接约束CDUT |\n| `U03` | https://xxgk.chd.edu.cn/__local/9/4B/DA/5BC64B65A0FE23528F05512C623_8959EEBB_25205.pdf | 官方跨校事实对照/实验室检查，不直接约束CDUT |\n| `U04` | https://shg.chd.edu.cn/__local/0/13/E5/F4C4ADD78FF9271CCD8227CBF18_83AD9668_22BE7.pdf | 官方跨校事实对照/实验室检查，不直接约束CDUT |\n| `U05` | https://gzc.xzhmu.edu.cn/info/1037/1675.htm | 官方跨校事实对照/实验室检查，不直接约束CDUT |\n| `U06` | https://jwc.hytc.edu.cn/info/1592/34547.htm | 官方跨校事实对照/实验室检查，不直接约束CDUT |\n| `U07` | https://sysglc.ntu.edu.cn/2026/0414/c8772a289207/page.htm | 官方跨校事实对照/实验室检查，不直接约束CDUT |\n| `U08` | https://www.cup.edu.cn/safety/tzgg/22ff546b54d144ada2d4060e44e218cc.htm | 官方跨校事实对照/实验室检查，不直接约束CDUT |\n| `U09` | https://www.bmsgrade.sdu.edu.cn/info/1010/9094.htm | 官方跨校事实对照/实验室检查，不直接约束CDUT |\n| `U10` | https://sysysbglzx.nepu.edu.cn/info/1110/1598.htm | 官方跨校事实对照/实验室检查，不直接约束CDUT |\n| `U11` | https://swre.cugb.edu.cn/c/2025-09-15/833024.shtml | 官方跨校事实对照/实验室检查，不直接约束CDUT |\n| `U12` | https://gcxy.shou.edu.cn/2024/1202/c18158a336458/page.htm | 官方跨校事实对照/实验室检查，不直接约束CDUT |\n| `U13` | https://zcglc.ecjtu.edu.cn/info/1043/5051.htm | 官方跨校事实对照/实验室检查，不直接约束CDUT |\n| `U14` | https://www.bjtu.edu.cn/xxgkw/xxgk_xxgkml/jbxx/jbxx_zczd/zczd_gzzd/ae53797d0b2a4fc49af517a67eeba65f.htm | 官方跨校事实对照/实验室检查，不直接约束CDUT |\n| `U15` | https://sysc.nwafu.edu.cn/zcfgB/xxwjB/cb54600e8ce043aa8f1a1ba8b1b41d4a.htm | 官方跨校事实对照/实验室检查，不直接约束CDUT |\n\n**证据效力声明**：`CD-R2-01`仅部门职责，不证明其实验风险项目最终签批权限；`CD-R2-02`是2026学院安全检查，不要求全部申请人上传检查台账；`CD-R2-04`只适用于指定省级创新性实验项目立项要求；`CD-R2-06`能确认准入考试系统入口，不证明存在专门项目风险OA系统；`CD-R2-07`是对CD01的补充精读，不是独立新校规。未读到的外校\n[后续原文见本模板 source-sections.json]",
+            "completion": "独立核对本章 F、MS/M、BR、EV、Q、ST、非编号例外、权限和输出不变量；在 source-sections.json 可逐行找回全文。",
+            "limits": "章节目录不能代替逐字段程序校验；未取得校本效力的数值或授权不可自动判定。"
+          },
+          {
+            "id": "sec15",
+            "title": "C作者依实际流程的走查入口",
+            "requirement": "## 15. C作者依实际流程的走查入口\n\n详见辅文件`G04-T04_作者自检与问题修订记录.md`；本母版固定走查下列路径：新科研实验初评→提交阶段缺后续签批→多房间多个危险源→个人准入T03缺失→变更重评→整改复评→正式否决→低危险源声明与校本范围→合法替代附件→校本配置/权威接口未知→批量多项目部分预审就绪。**这是作者侧静态规则推演，不是独立D金标。**\n",
+            "completion": "独立核对本章 F、MS/M、BR、EV、Q、ST、非编号例外、权限和输出不变量；在 source-sections.json 可逐行找回全文。",
+            "limits": "章节目录不能代替逐字段程序校验；未取得校本效力的数值或授权不可自动判定。"
+          },
+          {
+            "id": "sec16",
+            "title": "共性组件与专有风险逻辑",
+            "requirement": "## 16. 共性组件与专有风险逻辑\n\n通用候选：政策版本三值选择、项目-文档来源锚点、按阶段的材料义务、等价证据、跨附件版本核对、真实授权签批、分项与多问题聚合、补件重新审查；专有逻辑：**实验室等级与项目等级类型隔离、危险源→安全措施/应急/废物/法定许可证映射、房间专业安全与动态停用、变更重大性专业复核、T03/T05许可独立性**。完整模块输入输出与失败路径见共性模块候选文件。\n",
+            "completion": "独立核对本章 F、MS/M、BR、EV、Q、ST、非编号例外、权限和输出不变量；在 source-sections.json 可逐行找回全文。",
+            "limits": "章节目录不能代替逐字段程序校验；未取得校本效力的数值或授权不可自动判定。"
+          },
+          {
+            "id": "sec17",
+            "title": "编辑器/运行时映射与当前能力限制",
+            "requirement": "## 17. 编辑器/运行时映射与当前能力限制\n\n已读取公开仓库`https://github.com/Fuck-GH-Admin/cdut-studio-review-agent`的`main`分支，仓库树SHA为`dd5a553c34a92b559559a7cb3c4e9c3f67fd9c8e`（读取日期2026-10-13，不等于工作区或本地运行版本）。\n\n| 本母版语义 | 仓库中可证的结构/代码路径 | 可确认能力 vs 尚不能证明 |\n|---|---|---|\n| 字段、材料槽、阶段、输出 | `packages/shared/src/types/review-v2.ts`含`FieldSpec`、`MaterialSlotSpec`、`WorkflowStageSpec`、`TemplateVersion`；`TemplateWizardPanel.tsx`有字段/材料/阶段编辑配置 | **有代码描述和UI入口**；未用本母版运行/发布/验收 |\n| 模板存储与草稿发布 | `template-store.ts`有版本存储、`validateTemplate`；代码中定义`candidate-held`禁止候选普通发布 | **代码可见**，但未在现行客户端验证本业务全部依赖 |\n| 作者态与来源治理 | `review-authoring-v1.ts`校验来源种类与生效范围；`cross-school-reference`不能直接`request-scope`，政策候选不可当适用规则 | **已有源码约束**；本校CD01仍须政策管理员确认可用范围 |\n| 共性语义模块示范 | `semantic-module-demo.ts`定义任务、模块、引用、预览与覆盖回执 | 文件标明是**D0.5语义演示**，不是已上线安全项目审批规则引擎 |\n| 业务人工决定/补件与审计 | `business-workflow.ts`有`recordDecision`/`respondSupplement`，注明AI建议不是正式决定，补件回复不等于满足 | 源码路径支持**部分状态与原则**，非本案专业审批权限实机证明 |\n| 多值条件、法定证照、项目/房间关联、实时停用 | 可见类型有`ConditionAST`等，可供候选表达讨论 | **未核实完整执行/业务节点**；不删本模板这些语义，仅列待研发/外部接口 |\n\n**不得宣称**已经生成可以发布的JSON、跑过测试、拿到本校管理员API或完成现场专家评估。作者面向C版本先定义业务语义；系统不支持的子功能保留在缺口清单中。\n",
+            "completion": "独立核对本章 F、MS/M、BR、EV、Q、ST、非编号例外、权限和输出不变量；在 source-sections.json 可逐行找回全文。",
+            "limits": "章节目录不能代替逐字段程序校验；未取得校本效力的数值或授权不可自动判定。"
+          },
+          {
+            "id": "sec18",
+            "title": "冻结、完成状态与下一阶段对接",
+            "requirement": "## 18. 冻结、完成状态与下一阶段对接\n\n- **C0~C7**：已据B-v0.2建立稳定母版、规则追踪和作者自检。A阶段原始交接卡全文未在本轮挂载资料中恢复，已列非阻断补核。校本真实风险表/签章与OA仍未找到。\n- **源研究事实**：50个B-v0.1字段和26个材料槽保留；增量9个B-v0.2字段不推为全员必填；35条B候选原子规则均有稳定C编号；七个合法等价证据组。\n- **冻结状态**：`BUSINESS_MD_DRAFT_WITH_GAPS`，意味着**业务语义母版具备结构成熟度但仍需校本配置**；与独立D金标、独立E验收或真实系统测试完全分离。\n- **接续**：E验收以本文件SHA256、追踪矩阵、模块候选和作者走查记录为C作者基线；若未来核得校本细则或E提出有证据缺陷，创建**v0.2新版本**，不覆盖本次冻结文件，保留证据版本链。",
+            "completion": "独立核对本章 F、MS/M、BR、EV、Q、ST、非编号例外、权限和输出不变量；在 source-sections.json 可逐行找回全文。",
+            "limits": "章节目录不能代替逐字段程序校验；未取得校本效力的数值或授权不可自动判定。"
+          }
+        ]
+      },
+      {
+        "moduleId": "g04-t04-axis-hazard",
+        "version": 1,
+        "name": "实验项目安全风险评估审核 hazard 条件",
+        "purpose": "显式叠加条件三态核验",
+        "scope": "g04-project-hazard",
+        "limits": "只作合成场景轴，不替代全部原文 BR 细分",
+        "source": {
+          "kind": "user-request",
+          "note": "完整 C 原文 G04-T04_正式业务模板_MD_v0.1.md SHA256:868a37e073411ebe9aa3d5b7c5def22e8737caefb7c5b013df270f57b1059658，非正式校本审批政策"
+        },
+        "tasks": [
+          {
+            "id": "axis",
+            "title": "条件 hazard 适用性",
+            "requirement": "按原文第3、4章本对象具体业务条件复核 hazard 是否触发；已证不适用不算缺件，UNKNOWN 一律待核；检查后续章节中相关BR、材料槽及合法替代。",
+            "completion": "逐目标单独显示三态、有效来源版本与待有权确认事项。",
+            "limits": "不得据此推定真实校方授权或将未涵盖的细分分支全部认定为不适用。"
+          }
+        ]
+      },
+      {
+        "moduleId": "g04-t04-axis-revision",
+        "version": 1,
+        "name": "实验项目安全风险评估审核 revision 条件",
+        "purpose": "显式叠加条件三态核验",
+        "scope": "g04-project-hazard",
+        "limits": "只作合成场景轴，不替代全部原文 BR 细分",
+        "source": {
+          "kind": "user-request",
+          "note": "完整 C 原文 G04-T04_正式业务模板_MD_v0.1.md SHA256:868a37e073411ebe9aa3d5b7c5def22e8737caefb7c5b013df270f57b1059658，非正式校本审批政策"
+        },
+        "tasks": [
+          {
+            "id": "axis",
+            "title": "条件 revision 适用性",
+            "requirement": "按原文第3、4章本对象具体业务条件复核 revision 是否触发；已证不适用不算缺件，UNKNOWN 一律待核；检查后续章节中相关BR、材料槽及合法替代。",
+            "completion": "逐目标单独显示三态、有效来源版本与待有权确认事项。",
+            "limits": "不得据此推定真实校方授权或将未涵盖的细分分支全部认定为不适用。"
+          }
+        ]
+      }
+    ],
+    "templates": [
+      {
+        "templateId": "d4-g04-t04",
+        "version": 1,
+        "name": "G04-T04｜实验项目安全风险评估审核",
+        "purpose": "原文全部 R + 业务章字段/材料/权限技术预审",
+        "limits": "研究技术预审候选，未接入校本审批，不代签或放行",
+        "source": {
+          "kind": "user-request",
+          "note": "完整 C 原文 G04-T04_正式业务模板_MD_v0.1.md SHA256:868a37e073411ebe9aa3d5b7c5def22e8737caefb7c5b013df270f57b1059658，非正式校本审批政策"
+        },
+        "scenarios": [
+          "research",
+          "teaching",
+          "hazard",
+          "revision"
+        ],
+        "genericScenarioAxes": {
+          "primary": [
+            "research",
+            "teaching"
+          ],
+          "conditions": [
+            "hazard",
+            "revision"
+          ]
+        },
+        "modules": [
+          {
+            "id": "use-scope-research",
+            "moduleId": "g04-t04-scope",
+            "version": 1,
+            "scenario": "research"
+          },
+          {
+            "id": "use-identity-research",
+            "moduleId": "g04-t04-identity",
+            "version": 1,
+            "scenario": "research"
+          },
+          {
+            "id": "use-material-research",
+            "moduleId": "g04-t04-material",
+            "version": 1,
+            "scenario": "research"
+          },
+          {
+            "id": "use-authority-research",
+            "moduleId": "g04-t04-authority",
+            "version": 1,
+            "scenario": "research"
+          },
+          {
+            "id": "use-section-research",
+            "moduleId": "g04-t04-section",
+            "version": 1,
+            "scenario": "research"
+          },
+          {
+            "id": "use-scope-teaching",
+            "moduleId": "g04-t04-scope",
+            "version": 1,
+            "scenario": "teaching"
+          },
+          {
+            "id": "use-identity-teaching",
+            "moduleId": "g04-t04-identity",
+            "version": 1,
+            "scenario": "teaching"
+          },
+          {
+            "id": "use-material-teaching",
+            "moduleId": "g04-t04-material",
+            "version": 1,
+            "scenario": "teaching"
+          },
+          {
+            "id": "use-authority-teaching",
+            "moduleId": "g04-t04-authority",
+            "version": 1,
+            "scenario": "teaching"
+          },
+          {
+            "id": "use-section-teaching",
+            "moduleId": "g04-t04-section",
+            "version": 1,
+            "scenario": "teaching"
+          },
+          {
+            "id": "use-axis-hazard",
+            "moduleId": "g04-t04-axis-hazard",
+            "version": 1,
+            "scenario": "hazard"
+          },
+          {
+            "id": "use-axis-revision",
+            "moduleId": "g04-t04-axis-revision",
+            "version": 1,
+            "scenario": "revision"
+          }
+        ],
+        "localTasks": []
+      }
+    ]
+  },
+  "sources": [
+    {
+      "sourceId": "src-original",
+      "kind": "user-request",
+      "label": "G04-T04_正式业务模板_MD_v0.1.md",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md #全部",
+        "excerpt": "源业务完整母版"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-synthetic",
+      "kind": "synthetic",
+      "label": "审核者合成条件选择",
+      "reference": {
+        "documentVersionId": "synthetic-t04-v1",
+        "locator": "selection.json"
+      },
+      "verification": "content-checked",
+      "applicability": "request-scope",
+      "note": "仅用于对象与三值场景技术测试，绝不表示校本有效规则"
+    },
+    {
+      "sourceId": "src-r01",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r01",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L247#r01",
+        "excerpt": "### `R-01`｜CDUT2023办法第10条：凡在实验室开展实验项目，项目负责人向实验室所在教学科研单位提交安全论证材料\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-01/ST-02`；条件：`school=CDUT & project_at_school_lab=true`。CDUT: CD01 only within t"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r02",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r02",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L256#r02",
+        "excerpt": "### `R-02`｜本模板仅审项目/方案版次，不审批单人门禁、个人准入、专项危作或实验室建设\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-01`；条件：`application_object not project/protocol`。CDUT: CD01 only within the cited clauses; speci"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r03",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r03",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L265#r03",
+        "excerpt": "### `R-03`｜教学课程任课教师和相应实验项目负责人承担本校项目安全第一责任\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02/ST-03`；条件：`CDUT & project_has_owner`。CDUT: CD01 only within the cited clauses; specific approval ro"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r04",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r04",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L274#r04",
+        "excerpt": "### `R-04`｜实验室和项目负责人及所属教学科研单位应匹配真实管理边界\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02/ST-04`；条件：`room_list nonempty`。CDUT: CD01 only within the cited clauses; specific approval routes and "
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r05",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r05",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L283#r05",
+        "excerpt": "### `R-05`｜项目类型决定教学/科研/学位/大创归口及前置时点，而不是新模板\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-01/ST-02`；条件：`project_type any known`。Cross-school reference: not binding on CDUT unless explicitly c"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r06",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r06",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L292#r06",
+        "excerpt": "### `R-06`｜对特殊学校（CUP/山东大学）可按重要危险源是否涉及先“是/否”登记并决定是否上传评估表\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-01`；条件：`policy_scope=hazard_declaration_first`。Cross-school reference: not binding on CD"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r07",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r07",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L301#r07",
+        "excerpt": "### `R-07`｜申请时当前政策版本须匹配学校及生效日期\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-01`；条件：`policy_id/effective_date is selected`。CDUT: CD01 only within the cited clauses; specific approval routes "
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r08",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r08",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L310#r08",
+        "excerpt": "### `R-08`｜申报表/核心论证可采取经学校认可的OA或正式PDF/文档载体\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02`；条件：`initial/form_submission`。CDUT: CD01 only within the cited clauses; specific approval routes an"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r09",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r09",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L319#r09",
+        "excerpt": "### `R-09`｜实验方案须足以辨识项目及主要技术安全要素，不能只有空表标题\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02/ST-04`；条件：`project_lab_scope confirmed`。CDUT: CD01 only within the cited clauses; specific approval "
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r10",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r10",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L328#r10",
+        "excerpt": "### `R-10`｜具体危险源类别、特性、风险控制及现场处置措施由负责人辨识和提交\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02/ST-04`；条件：`hazard_type known or declared_none`。CDUT: CD01 only within the cited clauses; specific "
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r11",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r11",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L337#r11",
+        "excerpt": "### `R-11`｜风险分析要覆盖实施场所及设备，风险源与实际房间类别/条件对应\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-04`；条件：`rooms and equipments present`。CDUT: CD01 only within the cited clauses; specific approval rout"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r12",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r12",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L346#r12",
+        "excerpt": "### `R-12`｜应急处置可写在正式表格内或作为附件，若内容充分且校规允许则等价\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02`；条件：`emergency_measures_required`。CDUT: CD01 only within the cited clauses; specific approval rout"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r13",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r13",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L355#r13",
+        "excerpt": "### `R-13`｜危险源触发相应个人防护、通风、监测、消防、应急设施条件\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-04`；条件：`hazards trigger specific facilities/PPE`。CDUT: CD01 only within the cited clauses; specific appro"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r14",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r14",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L364#r14",
+        "excerpt": "### `R-14`｜涉及废弃物的项目应有分类暂存及处理说明并符合校规\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02/ST-04`；条件：`waste_generated=true`。CDUT: CD01 only within the cited clauses; specific approval routes and t"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r15",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r15",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L373#r15",
+        "excerpt": "### `R-15`｜人员名单及培训方案需对应项目风险点；人员最终安全资格独立于T04\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02/ST-08`；条件：`participants exist`。CDUT: CD01 only within the cited clauses; specific approval routes"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r16",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r16",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L382#r16",
+        "excerpt": "### `R-16`｜依法需要的辐射、特种设备等资质只在对应危险源触发\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-04`；条件：`specific statutory hazard=true`。CDUT: CD01 only within the cited clauses; specific approval routes a"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r17",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r17",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L391#r17",
+        "excerpt": "### `R-17`｜场地被正式暂停或存在危及安全的隐患状态不得依旧版审查结果恢复实验\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-04/ST-08`；条件：`room suspension status relevant`。CDUT: CD01 only within the cited clauses; specific ap"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r18",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r18",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L400#r18",
+        "excerpt": "### `R-18`｜风险等级用于分流时必须带`grade_subject`及`grade_scale_id`\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-01/ST-04`；条件：`risk grade supplied or needed`。CDUT: CD01 only within the cited clauses; s"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r19",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r19",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L409#r19",
+        "excerpt": "### `R-19`｜多场所/多危险源需分别建立评估发现与证据映射\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-04`；条件：`multiple rooms or hazards`。CDUT: CD01 only within the cited clauses; specific approval routes and thre"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r20",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r20",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L418#r20",
+        "excerpt": "### `R-20`｜项目工艺重大参数变化和原风险源不同，须按实际制度重新评估\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-06`；条件：`changed protocol or hazard facts`。Cross-school reference: not binding on CDUT unless explicitly "
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r21",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r21",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L427#r21",
+        "excerpt": "### `R-21`｜学校明确提交前置时点时，风险评估应先于项目实施；不同学校科研方案、开题、课程节点有差异\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02/ST-04`；条件：`applicable pre-start rule confirmed`。CDUT: CD01 only within the cited claus"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r22",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r22",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L436#r22",
+        "excerpt": "### `R-22`｜负责人签字/责任承诺与具体项目版本绑定，纸件与有效电子签署可有校本等效\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02`；条件：`responsible_signature_due=true`。CDUT: CD01 only within the cited clauses; specific approv"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r23",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r23",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L445#r23",
+        "excerpt": "### `R-23`｜审批链必须经过该学校有权限的实验室/二级单位/专项专家/归口校级节点\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-04/ST-05`；条件：`approval route from verified policy`。CDUT: CD01 only within the cited clauses; speci"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r24",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r24",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L454#r24",
+        "excerpt": "### `R-24`｜`专家意见=整改复评`应保持待整改/复评状态，不自动批准\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-05/ST-06`；条件：`official_review=rectification`。Cross-school reference: not binding on CDUT unless explicit"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r25",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r25",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L463#r25",
+        "excerpt": "### `R-25`｜被正式审核为不可控/不同意实施的项目不得因上传补材料被模型自动改成通过\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-05`；条件：`authority_decision=official_reject`。CDUT: CD01 only within the cited clauses; specific ap"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r26",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r26",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L472#r26",
+        "excerpt": "### `R-26`｜专家及审批人的意见只有在其被正式授权且签署当前版时有效\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-05`；条件：`reviewer judgement supplied`。Cross-school reference: not binding on CDUT unless explicitly config"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r27",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r27",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L481#r27",
+        "excerpt": "### `R-27`｜未取得相应后续签批的**初次提交**，只能要求后续审批节点完成，不得说申请材料缺件\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02/ST-03`；条件：`initial_submission & downstream signatures absent`。Cross-school reference: no"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r28",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r28",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L490#r28",
+        "excerpt": "### `R-28`｜校内真正的通过或备案必须带实验项目对象、方案版本、场地和签署时间\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-07`；条件：`claims formal approval`。CDUT: CD01 only within the cited clauses; specific approval routes a"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r29",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r29",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L499#r29",
+        "excerpt": "### `R-29`｜专家数量、复评次数、审批层级按当地制度版本生效；无配置时等待规则\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-01/ST-05`；条件：`expert_count or re-review_limit required`。Cross-school reference: not binding on CDUT "
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r30",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r30",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L508#r30",
+        "excerpt": "### `R-30`｜所有项目经批准后仍不能替代高危单次作业许可、人员准入和必要危险品交易手续\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-08`；条件：`project review completed`。CDUT: CD01 only within the cited clauses; specific approval ro"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r31",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r31",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L517#r31",
+        "excerpt": "### `R-31`｜危险源清单无关的材料不能强制存在；明确需要的材料可被同等效力载体覆盖\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-02`；条件：`conditional slot checked`。CDUT: CD01 only within the cited clauses; specific approval rout"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r32",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r32",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L526#r32",
+        "excerpt": "### `R-32`｜权威系统不可达、现行校规字段未查明与材料确实缺失属三种不同问题\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-01/ST-04`；条件：`system lookup or policy unresolved`。CDUT: CD01 only within the cited clauses; specific "
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r33",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r33",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L535#r33",
+        "excerpt": "### `R-33`｜教学课程学期集中报送总台账应由单位或归口部门提供，不能向单人申请强加学院台账\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-03`；条件：`institutional course batch`。Cross-school reference: not binding on CDUT unless explici"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r34",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r34",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L544#r34",
+        "excerpt": "### `R-34`｜特定学校允许不涉及重要危险源仅在线“否”申报；无该权威政策不能跳过安全论证\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-01`；条件：`hazard_declaration_first policy active`。CDUT: CD01 only within the cited clauses; speci"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-r35",
+      "kind": "user-request",
+      "label": "d4-g04-t04 r35",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L553#r35",
+        "excerpt": "### `R-35`｜版本改变、人员/场地及安全隐患状态变化后原审查的效力是否继续，需查生效规则与专业结论\n\n- **适用政策与触发**：`BR-01`策略已确定；当前阶段`ST-06/ST-08`；条件：`site/person/version/approval changed`。CDUT: CD01 only within the cited claus"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-sec01",
+      "kind": "user-request",
+      "label": "d4-g04-t04 sec01",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L9",
+        "excerpt": "## 1. 模板元信息、范围与法规效力\n\n| 属性 | 值 |\n|---|---|\n| 业务 ID | `G04-T04` |\n| 模板名称 | 实验项目安全风险评估审核 |\n| 作者版 | `C-v0.1`；静态母版，非已发布 `TemplateVersion` |\n| 审核主对象 | `school_id + experiment_project_uid"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-sec02",
+      "kind": "user-request",
+      "label": "d4-g04-t04 sec02",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L29",
+        "excerpt": "## 2. 业务独立性及不适用的申请\n\n**审核问句**：这份项目最新实验方案是否经过对应学校的安全论证，并获得其适用的专业评估和有权部门审核？既有批准的效力范围与当前实验室及方案是否仍然相符？\n\n**明确排除**：个人考试合格证/门禁开通属于T03/T01；特定夜间危险操作许可属于T05；建设施工前设施技术论证属于独立建设管理；危险品采购属于另一交易审批；"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-sec03",
+      "kind": "user-request",
+      "label": "d4-g04-t04 sec03",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L37",
+        "excerpt": "## 3. 参与角色、权责与权限链\n\n| 角色 | 在本模板负责的事实或动作 | 可读/签批边界 |\n|---|---|---|\n| 申请人/经办人 | 登记项目、上传材料；可能是研究生、教务秘书、科研人员 | 申报账号不自动成为项目安全第一责任人；代办须核权限 |\n| 项目负责人（含教学任课教师） | 危险源辨识、风险评估、防范措施及现场处置、版本确认 |"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-sec04",
+      "kind": "user-request",
+      "label": "d4-g04-t04 sec04",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L54",
+        "excerpt": "## 4. 条件分支及互斥、叠加、未知逻辑\n\n处理顺序必须为：`政策生效与范围 → 操作类型 → 项目类别 → 房间/危险源/人员并行条件 → 当前阶段与专业审批节点 → 动态场地/版本状态 → 整体聚合`。\n\n**三值条件**：`TRUE`触发对应义务；`FALSE`仅在事实和适用规则确证后产生`NOT_APPLICABLE`；`UNKNOWN`产生带来源"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-sec05",
+      "kind": "user-request",
+      "label": "d4-g04-t04 sec05",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L73",
+        "excerpt": "## 5. 输入契约：四种不同可信层\n\n| 类别 | 可接纳数据 | 权限/错误路径 | 主要字段与文件槽 |\n|---|---|---|---|\n| **申报事项** `application_item` | 项目及方案版本、动作初评/变更/整改、项目类型、危险源声明、实施场所与时段 | 申请人低信任声明；未证实的免表资格不能当权威 | `F-01~F-0"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-sec06",
+      "kind": "user-request",
+      "label": "d4-g04-t04 sec06",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L86",
+        "excerpt": "## 6. 字段字典及条件必填规则\n\n继承B研究的50项`F-01~F-50`，保持编号含义并加入9项B-v0.2增量字段。下面的“状态”是**条件义务**，不是所有字段在申请提交时必填：`M`当前条件下必要、`C`条件触发、`S`可信记录读取、`L`审批后生成、`CFG`学校规则配置。所有文件均有证据位置引用。\n\n| 字段ID | B研究事实定义 | 来源"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-sec07",
+      "kind": "user-request",
+      "label": "d4-g04-t04 sec07",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L161",
+        "excerpt": "## 7. 材料槽与等价证据组\n\n`MS-01~MS-26`一一映射B研究`M-01~M-26`；这里使用**材料槽**而非要求上传固定文件。受理时必要的实质事实可由官方允许的单个文档/多个章节覆盖；后续审批产物不能在初次申报阶段提前要求。\n\n| 材料槽 | 功能/原B槽 | 提交或来源级别 | 条件、形成阶段 | 关联字段/接受格式 | 等价来源和时效 |"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-sec08",
+      "kind": "user-request",
+      "label": "d4-g04-t04 sec08",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L227",
+        "excerpt": "## 8. 审核事实、跨文件关系与时态\n\n| 事实ID | 需要成立的事实 | 核对关系及失效条件 |\n|---|---|---|\n| `FACT-01` | 申报对象为某一实验项目的**当前方案版本** | F-01/F-02/F-05；方案与申请主表项目ID、版本同一；官方更名沿继承链处理 |\n| `FACT-02` | 负责人及归口教学科研单位真实匹配"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-sec10",
+      "kind": "user-request",
+      "label": "d4-g04-t04 sec10",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L563",
+        "excerpt": "## 10. 输出契约、单元判定与多问题聚合\n\n### 10.1 分项对象及审核职责\n\n一份申请包含`project_item[]`（**每个独立实验项目**各一项），每项下有`room_findings[]`、`hazard_findings[]`、`participant_dependencies[]`、`approval_node_findings[]"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-sec11",
+      "kind": "user-request",
+      "label": "d4-g04-t04 sec11",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L626",
+        "excerpt": "## 11. 生命周期、变更、补正、撤回及审批权限\n\n| 阶段 | 状态入口 | 操作/应产生的事实 | 不得错误要求 | 跳转条件 |\n|---|---|---|---|---|\n\n| `ST-01` 受理范围与政策版本 | `RECEIVED` | 政策版本、场地、项目类型和`BR-01`范围（责任：系统/有权政策管理员） | 不要求本校未核实的统一表单"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-sec12",
+      "kind": "user-request",
+      "label": "d4-g04-t04 sec12",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L648",
+        "excerpt": "## 12. 合法例外、替代证据与人工权限边界\n\n- **更名/身份连续性**：人员或项目名称发生官方更正，核`project_uid + effective_date + rename_map`；不得单看字符串拒绝。\n- **跨单位、共享房间**：对每个房间所属教学科研单位逐个核，缺校本跨院路由时待确认，不自动认定未授权。\n- **电子签与扫描签字**：校"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-sec13",
+      "kind": "user-request",
+      "label": "d4-g04-t04 sec13",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L659",
+        "excerpt": "## 13. 校本/跨校策略与版本配置\n\n| 配置参数 | CDUT现阶段事实/取值 | 候选跨校分支 | 未证实处理 |\n|---|---|---|---|\n| `scope_rule` | `ALL_LAB_PROJECTS_REQUIRES_SUBSTANTIVE_SAFETY_JUSTIFICATION`（CD01第10条） | U03仅重要危险源、"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-sec14",
+      "kind": "user-request",
+      "label": "d4-g04-t04 sec14",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L678",
+        "excerpt": "## 14. 官方来源与事实、推断界线\n\n下列来源编号与B源索引同名；`CD02`是历史资料且**已废止**。所有跨校来源用于规则覆盖与条件设计，不直接代表CDUT政策。来源、原件缺口及访问状态应详见B阶段`04_官方来源与差异登记.md`以及`07_本校定向补证第二轮_20261011.md`。\n\n| 来源ID | 原始官方链接/定位 | 在本模板中的效力"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-sec15",
+      "kind": "user-request",
+      "label": "d4-g04-t04 sec15",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L715",
+        "excerpt": "## 15. C作者依实际流程的走查入口\n\n详见辅文件`G04-T04_作者自检与问题修订记录.md`；本母版固定走查下列路径：新科研实验初评→提交阶段缺后续签批→多房间多个危险源→个人准入T03缺失→变更重评→整改复评→正式否决→低危险源声明与校本范围→合法替代附件→校本配置/权威接口未知→批量多项目部分预审就绪。**这是作者侧静态规则推演，不是独立D金标"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-sec16",
+      "kind": "user-request",
+      "label": "d4-g04-t04 sec16",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L719",
+        "excerpt": "## 16. 共性组件与专有风险逻辑\n\n通用候选：政策版本三值选择、项目-文档来源锚点、按阶段的材料义务、等价证据、跨附件版本核对、真实授权签批、分项与多问题聚合、补件重新审查；专有逻辑：**实验室等级与项目等级类型隔离、危险源→安全措施/应急/废物/法定许可证映射、房间专业安全与动态停用、变更重大性专业复核、T03/T05许可独立性**。完整模块输入输出与"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-sec17",
+      "kind": "user-request",
+      "label": "d4-g04-t04 sec17",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L723",
+        "excerpt": "## 17. 编辑器/运行时映射与当前能力限制\n\n已读取公开仓库`https://github.com/Fuck-GH-Admin/cdut-studio-review-agent`的`main`分支，仓库树SHA为`dd5a553c34a92b559559a7cb3c4e9c3f67fd9c8e`（读取日期2026-10-13，不等于工作区或本地运行版本）"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    },
+    {
+      "sourceId": "src-sec18",
+      "kind": "user-request",
+      "label": "d4-g04-t04 sec18",
+      "reference": {
+        "documentVersionId": "868a37e073411ebe9aa3",
+        "locator": "G04-T04_正式业务模板_MD_v0.1.md:L738",
+        "excerpt": "## 18. 冻结、完成状态与下一阶段对接\n\n- **C0~C7**：已据B-v0.2建立稳定母版、规则追踪和作者自检。A阶段原始交接卡全文未在本轮挂载资料中恢复，已列非阻断补核。校本真实风险表/签章与OA仍未找到。\n- **源研究事实**：50个B-v0.1字段和26个材料槽保留；增量9个B-v0.2字段不推为全员必填；35条B候选原子规则均有稳定C编号；"
+      },
+      "verification": "content-checked",
+      "applicability": "unknown",
+      "note": "已核完整 C 原文字节；政策现行性、具体对象适用及真实批准权限一律待有权核实"
+    }
+  ],
+  "sourceBindings": [
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-research/r02",
+      "sourceIds": [
+        "src-r02",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r02"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-research/r05",
+      "sourceIds": [
+        "src-r05",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r05"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-research/r07",
+      "sourceIds": [
+        "src-r07",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r07"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-research/r08",
+      "sourceIds": [
+        "src-r08",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r08"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-research/r09",
+      "sourceIds": [
+        "src-r09",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r09"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-research/r11",
+      "sourceIds": [
+        "src-r11",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r11"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-research/r13",
+      "sourceIds": [
+        "src-r13",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r13"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-research/r14",
+      "sourceIds": [
+        "src-r14",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r14"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-research/r16",
+      "sourceIds": [
+        "src-r16",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r16"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-research/r17",
+      "sourceIds": [
+        "src-r17",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r17"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-research/r18",
+      "sourceIds": [
+        "src-r18",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r18"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-research/r20",
+      "sourceIds": [
+        "src-r20",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r20"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-research/r21",
+      "sourceIds": [
+        "src-r21",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r21"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-research/r23",
+      "sourceIds": [
+        "src-r23",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r23"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-research/r28",
+      "sourceIds": [
+        "src-r28",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r28"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-research/r29",
+      "sourceIds": [
+        "src-r29",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r29"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-research/r33",
+      "sourceIds": [
+        "src-r33",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r33"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-research/r34",
+      "sourceIds": [
+        "src-r34",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r34"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-identity-research/r03",
+      "sourceIds": [
+        "src-r03",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r03"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-identity-research/r04",
+      "sourceIds": [
+        "src-r04",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r04"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-identity-research/r10",
+      "sourceIds": [
+        "src-r10",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r10"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-identity-research/r15",
+      "sourceIds": [
+        "src-r15",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r15"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-identity-research/r22",
+      "sourceIds": [
+        "src-r22",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r22"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-identity-research/r35",
+      "sourceIds": [
+        "src-r35",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r35"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-material-research/r01",
+      "sourceIds": [
+        "src-r01",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r01"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-material-research/r06",
+      "sourceIds": [
+        "src-r06",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r06"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-material-research/r12",
+      "sourceIds": [
+        "src-r12",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r12"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-material-research/r19",
+      "sourceIds": [
+        "src-r19",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r19"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-material-research/r25",
+      "sourceIds": [
+        "src-r25",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r25"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-material-research/r31",
+      "sourceIds": [
+        "src-r31",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r31"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-material-research/r32",
+      "sourceIds": [
+        "src-r32",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r32"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-authority-research/r24",
+      "sourceIds": [
+        "src-r24",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r24"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-authority-research/r26",
+      "sourceIds": [
+        "src-r26",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r26"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-authority-research/r27",
+      "sourceIds": [
+        "src-r27",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r27"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-authority-research/r30",
+      "sourceIds": [
+        "src-r30",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r30"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-research/sec01",
+      "sourceIds": [
+        "src-sec01",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec01"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-research/sec02",
+      "sourceIds": [
+        "src-sec02",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec02"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-research/sec03",
+      "sourceIds": [
+        "src-sec03",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec03"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-research/sec04",
+      "sourceIds": [
+        "src-sec04",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec04"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-research/sec05",
+      "sourceIds": [
+        "src-sec05",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec05"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-research/sec06",
+      "sourceIds": [
+        "src-sec06",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec06"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-research/sec07",
+      "sourceIds": [
+        "src-sec07",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec07"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-research/sec08",
+      "sourceIds": [
+        "src-sec08",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec08"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-research/sec10",
+      "sourceIds": [
+        "src-sec10",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec10"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-research/sec11",
+      "sourceIds": [
+        "src-sec11",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec11"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-research/sec12",
+      "sourceIds": [
+        "src-sec12",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec12"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-research/sec13",
+      "sourceIds": [
+        "src-sec13",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec13"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-research/sec14",
+      "sourceIds": [
+        "src-sec14",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec14"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-research/sec15",
+      "sourceIds": [
+        "src-sec15",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec15"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-research/sec16",
+      "sourceIds": [
+        "src-sec16",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec16"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-research/sec17",
+      "sourceIds": [
+        "src-sec17",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec17"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-research/sec18",
+      "sourceIds": [
+        "src-sec18",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec18"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-teaching/r02",
+      "sourceIds": [
+        "src-r02",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r02"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-teaching/r05",
+      "sourceIds": [
+        "src-r05",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r05"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-teaching/r07",
+      "sourceIds": [
+        "src-r07",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r07"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-teaching/r08",
+      "sourceIds": [
+        "src-r08",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r08"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-teaching/r09",
+      "sourceIds": [
+        "src-r09",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r09"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-teaching/r11",
+      "sourceIds": [
+        "src-r11",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r11"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-teaching/r13",
+      "sourceIds": [
+        "src-r13",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r13"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-teaching/r14",
+      "sourceIds": [
+        "src-r14",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r14"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-teaching/r16",
+      "sourceIds": [
+        "src-r16",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r16"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-teaching/r17",
+      "sourceIds": [
+        "src-r17",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r17"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-teaching/r18",
+      "sourceIds": [
+        "src-r18",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r18"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-teaching/r20",
+      "sourceIds": [
+        "src-r20",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r20"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-teaching/r21",
+      "sourceIds": [
+        "src-r21",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r21"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-teaching/r23",
+      "sourceIds": [
+        "src-r23",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r23"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-teaching/r28",
+      "sourceIds": [
+        "src-r28",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r28"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-teaching/r29",
+      "sourceIds": [
+        "src-r29",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r29"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-teaching/r33",
+      "sourceIds": [
+        "src-r33",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r33"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-scope-teaching/r34",
+      "sourceIds": [
+        "src-r34",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r34"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-identity-teaching/r03",
+      "sourceIds": [
+        "src-r03",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r03"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-identity-teaching/r04",
+      "sourceIds": [
+        "src-r04",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r04"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-identity-teaching/r10",
+      "sourceIds": [
+        "src-r10",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r10"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-identity-teaching/r15",
+      "sourceIds": [
+        "src-r15",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r15"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-identity-teaching/r22",
+      "sourceIds": [
+        "src-r22",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r22"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-identity-teaching/r35",
+      "sourceIds": [
+        "src-r35",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r35"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-material-teaching/r01",
+      "sourceIds": [
+        "src-r01",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r01"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-material-teaching/r06",
+      "sourceIds": [
+        "src-r06",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r06"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-material-teaching/r12",
+      "sourceIds": [
+        "src-r12",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r12"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-material-teaching/r19",
+      "sourceIds": [
+        "src-r19",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r19"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-material-teaching/r25",
+      "sourceIds": [
+        "src-r25",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r25"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-material-teaching/r31",
+      "sourceIds": [
+        "src-r31",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r31"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-material-teaching/r32",
+      "sourceIds": [
+        "src-r32",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r32"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-authority-teaching/r24",
+      "sourceIds": [
+        "src-r24",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r24"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-authority-teaching/r26",
+      "sourceIds": [
+        "src-r26",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r26"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-authority-teaching/r27",
+      "sourceIds": [
+        "src-r27",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r27"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-authority-teaching/r30",
+      "sourceIds": [
+        "src-r30",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:r30"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-teaching/sec01",
+      "sourceIds": [
+        "src-sec01",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec01"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-teaching/sec02",
+      "sourceIds": [
+        "src-sec02",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec02"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-teaching/sec03",
+      "sourceIds": [
+        "src-sec03",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec03"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-teaching/sec04",
+      "sourceIds": [
+        "src-sec04",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec04"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-teaching/sec05",
+      "sourceIds": [
+        "src-sec05",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec05"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-teaching/sec06",
+      "sourceIds": [
+        "src-sec06",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec06"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-teaching/sec07",
+      "sourceIds": [
+        "src-sec07",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec07"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-teaching/sec08",
+      "sourceIds": [
+        "src-sec08",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec08"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-teaching/sec10",
+      "sourceIds": [
+        "src-sec10",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec10"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-teaching/sec11",
+      "sourceIds": [
+        "src-sec11",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec11"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-teaching/sec12",
+      "sourceIds": [
+        "src-sec12",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec12"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-teaching/sec13",
+      "sourceIds": [
+        "src-sec13",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec13"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-teaching/sec14",
+      "sourceIds": [
+        "src-sec14",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec14"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-teaching/sec15",
+      "sourceIds": [
+        "src-sec15",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec15"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-teaching/sec16",
+      "sourceIds": [
+        "src-sec16",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec16"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-teaching/sec17",
+      "sourceIds": [
+        "src-sec17",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec17"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-section-teaching/sec18",
+      "sourceIds": [
+        "src-sec18",
+        "src-original"
+      ],
+      "applicabilityNote": "需依原文触发及当期制度判定，未确认保留 pending",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:sec18"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-axis-hazard/axis",
+      "sourceIds": [
+        "src-original"
+      ],
+      "applicabilityNote": "叠加条件真/假/未知必须明确",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:axis-hazard"
+        ]
+      }
+    },
+    {
+      "checkId": "d4-g04-t04@1:module/use-axis-revision/axis",
+      "sourceIds": [
+        "src-original"
+      ],
+      "applicabilityNote": "叠加条件真/假/未知必须明确",
+      "genericScope": {
+        "businessTypes": [
+          "g04-project-hazard"
+        ],
+        "evidenceFacts": [
+          "d2:object:g04-project-hazard:axis-revision"
+        ]
+      }
+    }
+  ],
+  "sharedModuleLocks": []
+}

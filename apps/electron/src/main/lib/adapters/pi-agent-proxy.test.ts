@@ -40,6 +40,10 @@ describe('Pi request proxy', () => {
     expect(buildPiRetrySettings('ollama')).toEqual({ enabled: false })
   })
 
+  test('Given a review request When building retry settings Then avoid replaying tool writes', () => {
+    expect(buildPiRetrySettings('openai', { isReviewRequest: true })).toEqual({ enabled: false })
+  })
+
   test.each(['openai', 'openai-codex', 'anthropic'] as const)('Given %s When building retry settings Then preserve Pi native retries', (provider) => {
     expect(buildPiRetrySettings(provider)).toEqual({
       enabled: true,

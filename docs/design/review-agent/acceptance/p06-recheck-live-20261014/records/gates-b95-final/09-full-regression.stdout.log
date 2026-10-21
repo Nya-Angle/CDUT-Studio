@@ -1,0 +1,1548 @@
+bun test v1.4.0 (34cbb9a40)
+[设置] 已更新 keys: pocketModeEnabled
+[设置] 已更新 keys: notificationsEnabled
+[设置] 已更新 keys: developerModeEnabled, openEpistemicModeEnabled
+[设置] 已更新 keys: pocketModePort
+[配置] 已创建配置目录: /tmp/profer-default-skills-87IXpl/isolated-config
+[配置] 已创建配置目录: /tmp/profer-default-skills-ioYp8o/config
+[配置] 已同步默认 Skill: test-skill
+[配置] 已创建配置目录: /tmp/profer-default-skills-nKtIag/config
+[配置] 已同步默认 Skill: test-skill
+[配置] 已升级默认 Skill: test-skill (1.0.0 → 1.0.1)
+[配置] 已创建配置目录: /tmp/profer-default-skills-JoJGxX/config
+[配置] 已同步默认 Skill: test-skill
+[配置] 保留用户修改的元 Skill: test-skill
+[配置] 已创建配置目录: /tmp/profer-default-skills-IBv6ta/config
+[配置] 已同步默认 Skill: test-skill
+[配置] 保留用户修改的元 Skill: test-skill
+[配置] 已创建配置目录: /tmp/profer-default-skills-7MIFbf/config
+[配置] 已同步默认 Skill: test-skill
+[配置] 保留用户修改的元 Skill: test-skill
+[配置] 已创建配置目录: /tmp/profer-default-skills-dKR5PW/config
+[配置] 保留已有元 Skill（缺少可信内置基线）: test-skill
+[配置] 已创建配置目录: /tmp/profer-default-skills-mFfTze/config
+[配置] 已接管并升级历史内置 Skill: test-skill (1.0.1)
+[配置] 已创建配置目录: /tmp/profer-default-skills-H45Ucp/config
+[配置] 保留已有元 Skill（缺少可信内置基线）: test-skill
+[配置] 已创建配置目录: /tmp/profer-default-skills-Llm7bL/config
+[配置] 已接管并升级历史内置 Skill: test-skill (1.0.1)
+[配置] 已创建配置目录: /tmp/p06-live-gates-x409s6az/config
+[配置] 已创建 SDK 配置目录: /tmp/p06-live-gates-x409s6az/config/sdk-config
+[配置] 已创建 Agent 工作区目录: /tmp/profer-workspace-profile-Co0Y5J/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-workspace-profile-Co0Y5J/agent-workspaces/profile-compatibility
+[Agent 工作区] 已创建 plugin manifest: profile-compatibility
+[Agent 工作区] 已创建个人工作区: Profile Compatibility (slug: profile-compatibility)
+[Agent 工作区] 已更新 Profer workspace-profile.md: profile-compatibility
+[配置] 已创建 Agent 工作区目录: /tmp/profer-workspace-profile-D0PMNf/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-workspace-profile-D0PMNf/agent-workspaces/memory-compatibility
+[Agent 工作区] 已创建 plugin manifest: memory-compatibility
+[Agent 工作区] 已创建个人工作区: Memory Compatibility (slug: memory-compatibility)
+[Agent 工作区] 已兼容迁移旧记忆目录: /tmp/profer-workspace-profile-D0PMNf/agent-workspaces/memory-compatibility/.claude/memory → /tmp/profer-workspace-profile-D0PMNf/agent-workspaces/memory-compatibility/.cdutai/memory（旧目录保留）
+[配置] 已创建 Agent 工作区目录: /tmp/profer-workspace-profile-h5zYCN/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-workspace-profile-h5zYCN/agent-workspaces/new-profile
+[Agent 工作区] 已创建 plugin manifest: new-profile
+[Agent 工作区] 已创建个人工作区: New Profile (slug: new-profile)
+[Agent 工作区] 已更新 Profer workspace-profile.md: new-profile
+[配置] 已创建 SDK 配置目录: /tmp/profer-session-index-cache-test-LNQWtz/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-session-index-cache-test-LNQWtz/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-session-index-cache-test-LNQWtz/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-session-index-cache-test-LNQWtz/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-session-index-cache-test-LNQWtz/agent-workspaces/default/SESSION_fd012d44edb7
+[Agent 会话] 已创建会话: cached title (SESSION_fd012d44edb7)
+[配置] 已创建 SDK 配置目录: /tmp/profer-session-index-cache-test-hKv2XE/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-session-index-cache-test-hKv2XE/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-session-index-cache-test-hKv2XE/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-session-index-cache-test-hKv2XE/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-session-index-cache-test-hKv2XE/agent-workspaces/default/SESSION_0b79f7a0eb0d
+[Agent 会话] 已创建会话: stale cache guard (SESSION_0b79f7a0eb0d)
+[Agent 预设] 已创建预设: workspace-a/Review (SESSION_4df0601d40ba)
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建 Agent 工作区目录: /tmp/profer-workspace-skill-portable-oIZR7c/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-workspace-skill-portable-oIZR7c/agent-workspaces/portable
+[Agent 工作区] 已创建 Skill: portable/CAFÉ
+[配置] 已创建 Agent 工作区目录: /tmp/profer-scan-source-orGuEO/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-scan-source-orGuEO/agent-workspaces/scan
+[配置] 已创建 Agent 工作区: /tmp/profer-scan-source-orGuEO/agent-workspaces/missing-source
+[配置] 已创建 Agent 工作区目录: /tmp/profer-workspace-skill-list-aYvuku/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-workspace-skill-list-aYvuku/agent-workspaces/listed
+[配置] 已创建 Agent 工作区目录: /tmp/profer-toggle-local-J6WHok/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-toggle-local-J6WHok/agent-workspaces/toggle-local
+[Agent 工作区] Skill 禁用: toggle-local/demo
+[Agent 工作区] Skill 启用: toggle-local/demo
+[配置] 已创建个人资料库目录: /tmp/profer-knowledge-test-poZa87/knowledge-base
+[配置] 已创建个人资料库目录: /tmp/profer-knowledge-test-lLIKF1/knowledge-base
+[配置] 已创建个人资料库目录: /tmp/profer-knowledge-test-ecHDkm/knowledge-base
+[配置] 已创建个人资料库目录: /tmp/profer-knowledge-test-SHLdJi/knowledge-base
+[渠道管理] 已应用渠道配置迁移或预设模型更新
+[配置] 已创建 SDK 配置目录: /tmp/p06-owner-recovery-ZgRcr5/sdk-config
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建 Agent 会话目录: /tmp/p06-owner-recovery-ZgRcr5/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/p06-owner-recovery-ZgRcr5/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p06-owner-recovery-ZgRcr5/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-owner-recovery-ZgRcr5/agent-workspaces/default/SESSION_e8669008ea09
+[Agent 会话] 已创建会话: 合成普通 Agent (SESSION_e8669008ea09)
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-owner-recovery-ZgRcr5/agent-workspaces/default/SESSION_80204723ef92
+[Agent 会话] 已创建会话: 合成隐藏审核 (SESSION_80204723ef92)
+[数据恢复] 从 .bak 文件恢复: /tmp/p06-owner-recovery-ZgRcr5/agent-sessions.json
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-owner-recovery-ZgRcr5/agent-workspaces/default/SESSION_1cce8655b3c0
+[Agent 会话] 已创建会话: 合成隐藏审核 (SESSION_1cce8655b3c0)
+[配置] 已创建 Pi 检查点目录: /tmp/p06-owner-recovery-ZgRcr5/agent-checkpoints
+[Agent 会话] 已清理 session 工作目录: /tmp/p06-owner-recovery-ZgRcr5/agent-workspaces/default/SESSION_1cce8655b3c0
+[Agent 会话] 已删除会话: 合成隐藏审核 (SESSION_1cce8655b3c0)
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-owner-recovery-ZgRcr5/agent-workspaces/default/SESSION_c97fc69fa01e
+[Agent 会话] 已创建会话: 合成隐藏审核 (SESSION_c97fc69fa01e)
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-owner-recovery-ZgRcr5/agent-workspaces/default/SESSION_48378b22b025
+[Agent 会话] 已创建会话: 合成隐藏审核 (SESSION_48378b22b025)
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-owner-recovery-ZgRcr5/agent-workspaces/default/SESSION_d09975ec1719
+[Agent 会话] 已创建会话: 合成隐藏审核 (SESSION_d09975ec1719)
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-owner-recovery-ZgRcr5/agent-workspaces/default/SESSION_34957ea59e6d
+[Agent 会话] 已创建会话: 合成普通 Agent (SESSION_34957ea59e6d)
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-owner-recovery-ZgRcr5/agent-workspaces/default/SESSION_8021c780308c
+[Agent 会话] 已创建会话: 合成普通 Agent (SESSION_8021c780308c)
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-owner-recovery-ZgRcr5/agent-workspaces/default/SESSION_7bd47ef31593
+[Agent 会话] 已创建会话: 合成普通 Agent (SESSION_7bd47ef31593)
+[配置] 已创建 SDK 配置目录: /tmp/profer-pi-session-test-y1C53M/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-session-test-y1C53M/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-pi-session-test-y1C53M/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-pi-session-test-y1C53M/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-y1C53M/agent-workspaces/default/SESSION_e184d7af36ec
+[Agent 会话] 已创建会话: Pi health (SESSION_e184d7af36ec)
+[Agent 会话] 已更新会话: Pi health (SESSION_e184d7af36ec)
+[配置] 已创建 SDK 配置目录: /tmp/profer-pi-session-test-vSwJQS/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-session-test-vSwJQS/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-pi-session-test-vSwJQS/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-pi-session-test-vSwJQS/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-vSwJQS/agent-workspaces/default/SESSION_cbf2ddd05b85
+[Agent 会话] 已创建会话: Pi delete (SESSION_cbf2ddd05b85)
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-vSwJQS/agent-workspaces/default/SESSION_bb4bfccf780a
+[Agent 会话] 已创建会话: Pi keep (SESSION_bb4bfccf780a)
+[Agent 会话] 已更新会话: Pi delete (SESSION_cbf2ddd05b85)
+[Agent 会话] 已更新会话: Pi keep (SESSION_bb4bfccf780a)
+[配置] 已创建 Pi 检查点目录: /tmp/profer-pi-session-test-vSwJQS/agent-checkpoints
+[Agent 会话] 已清理 session 工作目录: /tmp/profer-pi-session-test-vSwJQS/agent-workspaces/default/SESSION_cbf2ddd05b85
+[Agent 会话] 已删除会话: Pi delete (SESSION_cbf2ddd05b85)
+[Agent 会话] 已清理 Pi session 文件: /tmp/profer-pi-session-test-vSwJQS/sdk-config/sessions/pi/2026-07-20T00-00-00-000Z_pi-delete-id.jsonl
+[配置] 已创建 SDK 配置目录: /tmp/profer-pi-session-test-YuU1or/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-session-test-YuU1or/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-pi-session-test-YuU1or/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-pi-session-test-YuU1or/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-YuU1or/agent-workspaces/default/SESSION_2b352b4fbf5b
+[Agent 会话] 已创建会话: parent (SESSION_2b352b4fbf5b)
+[协作] 已创建委派子会话索引: child (delegated-child)
+[协作] 已创建委派子会话索引: grandchild (delegated-grandchild)
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-YuU1or/agent-workspaces/default/SESSION_607c7ff32650
+[Agent 会话] 已创建会话: unrelated (SESSION_607c7ff32650)
+[Agent 会话] 已更新会话: unrelated (SESSION_607c7ff32650)
+[配置] 已创建 SDK 配置目录: /tmp/profer-pi-session-test-9hai1U/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-session-test-9hai1U/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-pi-session-test-9hai1U/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-pi-session-test-9hai1U/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-9hai1U/agent-workspaces/default/SESSION_97dedc81df86
+[Agent 会话] 已创建会话: delegation preset (SESSION_97dedc81df86)
+[配置] 已创建 SDK 配置目录: /tmp/profer-pi-session-test-ASDEHk/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-session-test-ASDEHk/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-pi-session-test-ASDEHk/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-pi-session-test-ASDEHk/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-ASDEHk/agent-workspaces/default/SESSION_b491b149e609
+[Agent 会话] 已创建会话: default preset (SESSION_b491b149e609)
+[配置] 已创建 SDK 配置目录: /tmp/profer-pi-session-test-Q7FBgv/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-session-test-Q7FBgv/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-pi-session-test-Q7FBgv/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-pi-session-test-Q7FBgv/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-Q7FBgv/agent-workspaces/default/SESSION_b59deff1d63e
+[Agent 会话] 已创建会话: first selection (SESSION_b59deff1d63e)
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-Q7FBgv/agent-workspaces/default/SESSION_09deb597ff1a
+[Agent 会话] 已创建会话: second selection (SESSION_09deb597ff1a)
+[Agent 会话] 已更新会话: first selection (SESSION_b59deff1d63e)
+[配置] 已创建 SDK 配置目录: /tmp/profer-pi-session-test-lxHvMZ/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-session-test-lxHvMZ/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-pi-session-test-lxHvMZ/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-pi-session-test-lxHvMZ/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-lxHvMZ/agent-workspaces/default/SESSION_87a7d1bebdad
+[Agent 会话] 已创建会话: stale attachments (SESSION_87a7d1bebdad)
+[Agent 会话] 已更新会话: stale attachments (SESSION_87a7d1bebdad)
+[Agent 会话] 清理了 2 个不存在的附加路径
+[配置] 已创建 SDK 配置目录: /tmp/profer-pi-session-test-bKLJzc/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-session-test-bKLJzc/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-pi-session-test-bKLJzc/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-pi-session-test-bKLJzc/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-bKLJzc/agent-workspaces/default/SESSION_b9884fec2991
+[Agent 会话] 已创建会话: runtime switch (SESSION_b9884fec2991)
+[Agent 会话] 已更新会话: runtime switch (SESSION_b9884fec2991)
+[Agent 会话] 已更新会话: runtime switch (SESSION_b9884fec2991)
+[配置] 已创建 SDK 配置目录: /tmp/profer-pi-session-test-wmAoG5/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-session-test-wmAoG5/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-pi-session-test-wmAoG5/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-pi-session-test-wmAoG5/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-wmAoG5/agent-workspaces/default/SESSION_83e24eda312f
+[Agent 会话] 已创建会话: runtime rollback (SESSION_83e24eda312f)
+[Agent 会话] 已更新会话: runtime rollback (SESSION_83e24eda312f)
+[Agent 会话] 已更新会话: runtime rollback (SESSION_83e24eda312f)
+[配置] 已创建 SDK 配置目录: /tmp/profer-pi-session-test-r3VlbZ/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-session-test-r3VlbZ/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-pi-session-test-r3VlbZ/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-pi-session-test-r3VlbZ/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-r3VlbZ/agent-workspaces/default/SESSION_b008546fcb5b
+[Agent 会话] 已创建会话: runtime checkpoint cleanup (SESSION_b008546fcb5b)
+[配置] 已创建 Pi 检查点目录: /tmp/profer-pi-session-test-r3VlbZ/agent-checkpoints
+[Agent 会话] 已更新会话: runtime checkpoint cleanup (SESSION_b008546fcb5b)
+[Agent 会话] 已更新会话: runtime checkpoint cleanup (SESSION_b008546fcb5b)
+[配置] 已创建 SDK 配置目录: /tmp/profer-pi-session-test-fu5CgJ/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-session-test-fu5CgJ/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-pi-session-test-fu5CgJ/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-pi-session-test-fu5CgJ/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-fu5CgJ/agent-workspaces/default/SESSION_31ad23db4065
+[Agent 会话] 已创建会话: checkpoint source (SESSION_31ad23db4065)
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-fu5CgJ/agent-workspaces/default/SESSION_e56cad81f43d
+[Agent 会话] 已创建会话: legacy checkpoint fork (SESSION_e56cad81f43d)
+[配置] 已创建 Pi 检查点目录: /tmp/profer-pi-session-test-fu5CgJ/agent-checkpoints
+[Agent 会话] 已更新会话: legacy checkpoint fork (SESSION_e56cad81f43d)
+[Agent 会话] 已清理 session 工作目录: /tmp/profer-pi-session-test-fu5CgJ/agent-workspaces/default/SESSION_31ad23db4065
+[Agent 会话] 已删除会话: checkpoint source (SESSION_31ad23db4065)
+[配置] 已创建 SDK 配置目录: /tmp/profer-pi-session-test-9lrgKd/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-session-test-9lrgKd/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-pi-session-test-9lrgKd/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-pi-session-test-9lrgKd/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-9lrgKd/agent-workspaces/default/SESSION_0f20bfb78612
+[Agent 会话] 已创建会话: missing checkpoint source (SESSION_0f20bfb78612)
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-9lrgKd/agent-workspaces/default/SESSION_392a588ef169
+[Agent 会话] 已创建会话: missing checkpoint fork (SESSION_392a588ef169)
+[配置] 已创建 Pi 检查点目录: /tmp/profer-pi-session-test-9lrgKd/agent-checkpoints
+[Agent 会话] 已更新会话: missing checkpoint fork (SESSION_392a588ef169)
+[Agent 会话] 已清理 session 工作目录: /tmp/profer-pi-session-test-9lrgKd/agent-workspaces/default/SESSION_0f20bfb78612
+[Agent 会话] 已删除会话: missing checkpoint source (SESSION_0f20bfb78612)
+[配置] 已创建 SDK 配置目录: /tmp/profer-pi-session-test-PDlYKW/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-session-test-PDlYKW/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-pi-session-test-PDlYKW/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-pi-session-test-PDlYKW/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-PDlYKW/agent-workspaces/default/SESSION_96af2941d43e
+[Agent 会话] 已创建会话: runtime stale callback (SESSION_96af2941d43e)
+[Agent 会话] 已更新会话: runtime stale callback (SESSION_96af2941d43e)
+[Agent 会话] 已更新会话: runtime stale callback (SESSION_96af2941d43e)
+[配置] 已创建 SDK 配置目录: /tmp/profer-pi-session-test-tjiuKP/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-session-test-tjiuKP/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-pi-session-test-tjiuKP/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-pi-session-test-tjiuKP/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-tjiuKP/agent-workspaces/default/SESSION_296d4328f722
+[Agent 会话] 已创建会话: Network fail (SESSION_296d4328f722)
+[配置] 已创建 SDK 配置目录: /tmp/profer-pi-session-test-lPfFqD/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-session-test-lPfFqD/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-pi-session-test-lPfFqD/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-pi-session-test-lPfFqD/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-session-test-lPfFqD/agent-workspaces/default/SESSION_1f7f5486d036
+[Agent 会话] 已创建会话: Recovered (SESSION_1f7f5486d036)
+[渠道管理] 已应用渠道配置迁移或预设模型更新
+[渠道管理] 已应用渠道配置迁移或预设模型更新
+[渠道管理] 已应用渠道配置迁移或预设模型更新
+[渠道管理] 已应用渠道配置迁移或预设模型更新
+[渠道管理] 已应用渠道配置迁移或预设模型更新
+[渠道管理] 已应用渠道配置迁移或预设模型更新
+[Agent 预设] 已创建预设: ws-a/研究模式 (SESSION_6101aea550fd)
+[Agent 预设] 已创建预设: ws-a/默认候选 (SESSION_fb57245b99bf)
+[Agent 预设] 已创建预设: ws-a/审计回滚 (SESSION_0146be8fa0e7)
+[Agent 预设] 已创建预设: ws-a/摘要测试 (SESSION_3ef00b45ab85)
+[Agent 预设工具] operation=create session=session-summary workspace=ws-a preset=SESSION_3ef00b45ab85
+[Agent 预设] 已创建预设: ws-a/代码审查 (SESSION_2e6524e99aef)
+[Agent 预设工具] operation=create session=session-create workspace=ws-a preset=SESSION_2e6524e99aef
+[Agent 预设] 已创建预设: ws-a/快速问答 (SESSION_3886206800c6)
+[Agent 预设工具] operation=copy session=session-copy workspace=ws-a preset=SESSION_3886206800c6
+[Agent 预设工具] operation=switch session=session-switch workspace=ws-a from=builtin-meta:minimal to=builtin-meta:standard elevated=true
+[配置] 已创建配置目录: /tmp/profer-coach-slug-migration-t6qIRr/config
+[配置] 已同步默认 Skill: proma-coach
+[配置] 已迁移默认 Skill: proma-coach → profer-coach
+[配置] 已升级默认 Skill: profer-coach (1.0.1 → 1.0.2)
+[配置] 已创建配置目录: /tmp/profer-coach-slug-migration-Lr7vOy/config
+[配置] 保留已有元 Skill（缺少可信内置基线）: profer-coach
+[配置] 已创建配置目录: /tmp/profer-workspace-archive-1791995180395
+[配置] 已创建 SDK 配置目录: /tmp/profer-workspace-archive-1791995180395/sdk-config
+[配置] 已创建 Agent 工作区目录: /tmp/profer-workspace-archive-1791995180395/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-workspace-archive-1791995180395/agent-workspaces/workspace-1791995180415
+[Agent 工作区] 已创建 plugin manifest: workspace-1791995180415
+[Agent 工作区] 已创建个人工作区: 收纳往返 (slug: workspace-1791995180415)
+[Agent 工作区] 已更新工作区: 收纳往返 (SESSION_27db9bbe77bb) [已收纳]
+[Agent 工作区] 已更新工作区: 收纳往返 (SESSION_27db9bbe77bb) [已取出]
+[配置] 已创建 Agent 工作区: /tmp/profer-workspace-archive-1791995180395/agent-workspaces/workspace-1791995180415-1
+[Agent 工作区] 已创建 plugin manifest: workspace-1791995180415-1
+[Agent 工作区] 已创建个人工作区: 重复收纳 (slug: workspace-1791995180415-1)
+[Agent 工作区] 已更新工作区: 重复收纳 (SESSION_f6b4137cc207) [已收纳]
+[Agent 工作区] 已更新工作区: 重复收纳 (SESSION_f6b4137cc207) [已收纳]
+[配置] 已创建 Agent 工作区: /tmp/profer-workspace-archive-1791995180395/agent-workspaces/workspace-1791995180416
+[Agent 工作区] 已创建 plugin manifest: workspace-1791995180416
+[Agent 工作区] 已创建个人工作区: 名称保持不变 (slug: workspace-1791995180416)
+[Agent 工作区] 已更新工作区: 名称保持不变 (SESSION_a49173478f7e) [已收纳]
+[配置] 已创建 Agent 工作区: /tmp/profer-workspace-archive-1791995180395/agent-workspaces/workspace-1791995180416-1
+[Agent 工作区] 已创建 plugin manifest: workspace-1791995180416-1
+[Agent 工作区] 已创建个人工作区: 重名干扰项 (slug: workspace-1791995180416-1)
+[配置] 已创建 Agent 工作区: /tmp/profer-workspace-archive-1791995180395/agent-workspaces/workspace-1791995180416-2
+[Agent 工作区] 已创建 plugin manifest: workspace-1791995180416-2
+[Agent 工作区] 已创建个人工作区: 待收纳项目 (slug: workspace-1791995180416-2)
+[Agent 工作区] 已更新工作区: 待收纳项目 (SESSION_fad753e040b6) [已收纳]
+[配置] 已创建 Agent 工作区: /tmp/profer-workspace-archive-1791995180395/agent-workspaces/workspace-1791995180416-3
+[Agent 工作区] 已创建 plugin manifest: workspace-1791995180416-3
+[Agent 工作区] 已创建个人工作区: 重名校验甲 (slug: workspace-1791995180416-3)
+[配置] 已创建 Agent 工作区: /tmp/profer-workspace-archive-1791995180395/agent-workspaces/workspace-1791995180417
+[Agent 工作区] 已创建 plugin manifest: workspace-1791995180417
+[Agent 工作区] 已创建个人工作区: 重名校验乙 (slug: workspace-1791995180417)
+[配置] 已创建 Agent 工作区: /tmp/profer-workspace-archive-1791995180395/agent-workspaces/default
+[Agent 工作区] 已创建 plugin manifest: default
+[Agent 工作区] 已创建默认工作区
+[配置] 已创建 Agent 工作区: /tmp/profer-workspace-archive-1791995180395/agent-workspaces/workspace-1791995180417-1
+[Agent 工作区] 已创建 plugin manifest: workspace-1791995180417-1
+[Agent 工作区] 已创建个人工作区: 仍在底层列表 (slug: workspace-1791995180417-1)
+[Agent 工作区] 已更新工作区: 仍在底层列表 (SESSION_b2206b546912) [已收纳]
+[配置] 已创建 Agent 工作区: /tmp/profer-workspace-archive-1791995180395/agent-workspaces/workspace-1791995180418
+[Agent 工作区] 已创建 plugin manifest: workspace-1791995180418
+[Agent 工作区] 已创建个人工作区: 持久化检查 (slug: workspace-1791995180418)
+[Agent 工作区] 已更新工作区: 持久化检查 (SESSION_3381a7d31b08) [已收纳]
+[全局快捷键] 注册成功: show-main-window → CommandOrControl+Shift+P
+[配置] 已创建 SDK 配置目录: /tmp/p06-pi-permission-wiring-olgdyp/sdk-config
+[协作工具] EventBus 阻塞事件监听已注册
+[身份] 设备身份: Linux (Bot) (SESSION_4bddaf72dfe2)
+[渠道管理] 已创建渠道: 合成权限渠道 (SESSION_1fce60ac8810)
+[配置] 已创建 Agent 会话目录: /tmp/p06-pi-permission-wiring-olgdyp/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/p06-pi-permission-wiring-olgdyp/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p06-pi-permission-wiring-olgdyp/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-pi-permission-wiring-olgdyp/agent-workspaces/default/SESSION_d043b019fdd0
+[Agent 会话] 已创建会话: 合成 auto 权限 (SESSION_d043b019fdd0)
+[Agent 会话] 已更新会话: 合成 auto 权限 (SESSION_d043b019fdd0)
+[渠道管理] 已应用渠道配置迁移或预设模型更新
+[Agent 编排] 请求路由: {
+  sessionId: "SESSION_d043b019fdd0",
+  requestSource: "agent-message",
+  channelId: "SESSION_1fce60ac8810",
+  modelId: "synthetic-model",
+  provider: "deepseek",
+}
+[Agent 编排] Resume 状态: sdkSessionId=无, proma sessionId=SESSION_d043b019fdd0
+[Agent 编排] 启动 Pi runtime，模型: synthetic-model, resume: 无
+[Agent 工作区] 已创建 plugin manifest: default
+[Agent 工作区] 已创建默认工作区
+[Agent 编排] 使用 session 级别 cwd: /tmp/p06-pi-permission-wiring-olgdyp/agent-workspaces/default/SESSION_d043b019fdd0 (默认工作区/SESSION_d043b019fdd0)
+[Agent 编排] 无 sdkSessionId，将作为新会话启动（回填历史上下文）
+[Pi 桥接] 已挂载 5 个工具（激活组: 仅基础）
+[Agent 编排] 权限模式: auto（外部覆盖）
+[Skill 路由] {"sessionId":"SESSION_d043b019fdd0","allowed":[],"blocked":[],"selected":[],"diagnostics":[]}
+[代理配置] 配置文件不存在，使用默认配置
+[配置] 已创建 Pi 检查点目录: /tmp/p06-pi-permission-wiring-olgdyp/agent-checkpoints
+[Agent 编排] 开始通过 Adapter 遍历事件流...
+[Agent 编排] SDK 路由输入: {
+  sessionId: "SESSION_d043b019fdd0",
+  channelId: "SESSION_1fce60ac8810",
+  provider: "deepseek",
+  configuredModelId: "synthetic-model",
+  effectiveSdkModelId: "synthetic-model",
+  oneMillionContextEnabled: false,
+  betaCount: 0,
+  authMode: "api-key",
+  agentUrlOrigin: "https://example.invalid",
+  agentUrlPathname: "/",
+  appProxyEnabled: true,
+}
+[Agent 编排] result 到达: sessionId=SESSION_d043b019fdd0, subtype=success, terminal_reason=undefined, keepChannelOpen=false
+[Agent 会话] 已更新会话: 合成 auto 权限 (SESSION_d043b019fdd0)
+[Agent 会话] 已更新会话: 合成 auto 权限 (SESSION_d043b019fdd0)
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-pi-permission-wiring-olgdyp/agent-workspaces/default/SESSION_266ed94c1904
+[Agent 会话] 已创建会话: 合成模式热切换 (SESSION_266ed94c1904)
+[Agent 会话] 已更新会话: 合成模式热切换 (SESSION_266ed94c1904)
+[Agent 编排] 请求路由: {
+  sessionId: "SESSION_266ed94c1904",
+  requestSource: "agent-message",
+  channelId: "SESSION_1fce60ac8810",
+  modelId: "synthetic-model",
+  provider: "deepseek",
+}
+[Agent 编排] Resume 状态: sdkSessionId=无, proma sessionId=SESSION_266ed94c1904
+[Agent 编排] 启动 Pi runtime，模型: synthetic-model, resume: 无
+[Agent 编排] 使用 session 级别 cwd: /tmp/p06-pi-permission-wiring-olgdyp/agent-workspaces/default/SESSION_266ed94c1904 (默认工作区/SESSION_266ed94c1904)
+[Agent 编排] 无 sdkSessionId，将作为新会话启动（回填历史上下文）
+[Pi 桥接] 已挂载 5 个工具（激活组: 仅基础）
+[Agent 编排] 权限模式: auto（外部覆盖）
+[Skill 路由] {"sessionId":"SESSION_266ed94c1904","allowed":[],"blocked":[],"selected":[],"diagnostics":[]}
+[代理配置] 配置文件不存在，使用默认配置
+[Agent 编排] 开始通过 Adapter 遍历事件流...
+[Agent 编排] SDK 路由输入: {
+  sessionId: "SESSION_266ed94c1904",
+  channelId: "SESSION_1fce60ac8810",
+  provider: "deepseek",
+  configuredModelId: "synthetic-model",
+  effectiveSdkModelId: "synthetic-model",
+  oneMillionContextEnabled: false,
+  betaCount: 0,
+  authMode: "api-key",
+  agentUrlOrigin: "https://example.invalid",
+  agentUrlPathname: "/",
+  appProxyEnabled: true,
+}
+[Agent 编排] 运行中权限模式已切换: sessionId=SESSION_266ed94c1904, mode=plan
+[Agent 编排] 运行中权限模式已切换: sessionId=SESSION_266ed94c1904, mode=bypassPermissions
+[Agent 编排] result 到达: sessionId=SESSION_266ed94c1904, subtype=success, terminal_reason=undefined, keepChannelOpen=false
+[Agent 会话] 已更新会话: 合成模式热切换 (SESSION_266ed94c1904)
+[Agent 会话] 已更新会话: 合成模式热切换 (SESSION_266ed94c1904)
+[文档解析] DOCX 提取完成: 22 字符
+[文档解析] Office 提取完成: 26 字符
+[文档解析] Office 提取完成: 19 字符
+[文档解析] RTF 提取完成: 32 字符
+[文档解析] RTF 提取完成: 7 字符
+[文档解析] RTF 提取完成: 32 字符
+[文档解析] RTF 提取完成: 27 字符
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建对话目录: /tmp/profer-conv-test-WXvG1k/conversations
+[对话管理] 已创建对话: 分支树测试 (SESSION_29fde4d4fa95)
+[对话管理] 已更新对话: 分支树测试 (SESSION_29fde4d4fa95)
+[对话管理] 已设置 activePath (SESSION_29fde4d4fa95, 3 节点)
+[对话管理] 已更新对话: 分支树测试 (SESSION_29fde4d4fa95)
+[对话管理] 已设置 activePath (SESSION_29fde4d4fa95, 2 节点)
+[对话管理] forkBranchAt SESSION_21863e465117 → 新节点 SESSION_ef9ce5aaf461 (parent=SESSION_642491799973)
+[对话管理] 已创建对话: 分支树测试 (SESSION_9e93a484791b)
+[对话管理] 已更新对话: 分支树测试 (SESSION_9e93a484791b)
+[对话管理] 已设置 activePath (SESSION_9e93a484791b, 2 节点)
+[对话管理] 已更新对话: 分支树测试 (SESSION_9e93a484791b)
+[对话管理] 已设置 activePath (SESSION_9e93a484791b, 1 节点)
+[对话管理] forkBranchAt SESSION_14783ecfb143 → 新节点 SESSION_712f51bbf65b (parent=null)
+[对话管理] 已创建对话: 分支树测试 (SESSION_1e2108322698)
+[对话管理] 已更新对话: 分支树测试 (SESSION_1e2108322698)
+[对话管理] 已设置 activePath (SESSION_1e2108322698, 3 节点)
+[对话管理] 已创建对话: 分支树测试 (SESSION_9ae08673617c)
+[对话管理] 已更新对话: 分支树测试 (SESSION_9ae08673617c)
+[对话管理] 已设置 activePath (SESSION_9ae08673617c, 1 节点)
+[对话管理] 已创建对话: 分支树测试 (SESSION_5cbbe391b51d)
+[对话管理] 已创建对话: 分支树测试 (SESSION_dfcc8745920b)
+[对话管理] 已创建对话: 分支树测试 (SESSION_d1eef1fa42ff)
+[对话管理] 已创建对话: 分支树测试 (SESSION_223745cad491)
+[对话管理] 已创建对话: 分支树测试 (SESSION_6b16599b8efd)
+[对话管理] 已更新对话: 分支树测试 (SESSION_6b16599b8efd)
+[对话管理] 已设置 activePath (SESSION_6b16599b8efd, 3 节点)
+[对话管理] 已更新对话: 分支树测试 (SESSION_6b16599b8efd)
+[对话管理] 已删除子树 (SESSION_3743cabc20f5, 共 2 节点)
+[对话管理] 已创建对话: 分支树测试 (SESSION_26713426cc85)
+[对话管理] 已更新对话: 分支树测试 (SESSION_26713426cc85)
+[对话管理] 已设置 activePath (SESSION_26713426cc85, 3 节点)
+[对话管理] 已更新对话: 分支树测试 (SESSION_26713426cc85)
+[对话管理] 已删除子树 (SESSION_66e1811e6bdb, 共 2 节点)
+[对话管理] 已创建对话: 分支树测试 (SESSION_cdcc24439fae)
+[对话管理] 已更新对话: 分支树测试 (SESSION_cdcc24439fae)
+[对话管理] 已设置 activePath (SESSION_cdcc24439fae, 3 节点)
+[对话管理] 已删除子树 (SESSION_a893e0cbefa0, 共 3 节点)
+[对话管理] 已创建对话: 分支树测试 (SESSION_66be4b03fa66)
+[对话管理] 已更新对话: 分支树测试 (SESSION_66be4b03fa66)
+[对话管理] 已设置 activePath (SESSION_66be4b03fa66, 3 节点)
+[对话管理] 已删除子树 (SESSION_c58878239713, 共 2 节点)
+[Chat 工具配置] 已保存
+[Chat 工具配置] 已保存
+[Chat 工具配置] 已保存
+[Chat 工具配置] 已保存
+[协作工具] EventBus 阻塞事件监听已注册
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建 Agent 会话目录: /tmp/profer-harness-graph-alias-jW01GQ/config-alias/agent-sessions
+[配置] 已创建 Agent 会话目录: /tmp/profer-harness-graph-service-w4SiYJ/agent-sessions
+[配置] 已创建 SDK 配置目录: /tmp/profer-compaction-test-U3tIq3/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-compaction-test-U3tIq3/agent-sessions
+[配置] 已创建 SDK 配置目录: /tmp/profer-compaction-test-Zm2RBc/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-compaction-test-Zm2RBc/agent-sessions
+[配置] 已创建 SDK 配置目录: /tmp/profer-compaction-test-pni4yf/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-compaction-test-pni4yf/agent-sessions
+[配置] 已创建 SDK 配置目录: /tmp/profer-compaction-test-r3rjcE/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-compaction-test-r3rjcE/agent-sessions
+[配置] 已创建 SDK 配置目录: /tmp/profer-compaction-test-vRzkMG/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-compaction-test-vRzkMG/agent-sessions
+[配置] 已创建 SDK 配置目录: /tmp/profer-compaction-test-VetXJy/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-compaction-test-VetXJy/agent-sessions
+[配置] 已创建 SDK 配置目录: /tmp/profer-compaction-test-U8fpgP/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-compaction-test-U8fpgP/agent-sessions
+[配置] 已创建 SDK 配置目录: /tmp/profer-compaction-test-TsX7QD/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-compaction-test-TsX7QD/agent-sessions
+[配置] 已创建 SDK 配置目录: /tmp/profer-compaction-test-SE0kAy/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-compaction-test-SE0kAy/agent-sessions
+[配置] 已创建 SDK 配置目录: /tmp/profer-compaction-test-LbEpqe/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-compaction-test-LbEpqe/agent-sessions
+[配置] 已创建 SDK 配置目录: /tmp/profer-compaction-test-tbshTK/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-compaction-test-tbshTK/agent-sessions
+[配置] 已创建 SDK 配置目录: /tmp/profer-storage-blob-test-Stk3qZ/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-storage-blob-test-Stk3qZ/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-storage-blob-test-Stk3qZ/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-storage-blob-test-Stk3qZ/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-storage-blob-test-Stk3qZ/agent-workspaces/default/SESSION_7baa6878a9fd
+[Agent 会话] 已创建会话: blob category (SESSION_7baa6878a9fd)
+[配置] 已创建对话目录: /tmp/profer-storage-blob-test-Stk3qZ/conversations
+[配置] 已创建附件目录: /tmp/profer-storage-blob-test-Stk3qZ/attachments
+[配置] 已创建 SDK 配置目录: /tmp/profer-storage-blob-test-M41MF5/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-storage-blob-test-M41MF5/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-storage-blob-test-M41MF5/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-storage-blob-test-M41MF5/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-storage-blob-test-M41MF5/agent-workspaces/default/SESSION_1bd9604e78d8
+[Agent 会话] 已创建会话: blob category (SESSION_1bd9604e78d8)
+[配置] 已创建对话目录: /tmp/profer-storage-blob-test-M41MF5/conversations
+[配置] 已创建附件目录: /tmp/profer-storage-blob-test-M41MF5/attachments
+[配置] 已创建 SDK 配置目录: /tmp/profer-storage-blob-test-QHUrBb/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-storage-blob-test-QHUrBb/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-storage-blob-test-QHUrBb/agent-workspaces
+[配置] 已创建对话目录: /tmp/profer-storage-blob-test-QHUrBb/conversations
+[配置] 已创建附件目录: /tmp/profer-storage-blob-test-QHUrBb/attachments
+[配置] 已创建 SDK 配置目录: /tmp/profer-storage-blob-test-BCE3DV/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-storage-blob-test-BCE3DV/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-storage-blob-test-BCE3DV/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-storage-blob-test-BCE3DV/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-storage-blob-test-BCE3DV/agent-workspaces/default/SESSION_67ef396f9d41
+[Agent 会话] 已创建会话: blob category (SESSION_67ef396f9d41)
+[存储清理] 总计释放 0.0 MB, 删除 1 项
+[配置] 已创建 SDK 配置目录: /tmp/profer-storage-blob-test-mhVTgl/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-storage-blob-test-mhVTgl/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-storage-blob-test-mhVTgl/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-storage-blob-test-mhVTgl/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-storage-blob-test-mhVTgl/agent-workspaces/default/SESSION_f118c9879c7c
+[Agent 会话] 已创建会话: blob category (SESSION_f118c9879c7c)
+[配置] 已创建对话目录: /tmp/profer-storage-blob-test-mhVTgl/conversations
+[配置] 已创建附件目录: /tmp/profer-storage-blob-test-mhVTgl/attachments
+[配置] 已创建 SDK 配置目录: /tmp/profer-storage-blob-test-rEsa1T/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-storage-blob-test-rEsa1T/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-storage-blob-test-rEsa1T/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-storage-blob-test-rEsa1T/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-storage-blob-test-rEsa1T/agent-workspaces/default/SESSION_23510377c869
+[Agent 会话] 已创建会话: blob category (SESSION_23510377c869)
+[存储清理] 总计释放 0.0 MB, 删除 2 项
+[配置] 已创建对话目录: /tmp/profer-storage-blob-test-rEsa1T/conversations
+[配置] 已创建附件目录: /tmp/profer-storage-blob-test-rEsa1T/attachments
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+[配置] 已创建 Agent 工作区目录: /tmp/profer-agent-directory-utils-80EjFy/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-agent-directory-utils-80EjFy/agent-workspaces/directory-utils-SESSION_410cab6dbf49
+[配置] 默认配置目录名: ~/.cdutai-dev/（开发模式）；实际路径可由 PROFER_CONFIG_DIR 覆盖
+[Pi 检查点] 回收 1 份快照（session=session，其中 0 份同步丢弃了回退绑定）
+[Pi 检查点] 回收 1 份快照（session=session，其中 1 份同步丢弃了回退绑定）
+[Pi 检查点] 回收 1 份快照（session=session，其中 0 份同步丢弃了回退绑定，已释放影子仓库）
+[Pi 检查点] 回收 1 份快照（session=session，其中 0 份同步丢弃了回退绑定，已释放影子仓库）
+[Pi 检查点] 回收 1 份快照（session=session，其中 0 份同步丢弃了回退绑定）
+[配置] 已创建 Agent 工作区目录: /tmp/profer-migration-runtime-test-vkmOiF/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-migration-runtime-test-vkmOiF/agent-workspaces/migration-pi-pi-export-id
+[Agent 工作区] 已创建 plugin manifest: migration-pi-pi-export-id
+[Agent 工作区] 已创建个人工作区: Migration pi pi-export-id (slug: migration-pi-pi-export-id)
+[配置] 已创建 Agent 会话目录: /tmp/profer-migration-runtime-test-vkmOiF/agent-sessions
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-migration-runtime-test-vkmOiF/agent-workspaces/migration-pi-pi-export-id/SESSION_bdc7e2c7d307
+[Agent 会话] 已创建会话: pi session (SESSION_bdc7e2c7d307)
+[Agent 会话] 已更新会话: pi session (SESSION_bdc7e2c7d307)
+[配置] 已创建 Agent 工作区: /tmp/profer-migration-runtime-test-vkmOiF/agent-workspaces/migration-pi-pi-export-secondary-id
+[Agent 工作区] 已创建 plugin manifest: migration-pi-pi-export-secondary-id
+[Agent 工作区] 已创建个人工作区: Migration pi pi-export-secondary-id (slug: migration-pi-pi-export-secondary-id)
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-migration-runtime-test-vkmOiF/agent-workspaces/migration-pi-pi-export-secondary-id/SESSION_ca5412ad4521
+[Agent 会话] 已创建会话: pi session (SESSION_ca5412ad4521)
+[Agent 会话] 已更新会话: pi session (SESSION_ca5412ad4521)
+[配置] 已创建 Agent 工作区: /tmp/profer-migration-runtime-test-vkmOiF/agent-workspaces/migration-pi-pi-not-exported
+[Agent 工作区] 已创建 plugin manifest: migration-pi-pi-not-exported
+[Agent 工作区] 已创建个人工作区: Migration pi pi-not-exported (slug: migration-pi-pi-not-exported)
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-migration-runtime-test-vkmOiF/agent-workspaces/migration-pi-pi-not-exported/SESSION_44c94b56124e
+[Agent 会话] 已创建会话: pi session (SESSION_44c94b56124e)
+[Agent 会话] 已更新会话: pi session (SESSION_44c94b56124e)
+[配置] 已创建 SDK 配置目录: /tmp/profer-migration-runtime-test-vkmOiF/sdk-config
+[配置] 已创建 Agent 工作区目录: /tmp/profer-migration-runtime-test-lMjwXq/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-migration-runtime-test-lMjwXq/agent-workspaces/migration-pi-pi-import-id
+[Agent 工作区] 已创建 plugin manifest: migration-pi-pi-import-id
+[Agent 工作区] 已创建个人工作区: Migration pi pi-import-id (slug: migration-pi-pi-import-id)
+[配置] 已创建 Agent 会话目录: /tmp/profer-migration-runtime-test-lMjwXq/agent-sessions
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-migration-runtime-test-lMjwXq/agent-workspaces/migration-pi-pi-import-id/SESSION_f32f1ea0f629
+[Agent 会话] 已创建会话: pi session (SESSION_f32f1ea0f629)
+[Agent 会话] 已更新会话: pi session (SESSION_f32f1ea0f629)
+[配置] 已创建 Agent 工作区: /tmp/profer-migration-runtime-test-lMjwXq/agent-workspaces/migration-pi-pi-import-secondary-id
+[Agent 工作区] 已创建 plugin manifest: migration-pi-pi-import-secondary-id
+[Agent 工作区] 已创建个人工作区: Migration pi pi-import-secondary-id (slug: migration-pi-pi-import-secondary-id)
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-migration-runtime-test-lMjwXq/agent-workspaces/migration-pi-pi-import-secondary-id/SESSION_650d61b0cb6c
+[Agent 会话] 已创建会话: pi session (SESSION_650d61b0cb6c)
+[Agent 会话] 已更新会话: pi session (SESSION_650d61b0cb6c)
+[配置] 已创建 SDK 配置目录: /tmp/profer-migration-runtime-test-lMjwXq/sdk-config
+[配置] 已创建 Agent 工作区目录: /tmp/profer-migration-import-test-4HunZ7/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-migration-import-test-4HunZ7/agent-workspaces/migration-pi-pi-import-id
+[Agent 工作区] 已创建 plugin manifest: migration-pi-pi-import-id
+[Agent 工作区] 已创建个人工作区: Migration pi pi-import-id (slug: migration-pi-pi-import-id)
+[配置] 已创建 Agent 工作区: /tmp/profer-migration-import-test-4HunZ7/agent-workspaces/migration-pi-pi-import-secondary-id
+[Agent 工作区] 已创建 plugin manifest: migration-pi-pi-import-secondary-id
+[Agent 工作区] 已创建个人工作区: Migration pi pi-import-secondary-id (slug: migration-pi-pi-import-secondary-id)
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-migration-import-test-4HunZ7/agent-workspaces/migration-pi-pi-import-id/SESSION_f32f1ea0f629
+[配置] 已创建 SDK 配置目录: /tmp/profer-migration-import-test-4HunZ7/sdk-config
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-migration-import-test-4HunZ7/agent-workspaces/migration-pi-pi-import-secondary-id/SESSION_650d61b0cb6c
+[配置] 已创建 Agent 会话目录: /tmp/profer-migration-import-test-4HunZ7/agent-sessions
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-migration-import-test-4HunZ7/agent-workspaces/migration-pi-pi-import-id/SESSION_650d61b0cb6c
+[配置] 已创建对话目录: /tmp/profer-migration-import-test-4HunZ7/conversations
+[配置] 已创建 Agent 工作区目录: /tmp/profer-migration-runtime-test-Y4VYbd/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-migration-runtime-test-Y4VYbd/agent-workspaces/migration-pi-pi-preview-id
+[Agent 工作区] 已创建 plugin manifest: migration-pi-pi-preview-id
+[Agent 工作区] 已创建个人工作区: Migration pi pi-preview-id (slug: migration-pi-pi-preview-id)
+[配置] 已创建 Agent 会话目录: /tmp/profer-migration-runtime-test-Y4VYbd/agent-sessions
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-migration-runtime-test-Y4VYbd/agent-workspaces/migration-pi-pi-preview-id/SESSION_487ff8e3f80c
+[Agent 会话] 已创建会话: pi session (SESSION_487ff8e3f80c)
+[Agent 会话] 已更新会话: pi session (SESSION_487ff8e3f80c)
+[配置] 已创建 SDK 配置目录: /tmp/profer-migration-runtime-test-Y4VYbd/sdk-config
+[配置] 已创建配置目录: /tmp/profer-pi-fork-test-x0Rpkm/config
+[配置] 已创建 SDK 配置目录: /tmp/profer-pi-fork-test-x0Rpkm/config/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-fork-test-x0Rpkm/config/agent-sessions
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-fork-test-x0Rpkm/config/agent-workspaces/workspace-a/SESSION_4fe149bcf7d5
+[Agent 会话] 已创建会话: 并发 Pi 会话 (fork) (SESSION_4fe149bcf7d5)
+[Agent 会话] 已更新会话: 并发 Pi 会话 (fork) (SESSION_4fe149bcf7d5)
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-fork-test-x0Rpkm/config/agent-workspaces/workspace-a/pi-source-session
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-fork-test-x0Rpkm/config/agent-workspaces/workspace-a/SESSION_b0e306d70b49
+[Agent 会话] 已创建会话: Pi 源会话 (fork) (SESSION_b0e306d70b49)
+[Agent 会话] 已更新会话: Pi 源会话 (fork) (SESSION_b0e306d70b49)
+[配置] 已创建 Pi 检查点目录: /tmp/profer-pi-fork-test-x0Rpkm/config/agent-checkpoints
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-fork-test-x0Rpkm/config/agent-workspaces/workspace-a/SESSION_4f4369d83012
+[Agent 会话] 已创建会话: Pi 带检查点源会话 (fork) (SESSION_4f4369d83012)
+[Agent 会话] 已更新会话: Pi 带检查点源会话 (fork) (SESSION_4f4369d83012)
+[Agent 会话] 已清理 session 工作目录: /tmp/profer-pi-fork-test-x0Rpkm/config/agent-workspaces/workspace-a/pi-source-checkpoint
+[Agent 会话] 已删除会话: Pi 带检查点源会话 (pi-source-checkpoint)
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-pi-fork-test-x0Rpkm/config/agent-workspaces/workspace-a/SESSION_aead9f3dd298
+[Agent 会话] 已创建会话: Pi 中断会话 (fork) (SESSION_aead9f3dd298)
+[Agent 会话] 已更新会话: Pi 中断会话 (fork) (SESSION_aead9f3dd298)
+[Agent 预设] 已创建预设: ws-a/全局研究 副本 (SESSION_5f122ed078fe)
+[Agent 预设] 已创建预设: ws-a/代码派生岗位 (SESSION_6c0c95721c66)
+[Agent 预设] 已创建预设: ws-a/岗位A (SESSION_32548aa2233d)
+[Agent 预设] 已创建预设: ws-b/B区岗位 (SESSION_54b91a2ab778)
+[Agent 预设] 已创建预设: ws-a/研究模式 (SESSION_4338870b974b)
+[Agent 预设] 已创建预设: ws-a/A区专属 (SESSION_e5773a315508)
+[Agent 预设] 已创建预设: ws-a/我的极简 (SESSION_489e14a57d93)
+[Agent 预设] 已创建预设: ws-a/极简副本 (SESSION_c43e804c878c)
+[Agent 预设] 已创建预设: ws-a/轻量 (SESSION_14951320a500)
+[Agent 预设] 已创建预设: ws-a/校验目标 (SESSION_e9bb8384a8f8)
+[Agent 预设] 已创建预设: ws-a/零 MCP (SESSION_61910780a6f3)
+[Agent 预设] 已创建预设: ws-a/零 MCP 副本 (SESSION_83d204f335cb)
+[Agent 预设] 已创建预设: ws-a/原始 (SESSION_6f09f3dff26c)
+[Agent 预设] 已创建预设: ws-a/全配置 (SESSION_6ed0b7582454)
+[Agent 预设] 已创建预设: ws-a/临时 (SESSION_3e3d0b5ea2da)
+[Agent 预设] 已创建预设: ws-a/默认候选 (SESSION_9e60f0a9ae6e)
+[Agent 预设] 已创建预设: ws-a/临时默认 (SESSION_c65c92bc7526)
+[Agent 预设] 已创建预设: ws-a/A区 (SESSION_5e821c2ad955)
+[Agent 预设] 已创建预设: ws-a/研究模式 (SESSION_d8b4334af542)
+[Agent 预设] 已创建预设: ws-a/零 MCP 导出 (SESSION_58d7579c80c6)
+[Agent 预设] 已创建预设: ws-b/零 MCP 导出 (SESSION_ae0abbfad253)
+[Agent 预设] 已导入 1 个预设: 零 MCP 导出
+[Agent 预设] 已创建预设: ws-a/研究模式 (SESSION_1c83d08fec9d)
+[Agent 预设] 已创建预设: ws-b/研究模式 (SESSION_97382883d216)
+[Agent 预设] 已导入 1 个预设: 研究模式
+[Agent 预设] 已创建预设: ws-b/标准（导入） (SESSION_70964049af47)
+[Agent 预设] 已创建预设: ws-b/代码（导入） (SESSION_69629e3c22d7)
+[Agent 预设] 已创建预设: ws-b/审核操作员（导入） (SESSION_69200a31d9c6)
+[Agent 预设] 已创建预设: ws-b/极简（导入） (SESSION_c0784a3220db)
+[Agent 预设] 已导入 4 个预设: 标准（导入） / 代码（导入） / 审核操作员（导入） / 极简（导入）
+[Agent 预设] 已创建预设: ws-a/迁移预设 (SESSION_b86a95ff8e2b)
+[Agent 预设] 已导入 1 个预设: 迁移预设
+[Agent 预设] 已创建预设: ws-a/迁移预设（导入） (SESSION_e4cafb5879ec)
+[Agent 预设] 已导入 1 个预设: 迁移预设（导入）
+[Agent 预设] 已创建预设: ws-a/代码·测试强化 (SESSION_ad83e3a8451f)
+[Agent 预设] 已创建预设: ws-a/极简·无自动化 (SESSION_ea77b21b2c72)
+[Agent 预设] 已创建预设: ws-a/普通 (SESSION_3f3164359a3d)
+[Agent 预设] 已创建预设: ws-a/会漂移的预设 (SESSION_c889e60e39e0)
+[Agent 预设] 已创建预设: ws-a/先派生后独立 (SESSION_23fe2aeabaef)
+[Agent 预设] 已创建预设: ws-a/派生源 (SESSION_a48c4dccf6cc)
+[Agent 预设] 已创建预设: ws-a/派生副本 (SESSION_b38a6a7c6f04)
+[Agent 预设] 已创建预设: ws-a/代码派生岗位 (SESSION_3c48cb3a4ed9)
+[Agent 预设] 已创建预设: ws-a/冻结代码岗位 (SESSION_926be07a2d2b)
+[Agent 预设] 已创建预设: ws-a/跨机器派生 (SESSION_336adb2a856a)
+[Agent 预设] 已创建预设: ws-b/跨机器派生 (SESSION_ab0db379c4d0)
+[Agent 预设] 已导入 1 个预设: 跨机器派生
+[Agent 预设] 已创建预设: ws-a/无委派精简 (SESSION_e01e094459fa)
+[Agent 预设] 已创建预设: ws-a/y (SESSION_aa77f53453fb)
+[Agent 预设] 已创建预设: ws-a/派生叠加裁剪 (SESSION_18fa284bf1ac)
+[Agent 预设] 已创建预设: ws-a/先裁后放 (SESSION_41f031c261c0)
+[Agent 预设] 已创建预设: ws-a/跨机器裁工具 (SESSION_4cdcbc95f368)
+[Agent 预设] 已创建预设: ws-b/跨机器裁工具 (SESSION_79ff6a441e7c)
+[Agent 预设] 已导入 1 个预设: 跨机器裁工具
+[配置] 已创建配置目录: /tmp/profer-migration-v3-1791995184301
+[配置] 已创建 SDK 配置目录: /tmp/profer-migration-v3-1791995184301/sdk-config
+[配置] 已创建 SDK 配置目录: /tmp/profer-oversized-sanitize-test-WMDfJ9/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-oversized-sanitize-test-WMDfJ9/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-oversized-sanitize-test-WMDfJ9/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-oversized-sanitize-test-WMDfJ9/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-oversized-sanitize-test-WMDfJ9/agent-workspaces/default/SESSION_a1782e8a63d5
+[Agent 会话] 已创建会话: oversized sanitize (SESSION_a1782e8a63d5)
+[配置] 已创建 SDK 配置目录: /tmp/profer-oversized-sanitize-test-2po7KR/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-oversized-sanitize-test-2po7KR/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-oversized-sanitize-test-2po7KR/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-oversized-sanitize-test-2po7KR/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-oversized-sanitize-test-2po7KR/agent-workspaces/default/SESSION_2ba303372c44
+[Agent 会话] 已创建会话: oversized sanitize (SESSION_2ba303372c44)
+[配置] 已创建 SDK 配置目录: /tmp/profer-oversized-sanitize-test-pFmGg6/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-oversized-sanitize-test-pFmGg6/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-oversized-sanitize-test-pFmGg6/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-oversized-sanitize-test-pFmGg6/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-oversized-sanitize-test-pFmGg6/agent-workspaces/default/SESSION_c89529094433
+[Agent 会话] 已创建会话: oversized sanitize (SESSION_c89529094433)
+[配置] 已创建 SDK 配置目录: /tmp/profer-oversized-sanitize-test-Ntskpw/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-oversized-sanitize-test-Ntskpw/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-oversized-sanitize-test-Ntskpw/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-oversized-sanitize-test-Ntskpw/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-oversized-sanitize-test-Ntskpw/agent-workspaces/default/SESSION_22145a3c79b2
+[Agent 会话] 已创建会话: oversized sanitize (SESSION_22145a3c79b2)
+[配置] 已创建 SDK 配置目录: /tmp/profer-oversized-sanitize-test-OVV7KX/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-oversized-sanitize-test-OVV7KX/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-oversized-sanitize-test-OVV7KX/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-oversized-sanitize-test-OVV7KX/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-oversized-sanitize-test-OVV7KX/agent-workspaces/default/SESSION_b59b564711b5
+[Agent 会话] 已创建会话: oversized sanitize (SESSION_b59b564711b5)
+[配置] 已创建 SDK 配置目录: /tmp/profer-oversized-sanitize-test-BZ71ib/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-oversized-sanitize-test-BZ71ib/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-oversized-sanitize-test-BZ71ib/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-oversized-sanitize-test-BZ71ib/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-oversized-sanitize-test-BZ71ib/agent-workspaces/default/SESSION_0183214483f9
+[Agent 会话] 已创建会话: oversized sanitize (SESSION_0183214483f9)
+[配置] 已创建 SDK 配置目录: /tmp/profer-oversized-sanitize-test-01M2sh/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-oversized-sanitize-test-01M2sh/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-oversized-sanitize-test-01M2sh/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-oversized-sanitize-test-01M2sh/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-oversized-sanitize-test-01M2sh/agent-workspaces/default/SESSION_426cfb630c8f
+[Agent 会话] 已创建会话: oversized sanitize (SESSION_426cfb630c8f)
+[配置] 已创建 SDK 配置目录: /tmp/profer-oversized-sanitize-test-rk3kw8/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-oversized-sanitize-test-rk3kw8/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-oversized-sanitize-test-rk3kw8/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-oversized-sanitize-test-rk3kw8/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-oversized-sanitize-test-rk3kw8/agent-workspaces/default/SESSION_26ad0a30f0bb
+[Agent 会话] 已创建会话: oversized sanitize (SESSION_26ad0a30f0bb)
+[配置] 已创建 SDK 配置目录: /tmp/profer-oversized-sanitize-test-Zq7E00/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-oversized-sanitize-test-Zq7E00/agent-sessions
+[配置] 已创建 SDK 配置目录: /tmp/profer-oversized-sanitize-test-j6Fgj7/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-oversized-sanitize-test-j6Fgj7/agent-sessions
+[配置] 已创建 SDK 配置目录: /tmp/profer-oversized-sanitize-test-S86LjM/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-oversized-sanitize-test-S86LjM/agent-sessions
+[配置] 已创建 SDK 配置目录: /tmp/profer-oversized-sanitize-test-avG3Id/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-oversized-sanitize-test-avG3Id/agent-sessions
+[配置] 已创建 SDK 配置目录: /tmp/profer-oversized-sanitize-test-wUFwTa/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-oversized-sanitize-test-wUFwTa/agent-sessions
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建 SDK 配置目录: /tmp/profer-externalize-test-vBFqRS/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-externalize-test-vBFqRS/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-externalize-test-vBFqRS/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-externalize-test-vBFqRS/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-externalize-test-vBFqRS/agent-workspaces/default/SESSION_fcc6bc4112e9
+[Agent 会话] 已创建会话: externalize (SESSION_fcc6bc4112e9)
+[配置] 已创建 SDK 配置目录: /tmp/profer-externalize-test-oKRovg/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-externalize-test-oKRovg/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-externalize-test-oKRovg/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-externalize-test-oKRovg/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-externalize-test-oKRovg/agent-workspaces/default/SESSION_5bea19ff0355
+[Agent 会话] 已创建会话: externalize (SESSION_5bea19ff0355)
+[配置] 已创建 SDK 配置目录: /tmp/profer-externalize-test-00PU1Z/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-externalize-test-00PU1Z/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-externalize-test-00PU1Z/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-externalize-test-00PU1Z/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-externalize-test-00PU1Z/agent-workspaces/default/SESSION_f36e7cc30539
+[Agent 会话] 已创建会话: externalize (SESSION_f36e7cc30539)
+[配置] 已创建 SDK 配置目录: /tmp/profer-externalize-test-Bortfi/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-externalize-test-Bortfi/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-externalize-test-Bortfi/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-externalize-test-Bortfi/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-externalize-test-Bortfi/agent-workspaces/default/SESSION_5517c1337ca6
+[Agent 会话] 已创建会话: externalize (SESSION_5517c1337ca6)
+[配置] 已创建 SDK 配置目录: /tmp/profer-externalize-test-yOPzKs/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-externalize-test-yOPzKs/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-externalize-test-yOPzKs/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-externalize-test-yOPzKs/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-externalize-test-yOPzKs/agent-workspaces/default/SESSION_2d51a081556d
+[Agent 会话] 已创建会话: externalize (SESSION_2d51a081556d)
+[配置] 已创建 SDK 配置目录: /tmp/profer-externalize-test-jLk9lx/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-externalize-test-jLk9lx/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-externalize-test-jLk9lx/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-externalize-test-jLk9lx/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-externalize-test-jLk9lx/agent-workspaces/default/SESSION_0065fb76d297
+[Agent 会话] 已创建会话: externalize (SESSION_0065fb76d297)
+[配置] 已创建 SDK 配置目录: /tmp/profer-externalize-test-f8LBSR/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-externalize-test-f8LBSR/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-externalize-test-f8LBSR/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-externalize-test-f8LBSR/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-externalize-test-f8LBSR/agent-workspaces/default/SESSION_7da7836a06ba
+[Agent 会话] 已创建会话: externalize (SESSION_7da7836a06ba)
+[配置] 已创建 SDK 配置目录: /tmp/profer-externalize-test-bH1vCr/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-externalize-test-bH1vCr/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/profer-externalize-test-bH1vCr/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-externalize-test-bH1vCr/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/profer-externalize-test-bH1vCr/agent-workspaces/default/SESSION_024ba8d32326
+[Agent 会话] 已创建会话: externalize (SESSION_024ba8d32326)
+[配置] 已创建 SDK 配置目录: /tmp/profer-externalize-test-bX63rS/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-externalize-test-bX63rS/agent-sessions
+[配置] 已创建 SDK 配置目录: /tmp/profer-externalize-test-lbxdO8/sdk-config
+[配置] 已创建 Agent 会话目录: /tmp/profer-externalize-test-lbxdO8/agent-sessions
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-harness-session-telemetry-yt0I1C/agent-sessions
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-harness-bridge-Jo5Qy1/agent-sessions
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-harness-bridge-g78k1L/agent-sessions
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-harness-bridge-UYQqVu/agent-sessions
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-harness-bridge-62TAQ0/agent-sessions
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-harness-bridge-LAeY6b/agent-sessions
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-harness-bridge-nrTUQO/agent-sessions
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-harness-bridge-50RPvV/agent-sessions
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-harness-bridge-NAvqMu/agent-sessions
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-harness-bridge-Fnu2bP/agent-sessions
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-harness-bridge-eFv7DM/agent-sessions
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-harness-bridge-Cvdbnl/agent-sessions
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-harness-bridge-SLssnP/agent-sessions
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-harness-bridge-Wyu5oG/agent-sessions
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-harness-store-HvViBl/agent-sessions
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-harness-store-m6hWn2/agent-sessions
+[配置] 已创建 Agent 会话目录: /tmp/profer-pi-harness-store-V0UJk8/agent-sessions
+[冒烟] PiAgentAdapter 类与关键导出加载成功
+[冒烟] retry 事件映射（start/attempt_start/cancelled）运行时工作正常
+[冒烟] AgentOptions.streamFn（构造入参）与 Agent.streamFunction（运行时属性）并存，二者都会被 tsc 校验
+[协作工具] EventBus 阻塞事件监听已注册
+[Pi 桥接] 已挂载 76 个工具（激活组: 仅基础）
+[Pi 记忆工具] Agent 检索 memory-archive: workspace=profer, query="Pi", hits=1
+[配置] 已创建 Agent 会话目录: /tmp/p06-live-gates-x409s6az/config/agent-sessions
+[Pi 桥接] 已挂载 82 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 83 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 82 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 79 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 79 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 77 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 84 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 82 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 77 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 63 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 80 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 79 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 80 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 80 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 62 个工具（激活组: 仅基础）
+[Pi 桥接] 单工具裁剪: 1 个工具被预设禁用（create_skin）
+[Pi 桥接] 已挂载 38 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 76 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 75 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 62 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 67 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 49 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 46 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 26 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 43 个工具（激活组: 仅基础）
+[Pi 桥接] 单工具裁剪: 2 个工具被预设禁用（proma_task_create, delegate_agent）
+[Pi 桥接] 已挂载 75 个工具（激活组: 仅基础）
+[Pi 桥接] 单工具裁剪: 1 个工具被预设禁用（proma_task_create, delegate_agent）
+[Pi 桥接] 已挂载 74 个工具（激活组: 仅基础）
+[Pi 桥接] 已挂载 82 个工具（激活组: 仅基础）
+[身份] 设备身份: Linux (Bot) (SESSION_185b903d52c6)
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-workspace-business-1791995190878
+[审核模板] 已发布: workspace-test@1
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/review-ipc-poc-1791995190954/configuration
+[审核专区] IPC 处理器注册完成
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-rt-1791995190977
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-template-1791995190995
+[审核模板] 已发布: comprehensive-assessment-v2@3
+[审核模板] 已发布: template-version-history-test@1
+[审核模板] 已发布: document-checklist-v2@1
+[审核模板] 已发布: lab-usage-v2@1
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-workspace-v2-1791995191106
+[审核模板] 已发布: comprehensive-assessment-v2@3
+[审核模板] 已发布: comprehensive-assessment-v2@2
+[审核专区] 案卷已更新(rev=1): demo-zhangsan-2026 — 升级空规则内置综测模板 v2 → v3（保留历史运行）
+[审核专区] 案卷已更新(rev=1): demo-zhangsan-2026 — 从当前审核中移除证明材料
+[审核专区] 案卷已更新(rev=1): demo-zhangsan-2026 — 调整证明材料顺序
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建 Agent 会话目录: /tmp/p05-pocket-HtXCIA/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/p05-pocket-HtXCIA/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p05-pocket-HtXCIA/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-HtXCIA/agent-workspaces/default/SESSION_e280825ee29c
+[Agent 会话] 已创建会话: hidden-03707306-d (SESSION_e280825ee29c)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-HtXCIA/agent-workspaces/default/SESSION_65142bf420dd
+[Agent 会话] 已创建会话: ordinary-03707306-d (SESSION_65142bf420dd)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-HtXCIA/agent-workspaces/default/SESSION_a294298649ef
+[Agent 会话] 已创建会话: hidden-62e81335-7 (SESSION_a294298649ef)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-HtXCIA/agent-workspaces/default/SESSION_ae8fb52a9d16
+[Agent 会话] 已创建会话: ordinary-62e81335-7 (SESSION_ae8fb52a9d16)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-HtXCIA/agent-workspaces/default/SESSION_8d8dc881f465
+[Agent 会话] 已创建会话: hidden-e28c6104-5 (SESSION_8d8dc881f465)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-HtXCIA/agent-workspaces/default/SESSION_d0b0452e78bd
+[Agent 会话] 已创建会话: ordinary-e28c6104-5 (SESSION_d0b0452e78bd)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-HtXCIA/agent-workspaces/default/SESSION_1a01cbc746e8
+[Agent 会话] 已创建会话: hidden-7ccbdbf0-c (SESSION_1a01cbc746e8)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-HtXCIA/agent-workspaces/default/SESSION_ccdd0252d7b9
+[Agent 会话] 已创建会话: ordinary-7ccbdbf0-c (SESSION_ccdd0252d7b9)
+[配置] 已创建 Pi 检查点目录: /tmp/p05-pocket-HtXCIA/agent-checkpoints
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-pocket-HtXCIA/agent-workspaces/default/SESSION_1a01cbc746e8
+[Agent 会话] 已删除会话: hidden-7ccbdbf0-c (SESSION_1a01cbc746e8)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-HtXCIA/agent-workspaces/default/SESSION_1a2906124b93
+[Agent 会话] 已创建会话: hidden-969b8738-2 (SESSION_1a2906124b93)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-HtXCIA/agent-workspaces/default/SESSION_f0f239fa5c48
+[Agent 会话] 已创建会话: ordinary-969b8738-2 (SESSION_f0f239fa5c48)
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-pocket-HtXCIA/agent-workspaces/default/SESSION_1a2906124b93
+[Agent 会话] 已删除会话: hidden-969b8738-2 (SESSION_1a2906124b93)
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-sidx-1791995191558
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-batch-1791995191586
+[批次] 重开: b2 → b2-r2（评分复核）
+[政策仓库] 已发布: policy-comprehensive-assessment-demo@1
+[审核模板] 已发布: comprehensive-assessment-v2@2
+[审核模板] 已发布: comprehensive-sections-test@1
+[配置] 已创建 SDK 配置目录: /tmp/review-main-bridge-7Qntf7/sdk-config
+[身份] 设备身份: Linux (Bot) (SESSION_051ec1103cac)
+[渠道管理] 已创建渠道: 合成审核渠道 (SESSION_6757bc32314a)
+[设置] 已更新 keys: agentChannelId, agentModelId
+[审核模板] 已发布: bridge-SESSION_b3a4270d9053@1
+[渠道管理] 已应用渠道配置迁移或预设模型更新
+[配置] 已创建 Agent 会话目录: /tmp/review-main-bridge-7Qntf7/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/review-main-bridge-7Qntf7/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/review-main-bridge-7Qntf7/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-7Qntf7/agent-workspaces/default/SESSION_c86490bdf822
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_b3a4270d9053 (SESSION_c86490bdf822)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_b3a4270d9053 (SESSION_c86490bdf822)
+[审核模板] 已发布: bridge-SESSION_c328c19ecebd@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-7Qntf7/agent-workspaces/default/SESSION_01d11144d821
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_c328c19ecebd (SESSION_01d11144d821)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_c328c19ecebd (SESSION_01d11144d821)
+[审核模板] 已发布: bridge-SESSION_6405fb3dfd72@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-7Qntf7/agent-workspaces/default/SESSION_3587acedce88
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_6405fb3dfd72 (SESSION_3587acedce88)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_6405fb3dfd72 (SESSION_3587acedce88)
+[审核模板] 已发布: bridge-SESSION_57b0bd764e5e@1
+[审核模板] 已发布: bridge-SESSION_3f6c8ce19ba4@1
+[渠道管理] 已更新渠道: 合成审核渠道 (SESSION_6757bc32314a)
+[渠道管理] 已更新渠道: 合成审核渠道 (SESSION_6757bc32314a)
+[审核模板] 已发布: bridge-SESSION_eaec775a463d@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-7Qntf7/agent-workspaces/default/SESSION_6ad298535a44
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_eaec775a463d (SESSION_6ad298535a44)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_eaec775a463d (SESSION_6ad298535a44)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_eaec775a463d (SESSION_6ad298535a44)
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-7Qntf7/agent-workspaces/default/SESSION_39b672439d40
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_eaec775a463d (SESSION_39b672439d40)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_eaec775a463d (SESSION_39b672439d40)
+[渠道管理] 已创建渠道: 独立合成渠道 (SESSION_6c478914c5cb)
+[审核模板] 已发布: bridge-SESSION_33425dfce010@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-7Qntf7/agent-workspaces/default/SESSION_9bb43566934b
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_33425dfce010 (SESSION_9bb43566934b)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_33425dfce010 (SESSION_9bb43566934b)
+[审核模板] 已发布: bridge-SESSION_a0cd0cbf75a1@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-7Qntf7/agent-workspaces/default/SESSION_47d9456112c3
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_a0cd0cbf75a1 (SESSION_47d9456112c3)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_a0cd0cbf75a1 (SESSION_47d9456112c3)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_a0cd0cbf75a1 (SESSION_47d9456112c3)
+[审核模板] 已发布: bridge-SESSION_61c54831933a@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-7Qntf7/agent-workspaces/default/SESSION_264190ef5597
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_61c54831933a (SESSION_264190ef5597)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_61c54831933a (SESSION_264190ef5597)
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-7Qntf7/agent-workspaces/default/SESSION_52a9c6b1043a
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_61c54831933a (SESSION_52a9c6b1043a)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_61c54831933a (SESSION_52a9c6b1043a)
+[审核专区] IPC 处理器注册完成
+[审核模板] 已发布: bridge-SESSION_6cd0d9a5192d@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-7Qntf7/agent-workspaces/default/SESSION_c3f94a1039e0
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_6cd0d9a5192d (SESSION_c3f94a1039e0)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_6cd0d9a5192d (SESSION_c3f94a1039e0)
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-boot-1791995191998
+[审核模板] 已发布: comprehensive-assessment-v2@3
+[政策仓库] 已发布: policy-comprehensive-assessment-demo@1
+[审核模板] 已发布: comprehensive-assessment-v2@2
+[配置] 已创建 Agent 工作区目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-fe90fa1b
+[Agent 工作区] 已创建 plugin manifest: p04-path-fe90fa1b
+[Agent 工作区] 已创建个人工作区: P04 Path fe90fa1b- (slug: p04-path-fe90fa1b)
+[配置] 已创建 Agent 会话目录: /tmp/p04-path-sandbox-V226hH/agent-sessions
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-fe90fa1b/SESSION_fdde081ac6b8
+[Agent 会话] 已创建会话: ordinary-fe90fa1b- (SESSION_fdde081ac6b8)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-fe90fa1b/SESSION_df6a0fabaf20
+[Agent 会话] 已创建会话: private-fe90fa1b- (SESSION_df6a0fabaf20)
+[配置] 已创建 Agent 工作区: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-2cbf9500
+[Agent 工作区] 已创建 plugin manifest: p04-path-2cbf9500
+[Agent 工作区] 已创建个人工作区: P04 Path 2cbf9500- (slug: p04-path-2cbf9500)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-2cbf9500/SESSION_279a18a45304
+[Agent 会话] 已创建会话: ordinary-2cbf9500- (SESSION_279a18a45304)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-2cbf9500/SESSION_1a1b7914a751
+[Agent 会话] 已创建会话: private-2cbf9500- (SESSION_1a1b7914a751)
+[配置] 已创建 Agent 工作区: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-be89b855
+[Agent 工作区] 已创建 plugin manifest: p04-path-be89b855
+[Agent 工作区] 已创建个人工作区: P04 Path be89b855- (slug: p04-path-be89b855)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-be89b855/SESSION_02ca3b3f372a
+[Agent 会话] 已创建会话: ordinary-be89b855- (SESSION_02ca3b3f372a)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-be89b855/SESSION_1ed1c09ff0e9
+[Agent 会话] 已创建会话: private-be89b855- (SESSION_1ed1c09ff0e9)
+[配置] 已创建 Pi 检查点目录: /tmp/p04-path-sandbox-V226hH/agent-checkpoints
+[Agent 会话] 已清理 session 工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-be89b855/SESSION_1ed1c09ff0e9
+[Agent 会话] 已删除会话: private-be89b855- (SESSION_1ed1c09ff0e9)
+[配置] 已创建 Agent 工作区: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-45218fcd
+[Agent 工作区] 已创建 plugin manifest: p04-path-45218fcd
+[Agent 工作区] 已创建个人工作区: P04 Path 45218fcd- (slug: p04-path-45218fcd)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-45218fcd/SESSION_13b64b2d86d8
+[Agent 会话] 已创建会话: ordinary-45218fcd- (SESSION_13b64b2d86d8)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-45218fcd/SESSION_5a5ff01048aa
+[Agent 会话] 已创建会话: private-45218fcd- (SESSION_5a5ff01048aa)
+[配置] 已创建 Agent 工作区: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-de4e0bef
+[Agent 工作区] 已创建 plugin manifest: p04-path-de4e0bef
+[Agent 工作区] 已创建个人工作区: P04 Path de4e0bef- (slug: p04-path-de4e0bef)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-de4e0bef/SESSION_6a2e4c696455
+[Agent 会话] 已创建会话: ordinary-de4e0bef- (SESSION_6a2e4c696455)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-de4e0bef/SESSION_7d96709cb81a
+[Agent 会话] 已创建会话: private-de4e0bef- (SESSION_7d96709cb81a)
+[配置] 已创建 Agent 工作区: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-14f3c70c
+[Agent 工作区] 已创建 plugin manifest: p04-path-14f3c70c
+[Agent 工作区] 已创建个人工作区: P04 Path 14f3c70c- (slug: p04-path-14f3c70c)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-14f3c70c/SESSION_d42836e2b37d
+[Agent 会话] 已创建会话: ordinary-14f3c70c- (SESSION_d42836e2b37d)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-14f3c70c/SESSION_ee748b7a9be3
+[Agent 会话] 已创建会话: private-14f3c70c- (SESSION_ee748b7a9be3)
+[配置] 已创建 Agent 工作区: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-d304cffb
+[Agent 工作区] 已创建 plugin manifest: p04-path-d304cffb
+[Agent 工作区] 已创建个人工作区: P04 Path d304cffb- (slug: p04-path-d304cffb)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-d304cffb/SESSION_448cd9dade9a
+[Agent 会话] 已创建会话: ordinary-d304cffb- (SESSION_448cd9dade9a)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-d304cffb/SESSION_f5b3af208cf1
+[Agent 会话] 已创建会话: private-d304cffb- (SESSION_f5b3af208cf1)
+[配置] 已创建 Agent 工作区: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-10d74ac9
+[Agent 工作区] 已创建 plugin manifest: p04-path-10d74ac9
+[Agent 工作区] 已创建个人工作区: P04 Path 10d74ac9- (slug: p04-path-10d74ac9)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-10d74ac9/SESSION_f9df710e2a86
+[Agent 会话] 已创建会话: ordinary-10d74ac9- (SESSION_f9df710e2a86)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-10d74ac9/SESSION_23764c5bfb15
+[Agent 会话] 已创建会话: private-10d74ac9- (SESSION_23764c5bfb15)
+[配置] 已创建 Agent 工作区: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-37b3cd18
+[Agent 工作区] 已创建 plugin manifest: p04-path-37b3cd18
+[Agent 工作区] 已创建个人工作区: P04 Path 37b3cd18- (slug: p04-path-37b3cd18)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-37b3cd18/SESSION_18e37d87d949
+[Agent 会话] 已创建会话: ordinary-37b3cd18- (SESSION_18e37d87d949)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-37b3cd18/SESSION_c0a9671e4daf
+[Agent 会话] 已创建会话: private-37b3cd18- (SESSION_c0a9671e4daf)
+[Agent 会话] 已清理 session 工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-37b3cd18/SESSION_c0a9671e4daf
+[Agent 会话] 已删除会话: private-37b3cd18- (SESSION_c0a9671e4daf)
+[配置] 已创建 Agent 工作区: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-c1ccc54a
+[Agent 工作区] 已创建 plugin manifest: p04-path-c1ccc54a
+[Agent 工作区] 已创建个人工作区: P04 Path c1ccc54a- (slug: p04-path-c1ccc54a)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-c1ccc54a/SESSION_16151c445988
+[Agent 会话] 已创建会话: ordinary-c1ccc54a- (SESSION_16151c445988)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-c1ccc54a/SESSION_6f4698c60fe5
+[Agent 会话] 已创建会话: private-c1ccc54a- (SESSION_6f4698c60fe5)
+[配置] 已创建 Agent 工作区: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-08912106
+[Agent 工作区] 已创建 plugin manifest: p04-path-08912106
+[Agent 工作区] 已创建个人工作区: P04 Path 08912106- (slug: p04-path-08912106)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-08912106/SESSION_0ac5c3becc2f
+[Agent 会话] 已创建会话: ordinary-08912106- (SESSION_0ac5c3becc2f)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-08912106/SESSION_bb66ca6afc3f
+[Agent 会话] 已创建会话: private-08912106- (SESSION_bb66ca6afc3f)
+[配置] 已创建 Agent 工作区: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-b0e50335
+[Agent 工作区] 已创建 plugin manifest: p04-path-b0e50335
+[Agent 工作区] 已创建个人工作区: P04 Path b0e50335- (slug: p04-path-b0e50335)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-b0e50335/SESSION_82d5c6b69743
+[Agent 会话] 已创建会话: ordinary-b0e50335- (SESSION_82d5c6b69743)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-b0e50335/SESSION_25667b12d0b7
+[Agent 会话] 已创建会话: private-b0e50335- (SESSION_25667b12d0b7)
+[配置] 已创建 Agent 工作区: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-f2c8c4dc
+[Agent 工作区] 已创建 plugin manifest: p04-path-f2c8c4dc
+[Agent 工作区] 已创建个人工作区: P04 Path f2c8c4dc- (slug: p04-path-f2c8c4dc)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-f2c8c4dc/SESSION_a3654611643d
+[Agent 会话] 已创建会话: ordinary-f2c8c4dc- (SESSION_a3654611643d)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-f2c8c4dc/SESSION_2df57a72d392
+[Agent 会话] 已创建会话: private-f2c8c4dc- (SESSION_2df57a72d392)
+[Agent 会话] 已清理 session 工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-f2c8c4dc/SESSION_2df57a72d392
+[Agent 会话] 已删除会话: private-f2c8c4dc- (SESSION_2df57a72d392)
+[配置] 已创建 Agent 工作区: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-94b4e00c
+[Agent 工作区] 已创建 plugin manifest: p04-path-94b4e00c
+[Agent 工作区] 已创建个人工作区: P04 Path 94b4e00c- (slug: p04-path-94b4e00c)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-94b4e00c/SESSION_46034ef1c4c2
+[Agent 会话] 已创建会话: ordinary-94b4e00c- (SESSION_46034ef1c4c2)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-path-sandbox-V226hH/agent-workspaces/p04-path-94b4e00c/SESSION_21496b0cceb1
+[Agent 会话] 已创建会话: private-94b4e00c- (SESSION_21496b0cceb1)
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-rate-1791995192196
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-multi-rule-1791995192235
+[审核专区] 审核运行完成: demo-zhangsan-2026/run-1791995192243-ykj7f6（引擎 mock-engine，发现 7 条）
+[审核专区] 审核运行完成: demo-zhangsan-2026/run-1791995192246-ccm1xc（引擎 mock-engine，发现 7 条）
+[审核专区] 已导出预审报告: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-multi-rule-1791995192235/review-reports/qa-human-report-2026-10-14T16-26-32-i8rk.json
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/review-module-settings-1791995192261
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-bulk-action-1791995192276
+[审核模板] 已发布: batch-b-test@1
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建 Agent 会话目录: /tmp/p04-review-tombstone-GPmflr/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/p04-review-tombstone-GPmflr/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p04-review-tombstone-GPmflr/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-review-tombstone-GPmflr/agent-workspaces/default/SESSION_f3e781741c14
+[Agent 会话] 已创建会话: private-review-ccb0ac75-2 (SESSION_f3e781741c14)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-review-tombstone-GPmflr/agent-workspaces/default/SESSION_df8d18dec35a
+[Agent 会话] 已创建会话: ordinary-ccb0ac75-2 (SESSION_df8d18dec35a)
+[配置] 已创建 Pi 检查点目录: /tmp/p04-review-tombstone-GPmflr/agent-checkpoints
+[Agent 会话] 已清理 session 工作目录: /tmp/p04-review-tombstone-GPmflr/agent-workspaces/default/SESSION_f3e781741c14
+[Agent 会话] 已删除会话: private-review-ccb0ac75-2 (SESSION_f3e781741c14)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-review-tombstone-GPmflr/agent-workspaces/default/SESSION_1eb3ba56e53f
+[Agent 会话] 已创建会话: private-review-acd940d3-e (SESSION_1eb3ba56e53f)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-review-tombstone-GPmflr/agent-workspaces/default/SESSION_80907ed9fd67
+[Agent 会话] 已创建会话: ordinary-acd940d3-e (SESSION_80907ed9fd67)
+[Agent 会话] 已清理 session 工作目录: /tmp/p04-review-tombstone-GPmflr/agent-workspaces/default/SESSION_80907ed9fd67
+[Agent 会话] 已删除会话: ordinary-acd940d3-e (SESSION_80907ed9fd67)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-review-tombstone-GPmflr/agent-workspaces/default/SESSION_e91fa4813c3d
+[Agent 会话] 已创建会话: private-review-4811d7f0-7 (SESSION_e91fa4813c3d)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-review-tombstone-GPmflr/agent-workspaces/default/SESSION_cdff74a12496
+[Agent 会话] 已创建会话: ordinary-4811d7f0-7 (SESSION_cdff74a12496)
+[Agent 会话] 已清理 session 工作目录: /tmp/p04-review-tombstone-GPmflr/agent-workspaces/default/SESSION_e91fa4813c3d
+[Agent 会话] 已删除会话: private-review-4811d7f0-7 (SESSION_e91fa4813c3d)
+[Agent 会话] 已清理 session 工作目录: /tmp/p04-review-tombstone-GPmflr/agent-workspaces/default/SESSION_cdff74a12496
+[Agent 会话] 已删除会话: ordinary-4811d7f0-7 (SESSION_cdff74a12496)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-review-tombstone-GPmflr/agent-workspaces/default/SESSION_d0f9441eaf22
+[Agent 会话] 已创建会话: private-review-fac6063c-3 (SESSION_d0f9441eaf22)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-review-tombstone-GPmflr/agent-workspaces/default/SESSION_948ed7964701
+[Agent 会话] 已创建会话: ordinary-fac6063c-3 (SESSION_948ed7964701)
+[Agent 会话] 已清理 session 工作目录: /tmp/p04-review-tombstone-GPmflr/agent-workspaces/default/SESSION_d0f9441eaf22
+[Agent 会话] 已删除会话: private-review-fac6063c-3 (SESSION_d0f9441eaf22)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-review-tombstone-GPmflr/agent-workspaces/default/SESSION_4aa902162c7a
+[Agent 会话] 已创建会话: private-review-9dcfdd98-2 (SESSION_4aa902162c7a)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-review-tombstone-GPmflr/agent-workspaces/default/SESSION_af812d5aec42
+[Agent 会话] 已创建会话: ordinary-9dcfdd98-2 (SESSION_af812d5aec42)
+[Agent 会话] 已清理 session 工作目录: /tmp/p04-review-tombstone-GPmflr/agent-workspaces/default/SESSION_4aa902162c7a
+[Agent 会话] 已删除会话: private-review-9dcfdd98-2 (SESSION_4aa902162c7a)
+[配置] 已创建 Agent 会话目录: /tmp/p04-pending-Ei1o5z/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/p04-pending-Ei1o5z/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p04-pending-Ei1o5z/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-pending-Ei1o5z/agent-workspaces/default/SESSION_534ca0440485
+[Agent 会话] 已创建会话: private (SESSION_534ca0440485)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-pending-Ei1o5z/agent-workspaces/default/SESSION_4956c33e5283
+[Agent 会话] 已创建会话: ordinary (SESSION_4956c33e5283)
+[配置] 已创建 Pi 检查点目录: /tmp/p04-pending-Ei1o5z/agent-checkpoints
+[Agent 会话] 已清理 session 工作目录: /tmp/p04-pending-Ei1o5z/agent-workspaces/default/SESSION_534ca0440485
+[Agent 会话] 已删除会话: private (SESSION_534ca0440485)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-pending-Ei1o5z/agent-workspaces/default/SESSION_b816a8d366c5
+[Agent 会话] 已创建会话: private (SESSION_b816a8d366c5)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-pending-Ei1o5z/agent-workspaces/default/SESSION_ac7bffa503ff
+[Agent 会话] 已创建会话: ordinary (SESSION_ac7bffa503ff)
+[Agent 会话] 已清理 session 工作目录: /tmp/p04-pending-Ei1o5z/agent-workspaces/default/SESSION_b816a8d366c5
+[Agent 会话] 已删除会话: private (SESSION_b816a8d366c5)
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-case-store-1791995192737
+[审核专区] 已删除案卷: case-test-001
+[审核专区] 已载入演示案卷: demo-zhangsan-2026（文档 6 / 条目 6）
+[审核专区] 案卷已更新(rev=1): case-test-001 — 测试
+[审核专区] 规则大纲 AI 生成成功: 6 条
+[审核专区] 案卷已更新(rev=1): case-generic-1-txt-default-rule-constraints — 规则大纲写回（6 条）
+[审核专区] AI 审核成功: 发现 1 条
+[审核专区] AI 审核成功: 发现 1 条
+[审核专区] AI 审核成功: 发现 1 条
+[审核专区] AI 审核成功: 发现 1 条
+[审核专区] AI 审核成功: 发现 1 条
+[审核专区] AI 审核成功: 发现 1 条
+[审核专区] AI 审核成功: 发现 1 条
+[审核专区] AI 审核成功: 发现 1 条
+[审核专区] AI 审核成功: 发现 1 条
+[审核专区] 条目识别 AI 成功: 1 条
+[审核专区] 案卷已更新(rev=1): case-generic-2-txt-default — 条目识别写回（1 条）
+[审核专区] AI 审核成功: 发现 1 条
+[审核专区] AI 审核成功: 发现 0 条
+[配置] 已创建 Agent 会话目录: /tmp/p04-tombstone-scale-0PNWAT/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/p04-tombstone-scale-0PNWAT/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p04-tombstone-scale-0PNWAT/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-tombstone-scale-0PNWAT/agent-workspaces/default/SESSION_e26899a7b4cd
+[Agent 会话] 已创建会话: ordinary-index-cache (SESSION_e26899a7b4cd)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-tombstone-scale-0PNWAT/agent-workspaces/default/SESSION_920deef033f1
+[Agent 会话] 已创建会话: review-private (SESSION_920deef033f1)
+[配置] 已创建 Pi 检查点目录: /tmp/p04-tombstone-scale-0PNWAT/agent-checkpoints
+[Agent 会话] 已清理 session 工作目录: /tmp/p04-tombstone-scale-0PNWAT/agent-workspaces/default/SESSION_920deef033f1
+[Agent 会话] 已删除会话: review-private (SESSION_920deef033f1)
+[Agent 会话] 已更新会话: ordinary-index-cache-updated (SESSION_e26899a7b4cd)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-tombstone-scale-0PNWAT/agent-workspaces/default/SESSION_7af63120433b
+[Agent 会话] 已创建会话: write-fail-owner (SESSION_7af63120433b)
+[Agent 会话] 已清理 session 工作目录: /tmp/p04-tombstone-scale-0PNWAT/agent-workspaces/default/SESSION_7af63120433b
+[Agent 会话] 已删除会话: write-fail-owner (SESSION_7af63120433b)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-tombstone-scale-0PNWAT/agent-workspaces/default/SESSION_5c1ef0d4d830
+[Agent 会话] 已创建会话: private-restart-check (SESSION_5c1ef0d4d830)
+[Agent 会话] 已清理 session 工作目录: /tmp/p04-tombstone-scale-0PNWAT/agent-workspaces/default/SESSION_5c1ef0d4d830
+[Agent 会话] 已删除会话: private-restart-check (SESSION_5c1ef0d4d830)
+[Agent 会话] 已更新会话: bench-0 (benchmark-ordinary)
+[Agent 会话] 已更新会话: bench-1000 (benchmark-ordinary)
+[Agent 会话] 已更新会话: bench-10000 (benchmark-ordinary)
+[Agent 会话] 已更新会话: bench-100000 (benchmark-ordinary)
+P04_TECHDEBT_01_BENCHMARK={"platform":"linux","arch":"x64","sample_size":512,"measurements":[{"tombstones":0,"index_bytes":281,"cold_load_ms":0.096,"seed_atomic_write_ms":0.085,"index_update_ms":0.154,"hot_guard":{"p50_ms":0.0107,"p95_ms":0.0156},"linear_reference":{"p50_ms":0.0021,"p95_ms":0.0035}},{"tombstones":1000,"index_bytes":44286,"cold_load_ms":1.101,"seed_atomic_write_ms":0.217,"index_update_ms":0.282,"hot_guard":{"p50_ms":0.0067,"p95_ms":0.0088},"linear_reference":{"p50_ms":0.0081,"p95_ms":0.0087}},{"tombstones":10000,"index_bytes":440287,"cold_load_ms":10.546,"seed_atomic_write_ms":1.541,"index_update_ms":2.43,"hot_guard":{"p50_ms":0.0065,"p95_ms":0.0085},"linear_reference":{"p50_ms":0.0736,"p95_ms":0.101}},{"tombstones":100000,"index_bytes":4400288,"cold_load_ms":78.024,"seed_atomic_write_ms":13.039,"index_update_ms":14.846,"hot_guard":{"p50_ms":0.0064,"p95_ms":0.0086},"linear_reference":{"p50_ms":0.6821,"p95_ms":0.7976}}]}
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-ocr-1791995193415
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-runv2-1791995193498
+[审核模板] 已发布: comprehensive-assessment-v2@3
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/test-batch-auto-1791995193538
+[政策仓库] 已发布: auto-policy@1
+[审核模板] 已发布: batch-auto-test@1
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[设置] 已更新 keys: reviewAgentAutoApproval
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建 Agent 会话目录: /tmp/p03-owned-Cp2AwL/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/p03-owned-Cp2AwL/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p03-owned-Cp2AwL/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/p03-owned-Cp2AwL/agent-workspaces/default/SESSION_9833c418f8a6
+[Agent 会话] 已创建会话: 内部审核执行 (SESSION_9833c418f8a6)
+[配置] 已创建 Agent 会话工作目录: /tmp/p03-owned-Cp2AwL/agent-workspaces/default/SESSION_86abc3c80787
+[Agent 会话] 已创建会话: 普通聊天-1b23d493 (SESSION_86abc3c80787)
+[配置] 已创建 Agent 会话工作目录: /tmp/p03-owned-Cp2AwL/agent-workspaces/default/SESSION_06c737af2211
+[Agent 会话] 已创建会话: 内部审核执行 (SESSION_06c737af2211)
+[配置] 已创建 Agent 会话工作目录: /tmp/p03-owned-Cp2AwL/agent-workspaces/default/SESSION_a1fc82f740cf
+[Agent 会话] 已创建会话: 普通聊天-8a76a868 (SESSION_a1fc82f740cf)
+[Agent 会话] 已更新会话: 内部审核进行中 (SESSION_06c737af2211)
+[配置] 已创建 Agent 会话工作目录: /tmp/p03-owned-Cp2AwL/agent-workspaces/default/SESSION_504c47fa1ae0
+[Agent 会话] 已创建会话: 内部审核执行 (SESSION_504c47fa1ae0)
+[配置] 已创建 Agent 会话工作目录: /tmp/p03-owned-Cp2AwL/agent-workspaces/default/SESSION_3f48b31ba29b
+[Agent 会话] 已创建会话: 普通聊天-673d4f09 (SESSION_3f48b31ba29b)
+[配置] 已创建 Agent 会话工作目录: /tmp/p03-owned-Cp2AwL/agent-workspaces/default/SESSION_709223d3b0b2
+[Agent 会话] 已创建会话: 内部审核执行 (SESSION_709223d3b0b2)
+[配置] 已创建 Agent 会话工作目录: /tmp/p03-owned-Cp2AwL/agent-workspaces/default/SESSION_2e030722b35c
+[Agent 会话] 已创建会话: 普通聊天-9eadc09e (SESSION_2e030722b35c)
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建 Agent 工作区目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-24b876e5
+[Agent 工作区] 已创建 plugin manifest: p05-ws-24b876e5
+[Agent 工作区] 已创建个人工作区: p05-ws-24b876e5- (slug: p05-ws-24b876e5)
+[配置] 已创建 Agent 会话目录: /tmp/p05-reconnect-search-Xj9fG0/agent-sessions
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-24b876e5/SESSION_d29e880a9e6d
+[Agent 会话] 已创建会话: normal-24b876e5- (SESSION_d29e880a9e6d)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-24b876e5/SESSION_c8ee76931079
+[Agent 会话] 已创建会话: private-24b876e5- (SESSION_c8ee76931079)
+[配置] 已创建 Pi 检查点目录: /tmp/p05-reconnect-search-Xj9fG0/agent-checkpoints
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-24b876e5/SESSION_c8ee76931079
+[Agent 会话] 已删除会话: private-24b876e5- (SESSION_c8ee76931079)
+[配置] 已创建 Agent 工作区: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-8f17c5e4
+[Agent 工作区] 已创建 plugin manifest: p05-ws-8f17c5e4
+[Agent 工作区] 已创建个人工作区: p05-ws-8f17c5e4- (slug: p05-ws-8f17c5e4)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-8f17c5e4/SESSION_f55f512ed33c
+[Agent 会话] 已创建会话: normal-8f17c5e4- (SESSION_f55f512ed33c)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-8f17c5e4/SESSION_e01715ea193b
+[Agent 会话] 已创建会话: private-8f17c5e4- (SESSION_e01715ea193b)
+[Agent 会话] 已更新会话: normal-8f17c5e4- (SESSION_f55f512ed33c)
+[配置] 已创建 Agent 工作区: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-6897c870
+[Agent 工作区] 已创建 plugin manifest: p05-ws-6897c870
+[Agent 工作区] 已创建个人工作区: p05-ws-6897c870- (slug: p05-ws-6897c870)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-6897c870/SESSION_ccd9edeb2e06
+[Agent 会话] 已创建会话: normal-6897c870- (SESSION_ccd9edeb2e06)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-6897c870/SESSION_7c9f645d352e
+[Agent 会话] 已创建会话: private-6897c870- (SESSION_7c9f645d352e)
+[Agent 会话] 已更新会话: normal-6897c870- (SESSION_ccd9edeb2e06)
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-6897c870/SESSION_7c9f645d352e
+[Agent 会话] 已删除会话: private-6897c870- (SESSION_7c9f645d352e)
+[配置] 已创建 Agent 工作区: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-876184c8
+[Agent 工作区] 已创建 plugin manifest: p05-ws-876184c8
+[Agent 工作区] 已创建个人工作区: p05-ws-876184c8- (slug: p05-ws-876184c8)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-876184c8/SESSION_1810ba29fc51
+[Agent 会话] 已创建会话: normal-876184c8- (SESSION_1810ba29fc51)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-876184c8/SESSION_6e70a4168efd
+[Agent 会话] 已创建会话: private-876184c8- (SESSION_6e70a4168efd)
+[Agent 会话] 已更新会话: normal-876184c8- (SESSION_1810ba29fc51)
+[配置] 已创建 Agent 工作区: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-7400876d
+[Agent 工作区] 已创建 plugin manifest: p05-ws-7400876d
+[Agent 工作区] 已创建个人工作区: p05-ws-7400876d- (slug: p05-ws-7400876d)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-7400876d/SESSION_31698d8c7528
+[Agent 会话] 已创建会话: normal-7400876d- (SESSION_31698d8c7528)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-7400876d/SESSION_e5fe4c4a3199
+[Agent 会话] 已创建会话: private-7400876d- (SESSION_e5fe4c4a3199)
+[配置] 已创建 Agent 工作区: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-c1136f74
+[Agent 工作区] 已创建 plugin manifest: p05-ws-c1136f74
+[Agent 工作区] 已创建个人工作区: p05-ws-c1136f74- (slug: p05-ws-c1136f74)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-c1136f74/SESSION_0fe90cba5737
+[Agent 会话] 已创建会话: normal-c1136f74- (SESSION_0fe90cba5737)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-c1136f74/SESSION_9ae487fbdc6e
+[Agent 会话] 已创建会话: private-c1136f74- (SESSION_9ae487fbdc6e)
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-c1136f74/SESSION_9ae487fbdc6e
+[Agent 会话] 已删除会话: private-c1136f74- (SESSION_9ae487fbdc6e)
+[配置] 已创建 Agent 工作区: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-54983211
+[Agent 工作区] 已创建 plugin manifest: p05-ws-54983211
+[Agent 工作区] 已创建个人工作区: p05-ws-54983211- (slug: p05-ws-54983211)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-54983211/SESSION_22e240df1f1c
+[Agent 会话] 已创建会话: normal-54983211- (SESSION_22e240df1f1c)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-54983211/SESSION_e1f68d45e903
+[Agent 会话] 已创建会话: private-54983211- (SESSION_e1f68d45e903)
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-54983211/SESSION_e1f68d45e903
+[Agent 会话] 已删除会话: private-54983211- (SESSION_e1f68d45e903)
+[配置] 已创建 Agent 工作区: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-257c00f4
+[Agent 工作区] 已创建 plugin manifest: p05-ws-257c00f4
+[Agent 工作区] 已创建个人工作区: p05-ws-257c00f4- (slug: p05-ws-257c00f4)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-257c00f4/SESSION_1257a754c942
+[Agent 会话] 已创建会话: normal-257c00f4- (SESSION_1257a754c942)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-Xj9fG0/agent-workspaces/p05-ws-257c00f4/SESSION_ff8e10745a04
+[Agent 会话] 已创建会话: private-257c00f4- (SESSION_ff8e10745a04)
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-art-1791995193906
+[审核模板] 已发布: comprehensive-assessment-v2@3
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/review-v2-id-poc-1791995194020/configuration
+Warning: Indexing all PDF objects
+Warning: Indexing all PDF objects
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+[文档解析] PDF 高精解析完成: 1 页, 0 块, 拦截幽灵字符 0
+[审核模板] 已发布: comprehensive-assessment-v2@3
+[审核专区] 已创建案卷: case-1791995194369-dxsqxb（青禾竞赛单案审核）
+[审核专区] 案卷已更新(rev=1): case-1791995194369-dxsqxb — 导入材料 竞赛细则.txt（parsed）
+[审核专区] 已导入材料: 竞赛细则.txt → case-1791995194369-dxsqxb/doc-1791995194372-b6hfxo（解析 parsed，已登记规则包）
+[审核专区] 规则大纲 AI 生成成功: 2 条
+[审核专区] 案卷已更新(rev=2): case-1791995194369-dxsqxb — 规则大纲写回（2 条）
+[审核专区] 案卷已更新(rev=3): case-1791995194369-dxsqxb — 审核员确认依据 pack-1791995194374-01j6bz
+[审核专区] 案卷已更新(rev=4): case-1791995194369-dxsqxb — 导入材料 申报表.txt（parsed）
+[审核专区] 已导入材料: 申报表.txt → case-1791995194369-dxsqxb/doc-1791995194379-umnabr（解析 parsed）
+[审核专区] 条目识别 AI 成功: 1 条
+[审核专区] 案卷已更新(rev=5): case-1791995194369-dxsqxb — 条目识别写回（1 条）
+[审核专区] 案卷已更新(rev=6): case-1791995194369-dxsqxb — 导入材料 获奖证书.txt（parsed）
+[审核专区] 已导入材料: 获奖证书.txt → case-1791995194369-dxsqxb/doc-1791995194395-807hhu（解析 parsed）
+[审核专区] 案卷已更新(rev=7): case-1791995194369-dxsqxb — 导入材料 补充说明.txt（parsed）
+[审核专区] 已导入材料: 补充说明.txt → case-1791995194369-dxsqxb/doc-1791995194402-juzix9（解析 parsed）
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-gateway-1791995194437
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-agg-1791995194447
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建 Agent 会话目录: /tmp/p05-s06-relay-gj84zC/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/p05-s06-relay-gj84zC/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p05-s06-relay-gj84zC/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-s06-relay-gj84zC/agent-workspaces/default/SESSION_b41ba099bc3a
+[Agent 会话] 已创建会话: P05-S06 ordinary (SESSION_b41ba099bc3a)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-s06-relay-gj84zC/agent-workspaces/default/SESSION_c4e9b59fa95e
+[Agent 会话] 已创建会话: private (SESSION_c4e9b59fa95e)
+
+════════════════════════════════════════════════════
+[Remote] Profer 移动版已启动
+[Remote] 本机访问:  http://127.0.0.1:42355
+[Remote] 移动端访问:  http://172.27.62.99:42355
+[Remote] 访问 Token: p05-s06-local-SESSION_3bbc50fcf2e4（首次在移动端输入一次）
+════════════════════════════════════════════════════
+
+[Remote] 服务已在 127.0.0.1:42355 就绪
+[配置] 已创建 Pi 检查点目录: /tmp/p05-s06-relay-gj84zC/agent-checkpoints
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-s06-relay-gj84zC/agent-workspaces/default/SESSION_c4e9b59fa95e
+[Agent 会话] 已删除会话: private (SESSION_c4e9b59fa95e)
+[Remote] 移动版服务已停止
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-effective-rules-1791995194858
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建附件目录: /tmp/p05-remote-path-K2lQCu/attachments
+[附件服务] 已删除附件: synthetic-chat-SESSION_e3b192533fdf/normal.txt
+[配置] 已创建 Agent 工作区目录: /tmp/p05-remote-path-K2lQCu/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-22ab7592
+[Agent 工作区] 已创建 plugin manifest: p05-path-22ab7592
+[Agent 工作区] 已创建个人工作区: P05 Path 22ab7592- (slug: p05-path-22ab7592)
+[配置] 已创建 Agent 会话目录: /tmp/p05-remote-path-K2lQCu/agent-sessions
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-22ab7592/SESSION_60e64bc77eb6
+[Agent 会话] 已创建会话: normal-22ab7592- (SESSION_60e64bc77eb6)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-22ab7592/SESSION_08c085dbcb73
+[Agent 会话] 已创建会话: private-22ab7592- (SESSION_08c085dbcb73)
+[配置] 已创建 Agent 工作区: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-96e99b45
+[Agent 工作区] 已创建 plugin manifest: p05-path-96e99b45
+[Agent 工作区] 已创建个人工作区: P05 Path 96e99b45- (slug: p05-path-96e99b45)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-96e99b45/SESSION_c8ffc261764d
+[Agent 会话] 已创建会话: normal-96e99b45- (SESSION_c8ffc261764d)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-96e99b45/SESSION_813bb87f9061
+[Agent 会话] 已创建会话: private-96e99b45- (SESSION_813bb87f9061)
+[配置] 已创建 Agent 工作区: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-4f39a208
+[Agent 工作区] 已创建 plugin manifest: p05-path-4f39a208
+[Agent 工作区] 已创建个人工作区: P05 Path 4f39a208- (slug: p05-path-4f39a208)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-4f39a208/SESSION_b16513270fb7
+[Agent 会话] 已创建会话: normal-4f39a208- (SESSION_b16513270fb7)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-4f39a208/SESSION_7825d0166b1c
+[Agent 会话] 已创建会话: private-4f39a208- (SESSION_7825d0166b1c)
+[配置] 已创建 Pi 检查点目录: /tmp/p05-remote-path-K2lQCu/agent-checkpoints
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-4f39a208/SESSION_7825d0166b1c
+[Agent 会话] 已删除会话: private-4f39a208- (SESSION_7825d0166b1c)
+[配置] 已创建 Agent 工作区: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-82910ee0
+[Agent 工作区] 已创建 plugin manifest: p05-path-82910ee0
+[Agent 工作区] 已创建个人工作区: P05 Path 82910ee0- (slug: p05-path-82910ee0)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-82910ee0/SESSION_dc35898e635a
+[Agent 会话] 已创建会话: normal-82910ee0- (SESSION_dc35898e635a)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-82910ee0/SESSION_7c0edab687b2
+[Agent 会话] 已创建会话: private-82910ee0- (SESSION_7c0edab687b2)
+[Agent 会话] 已更新会话: normal-82910ee0- (SESSION_dc35898e635a)
+[配置] 已创建 Agent 工作区: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-63db4269
+[Agent 工作区] 已创建 plugin manifest: p05-path-63db4269
+[Agent 工作区] 已创建个人工作区: P05 Path 63db4269- (slug: p05-path-63db4269)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-63db4269/SESSION_9d85143b995d
+[Agent 会话] 已创建会话: normal-63db4269- (SESSION_9d85143b995d)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-63db4269/SESSION_5b3103c1af8b
+[Agent 会话] 已创建会话: private-63db4269- (SESSION_5b3103c1af8b)
+[配置] 已创建 Agent 工作区: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-other-f83e3c9f
+[Agent 工作区] 已创建 plugin manifest: p05-other-f83e3c9f
+[Agent 工作区] 已创建个人工作区: P05 Other f83e3c9f- (slug: p05-other-f83e3c9f)
+[配置] 已创建 Agent 工作区: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-105cf92c
+[Agent 工作区] 已创建 plugin manifest: p05-path-105cf92c
+[Agent 工作区] 已创建个人工作区: P05 Path 105cf92c- (slug: p05-path-105cf92c)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-105cf92c/SESSION_918420c7c286
+[Agent 会话] 已创建会话: normal-105cf92c- (SESSION_918420c7c286)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-105cf92c/SESSION_55d65a451812
+[Agent 会话] 已创建会话: private-105cf92c- (SESSION_55d65a451812)
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-remote-path-K2lQCu/agent-workspaces/p05-path-105cf92c/SESSION_55d65a451812
+[Agent 会话] 已删除会话: private-105cf92c- (SESSION_55d65a451812)
+[配置] 已创建 Agent 会话目录: /tmp/p04-desktop-EIXdKd/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/p04-desktop-EIXdKd/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p04-desktop-EIXdKd/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-desktop-EIXdKd/agent-workspaces/default/SESSION_36eee0f4c37b
+[Agent 会话] 已创建会话: private-case-e232e32e-7 (SESSION_36eee0f4c37b)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-desktop-EIXdKd/agent-workspaces/default/SESSION_6f5957d66989
+[Agent 会话] 已创建会话: public-agent-e232e32e-7 (SESSION_6f5957d66989)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-desktop-EIXdKd/agent-workspaces/default/SESSION_614af1287230
+[Agent 会话] 已创建会话: private-case-91c15583-c (SESSION_614af1287230)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-desktop-EIXdKd/agent-workspaces/default/SESSION_329a456466d0
+[Agent 会话] 已创建会话: public-agent-91c15583-c (SESSION_329a456466d0)
+[Agent 会话] 已更新会话: private-case-91c15583-c (SESSION_614af1287230)
+[Agent 会话] 已更新会话: public-agent-91c15583-c (SESSION_329a456466d0)
+[Agent 会话] 已更新会话: private-case-91c15583-c (SESSION_614af1287230)
+[Agent 会话] 自动归档 1 个会话（阈值: -1 天）
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-desktop-EIXdKd/agent-workspaces/default/SESSION_a2b269d4b676
+[Agent 会话] 已创建会话: private-case-0b44635b-c (SESSION_a2b269d4b676)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-desktop-EIXdKd/agent-workspaces/default/SESSION_4f7d5b1274c9
+[Agent 会话] 已创建会话: public-agent-0b44635b-c (SESSION_4f7d5b1274c9)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-desktop-EIXdKd/agent-workspaces/default/SESSION_026eefc80874
+[Agent 会话] 已创建会话: private-case-2250a340-8 (SESSION_026eefc80874)
+[配置] 已创建 Agent 会话工作目录: /tmp/p04-desktop-EIXdKd/agent-workspaces/default/SESSION_d55824f0d3bf
+[Agent 会话] 已创建会话: public-agent-2250a340-8 (SESSION_d55824f0d3bf)
+[Agent 会话] 已更新会话: internal-updated (SESSION_026eefc80874)
+[Agent 会话] 已更新会话: public-updated (SESSION_d55824f0d3bf)
+[审核专区] IPC 处理器注册完成
+[配置] 已创建 SDK 配置目录: /tmp/review-startup-io-iAkX7H/sdk-config
+[审核模板] 已发布: startup-SESSION_d68ce2eb2084@1
+[配置] 已创建 Agent 会话目录: /tmp/review-startup-io-iAkX7H/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/review-startup-io-iAkX7H/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/review-startup-io-iAkX7H/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/review-startup-io-iAkX7H/agent-workspaces/default/SESSION_6c70acbe26dc
+[Agent 会话] 已创建会话: 合成 owner (SESSION_6c70acbe26dc)
+[审核模板] 已发布: startup-SESSION_05b8aa192ed2@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-startup-io-iAkX7H/agent-workspaces/default/SESSION_3d7ad52fa845
+[Agent 会话] 已创建会话: 合成 owner (SESSION_3d7ad52fa845)
+[审核模板] 已发布: startup-SESSION_ddb61c1f5388@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-startup-io-iAkX7H/agent-workspaces/default/SESSION_d878f7f13fb6
+[Agent 会话] 已创建会话: 合成 owner (SESSION_d878f7f13fb6)
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-migrate-1791995195261
+[审核模板] 已发布: comprehensive-assessment-v2@3
+[审核模板] 已发布: pi-review-submit-same-turn@1
+[审核模板] 已发布: pi-review-submit-next-turn@1
+[审核模板] 已发布: pi-review-submit-inherit-reads@1
+[审核模板] 已发布: pi-review-submit-reconcile-reads@1
+[审核模板] 已发布: bg-probe-template-c739e11b@1
+[审核模板] 已发布: bg-probe-template-0a13beaa@1
+[审核模板] 已发布: bg-probe-template-bfbdba5c@1
+[审核模板] 已发布: bg-probe-template-b91d9f9b@1
+[审核模板] 已发布: bg-probe-template-e2b30839@1
+[审核模板] 已发布: bg-probe-template-612ce491@1
+[审核模板] 已发布: bg-probe-template-86d5ef69@1
+[审核模板] 已发布: bg-probe-template-33c54b6b@1
+[审核模板] 已发布: bg-probe-template-b94570b4@1
+[审核模板] 已发布: bg-probe-template-21afaed8@1
+[审核模板] 已发布: bg-probe-template-167259d0@1
+[审核模板] 已发布: bg-probe-template-4184a8c3@1
+[审核模板] 已发布: bg-probe-template-5ff7678e@1
+[审核模板] 已发布: bg-probe-template-b7708511@1
+[审核模板] 已发布: bg-probe-template-730c1150@1
+[审核模板] 已发布: bg-probe-template-fa80f1c4@1
+[审核模板] 已发布: bg-probe-template-0627db20@1
+[审核模板] 已发布: bg-probe-template-4dd23d96@1
+[审核模板] 已发布: bg-probe-template-3acf7625@1
+[审核模板] 已发布: bg-probe-template-cfd9e173@1
+[审核模板] 已发布: bg-probe-template-60acea00@1
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建 Agent 工作区目录: /tmp/p05-feishu-RhTqef/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-cc6966ea-b
+[Agent 工作区] 已创建 plugin manifest: p05-feishu-cc6966ea-b
+[Agent 工作区] 已创建个人工作区: P05 Feishu cc6966ea-b (slug: p05-feishu-cc6966ea-b)
+[配置] 已创建 Agent 会话目录: /tmp/p05-feishu-RhTqef/agent-sessions
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-cc6966ea-b/SESSION_ca60e1f71c43
+[Agent 会话] 已创建会话: private-cc6966ea-b (SESSION_ca60e1f71c43)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-cc6966ea-b/SESSION_54186c31165d
+[Agent 会话] 已创建会话: ordinary-cc6966ea-b (SESSION_54186c31165d)
+[飞书 Bridge] 已恢复 1 个聊天绑定
+[配置] 已创建 Agent 工作区: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-b0991bfe-d
+[Agent 工作区] 已创建 plugin manifest: p05-feishu-b0991bfe-d
+[Agent 工作区] 已创建个人工作区: P05 Feishu b0991bfe-d (slug: p05-feishu-b0991bfe-d)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-b0991bfe-d/SESSION_45e94f9ea68d
+[Agent 会话] 已创建会话: private-b0991bfe-d (SESSION_45e94f9ea68d)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-b0991bfe-d/SESSION_2c0d81380d96
+[Agent 会话] 已创建会话: ordinary-b0991bfe-d (SESSION_2c0d81380d96)
+[配置] 已创建 Pi 检查点目录: /tmp/p05-feishu-RhTqef/agent-checkpoints
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-b0991bfe-d/SESSION_45e94f9ea68d
+[Agent 会话] 已删除会话: private-b0991bfe-d (SESSION_45e94f9ea68d)
+[配置] 已创建 Agent 工作区: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-c98fea89-1
+[Agent 工作区] 已创建 plugin manifest: p05-feishu-c98fea89-1
+[Agent 工作区] 已创建个人工作区: P05 Feishu c98fea89-1 (slug: p05-feishu-c98fea89-1)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-c98fea89-1/SESSION_cf473954c4f2
+[Agent 会话] 已创建会话: private-c98fea89-1 (SESSION_cf473954c4f2)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-c98fea89-1/SESSION_29e2ea5d2d6f
+[Agent 会话] 已创建会话: ordinary-c98fea89-1 (SESSION_29e2ea5d2d6f)
+[配置] 已创建 Agent 工作区: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-a14b2815-b
+[Agent 工作区] 已创建 plugin manifest: p05-feishu-a14b2815-b
+[Agent 工作区] 已创建个人工作区: P05 Feishu a14b2815-b (slug: p05-feishu-a14b2815-b)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-a14b2815-b/SESSION_2738d28cb0a2
+[Agent 会话] 已创建会话: private-a14b2815-b (SESSION_2738d28cb0a2)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-a14b2815-b/SESSION_1bd53de6cd2e
+[Agent 会话] 已创建会话: ordinary-a14b2815-b (SESSION_1bd53de6cd2e)
+[飞书 Session 镜像] 已创建群: session=80b52d3e, chat=synthetic-chat
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-a14b2815-b/SESSION_2738d28cb0a2
+[Agent 会话] 已删除会话: private-a14b2815-b (SESSION_2738d28cb0a2)
+[配置] 已创建 Agent 工作区: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-43e599e0-7
+[Agent 工作区] 已创建 plugin manifest: p05-feishu-43e599e0-7
+[Agent 工作区] 已创建个人工作区: P05 Feishu 43e599e0-7 (slug: p05-feishu-43e599e0-7)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-43e599e0-7/SESSION_5831d16bf634
+[Agent 会话] 已创建会话: private-43e599e0-7 (SESSION_5831d16bf634)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-43e599e0-7/SESSION_48c2ec5d6fb1
+[Agent 会话] 已创建会话: ordinary-43e599e0-7 (SESSION_48c2ec5d6fb1)
+[配置] 已创建 Agent 工作区: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-0bf79ac1-7
+[Agent 工作区] 已创建 plugin manifest: p05-feishu-0bf79ac1-7
+[Agent 工作区] 已创建个人工作区: P05 Feishu 0bf79ac1-7 (slug: p05-feishu-0bf79ac1-7)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-0bf79ac1-7/SESSION_f982dfabf282
+[Agent 会话] 已创建会话: private-0bf79ac1-7 (SESSION_f982dfabf282)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-0bf79ac1-7/SESSION_4662a0dfadc4
+[Agent 会话] 已创建会话: ordinary-0bf79ac1-7 (SESSION_4662a0dfadc4)
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-0bf79ac1-7/SESSION_f982dfabf282
+[Agent 会话] 已删除会话: private-0bf79ac1-7 (SESSION_f982dfabf282)
+[配置] 已创建 Agent 工作区: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-788853ee-c
+[Agent 工作区] 已创建 plugin manifest: p05-feishu-788853ee-c
+[Agent 工作区] 已创建个人工作区: P05 Feishu 788853ee-c (slug: p05-feishu-788853ee-c)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-788853ee-c/SESSION_455bd353d5e0
+[Agent 会话] 已创建会话: private-788853ee-c (SESSION_455bd353d5e0)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-RhTqef/agent-workspaces/p05-feishu-788853ee-c/SESSION_6c7d412fea21
+[Agent 会话] 已创建会话: ordinary-788853ee-c (SESSION_6c7d412fea21)
+[审核模板] 已发布: p02-template-f31f08ca@1
+[审核模板] 已发布: p02-template-a4073e3f@1
+[审核模板] 已发布: p02-template-dfdcaf7a@1
+[审核模板] 已发布: p02-template-79eb2190@1
+[审核模板] 已发布: p02-template-9b595445@1
+[审核模板] 已发布: p02-template-ef51e8ac@1
+[审核模板] 已发布: p02-template-a604cbd3@1
+[审核模板] 已发布: p02-template-e9810d64@1
+[审核模板] 已发布: p02-template-1c824ad2@1
+[审核模板] 已发布: p02-template-2a5ddcb6@1
+[审核模板] 已发布: p02-template-ce40bb06@1
+[审核模板] 已发布: p02-template-1289c837@1
+[审核模板] 已发布: p02-template-598be614@1
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-stage-1791995195929
+[审核模板] 已发布: material-version-chain@1
+[审核模板] 已发布: material-reparse-review@1
+[审核模板] 已发布: material-xlsx-review@1
+[审核模板] 已发布: single-case-mvp-e2e@1
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建 Agent 工作区目录: /tmp/p05-real-ws-9mKrn6/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p05-real-ws-9mKrn6/agent-workspaces/p05-ws-637df16f
+[Agent 工作区] 已创建 plugin manifest: p05-ws-637df16f
+[Agent 工作区] 已创建个人工作区: P05 WS 637df16f- (slug: p05-ws-637df16f)
+[配置] 已创建 Agent 会话目录: /tmp/p05-real-ws-9mKrn6/agent-sessions
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-real-ws-9mKrn6/agent-workspaces/p05-ws-637df16f/SESSION_9845cc392d02
+[Agent 会话] 已创建会话: ordinary-loopback (SESSION_9845cc392d02)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-real-ws-9mKrn6/agent-workspaces/p05-ws-637df16f/SESSION_af1cdcd9e123
+[Agent 会话] 已创建会话: private-loopback (SESSION_af1cdcd9e123)
+
+════════════════════════════════════════════════════
+[Remote] Profer 移动版已启动
+[Remote] 本机访问:  http://127.0.0.1:38981
+[Remote] 移动端访问:  http://172.27.62.99:38981
+[Remote] 访问 Token: p05-ws-token-SESSION_72ad2e240e54（首次在移动端输入一次）
+════════════════════════════════════════════════════
+
+[Remote] 服务已在 127.0.0.1:38981 就绪
+[Remote] 移动端客户端已连接
+[Remote] 移动端客户端断开
+[Remote] 移动端客户端已连接
+[Remote] 移动端客户端已连接
+[Remote] 移动端客户端断开
+[Remote] 移动端客户端断开
+[Remote] 移动端客户端已连接
+[Remote] 移动端客户端断开
+[Remote] 移动端客户端已连接
+[Remote] 移动端客户端断开
+[Remote] 移动端客户端已连接
+[配置] 已创建 Pi 检查点目录: /tmp/p05-real-ws-9mKrn6/agent-checkpoints
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-real-ws-9mKrn6/agent-workspaces/p05-ws-637df16f/SESSION_af1cdcd9e123
+[Agent 会话] 已删除会话: private-loopback (SESSION_af1cdcd9e123)
+[Remote] 移动端客户端断开
+[Remote] 移动端客户端已连接
+[Remote] 移动端客户端断开
+[Remote] 移动端客户端已连接
+[Remote] 移动端客户端断开
+[Remote] 移动版服务已停止
+[飞书防休眠] 已启用，飞书实时同步期间阻止系统休眠（允许息屏锁屏）
+[飞书防休眠] 已启用，飞书实时同步期间阻止系统休眠（允许息屏锁屏）
+[飞书防休眠] 已启用，飞书实时同步期间阻止系统休眠（允许息屏锁屏）
+[飞书防休眠] 已关闭
+[飞书防休眠] 已启用，飞书实时同步期间阻止系统休眠（允许息屏锁屏）
+[飞书防休眠] 已启用，飞书实时同步期间阻止系统休眠（允许息屏锁屏）
+R1_EQUIV_HOOK_CONTROLLER witness_reads=2 stale_rejected=true
+R1_EQUIV_HOOK_HOOK witness_reads=2 stale_rejected=true
+[CdutDemo] 命中演示账户，进入离线演示态（不保活、不落盘）
+[CdutDemo] 命中演示账户，进入离线演示态（不保活、不落盘）
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/work/tmp/profer-test-n4-1791995203056
+[政策仓库] 已发布: policy-comprehensive-assessment-demo@1
+[政策仓库] 已发布: policy-scholarship-demo@1
+[审核模板] 已发布: comprehensive-assessment-v2@3
+[审核模板] 已发布: scholarship-v2@2
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/work/tmp/profer-test-policy-1791995203072
+[政策仓库] 已发布: policy-comprehensive-assessment-demo@1
+[审核模板] 已发布: comprehensive-assessment-v2@2

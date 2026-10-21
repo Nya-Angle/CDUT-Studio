@@ -1,0 +1,57 @@
+{
+  "id": "reboot-recovered",
+  "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+  "status": "PASS",
+  "assertions": [
+    {
+      "name": "重启后旧工具授权仍拒绝",
+      "pass": true
+    },
+    {
+      "name": "重启后旧 Pi binding 不复活",
+      "pass": true
+    },
+    {
+      "name": "可写恢复后 V2 interrupted 终态已落盘",
+      "pass": true
+    }
+  ],
+  "timeline": [
+    {
+      "at": "2026-10-14T15:14:04.598Z",
+      "event": "fresh-electron-main-authorization",
+      "pid": 725282,
+      "runStatus": "failed",
+      "toolAllowed": false,
+      "bindingReturned": false,
+      "main": {
+        "caseId": "case-1791975357085-tbbbrx",
+        "runId": "run-pi-mv88r81m-vnhyb",
+        "runStatus": "failed",
+        "completedAt": "2026-10-14T15:14:03.992Z",
+        "phase": "incomplete"
+      }
+    }
+  ],
+  "realIpcState": {
+    "caseId": "case-1791975357085-tbbbrx",
+    "runId": "run-pi-mv88r81m-vnhyb",
+    "runStatus": "failed",
+    "completedAt": "2026-10-14T15:14:03.992Z",
+    "phase": "incomplete"
+  },
+  "snapshot": {
+    "pid": 725282,
+    "runStatus": "failed",
+    "toolAllowed": false,
+    "bindingReturned": false,
+    "main": {
+      "caseId": "case-1791975357085-tbbbrx",
+      "runId": "run-pi-mv88r81m-vnhyb",
+      "runStatus": "failed",
+      "completedAt": "2026-10-14T15:14:03.992Z",
+      "phase": "incomplete"
+    }
+  },
+  "finishedAt": "2026-10-14T15:14:04.599Z"
+}

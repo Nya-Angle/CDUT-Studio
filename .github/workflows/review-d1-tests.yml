@@ -1,0 +1,38 @@
+name: D1 Review Authoring Tests
+on:
+  pull_request:
+    paths:
+      - 'packages/shared/src/types/review-authoring-v1.ts'
+      - 'packages/shared/src/types/index.ts'
+      - 'apps/electron/src/main/lib/review/review-authoring-*.ts'
+      - 'apps/electron/src/main/lib/review/template-store.ts'
+      - 'apps/electron/scripts/review-authoring-v1.ts'
+      - '.github/workflows/review-d1-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  authoring:
+    name: D1 contract, parity, history, and regressions
+    runs-on: ubuntu-latest
+    env:
+      ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: bun install --frozen-lockfile
+      - name: Full TypeScript check
+        run: bun run typecheck
+      - name: D1 authoring tests
+        run: bun test --isolate --timeout 30000 apps/electron/src/main/lib/review/review-authoring-v1.test.ts
+      - name: D0.5 boundary regressions
+        run: bun test --isolate --timeout 30000 apps/electron/src/main/lib/review/semantic-module-demo.test.ts
+      - name: Existing template regressions
+        run: bun test --isolate --timeout 30000 apps/electron/src/main/lib/review/template-store.test.ts

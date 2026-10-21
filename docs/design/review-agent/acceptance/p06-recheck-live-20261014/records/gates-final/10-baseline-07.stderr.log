@@ -1,0 +1,10 @@
+
+apps/electron/src/main/lib/agent-workspace-profile.test.ts:
+(pass) Profer workspace profile > 旧工作区 CLAUDE.md 仅兼容读取，新写入不会回写旧文件 [2.13ms]
+(pass) Profer workspace profile > 旧版 .claude/memory 会复制到新的 .cdutai/memory，旧目录保留 [1.23ms]
+(pass) Profer workspace profile > 没有历史文件时写入 workspace-profile.md [0.31ms]
+
+ 3 pass
+ 0 fail
+ 11 expect() calls
+Ran 3 tests across 1 file. [116.00ms]

@@ -1,0 +1,11 @@
+
+apps/electron/src/main/lib/review/pi-case-review-service.test.ts:
+(pass) Pi 审核结果提交与续审 > finish=true 遇到图像出处拒绝和缺项时保持运行开放，修正后可在同一运行提交 [10.59ms]
+(pass) Pi 审核结果提交与续审 > 流结束后的部分完成运行可由“更新审核结果”续交，复用原 runId 与有效检查 [4.33ms]
+(pass) Pi 审核结果提交与续审 > 更新审核会沿用内容未变材料在历史运行中的完整读取回执 [4.23ms]
+(pass) Pi 审核结果提交与续审 > 工作台读取历史结果时会修复已完成运行中缺失的跨轮材料读取凭据 [3.78ms]
+
+ 4 pass
+ 0 fail
+ 27 expect() calls
+Ran 4 tests across 1 file. [167.00ms]

@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "domain": "G07",
+  "businessTemplate": "G07-T03",
+  "technicalTemplateId": "g07-t03",
+  "commonCodeSha": "a7a6a11d4840ad64cfc858c17b35f35180adf063",
+  "original": {
+    "branchCommit": "e9f4db82176e235b87808787ddf12bd0806fa5ca",
+    "gitBlobSha1": "734f9fdeb16ee25c8b4e5b339b02a2af9baf1aee",
+    "path": "docs/design/review-agent/business-templates/G07/author-handoff/G07-T03/C-v0.1/G07-T03_正式业务模板_MD_v0.1.md",
+    "version": "C-v0.1",
+    "contentBytesUtf8": 66381,
+    "sha256": "fec6ee135ad9b5f644dfe8415440e34f633e851c690deba678a2097f2fc98d98",
+    "sha256VerifiedBy": "G07 GitHub Actions technical test"
+  },
+  "objectBusinessType": "g07-procurement-package",
+  "ruleCount": 33,
+  "extractedSourceLineCount": 812,
+  "sourceMdLocation": "docs/design/review-agent/acceptance/d4-g07-build/T03/source/frozen-C-v0.1.md",
+  "moduleCount": 15,
+  "authoredTaskCount": 62,
+  "sourceBindingCount": 62,
+  "scenarios": {
+    "core": "core",
+    "structuredConditions": [
+      "BR-01",
+      "BR-02",
+      "BR-03",
+      "BR-04",
+      "BR-05",
+      "BR-06",
+      "BR-07",
+      "BR-08",
+      "BR-09",
+      "BR-10",
+      "BR-11",
+      "BR-12"
+    ],
+    "semanticOnlyConditions": [
+      "BR-13",
+      "BR-14"
+    ]
+  },
+  "sharedLocks": [],
+  "status": "PARTIAL",
+  "technicalPreReviewOnly": true,
+  "publicationAllowed": false,
+  "knownGaps": [
+    {
+      "type": "SEMANTIC_ONLY_CONDITION",
+      "anchor": "BR-13",
+      "detail": "COMMON-02 单模板附加条件轴最大13；本分支仅留在核心规则原文及原件引用，不假称结构化条件已执行",
+      "owner": "ENGINE_OR_AUTHORING"
+    },
+    {
+      "type": "SEMANTIC_ONLY_CONDITION",
+      "anchor": "BR-14",
+      "detail": "COMMON-02 单模板附加条件轴最大13；本分支仅留在核心规则原文及原件引用，不假称结构化条件已执行",
+      "owner": "ENGINE_OR_AUTHORING"
+    },
+    {
+      "type": "POLICY",
+      "detail": "校本现行制度、授权与资金/预算/税票/银行权威事实缺少有权认证；源以 policy-candidate/unknown 进入 D2，不能输出正式符合或付款",
+      "owner": "POLICY_EXTERNAL"
+    },
+    {
+      "type": "HUMAN_ONLY",
+      "detail": "自动可付净额、实付、会计冲销或结清非默认能力；只生成待财务核实建议，不直接算账",
+      "owner": "HUMAN_EXTERNAL"
+    }
+  ],
+  "sharedModuleLocks": [],
+  "sourceSections": {
+    "status": "ALL_HEADING_SECTIONS_LINKED_TO_TASK_OR_RULEBOOK",
+    "locatorFile": "T03/source/coverage-ledger.json"
+  },
+  "technicalEvidence": {
+    "workflowRunId": 39051441393,
+    "workflowStatus": "SUCCESS",
+    "runtimePlan": "runtime/T03/d2-plan.json",
+    "piRun": "runtime/T03/pi-run.json",
+    "d3Export": "runtime/T03/d3-export.json",
+    "verdict": "runtime/T03/technical-verdict.json",
+    "subjects": 2,
+    "checks": 124,
+    "ruleChecks": 66,
+    "d3Fingerprint": "af3a1dfc829b70df94aae745fbf2ba6e129818543aeaffa11f75caa68b5ada39",
+    "d2Fingerprint": "d0d74471470c8cbe2ad3968ba0d5b4f911d80bf7643a757fd7531e9af724693b",
+    "piComplete": true,
+    "onlineModelAccuracyVerified": false
+  },
+  "remaining": {
+    "engine": "Additive condition axes limited to 13 and explicit complete BR fidelity not proven",
+    "policy": "Authority/effective versions unconfirmed",
+    "external": "No live school accounting/OA/official payment connectors",
+    "human": "No auto payable net/ledger closeout",
+    "test": "Original D private Gold not read; no online model or blind semantic audit"
+  },
+  "productionUsable": false
+}

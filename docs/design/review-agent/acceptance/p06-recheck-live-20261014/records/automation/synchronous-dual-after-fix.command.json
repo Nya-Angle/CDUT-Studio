@@ -1,0 +1,29 @@
+{
+  "name": "synchronous-dual-after-fix",
+  "sourceSha": "36625a28194863f205bf607f0da4de0196870b5f",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014",
+  "argv": [
+    "bun",
+    "test",
+    "--isolate",
+    "--timeout",
+    "30000",
+    "apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts"
+  ],
+  "startedAt": "2026-10-14T15:51:40.122328+00:00",
+  "environment": {
+    "NO_COLOR": "1"
+  },
+  "finishedAt": "2026-10-14T15:51:40.582273+00:00",
+  "exitCode": 0,
+  "files": {
+    "synchronous-dual-after-fix.stdout.log": {
+      "sha256": "e28bbc7b8233b82afc2212686a236917cb3a47ed4a74edf07424070c55da3b7a",
+      "bytes": 1183
+    },
+    "synchronous-dual-after-fix.stderr.log": {
+      "sha256": "a1271a8198a7db77ebcd9d81a44bc9400f750094a0c4c2ba82d9d5460d171be0",
+      "bytes": 18128
+    }
+  }
+}

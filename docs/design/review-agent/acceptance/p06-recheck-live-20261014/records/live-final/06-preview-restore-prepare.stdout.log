@@ -1,0 +1,1 @@
+{"id":"E06-PREVIEW-RESTORE-prepare","status":"FAIL","assertions":1,"error":"AssertionError [ERR_ASSERTION]: 真实存在的工作区外合成文件被拒止"}

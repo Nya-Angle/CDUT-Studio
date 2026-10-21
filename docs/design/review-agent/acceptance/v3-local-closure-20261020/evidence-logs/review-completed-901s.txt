@@ -1,0 +1,74 @@
+(node:1420120) [UNDICI-EHPA] Warning: EnvHttpProxyAgent is experimental, expect them to change at any time.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{
+  "scenario": "flow-full",
+  "ok": true,
+  "result": {
+    "steps": [
+      {
+        "name": "createCase",
+        "ok": true
+      },
+      {
+        "name": "import:evidence.pdf",
+        "ok": true,
+        "parseStatus": "parsed"
+      },
+      {
+        "name": "import:evidence.docx",
+        "ok": true,
+        "parseStatus": "partial"
+      },
+      {
+        "name": "attachD4Plan",
+        "checks": 60,
+        "fingerprint": "71bfc0d6b9faadabc27392f8b0e558a099fd725c10d5e1a631e2cbfaef6ccf3b"
+      },
+      {
+        "name": "startPiReview",
+        "phase": "accepted",
+        "runId": "run-pi-mvgxj57u-6roye"
+      },
+      {
+        "name": "piReviewOutcome",
+        "phase": "finished",
+        "runId": "run-pi-mvgxj57u-6roye",
+        "elapsedMs": 901569,
+        "error": null
+      },
+      {
+        "name": "listRuns",
+        "count": 1,
+        "runs": [
+          {
+            "id": "run-pi-mvgxj57u-6roye",
+            "status": "completed",
+            "checks": 60
+          }
+        ]
+      },
+      {
+        "name": "getRun",
+        "status": "completed",
+        "checkCount": 60,
+        "observations": 0
+      },
+      {
+        "name": "observations",
+        "count": 0
+      },
+      {
+        "name": "formalDecision",
+        "ok": false,
+        "code": "AGENT_DECISION_DISABLED"
+      },
+      {
+        "name": "exportReport",
+        "file": "/home/miku/Bot/CDUTStudio/cdut-studio-review-agent/work/e2e/config/review-cases/case-fa5671abfba34b759c02a6889cc0dfd9/reports/report-mvgy2gvf.md",
+        "decision": null
+      }
+    ],
+    "runId": "run-pi-mvgxj57u-6roye",
+    "caseId": "case-fa5671abfba34b759c02a6889cc0dfd9"
+  }
+}

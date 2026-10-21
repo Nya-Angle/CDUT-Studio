@@ -1,0 +1,43 @@
+{
+  "source_sha": "ef9074e367d2e7fda5955d8b0d6d9a4812836a6d",
+  "results": [
+    {
+      "name": "controlled-protection",
+      "source_sha": "ef9074e367d2e7fda5955d8b0d6d9a4812836a6d",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-p06-s02-acceptance-20261013",
+      "argv": [
+        "bun",
+        "test",
+        "--isolate",
+        "--timeout",
+        "30000",
+        "/tmp/review-risk-probes-453hn85q/scope-risk-audit.test.ts"
+      ],
+      "started_at": "2026-10-13T13:45:10.587618+00:00",
+      "finished_at": "2026-10-13T13:45:10.897104+00:00",
+      "seconds": 0.309,
+      "expected_exit_for_correct_protection": 0,
+      "actual_exit": 1,
+      "log": "controlled-protection.log",
+      "log_sha256": "7c05db9dc447cbd4fda88f6a6c2f93c3dad746693d0a346ce39fec2f94dcb9bd"
+    },
+    {
+      "name": "settlement-standalone",
+      "source_sha": "ef9074e367d2e7fda5955d8b0d6d9a4812836a6d",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-p06-s02-acceptance-20261013",
+      "argv": [
+        "bun",
+        "--preload",
+        "./test/preload-electron-mock.ts",
+        "/home/miku/Bot/CDUTStudio/.workdir/review-p06-s02-acceptance-20261013/docs/design/review-agent/acceptance/p06-s02-local-20261013/audit/settle-risk.probe.ts"
+      ],
+      "started_at": "2026-10-13T13:45:10.897248+00:00",
+      "finished_at": "2026-10-13T13:45:11.163403+00:00",
+      "seconds": 0.266,
+      "expected_exit_for_correct_protection": 0,
+      "actual_exit": 1,
+      "log": "settlement-standalone.log",
+      "log_sha256": "b141f1f4b6d2a08f5c9cbf13361efd258e22dcca737237c4fdbc10b317c57408"
+    }
+  ]
+}

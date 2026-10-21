@@ -1,0 +1,14 @@
+{
+  "id": "d4-g01-a-synthetic",
+  "templateId": "g01-archive-utilization",
+  "templateVersion": 1,
+  "title": "档案利用申请审核 合成技术预审",
+  "objectType": "document",
+  "caseFields": {},
+  "subjects": [],
+  "documents": [],
+  "stage": "draft",
+  "revision": 0,
+  "createdAt": "2026-10-17T00:00:00Z",
+  "updatedAt": "2026-10-17T00:00:00Z"
+}

@@ -1,0 +1,23 @@
+
+apps/electron/src/main/lib/review/review-d2-runtime.test.ts:
+(pass) D2 作者态到 Pi 有效审核规则（BDD） > Agent JSON CLI 基于固定 workspace 与对象选择无副作用编译 Pi 计划 [24.21ms]
+(pass) D2 作者态到 Pi 有效审核规则（BDD） > 不可发布候选只能走显式技术建案，普通正式入口继续拒绝未发布模板 [9.15ms]
+(pass) D2 作者态到 Pi 有效审核规则（BDD） > Agent JSON CLI 注册候选并建立可运行案卷，不需要绕过正式建案服务 [54.14ms]
+(pass) D2 作者态到 Pi 有效审核规则（BDD） > 没有固定 D2 任务包的候选案卷不能绕开技术建案直接运行 Pi [1.77ms]
+(pass) D2 作者态到 Pi 有效审核规则（BDD） > D2 计划之外混入额外规则或申报主体应被独立覆盖校验拒止 [1.96ms]
+(pass) D2 作者态到 Pi 有效审核规则（BDD） > 普通文本任务无需业务对象/高级 Claim 图即可编译为单一语义检查 [1.11ms]
+(pass) D2 作者态到 Pi 有效审核规则（BDD） > 校园卡 family 分支只激活家属义务，保留不可自动确认为校规的本地责任 [1.67ms]
+(pass) D2 作者态到 Pi 有效审核规则（BDD） > 未知情景不能假装不适用；复杂业务对象不允许悬空或串改操作 [2.96ms]
+(pass) D2 作者态到 Pi 有效审核规则（BDD） > 档案 item-1/read 与 item-1/copy 真正生成隔离的 RuleSpec/ReviewSubject [0.84ms]
+(pass) D2 作者态到 Pi 有效审核规则（BDD） > 普通 Pi 的真实准备/工具回执完成技术检查，但不意味着学校审批资格 [9.38ms]
+(pass) D2 作者态到 Pi 有效审核规则（BDD） > 档案查阅的真实 SourceRef 不得覆盖复制：Pi 续交完成逐操作三项检查 [10.40ms]
+(pass) D2 作者态到 Pi 有效审核规则（BDD） > 校园卡正式校规尚未认证时，即使 AI 提交符合结论也必须拒绝 [5.52ms]
+(pass) D2 作者态到 Pi 有效审核规则（BDD） > 冻结计划被改写或输入材料版本变化时拒绝旧 Pi 结果冒用 [4.37ms]
+(pass) D2 作者态到 Pi 有效审核规则（BDD） > D2 安装资格来自服务端独立登记，删改 sourceNote 也不影响候选技术预审 [1.82ms]
+(pass) D2 作者态到 Pi 有效审核规则（BDD） > 候选壳始终是草稿，直接发布必须被服务端拒绝 [0.62ms]
+(pass) D2 作者态到 Pi 有效审核规则（BDD） > 候选模板夹带额外 RuleSpec/政策/审批时，固定 D2 运行不能继续 [2.53ms]
+
+ 16 pass
+ 0 fail
+ 82 expect() calls
+Ran 16 tests across 1 file. [274.00ms]

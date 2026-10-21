@@ -1,0 +1,35 @@
+(pass) submitCommand（07 §3.3 事务） > Given 过期 expectedRevision When 提交 Then VERSION_CONFLICT 携当前版且不写数据 [0.16ms]
+(pass) submitCommand（07 §3.3 事务） > Given handler 校验失败 When 提交 Then 拒绝且无部分写入 [0.18ms]
+
+apps/electron/src/main/lib/review/stage-workflow.test.ts:
+(pass) 阶段推进（R07，修正误判 6） > Given 三阶段审核且时钟不前进 When 连续通过 Then 每个阶段任务仍有唯一 ID 并可终审 [2.06ms]
+(pass) 阶段推进（R07，修正误判 6） > Given 初审通过 When 决定 Then 创建终审任务且案卷不 decided [0.57ms]
+(pass) 阶段推进（R07，修正误判 6） > Given 终审阶段通过 When 决定 Then decided 且 finality=final [0.76ms]
+(pass) 阶段推进（R07，修正误判 6） > Given reviewer 尝试代签教师终审 When 提交 Then 拒绝且不写决定 [0.65ms]
+(pass) 阶段推进（R07，修正误判 6） > Given 传入别的模板定义 When 阶段决定 Then 拒绝跨模板与版本伪装 [0.39ms]
+(pass) 阶段推进（R07，修正误判 6） > Given 最终驳回 When 决定 Then decided（不自动待补件） [0.47ms]
+(pass) 阶段推进（R07，修正误判 6） > Given 退回补件 When 决定 Then awaiting-supplement 且补件请求创建 [0.48ms]
+(pass) 阶段推进（R07，修正误判 6） > Given 重复决定同任务 When 再提交 Then INVALID_TRANSITION [0.55ms]
+(pass) 补件多请求门控（06 §5.3） > Given 两个未结束请求 When 只满足其一 Then 不恢复；全部结束才恢复 [1.06ms]
+(pass) 补件回复与任务回流（G04/G05） > Given 退回补件 When 学生回复+判定满足 Then 原阶段任务回流（不是没有任务） [1.15ms]
+(pass) 补件回复与任务回流（G04/G05） > Given 判定不足 When 处理 Then 不恢复阶段也不回流任务 [0.70ms]
+(pass) 补件回复与任务回流（G04/G05） > Given 学生负责的补件 When 教师代回复 Then 拒绝（角色校验） [0.54ms]
+(pass) 角色安全收口（P0） > 学生或非来源阶段审核员不能代替来源审核人判定补件 [0.58ms]
+(pass) 角色安全收口（P0） > 未获得复核教师角色的本地 reviewer 不得自行维持或更改申诉结论 [0.85ms]
+(pass) 申诉更正与最终投影（R07） > Given 申诉更正 When resolve Then 追加关联决定且原决定被投影排除 [0.08ms]
+(pass) 申诉更正与最终投影（R07） > Given 仅阶段决定 When 投影 Then isFinal=false（报告不冒充终审） [0.03ms]
+(pass) 申诉更正与最终投影（R07） > Given 申诉流程 When resolveAppealV2 更正 Then 关联决定追加 [0.60ms]
+(pass) 补件不足后再回复（复查 §5.3） > Given insufficient When 再次回复+判定满足 Then 流程恢复 [1.14ms]
+(pass) 补件不足后再回复（复查 §5.3） > Given satisfied 但另一请求 insufficient When 门控 Then 不恢复（insufficient 计入未满足） [0.93ms]
+(pass) 申诉闭环（复查 §5.3-5） > Given 维持原判 When resolution Then 申诉 upheld 且案卷 decided [0.93ms]
+(pass) 申诉闭环（复查 §5.3-5） > Given 更正 When resolution Then 新决定 actor=复核人 且 finality=final [0.98ms]
+
+apps/electron/src/renderer/components/content-review/batch-ui-feedback.test.ts:
+(pass) 21 号本地 UI QA：反馈语义 > Electron IPC 包装信息不显示给用户，但保留真实业务拒绝原因 [0.11ms]
+(pass) 21 号本地 UI QA：反馈语义 > 补件完成后重新入队只展示本轮待审核，旧自动退回成为历史记录 [0.07ms]
+(pass) 21 号本地 UI QA：反馈语义 > 检查成功和业务批准不同；队列完成提示必须显示失败和待人工数 [0.13ms]
+
+ 143 pass
+ 0 fail
+ 889 expect() calls
+Ran 143 tests across 13 files. [559.00ms]

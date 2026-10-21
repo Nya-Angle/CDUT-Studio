@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "status": "AUTHOR_CANDIDATE_NOT_YET_EXECUTED",
+  "domain": "G01",
+  "key": "S",
+  "templateId": "g01-special-proof-seal",
+  "templateVersion": 1,
+  "businessSource": {
+    "file": "G01_special_proof_seal_review_template_v1.4.md",
+    "version": "v1.4",
+    "sha256": "bb9b11b7963e0cd7661afe12bb3a23eec1655153de2d122ffb59b26f10190c15",
+    "gitBlobSha": "6b931fb5f7d00482cb551f58d4fbb9349bd33cd2"
+  },
+  "technicalSha": "a7a6a11d4840ad64cfc858c17b35f35180adf063",
+  "moduleCount": 10,
+  "checkDefinitionCount": 92,
+  "sourceBindings": 92,
+  "sourceCatalogueEntries": 92,
+  "genericObjects": 2,
+  "independentGold": "UNCHANGED_NOT_ACCESSED",
+  "runtimeStatus": "NOT_RUN",
+  "publicationAllowed": false,
+  "limitations": [
+    "真实制度权限缺失",
+    "高级 Claim 无损映射不支持",
+    "仅独立真实技术运行才能升级完成状态"
+  ]
+}

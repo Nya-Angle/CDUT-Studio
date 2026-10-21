@@ -8,7 +8,7 @@ const start = source.indexOf('  ipcMain.handle(AGENT_IPC_CHANNELS.START_GOAL,')
 const end = source.indexOf('  // ===== Agent 队列消息 =====', start)
 if (start < 0 || end < start) throw new Error('Goal IPC 注册边界不存在')
 const js = new Bun.Transpiler({ loader: 'ts' }).transformSync(source.slice(start, end))
-const register = new Function('deps', `const { ipcMain, AGENT_IPC_CHANNELS, assertSensitiveAgentIpcSender, goalSessionService, feishuBridgeManager, stopAgentAndWait, isGoalRunActive } = deps; ${js}`)
+const register = new Function('deps', `const { ipcMain, AGENT_IPC_CHANNELS, assertSensitiveAgentIpcSender, assertOrdinaryAgentSession, goalSessionService, feishuBridgeManager, stopAgentAndWait, isGoalRunActive } = deps; ${js}`)
 
 function harness(goalOwner = false) {
   const handlers = new Map<string, (...args: unknown[]) => Promise<unknown>>()
@@ -18,6 +18,11 @@ function harness(goalOwner = false) {
     ipcMain: { handle: (channel: string, handler: (...args: unknown[]) => Promise<unknown>) => handlers.set(channel, handler) },
     AGENT_IPC_CHANNELS,
     assertSensitiveAgentIpcSender: () => { calls.push('guard') },
+    // The isolated GoAL/Stop test invokes real IPC source with synthetic sessions.
+    // Keep the new normal-session access gate in the extracted runtime as well.
+    assertOrdinaryAgentSession: (sessionId: string) => {
+      if (sessionId === 'owned-review') throw new Error('内部审核会话不可通过普通 Agent 入口访问')
+    },
     goalSessionService: {
       start: async () => { calls.push('start'); return state },
       get: () => state, list: () => [state],
@@ -51,6 +56,11 @@ describe('Goal IPC 控制路由', () => {
     const h = harness(true)
     await h.invoke(AGENT_IPC_CHANNELS.STOP_AGENT, 's')
     expect(h.calls).toEqual(['guard', 'mirror-stop', 'goal-stop'])
+  })
+  test('普通 Stop 即使持有内部 review sessionId 也不得中止后台执行', async () => {
+    const h = harness(false)
+    await expect(h.invoke(AGENT_IPC_CHANNELS.STOP_AGENT, 'owned-review')).rejects.toThrow('内部审核会话')
+    expect(h.calls).toEqual(['guard'])
   })
   test('等待中的 Goal 和当前普通运行都接受用户 Stop', async () => {
     const h = harness(false)

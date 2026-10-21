@@ -1,0 +1,211 @@
+
+apps/electron/src/main/lib/review/review-pi-run-bridge.main.test.ts:
+(pass) 后台 Main 入口与受理边界 > 真实执行权之前保持 preparing，ACK 不泄漏内部 ID，Main 在页面无等待时继续收尾 [10.33ms]
+(pass) 后台 Main 入口与受理边界 > 忙碌和重复启动不产生第二个运行或结束原运行 [2.37ms]
+(pass) 后台 Main 入口与受理边界 > 停止只接受当前案卷/运行，错误身份不触发执行器，正确停止持久 cancelled [3.05ms]
+(pass) 后台 Main 入口与受理边界 > 模型停用和非法请求在建内部会话前拒绝 [0.99ms]
+(pass) 后台 Main 入口与受理边界 > 预设不符合审核档案的旧 owner 不复用，防止加载普通工具配置 [8.36ms]
+(pass) 后台 Main 入口与受理边界 > 审核独立模型优先，运行中改设置不改变当前执行输入 [2.15ms]
+(pass) 后台 Main 入口与受理边界 > P06-S01 newest active assignment wins an exact-millisecond tie [0.46ms]
+(pass) 后台 Main 入口与受理边界 > P06-S01 same case reused owner: old failure, stop and revoked grant cannot affect second run [3.76ms]
+(pass) 后台 Main 入口与受理边界 > P06-S01 stop must release before restart; late callback never mutates new owner [3.94ms]
+(pass) 后台 Main 入口与受理边界 > 实际注册 IPC 拒绝非主窗口，旧 prepare/abort/指派入口不能操作新 owner [3.69ms]
+
+apps/electron/src/main/lib/review/boot-check.test.ts:
+(pass) runBootCheckV2（M5） > Given 首次启动 When 检查 Then 注入当前默认模板并提示发布 [6.98ms]
+(pass) runBootCheckV2（M5） > Given 二次启动 When 检查 Then 幂等（不再注入） [4.13ms]
+(pass) runBootCheckV2（M5） > Given V1 案卷无 v2 文件 When 检查 Then 列入可迁移 [3.37ms]
+(pass) runBootCheckV2（M5） > Given 内置草稿已存在 When ensureBuiltinTemplateDrafts Then 不覆盖 [3.71ms]
+
+apps/electron/src/main/lib/review/review-startup-io-recovery.p06.test.ts:
+[审核V2] 中断运行恢复未持久化，旧授权保持拒止: startup-SESSION_fb4a77d021a1/run-pi-mv88y0df-9cl41.json EACCES: permission denied, open '/tmp/review-startup-io-EQxQDh/review-cases/startup-SESSION_fb4a77d021a1/runs-v2/run-pi-mv88y0df-9cl41.json.tmp'
+    path: "/tmp/review-startup-io-EQxQDh/review-cases/startup-SESSION_fb4a77d021a1/runs-v2/run-pi-mv88y0df-9cl41.json.tmp",
+ syscall: "open",
+   errno: -13,
+    code: "EACCES"
+
+      at saveRunV2 (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/run-store-v2.ts:28:3)
+      at markStaleRunsInterrupted (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/run-store-v2.ts:69:11)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-startup-io-recovery.p06.test.ts:46:14)
+
+(pass) P06 启动恢复 I/O 故障隔离 > 恢复原文件与目录同时不可写时，磁盘仍 running，旧工具与 binding 必须拒绝 [3.72ms]
+(pass) P06 启动恢复 I/O 故障隔离 > 原文件只读但目录可写时，恢复通过原子替换持久 failed，旧授权拒绝 [1.56ms]
+[审核V2] 中断运行恢复未持久化，旧授权保持拒止: startup-SESSION_30186357149e/run-pi-mv88y0dj-k3k98.json EACCES: permission denied, open '/tmp/review-startup-io-EQxQDh/review-cases/startup-SESSION_30186357149e/runs-v2/run-pi-mv88y0dj-k3k98.json.tmp'
+    path: "/tmp/review-startup-io-EQxQDh/review-cases/startup-SESSION_30186357149e/runs-v2/run-pi-mv88y0dj-k3k98.json.tmp",
+ syscall: "open",
+   errno: -13,
+    code: "EACCES"
+
+      at saveRunV2 (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/run-store-v2.ts:28:3)
+      at markStaleRunsInterrupted (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/run-store-v2.ts:69:11)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-startup-io-recovery.p06.test.ts:67:18)
+
+(pass) P06 启动恢复 I/O 故障隔离 > 修复目录写入后可再次持久化 interrupted；新轮次和普通指派仍可用 [2.24ms]
+
+apps/electron/src/main/lib/review/pi-case-review-service.test.ts:
+(pass) Pi 审核结果提交与续审 > finish=true 遇到图像出处拒绝和缺项时保持运行开放，修正后可在同一运行提交 [7.03ms]
+(pass) Pi 审核结果提交与续审 > 流结束后的部分完成运行可由“更新审核结果”续交，复用原 runId 与有效检查 [4.30ms]
+(pass) Pi 审核结果提交与续审 > 更新审核会沿用内容未变材料在历史运行中的完整读取回执 [4.51ms]
+(pass) Pi 审核结果提交与续审 > 工作台读取历史结果时会修复已完成运行中缺失的跨轮材料读取凭据 [3.86ms]
+
+apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts:
+(pass) P01 direct Pi review can reuse runAgent without navigating to a chat tab > review tool writes a complete result; existing onRunOutcome does not overwrite completed V2 run [7.92ms]
+(pass) P01 direct Pi review can reuse runAgent without navigating to a chat tab > without complete submission, an otherwise successful Agent turn remains partially-completed [2.16ms]
+(pass) P01 direct Pi review can reuse runAgent without navigating to a chat tab > an error cannot be reported as successful review after late SDK success [2.07ms]
+(pass) P01 direct Pi review can reuse runAgent without navigating to a chat tab > a user stop persists cancelled rather than completed [2.07ms]
+(pass) P01 direct Pi review can reuse runAgent without navigating to a chat tab > a busy run without ownership cannot falsely finish another run [1.91ms]
+(pass) P03-S01 Main-owned Pi stage must not depend on review page lifetime > after runtime ownership, losing its WebContents does not lose final V2 ledger state [2.03ms]
+(pass) P03-S01 Main-owned Pi stage must not depend on review page lifetime > V2 running alone is NOT an acceptance acknowledgement before onRunOwned [2.77ms]
+(pass) P03-S02 Main admission ACK and single-owner lifecycle > ACK only after onRunOwned, while Main owns the subsequent long Pi turn [2.92ms]
+(pass) P03-S02 Main admission ACK and single-owner lifecycle > busy rejection before ownership closes only the newly prepared V2 run [2.38ms]
+(pass) P03-S02 Main admission ACK and single-owner lifecycle > an early return without onRunOwned cannot emit a false ACK or orphan running [2.22ms]
+(pass) P03-S02 Main admission ACK and single-owner lifecycle > a duplicate admission for the same assignment is rejected without cancelling its owner [2.74ms]
+(pass) P03-S02 Main admission ACK and single-owner lifecycle > preflight failure after token grant preserves ACK but eventually produces failed V2 result [2.33ms]
+(pass) P03-S02 Main admission ACK and single-owner lifecycle > untrusted or stale binding cannot start even when V2 has a historical run [1.65ms]
+(pass) P06-FIX-03 durable revoke-failure containment > a live direct Pi grant becomes unusable when its V2 run is already terminal, even with an unrevoked disk row [1.55ms]
+(pass) P06-FIX-03 durable revoke-failure containment > a malformed persistent assignment file cannot be overwritten by new grants or authorize old tools [1.44ms]
+[审核后台] 可信运行回调落盘失败: case=bg-probe-case-24bbedcf, run=run-pi-mv88y0ip-k9lte, assignment=ASSIGNMENT_d86867b88678 73 | function readAll(): ReviewAgentAssignment[] {
+74 |   const path = assignmentsPath()
+75 |   if (!existsSync(path)) return []
+76 |   // Missing file is a fresh profile. A present but corrupt/unreadable file
+77 |   // is NOT an empty authorization ledger: fail closed and never overwrite it.
+78 |   const parsed = JSON.parse(readFileSync(path, 'utf-8')) as { assignments?: ReviewAgentAssignment[] }
+                                 ^
+EISDIR: illegal operation on a directory, read
+ syscall: "read",
+   errno: -21,
+    code: "EISDIR"
+
+      at readAll (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:78:29)
+      at findActivePiReviewAssignment (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:235:10)
+      at getPiReviewBindingForSession (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/pi-case-review-service.ts:527:22)
+      at isCurrent (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:48:19)
+      at onRunOutcome (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:164:30)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts:413:16)
+
+[审核后台] V2 运行状态持久化失败: case=bg-probe-case-24bbedcf, run=run-pi-mv88y0ip-k9lte, assignment=ASSIGNMENT_d86867b88678 73 | function readAll(): ReviewAgentAssignment[] {
+74 |   const path = assignmentsPath()
+75 |   if (!existsSync(path)) return []
+76 |   // Missing file is a fresh profile. A present but corrupt/unreadable file
+77 |   // is NOT an empty authorization ledger: fail closed and never overwrite it.
+78 |   const parsed = JSON.parse(readFileSync(path, 'utf-8')) as { assignments?: ReviewAgentAssignment[] }
+                                 ^
+EISDIR: illegal operation on a directory, read
+ syscall: "read",
+   errno: -21,
+    code: "EISDIR"
+
+      at readAll (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:78:29)
+      at findActivePiReviewAssignment (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:235:10)
+      at getPiReviewBindingForSession (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/pi-case-review-service.ts:527:22)
+      at isCurrent (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:48:19)
+      at closeIfCurrent (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:56:8)
+      at closeSafely (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:110:7)
+      at finishExecution (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:125:9)
+
+[审核后台] 指派撤销未持久化（已进程内隔离）失败: case=bg-probe-case-24bbedcf, run=run-pi-mv88y0ip-k9lte, assignment=ASSIGNMENT_d86867b88678 73 | function readAll(): ReviewAgentAssignment[] {
+74 |   const path = assignmentsPath()
+75 |   if (!existsSync(path)) return []
+76 |   // Missing file is a fresh profile. A present but corrupt/unreadable file
+77 |   // is NOT an empty authorization ledger: fail closed and never overwrite it.
+78 |   const parsed = JSON.parse(readFileSync(path, 'utf-8')) as { assignments?: ReviewAgentAssignment[] }
+                                 ^
+EISDIR: illegal operation on a directory, read
+ syscall: "read",
+   errno: -21,
+    code: "EISDIR"
+
+      at readAll (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:78:29)
+      at revokeAssignment (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:140:15)
+      at finishExecution (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:136:9)
+
+(pass) P06-FIX-03 durable revoke-failure containment > failed revoke write after true ACK is observed: no unhandled rejection, Main ACK clears, grant locally denied [58.55ms]
+[审核后台] V2 运行状态持久化失败: case=bg-probe-case-5459ef60, run=run-pi-mv88y0kd-ba7iw, assignment=ASSIGNMENT_c1766df04d26 73 | function readAll(): ReviewAgentAssignment[] {
+74 |   const path = assignmentsPath()
+75 |   if (!existsSync(path)) return []
+76 |   // Missing file is a fresh profile. A present but corrupt/unreadable file
+77 |   // is NOT an empty authorization ledger: fail closed and never overwrite it.
+78 |   const parsed = JSON.parse(readFileSync(path, 'utf-8')) as { assignments?: ReviewAgentAssignment[] }
+                           ^
+SyntaxError: JSON Parse error: Expected '}'
+      at readAll (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:78:23)
+      at findActivePiReviewAssignment (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:235:10)
+      at getPiReviewBindingForSession (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/pi-case-review-service.ts:527:22)
+      at isCurrent (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:48:19)
+      at closeIfCurrent (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:56:8)
+      at closeSafely (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:110:7)
+      at finishExecution (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:121:9)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts:470:39)
+
+[审核后台] 指派撤销未持久化（已进程内隔离）失败: case=bg-probe-case-5459ef60, run=run-pi-mv88y0kd-ba7iw, assignment=ASSIGNMENT_c1766df04d26 73 | function readAll(): ReviewAgentAssignment[] {
+74 |   const path = assignmentsPath()
+75 |   if (!existsSync(path)) return []
+76 |   // Missing file is a fresh profile. A present but corrupt/unreadable file
+77 |   // is NOT an empty authorization ledger: fail closed and never overwrite it.
+78 |   const parsed = JSON.parse(readFileSync(path, 'utf-8')) as { assignments?: ReviewAgentAssignment[] }
+                           ^
+SyntaxError: JSON Parse error: Expected '}'
+      at readAll (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:78:23)
+      at revokeAssignment (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:140:15)
+      at finishExecution (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:136:9)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts:470:39)
+
+(pass) P06-FIX-03 durable revoke-failure containment > pre-ACK executor rejection under corrupt assignment storage settles the caller and releases the duplicate fence [33.33ms]
+[审核后台] 指派撤销未持久化（已进程内隔离）失败: case=bg-probe-case-02e03400, run=run-pi-mv88y0la-mwe0n, assignment=ASSIGNMENT_f048c300be0f 24 |       // 备份失败不阻塞写入
+25 |     }
+26 |   }
+27 | 
+28 |   // 写入临时文件
+29 |   writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf-8')
+       ^
+EACCES: permission denied, open '/tmp/cdut-review-background-p01-pl2hBP/review-agent-assignments.json.tmp'
+    path: "/tmp/cdut-review-background-p01-pl2hBP/review-agent-assignments.json.tmp",
+ syscall: "open",
+   errno: -13,
+    code: "EACCES"
+
+      at writeJsonFileAtomic (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/safe-file.ts:29:3)
+      at writeAll (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:93:3)
+      at revokeAssignment (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:151:3)
+      at finishExecution (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:136:9)
+
+(pass) P06-FIX-03 durable revoke-failure containment > EACCES from a readonly grants file leaves persistent revokedAt unconfirmed and denies the local grant [53.23ms]
+[审核V2] 运行文件解析失败: bg-probe-case-bfac1b1d/run-pi-mv88y0ms-dc6bk EISDIR: illegal operation on a directory, read
+ syscall: "read",
+   errno: -21,
+    code: "EISDIR"
+
+      at getRunV2 (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/run-store-v2.ts:84:23)
+      at onRunOutcome (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:158:27)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts:525:16)
+
+[审核后台] 可信运行回调落盘失败: case=bg-probe-case-bfac1b1d, run=run-pi-mv88y0ms-dc6bk, assignment=ASSIGNMENT_b5f85c4adc68 159 |         const active = admittedByCase.get(binding.caseId)
+160 |         const ownsThisRun = active?.runId === binding.runId && active.assignmentId === binding.assignmentId
+161 |         // The tool may have already completed V2. A late callback must not
+162 |         // reopen a terminal run or mutate a newer assignment.
+163 |         if (ownsThisRun && (!persisted || persisted.status === 'running' || persisted.status === 'queued')) {
+164 |           if (!persisted || !isCurrent(binding)) throw new Error('无法确认当前审核轮次及 V2 持久运行状态')
+                                                                 ^
+error: 无法确认当前审核轮次及 V2 持久运行状态
+      at onRunOutcome (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:164:60)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts:525:16)
+
+[审核V2] 运行文件解析失败: bg-probe-case-bfac1b1d/run-pi-mv88y0ms-dc6bk EISDIR: illegal operation on a directory, read
+ syscall: "read",
+   errno: -21,
+    code: "EISDIR"
+
+      at getRunV2 (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/run-store-v2.ts:84:23)
+      at getPiReviewBindingForSession (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/pi-case-review-service.ts:530:15)
+      at isCurrent (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:48:19)
+      at closeIfCurrent (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:56:8)
+      at closeSafely (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:110:7)
+      at finishExecution (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:125:9)
+
+(pass) P06-FIX-03 durable revoke-failure containment > invalid V2 final-state persistence is not accepted as terminal and cannot leave a stale ACK [46.74ms]
+(pass) P06-FIX-03 durable revoke-failure containment > a successful durable revoke still reports revokedAt and leaves an ordinary independent grant working [2.63ms]
+
+ 41 pass
+ 0 fail
+ 185 expect() calls
+Ran 41 tests across 5 files. [844.00ms]

@@ -1,0 +1,148 @@
+{
+  "templateId": "g01-special-campus-card",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "g01-c-object-a",
+      "subjectId": "sub-g01-c-object-a",
+      "title": "合成 特殊校园卡资格审核 g01-c-object-a",
+      "businessType": "g01-card-holder",
+      "scenario": "family",
+      "scenarioSource": {
+        "sourceId": "src-c-boundary",
+        "sourceVersionId": "g01-c-v1-4",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "deceased",
+          "applicability": "applicable",
+          "sourceId": "src-c-boundary",
+          "sourceVersionId": "g01-c-v1-4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "retired",
+          "applicability": "not-applicable",
+          "sourceId": "src-c-boundary",
+          "sourceVersionId": "g01-c-v1-4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "multi-generation",
+          "applicability": "not-applicable",
+          "sourceId": "src-c-boundary",
+          "sourceVersionId": "g01-c-v1-4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "secondment",
+          "applicability": "not-applicable",
+          "sourceId": "src-c-boundary",
+          "sourceVersionId": "g01-c-v1-4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "department-employed",
+          "applicability": "not-applicable",
+          "sourceId": "src-c-boundary",
+          "sourceVersionId": "g01-c-v1-4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "labor-dispatch",
+          "applicability": "not-applicable",
+          "sourceId": "src-c-boundary",
+          "sourceVersionId": "g01-c-v1-4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "long-service",
+          "applicability": "not-applicable",
+          "sourceId": "src-c-boundary",
+          "sourceVersionId": "g01-c-v1-4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "proxy",
+          "applicability": "not-applicable",
+          "sourceId": "src-c-boundary",
+          "sourceVersionId": "g01-c-v1-4",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "g01-c-object-b",
+      "subjectId": "sub-g01-c-object-b",
+      "title": "合成 特殊校园卡资格审核 g01-c-object-b",
+      "businessType": "g01-card-holder",
+      "scenario": "temporary-service",
+      "scenarioSource": {
+        "sourceId": "src-c-boundary",
+        "sourceVersionId": "g01-c-v1-4",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "deceased",
+          "applicability": "unknown",
+          "sourceId": "src-c-boundary",
+          "sourceVersionId": "g01-c-v1-4",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "retired",
+          "applicability": "not-applicable",
+          "sourceId": "src-c-boundary",
+          "sourceVersionId": "g01-c-v1-4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "multi-generation",
+          "applicability": "not-applicable",
+          "sourceId": "src-c-boundary",
+          "sourceVersionId": "g01-c-v1-4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "secondment",
+          "applicability": "not-applicable",
+          "sourceId": "src-c-boundary",
+          "sourceVersionId": "g01-c-v1-4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "department-employed",
+          "applicability": "not-applicable",
+          "sourceId": "src-c-boundary",
+          "sourceVersionId": "g01-c-v1-4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "labor-dispatch",
+          "applicability": "not-applicable",
+          "sourceId": "src-c-boundary",
+          "sourceVersionId": "g01-c-v1-4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "long-service",
+          "applicability": "not-applicable",
+          "sourceId": "src-c-boundary",
+          "sourceVersionId": "g01-c-v1-4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "proxy",
+          "applicability": "not-applicable",
+          "sourceId": "src-c-boundary",
+          "sourceVersionId": "g01-c-v1-4",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

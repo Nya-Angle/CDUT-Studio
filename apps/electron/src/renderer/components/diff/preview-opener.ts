@@ -15,6 +15,8 @@
 import * as React from 'react'
 import { getDefaultStore, useStore } from 'jotai'
 import { previewFileMapAtom, type PreviewFile } from '@/atoms/preview-atoms'
+import { agentSessionsAtom } from '@/atoms/agent-atoms'
+import { canOpenOrdinaryWorkTab, ensureOrdinaryWorkTabOwner, revokedAgentSessionIdsAtom } from '@/lib/agent-tab-access'
 import {
   agentDiffPanelTabAtom,
   agentSessionPathMapAtom,
@@ -77,6 +79,9 @@ export function openSidebarFilePreview(
   file: PreviewFile,
   options: SidebarPreviewOptions = {},
 ): string {
+  // 侧栏与兼容入口共用归属门禁，审核 owner 和已撤销会话不能进入普通预览。
+  if (store.get(revokedAgentSessionIdsAtom).has(sessionId)
+    || !canOpenOrdinaryWorkTab(store.get(agentSessionsAtom), sessionId)) return ''
   const normalizedFile = normalizePreviewFile(store, sessionId, file)
   // 严格只读：文件预览不允许写回临时/源文件；Git Diff 视图同样只读。
   const readOnlyFile: PreviewFile = { ...normalizedFile, readOnly: true }
@@ -115,6 +120,21 @@ export function openFilePreviewTab(
   return openSidebarFilePreview(store, sessionId, file, options)
 }
 
+/** Async version for early normal-session events: one Main-authorized lookup, never trust unknown event metadata. */
+export async function openFilePreviewTabAuthorized(
+  store: JotaiStore,
+  sessionId: string,
+  file: PreviewFile,
+  options: { activate?: boolean } = {},
+  isCurrent: () => boolean = () => true,
+  load: (id: string) => Promise<import('@profer/shared').AgentSessionMeta | null> =
+    (id) => window.electronAPI.getAgentSessionMeta(id),
+): Promise<string> {
+  if (!await ensureOrdinaryWorkTabOwner(store, sessionId, load, isCurrent)) return ''
+  if (!isCurrent()) return ''
+  return openFilePreviewTab(store, sessionId, file, options)
+}
+
 /** 模块级入口（与 usePanelAutoLayout 的模块级函数同一模式），供非 React 上下文调用。 */
 export function openFilePreviewTabForSession(
   sessionId: string,
@@ -129,7 +149,7 @@ export function useOpenPreview() {
 
   return React.useCallback(
     (sessionId: string, file: PreviewFile) => {
-      openSidebarFilePreview(store, sessionId, file)
+      void openFilePreviewTabAuthorized(store, sessionId, file)
     },
     [store],
   )

@@ -1,0 +1,29 @@
+{
+  "name": "01-frozen-install",
+  "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014",
+  "argv": [
+    "bun",
+    "install",
+    "--frozen-lockfile"
+  ],
+  "startedAt": "2026-10-14T15:24:07.978647+00:00",
+  "environment": {
+    "NO_COLOR": "1",
+    "PROFER_CONFIG_DIR": "/tmp/p06-live-gates-7becn7v1/config",
+    "PROFER_USER_DATA_DIR": "/tmp/p06-live-gates-7becn7v1/user-data",
+    "CI": "true"
+  },
+  "finishedAt": "2026-10-14T15:24:08.115919+00:00",
+  "exitCode": 0,
+  "files": {
+    "01-frozen-install.stdout.log": {
+      "sha256": "3e0dd03092dbbe0b3425f2f7059372161e031df0b5862477ff94f4b2dba926bc",
+      "bytes": 63
+    },
+    "01-frozen-install.stderr.log": {
+      "sha256": "b17e7d1ebdbf4f86ab3481a0355d53a2bc425a2d93414a2b4abf5a0591256eab",
+      "bytes": 62
+    }
+  }
+}

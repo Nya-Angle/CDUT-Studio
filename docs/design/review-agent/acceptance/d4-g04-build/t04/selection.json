@@ -1,0 +1,64 @@
+{
+  "templateId": "d4-g04-t04",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "object-a",
+      "subjectId": "subject-a",
+      "title": "实验项目安全风险评估审核 合成对象 A",
+      "businessType": "g04-project-hazard",
+      "scenario": "research",
+      "scenarioSource": {
+        "sourceId": "src-synthetic",
+        "sourceVersionId": "synthetic-t04-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "hazard",
+          "applicability": "applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t04-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "revision",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t04-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "object-b",
+      "subjectId": "subject-b",
+      "title": "实验项目安全风险评估审核 合成对象 B",
+      "businessType": "g04-project-hazard",
+      "scenario": "teaching",
+      "scenarioSource": {
+        "sourceId": "src-synthetic",
+        "sourceVersionId": "synthetic-t04-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "hazard",
+          "applicability": "unknown",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t04-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "revision",
+          "applicability": "applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t04-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

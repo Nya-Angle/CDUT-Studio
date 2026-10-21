@@ -332,6 +332,10 @@ export interface ChannelModel {
    * - false：强制关闭（即使模型 / 渠道验证支持也不按 1M 处理）
    */
   context1m?: boolean
+  /** 用户为该模型声明的上下文窗口 token 数；设置后覆盖 provider/catalog 推断值。 */
+  contextWindow?: number
+  /** 用户为该模型声明的最大输出 token 数；设置后覆盖 provider/catalog 推断值。 */
+  maxTokens?: number
   /** 来源标记：手动添加的模型在拉取供应商列表时保留，不会被覆盖清除 */
   source?: 'manual' | 'fetched'
   /** 服务端代管模式下，当前登录用户实际可见的模型倍率。 */

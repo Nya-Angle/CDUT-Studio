@@ -1,0 +1,35 @@
+$ node scripts/check-skin-surface-contract.mjs
+✓ forest-dark: Surface Contract v2（4705 bytes）
+✓ forest-light: Surface Contract v2（4592 bytes）
+✓ mist-paper-dark: Surface Contract v2（5703 bytes）
+✓ ocean-dark: Surface Contract v2（4960 bytes）
+✓ ocean-light: Surface Contract v2（4606 bytes）
+✓ slate-dark: Surface Contract v2（5269 bytes）
+✓ slate-light: Surface Contract v2（5210 bytes）
+✓ terminal-dark: Surface Contract v2（13807 bytes）
+✓ skin-template: Surface Contract v2
+
+ℹ 普通中性色审计（非阻断，品牌/媒体/代码高亮等需按域复核）：25 个文件
+  - apps/electron/src/renderer/components/agent/ContextUsageBadge.tsx (1)
+  - apps/electron/src/renderer/components/agent/ProjectGraphPanel.tsx (1)
+  - apps/electron/src/renderer/components/agent/SDKMessageRenderer.tsx (1)
+  - apps/electron/src/renderer/components/agent/agent-renderable-image.tsx (1)
+  - apps/electron/src/renderer/components/ai-elements/message.tsx (2)
+  - apps/electron/src/renderer/components/cdut-zone/AiClassKnowledgeTree.tsx (3)
+  - apps/electron/src/renderer/components/cdut-zone/yanhu/YanhuBlockedPage.tsx (1)
+  - apps/electron/src/renderer/components/cdut-zone/yanhu/YanhuErrorPage.tsx (1)
+  - apps/electron/src/renderer/components/content-review/CaseTimelinePanel.tsx (12)
+  - apps/electron/src/renderer/components/diff/DiffTabContent.tsx (1)
+  - apps/electron/src/renderer/components/diff/markdown-preview-extensions.tsx (1)
+  - apps/electron/src/renderer/components/onboarding/FeatureTour.tsx (7)
+  - apps/electron/src/renderer/components/onboarding/IntroFluidBackground.tsx (1)
+  - apps/electron/src/renderer/components/onboarding/IntroWaterRipple.tsx (1)
+  - apps/electron/src/renderer/components/onboarding/OnboardingView.tsx (1)
+  - apps/electron/src/renderer/components/planning/CalendarWorkspace.tsx (1)
+  - apps/electron/src/renderer/components/planning/PlanningView.tsx (3)
+  - apps/electron/src/renderer/components/settings/BotHubSettings.tsx (2)
+  - apps/electron/src/renderer/components/settings/DingTalkSettings.tsx (1)
+  - apps/electron/src/renderer/components/settings/FeishuSettings.tsx (4)
+  - … 另有 5 个文件
+
+全部 8 个内置皮肤与官方模板满足 Surface Contract v2 ✓

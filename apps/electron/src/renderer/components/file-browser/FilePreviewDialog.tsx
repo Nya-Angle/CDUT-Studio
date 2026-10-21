@@ -1,0 +1,262 @@
+/**
+ * FilePreviewDialog — 文件内嵌预览弹窗
+ *
+ * 根据文件扩展名分派预览方式：
+ * - 图片: 自渲染 <img>（useSmoothZoom：普通滚轮直接缩放、rAF 平滑、指针锚定）
+ *   曾试过交给 OFV viewer，但它的 imagePlugin 要求按住 Ctrl/Cmd 滚轮才缩放、
+ *   且是档位式 zoom-in/out 命令，体验不如自渲染版本，故改回。
+ * - PDF: prepare-pdf-preview → HTML iframe
+ * - Office: 复用只读 OfficePreview（与上游侧栏一致）
+ * - 代码/文本: resolve-and-read → 代码查看器
+ * - 其他: 文件信息 + 下载提示
+ */
+
+import * as React from 'react'
+import { X, Download, ExternalLink, FolderOpen, Loader2 } from 'lucide-react'
+import DOMPurify from 'dompurify'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@profer/ui/primitives/dialog'
+import { Button } from '@profer/ui/primitives/button'
+import { cn } from '@/lib/utils'
+import { OfficePreview } from './office-preview/OfficePreview'
+import { normalizeOfficeFormat } from './office-preview/silurus-bridge'
+import { useSmoothZoom } from '@profer/ui'
+import type { FileAccessOptions } from '@profer/shared'
+
+interface FilePreviewDialogProps {
+  open: boolean
+  filePath: string
+  fileName: string
+  onClose: () => void
+  /** 团队模式：预览前先下载到本地 */
+  teamDownload?: () => Promise<string | null>
+}
+
+type PreviewState =
+  | { status: 'loading' }
+  | { status: 'image'; src: string }
+  | { status: 'html'; html: string }
+  | { status: 'office'; path: string; access?: FileAccessOptions }
+  | { status: 'iframe'; src: string }
+  | { status: 'text'; content: string; language: string }
+  | { status: 'unsupported' }
+  | { status: 'error'; message: string }
+
+const TEXT_EXTS = new Set([
+  'txt', 'md', 'eml', 'json', 'csv', 'xml', 'css', 'scss', 'less',
+  'js', 'jsx', 'ts', 'tsx', 'py', 'rb', 'go', 'rs', 'java', 'c', 'cpp', 'h',
+  'yaml', 'yml', 'toml', 'ini', 'cfg', 'conf', 'sh', 'bat', 'sql', 'graphql',
+  'env', 'gitignore', 'dockerfile', 'log',
+])
+
+const IMAGE_EXTS = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'bmp', 'ico'])
+
+function ext(name: string): string {
+  return name.split('.').pop()?.toLowerCase() ?? ''
+}
+
+function langFromExt(e: string): string {
+  const map: Record<string, string> = {
+    js: 'javascript', jsx: 'javascript', ts: 'typescript', tsx: 'typescript',
+    py: 'python', rb: 'ruby', rs: 'rust', go: 'go', java: 'java',
+    c: 'c', cpp: 'cpp', h: 'c', sh: 'bash', bat: 'batch',
+    sql: 'sql', yaml: 'yaml', yml: 'yaml', toml: 'toml',
+    json: 'json', xml: 'xml', html: 'html', css: 'css',
+    md: 'markdown', graphql: 'graphql',
+  }
+  return map[e] ?? e
+}
+
+export function FilePreviewDialog({ open, filePath, fileName, onClose, teamDownload }: FilePreviewDialogProps): React.ReactElement {
+  const [state, setState] = React.useState<PreviewState>({ status: 'loading' })
+  const [resolvedPath, setResolvedPath] = React.useState<string | null>(null)
+  // 自渲染图片缩放：普通滚轮直接缩放（不用按 Ctrl）+ rAF 平滑 + 指针锚定 + 拖拽平移
+  const { zoom: imageZoom, pan: imagePan, bindRef: bindImagePreview, reset: resetImageZoom, onPanMouseDown: onImagePanMouseDown } =
+    useSmoothZoom({ minZoom: 0.5, maxZoom: 5 })
+
+  React.useEffect(() => {
+    if (!open || !filePath) return
+    setState({ status: 'loading' })
+    setResolvedPath(null)
+    resetImageZoom(1)
+    loadPreview()
+  }, [open, filePath, fileName, resetImageZoom])
+
+  const loadPreview = async (): Promise<void> => {
+    const e = ext(fileName)
+    try {
+      let localPath = filePath
+      // 团队模式：先下载到本地
+      if (teamDownload) {
+        const downloaded = await teamDownload()
+        if (!downloaded) { setState({ status: 'error', message: '文件下载失败，请重试' }); return }
+        localPath = downloaded
+      }
+      setResolvedPath(localPath)
+
+      // 团队下载后拿到的是临时目录绝对路径，IPC handler 需要授权上下文
+      const parentDir = localPath.replace(/[/\\][^/\\]*$/, '') || '/'
+      const access = teamDownload ? { candidateBasePaths: [parentDir] } : undefined
+
+      if (IMAGE_EXTS.has(e)) {
+        const url = await window.electronAPI.registerPreviewPath(localPath)
+        if (url) setState({ status: 'image', src: url })
+        else setState({ status: 'error', message: '无法读取图片' })
+      } else if (e === 'pdf') {
+        const result = await window.electronAPI.preparePdfPreview(localPath, access)
+        if (result?.tmpHtmlUrl) setState({ status: 'iframe', src: result.tmpHtmlUrl })
+        else setState({ status: 'error', message: '无法预览 PDF' })
+      } else if (normalizeOfficeFormat(fileName)) {
+        setState({ status: 'office', path: localPath, access })
+      } else if (e === 'html' || e === 'htm') {
+        const result = await window.electronAPI.resolveAndReadFile(localPath, access)
+        if (!result?.content) { setState({ status: 'error', message: '无法读取网页文件' }); return }
+        const safeHtml = DOMPurify.sanitize(result.content, {
+          FORBID_TAGS: ['script', 'style', 'iframe', 'object', 'embed', 'form', 'input', 'button'],
+          FORBID_ATTR: ['style'],
+        })
+        const securityAndStyle = '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; img-src data: blob:; style-src \'unsafe-inline\'; font-src data:;">'
+          + '<style>body{font:14px/1.65 system-ui,sans-serif;color:#222;padding:20px;overflow-wrap:anywhere}img{max-width:100%;height:auto}table{border-collapse:collapse;max-width:100%}td,th{border:1px solid #bbb;padding:5px 8px}</style>'
+        setState({ status: 'html', html: `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1">${securityAndStyle}</head><body>${safeHtml}</body></html>` })
+      } else if (TEXT_EXTS.has(e) || !e) {
+        const result = await window.electronAPI.resolveAndReadFile(localPath, access)
+        if (result?.content) setState({ status: 'text', content: result.content, language: langFromExt(e) })
+        else setState({ status: 'error', message: '无法读取文件' })
+      } else {
+        setState({ status: 'unsupported' })
+      }
+    } catch (err) {
+      setState({ status: 'error', message: err instanceof Error ? err.message : '加载失败' })
+    }
+  }
+
+  const handleOpenLocalFile = async (): Promise<void> => {
+    let targetPath = resolvedPath ?? filePath
+    if (!resolvedPath && teamDownload) {
+      const downloaded = await teamDownload()
+      if (!downloaded) {
+        setState({ status: 'error', message: '文件下载失败，请重试' })
+        return
+      }
+      targetPath = downloaded
+      setResolvedPath(downloaded)
+    }
+    const parentDir = targetPath.replace(/[/\\][^/\\]*$/, '') || '/'
+    window.electronAPI.systemOpenFile(
+      targetPath,
+      undefined,
+      teamDownload ? { candidateBasePaths: [parentDir] } : undefined,
+    ).catch(() => {})
+  }
+
+  const handleShowInFolder = async (): Promise<void> => {
+    let targetPath = resolvedPath ?? filePath
+    if (!resolvedPath && teamDownload) {
+      const downloaded = await teamDownload()
+      if (!downloaded) {
+        setState({ status: 'error', message: '文件下载失败，请重试' })
+        return
+      }
+      targetPath = downloaded
+      setResolvedPath(downloaded)
+    }
+    const parentDir = targetPath.replace(/[/\\][^/\\]*$/, '') || '/'
+    window.electronAPI.showItemInFolder(
+      targetPath,
+      teamDownload ? [parentDir] : undefined,
+    ).catch(() => {})
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={(o) => { if (!o) onClose() }}>
+      {/* 标题栏右侧已自带关闭按钮（见 DialogHeader），关闭 DialogContent 默认注入的右上角 X，避免两个关闭按钮 */}
+      <DialogContent hideClose className={cn(
+        'max-w-[calc(56rem-18px)] h-[calc(80vh-24px)] flex flex-col p-0 gap-0',
+        state.status === 'image' && 'max-w-[calc(64rem-18px)] h-[calc(90vh-24px)]',
+      )}>
+        <DialogHeader className="flex flex-row items-center justify-between border-b border-surface-border px-4 py-2 flex-shrink-0">
+          <DialogTitle className="text-sm font-medium truncate flex-1 mr-2">{fileName}</DialogTitle>
+          <DialogDescription className="sr-only">
+            预览文件 {fileName}
+          </DialogDescription>
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="icon" className="h-7 w-7"
+              onClick={() => { void handleOpenLocalFile() }}
+              title="用默认应用打开">
+              <ExternalLink className="size-3.5" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-7 w-7"
+              onClick={() => { void handleShowInFolder() }}
+              title="打开文件所在位置">
+              <FolderOpen className="size-3.5" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onClose}>
+              <X className="size-3.5" />
+            </Button>
+          </div>
+        </DialogHeader>
+
+        <div className="flex-1 min-h-0 overflow-auto bg-surface-raised">
+          {state.status === 'loading' && (
+            <div className="flex items-center justify-center h-full">
+              <Loader2 className="size-6 animate-spin text-muted-foreground" />
+            </div>
+          )}
+          {state.status === 'image' && (
+            <div className="flex h-full min-h-full w-full min-w-full items-center justify-center overflow-hidden">
+              <img
+                ref={bindImagePreview}
+                src={state.src}
+                alt={fileName}
+                className="max-w-full max-h-full object-contain select-none cursor-grab"
+                style={{ transform: `translate(${imagePan.x}px, ${imagePan.y}px) scale(${imageZoom})`, transformOrigin: '0 0' }}
+                onMouseDown={onImagePanMouseDown}
+                draggable={false}
+                title="滚动滚轮缩放，拖拽平移"
+              />
+            </div>
+          )}
+          {state.status === 'html' && (
+            <iframe srcDoc={state.html} className="w-full h-full border-0" sandbox="" />
+          )}
+          {state.status === 'office' && (
+            <OfficePreview
+              filePath={state.path}
+              fileName={fileName}
+              access={state.access}
+              className="h-full"
+            />
+          )}
+          {state.status === 'iframe' && (
+            <iframe src={state.src} className="w-full h-full border-0" />
+          )}
+          {state.status === 'text' && (
+            ext(fileName) === 'md' ? (
+              <article className="prose prose-sm dark:prose-invert mx-auto max-w-4xl px-6 py-5 prose-headings:scroll-mt-4 prose-table:block prose-table:overflow-x-auto">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{state.content}</ReactMarkdown>
+              </article>
+            ) : (
+              <pre className="h-full overflow-auto bg-code p-4 font-mono text-xs whitespace-pre-wrap text-code-foreground">
+                <code>{state.content}</code>
+              </pre>
+            )
+          )}
+          {state.status === 'unsupported' && (
+            <div className="flex flex-col items-center justify-center h-full gap-3 text-muted-foreground">
+              <p className="text-sm">暂不支持预览此文件类型（.{ext(fileName)}）</p>
+              <Button variant="outline" size="sm" onClick={() => { void handleOpenLocalFile() }}>
+                <Download className="size-3.5 mr-1" />用默认应用打开
+              </Button>
+            </div>
+          )}
+          {state.status === 'error' && (
+            <div className="flex items-center justify-center h-full text-sm text-destructive">
+              {state.message}
+            </div>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "d4-g03-template-v1",
+  "templateId": "g03-t11",
+  "sourceFile": "G03-T11_正式业务模板_MD_v0.1.md",
+  "sourceSha256": "bd051a6332d9c557fec3103d486747f3ceca042d928c3758ace6f35966f2eb98",
+  "sourceVersion": "business-md-v0.1",
+  "technicalSha": "a7a6a11d4840ad64cfc858c17b35f35180adf063",
+  "moduleCount": 35,
+  "checkCount": 57,
+  "sourceBindingCount": 57,
+  "sharedModuleLocks": [],
+  "reuse": "local by design; synthetic B01/B02 not promoted as policy",
+  "status": "GENERATED_NOT_RUN",
+  "policy": "POLICY_HOLD",
+  "gold": "UNTOUCHED"
+}

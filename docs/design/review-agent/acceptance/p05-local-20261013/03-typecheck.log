@@ -1,0 +1,15 @@
+SHA: df0c0d5740d4522c2ea4663c8e8b93a497a70b7f
+CWD: /home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013
+COMMAND: bun run typecheck
+START UTC: 2026-10-12T17:50:35.126146+00:00
+
+$ bun run --filter='*' typecheck
+@profer/agent-fabric typecheck: Exited with code 0
+@profer/benchmark-multihop typecheck: Exited with code 0
+@profer/shared typecheck: Exited with code 0
+@profer/project-core typecheck: Exited with code 0
+@profer/session-core typecheck: Exited with code 0
+@profer/core typecheck: Exited with code 0
+@profer/cli typecheck: Exited with code 0
+@profer/ui typecheck: Exited with code 0
+@profer/electron typecheck: Exited with code 0

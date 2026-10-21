@@ -23,18 +23,55 @@ const template: TemplateVersion = {
 
 const caseV2: ReviewCaseV2 = { id: 'case-stage-1', templateId: 't', templateVersion: 1, title: '阶段测试', objectType: 'person', caseFields: {}, subjects: [], documents: [], stage: 'submitted', revision: 0, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
 const actor = { actorId: 'u1', actorSource: 'local' as const, role: 'reviewer' as const }
+const teacherActor = { actorId: 'teacher-1', actorSource: 'local' as const, role: 'teacher' as const }
 let requestIdCounter = 0
 const nextReq = (): string => `req-${(requestIdCounter += 1)}`
 
 let caseCounter = 0
-async function seed(): Promise<{ caseId: string; firstTaskId: string }> {
+async function seed(flowTemplate: TemplateVersion = template): Promise<{ caseId: string; firstTaskId: string }> {
   const caseId = `case-stage-${(caseCounter += 1)}`
   await createAggregate(caseId, { ...caseV2, id: caseId })
-  const taskResult = await ensureInitialTask(caseId, template, actor)
+  const taskResult = await ensureInitialTask(caseId, flowTemplate, actor)
   return { caseId, firstTaskId: taskResult.ok ? taskResult.entity!.id : '' }
 }
 
 describe('阶段推进（R07，修正误判 6）', () => {
+  test('Given 三阶段审核且时钟不前进 When 连续通过 Then 每个阶段任务仍有唯一 ID 并可终审', async () => {
+    const threeStageTemplate = {
+      ...template,
+      stages: [
+        { id: 'first', name: '初审', kind: 'manual-review', executorRole: 'reviewer', nextStageId: 'middle' },
+        { id: 'middle', name: '复核', kind: 'manual-review', executorRole: 'reviewer', nextStageId: 'final' },
+        { id: 'final', name: '终审', kind: 'manual-review', executorRole: 'teacher' },
+      ],
+    } as TemplateVersion
+    const originalNow = Date.now
+    Date.now = () => 1
+    try {
+      const { caseId, firstTaskId } = await seed(threeStageTemplate)
+      let agg = readAggregate(caseId)!
+      const first = await recordStageDecision(caseId, { requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision, payload: { action: 'stage-pass', taskId: firstTaskId, reason: '初审通过' } }, threeStageTemplate)
+      expect(first.ok).toBeTrue()
+      if (!first.ok) return
+      agg = first.aggregate
+      const middleTask = agg.tasks.find((task) => task.stageId === 'middle' && task.status === 'open')!
+      const middle = await recordStageDecision(caseId, { requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision, payload: { action: 'stage-pass', taskId: middleTask.id, reason: '复核通过' } }, threeStageTemplate)
+      expect(middle.ok).toBeTrue()
+      if (!middle.ok) return
+      agg = middle.aggregate
+      const finalTask = agg.tasks.find((task) => task.stageId === 'final' && task.status === 'open')!
+      const final = await recordStageDecision(caseId, { requestId: nextReq(), actor: teacherActor, expectedRevision: agg.caseV2.revision, payload: { action: 'stage-pass', taskId: finalTask.id, reason: '终审通过' } }, threeStageTemplate)
+      expect(final.ok).toBeTrue()
+      if (final.ok) {
+        expect(final.aggregate.caseV2.stage).toBe('decided')
+        expect(new Set(final.aggregate.tasks.map((task) => task.id)).size).toBe(3)
+        expect(final.aggregate.decisions.map((decision) => decision.stageId)).toEqual(['first', 'middle', 'final'])
+      }
+    } finally {
+      Date.now = originalNow
+    }
+  })
+
   test('Given 初审通过 When 决定 Then 创建终审任务且案卷不 decided', async () => {
     const { caseId, firstTaskId } = await seed()
     const aggregate = readAggregate(caseId)!
@@ -53,12 +90,42 @@ describe('阶段推进（R07，修正误判 6）', () => {
     const first = await recordStageDecision(caseId, { requestId: nextReq(), actor, expectedRevision: 1, payload: { action: 'stage-pass', taskId: firstTaskId, reason: '初审通过' } }, template)
     agg = first.ok ? first.aggregate : agg
     const finalTask = agg.tasks.find((task) => task.stageId === 'final' && task.status === 'open')!
-    const second = await recordStageDecision(caseId, { requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision, payload: { action: 'stage-pass', taskId: finalTask.id, reason: '终审通过' } }, template)
+    const second = await recordStageDecision(caseId, { requestId: nextReq(), actor: teacherActor, expectedRevision: agg.caseV2.revision, payload: { action: 'stage-pass', taskId: finalTask.id, reason: '终审通过' } }, template)
     expect(second.ok).toBeTrue()
     if (second.ok) {
       expect(second.aggregate.caseV2.stage).toBe('decided')
       expect(second.aggregate.decisions.at(-1)!.finality).toBe('final')
     }
+  })
+
+  test('Given reviewer 尝试代签教师终审 When 提交 Then 拒绝且不写决定', async () => {
+    const { caseId, firstTaskId } = await seed()
+    const first = await recordStageDecision(caseId, {
+      requestId: nextReq(), actor, expectedRevision: 1,
+      payload: { action: 'stage-pass', taskId: firstTaskId, reason: '初审通过' },
+    }, template)
+    expect(first.ok).toBeTrue()
+    const agg = readAggregate(caseId)!
+    const finalTask = agg.tasks.find((task) => task.stageId === 'final' && task.status === 'open')!
+    const invalid = await recordStageDecision(caseId, {
+      requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision,
+      payload: { action: 'stage-pass', taskId: finalTask.id, reason: '冒签终审' },
+    }, template)
+    expect(invalid.ok).toBeFalse()
+    if (!invalid.ok) expect(invalid.code).toBe('INVALID_TRANSITION')
+    expect(readAggregate(caseId)!.decisions).toHaveLength(1)
+  })
+
+  test('Given 传入别的模板定义 When 阶段决定 Then 拒绝跨模板与版本伪装', async () => {
+    const { caseId, firstTaskId } = await seed()
+    const fakeTemplate = { ...template, version: 99 }
+    const invalid = await recordStageDecision(caseId, {
+      requestId: nextReq(), actor, expectedRevision: 1,
+      payload: { action: 'stage-pass', taskId: firstTaskId, reason: '假模板' },
+    }, fakeTemplate)
+    expect(invalid.ok).toBeFalse()
+    if (!invalid.ok) expect(invalid.code).toBe('INVALID_TRANSITION')
+    expect(readAggregate(caseId)!.decisions).toHaveLength(0)
   })
 
   test('Given 最终驳回 When 决定 Then decided（不自动待补件）', async () => {
@@ -109,6 +176,17 @@ describe('补件多请求门控（06 §5.3）', () => {
     agg = second.ok ? second.aggregate : agg
     const openRequests = agg.supplements.filter((request) => request.status === 'open')
     expect(openRequests).toHaveLength(2)
+    // 非法判定值必须 fail-closed：否则 status 会被写成 undefined，
+    // 补件既不关闭也不参与门控（真机 A09 曾复现）。
+    const bogus = await resolveSupplementV2(caseId, {
+      requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision,
+      payload: { supplementId: openRequests[0]!.id, outcome: 'satisfied-x' as never, reason: '非法值' },
+    })
+    expect(bogus.ok).toBeFalse()
+    if (!bogus.ok) expect(bogus.code).toBe('VALIDATION_FAILED')
+    const afterBogus = readAggregate(caseId)!
+    expect(afterBogus.supplements.find((request) => request.id === openRequests[0]!.id)?.status).toBe('open')
+
     const satisfied = await resolveSupplementV2(caseId, { requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision, payload: { supplementId: openRequests[0]!.id, outcome: 'satisfied', reason: '要素齐' } })
     expect(satisfied.ok).toBeTrue()
     if (satisfied.ok) {
@@ -160,6 +238,60 @@ describe('补件回复与任务回流（G04/G05）', () => {
     const denied = await respondSupplementV2(caseId, { requestId: nextReq(), actor: { actorId: 't-1', actorSource: 'local', role: 'teacher' }, expectedRevision: aggregate.caseV2.revision, payload: { supplementId: aggregate.supplements[0]!.id, note: '代回复' } })
     expect(denied.ok).toBeFalse()
     if (!denied.ok) expect(denied.code).toBe('INVALID_TRANSITION')
+  })
+})
+
+describe('角色安全收口（P0）', () => {
+  test('学生或非来源阶段审核员不能代替来源审核人判定补件', async () => {
+    const { caseId, firstTaskId } = await seed()
+    const opened = await recordStageDecision(caseId, {
+      requestId: nextReq(), actor, expectedRevision: 1,
+      payload: { action: 'return-for-supplement', taskId: firstTaskId,
+        reason: '缺材料', supplementRequiredElements: ['原件'], supplementReason: '请补充材料' },
+    }, template)
+    expect(opened.ok).toBeTrue()
+    const agg = readAggregate(caseId)!
+    const forbidden = await resolveSupplementV2(caseId, {
+      requestId: nextReq(), actor: teacherActor, expectedRevision: agg.caseV2.revision,
+      payload: { supplementId: agg.supplements[0]!.id, outcome: 'satisfied', reason: '尝试越权' },
+    })
+    expect(forbidden.ok).toBeFalse()
+    if (!forbidden.ok) expect(forbidden.code).toBe('INVALID_TRANSITION')
+    expect(readAggregate(caseId)?.supplements[0]?.status).toBe('open')
+  })
+
+  test('未获得复核教师角色的本地 reviewer 不得自行维持或更改申诉结论', async () => {
+    const { caseId, firstTaskId } = await seed()
+    const denied = await recordStageDecision(caseId, {
+      requestId: nextReq(), actor, expectedRevision: 1,
+      payload: { action: 'final-reject', taskId: firstTaskId, reason: '初审不符' },
+    }, template)
+    expect(denied.ok).toBeTrue()
+    const { submitCommand } = await import('./case-store-v2')
+    const base = readAggregate(caseId)!
+    const created = await submitCommand(caseId, {
+      requestId: nextReq(), actor, expectedRevision: base.caseV2.revision,
+      type: 'SeedAppealForPermissionTest', payload: {},
+    }, () => ({
+      summary: '测试创建待处理申诉',
+      mutate: (draft) => {
+        draft.appeals.push({
+          id: `role-appeal-${caseId}`, caseId, againstDecisionId: draft.decisions[0]!.id,
+          appellant: { actorId: 'student', actorSource: 'local' },
+          statement: '请求复核', newEvidenceDocumentVersionIds: [], status: 'in-review',
+          createdAt: '2026-10-10T00:00:00Z',
+        })
+      },
+    }))
+    expect(created.ok).toBeTrue()
+    const agg = readAggregate(caseId)!
+    const invalid = await resolveAppealV2(caseId, {
+      requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision,
+      payload: { appealId: `role-appeal-${caseId}`, resolution: 'maintain-original', reason: '冒签教师' },
+    })
+    expect(invalid.ok).toBeFalse()
+    if (!invalid.ok) expect(invalid.code).toBe('INVALID_TRANSITION')
+    expect(readAggregate(caseId)?.appeals[0]?.status).toBe('in-review')
   })
 })
 

@@ -71,14 +71,17 @@ export function buildEvidenceLinks(
     now?: string
   },
 ): EvidenceLink[] {
-  const now = input.now ?? new Date().toISOString()
   const added: EvidenceLink[] = []
-  for (const subjectId of input.subjectIds) {
-    const duplicate = existing.some(
+  const supportsFact = input.supportsFact.trim()
+  if (!supportsFact) return existing
+  // 同一条 Main 命令可提供多个目标。必须同时查已有记录和本次新增，
+  // 否则 [s1, s1] 会在一个事务内产生两条相同关联。
+  for (const subjectId of new Set(input.subjectIds)) {
+    const duplicate = [...existing, ...added].some(
       (link) =>
         link.documentVersionId === input.documentVersionId &&
         link.subjectId === subjectId &&
-        link.supportsFact === input.supportsFact,
+        link.supportsFact === supportsFact,
     )
     if (duplicate) continue // 含已拒绝：人工否决不因 AI 重跑复活（A05）
     added.push({
@@ -86,11 +89,10 @@ export function buildEvidenceLinks(
       documentVersionId: input.documentVersionId,
       blockRef: input.blockRef,
       subjectId,
-      supportsFact: input.supportsFact,
+      supportsFact,
       status: input.linkedBy === 'user' ? 'confirmed' : 'candidate',
       reuseScope: input.reuseScope,
       linkedBy: input.linkedBy,
-      ...(now ? {} : {}),
     })
   }
   return [...existing, ...added]

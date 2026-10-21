@@ -1,0 +1,2 @@
+$ bun scripts/check-boundaries.ts
+check-boundaries: ✅ 无边界违规

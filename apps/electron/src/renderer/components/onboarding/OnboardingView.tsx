@@ -8,8 +8,9 @@
  *  Step 1：欢迎
  *  Step 2：核心功能导览（6 张特性卡片）
  *  Step 3：迁移数据指引（从其他设备 / 其他用户导入配置）
- *  Step 4：诗意插页（海内存知己，天涯若比邻）——独立整屏，如同 Windows 10 首启
- *  Step 5：品牌收尾（CDUT Studio / 欢迎您！），点击进入主界面
+ *  Step 4：审核准备（复用全局渠道，显式选择模型、按需真实自检）
+ *  Step 5：诗意插页（海内存知己，天涯若比邻）——独立整屏，如同 Windows 10 首启
+ *  Step 6：品牌收尾（CDUT Studio / 欢迎您！），点击进入主界面
  *
  * 说明：Windows 执行环境已改为静默自适应（Git Bash > 内置 BusyBox > WSL > 原生 PowerShell），
  * 首启不再需要环境检测页；环境自检仍可从「设置 → 关于」随时发起。
@@ -21,6 +22,7 @@ import { cn } from '@/lib/utils'
 import { ChevronRight, HardDriveDownload, Users } from 'lucide-react'
 import { Button } from '@profer/ui/primitives/button'
 import { migrationImportDialogOpenAtom } from '@/atoms/migration-atoms'
+import { settingsOpenAtom, settingsTabAtom } from '@/atoms/settings-tab'
 import { IntroWaterRipple } from './IntroWaterRipple'
 import { IntroFluidBackground } from './IntroFluidBackground'
 import { FeatureTour } from './FeatureTour'
@@ -45,6 +47,8 @@ export function OnboardingView({
 }: OnboardingViewProps) {
   const [step, setStep] = useState<OnboardingStep>(initialStep)
   const setMigrationImportDialogOpen = useSetAtom(migrationImportDialogOpenAtom)
+  const setSettingsOpen = useSetAtom(settingsOpenAtom)
+  const setSettingsTab = useSetAtom(settingsTabAtom)
 
   const handleFinish = async (openTutorial?: boolean) => {
     if (persistCompletion) {

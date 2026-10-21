@@ -1,0 +1,116 @@
+[
+  {
+    "at": "2026-10-13T13:15:39.713Z",
+    "event": "accepted-first",
+    "caseId": "case-1791897333695-hoeek7",
+    "runId": "run-pi-mv6perlt-1p59y"
+  },
+  {
+    "at": "2026-10-13T13:15:44.283Z",
+    "event": "provider-reply-observed",
+    "caseId": "case-1791897333695-hoeek7",
+    "runId": "run-pi-mv6perlt-1p59y",
+    "assistantReplies": 1,
+    "toolCalls": [
+      "review_read_documents"
+    ]
+  },
+  {
+    "at": "2026-10-13T13:15:44.319Z",
+    "event": "stopped-ledger",
+    "caseId": "case-1791897333695-hoeek7",
+    "runId": "run-pi-mv6perlt-1p59y",
+    "status": "cancelled"
+  },
+  {
+    "at": "2026-10-13T13:15:44.740Z",
+    "event": "synthetic-material-replaced",
+    "caseId": "case-1791897333695-hoeek7",
+    "runId": "run-pi-mv6perlt-1p59y"
+  },
+  {
+    "at": "2026-10-13T13:15:44.783Z",
+    "event": "accepted-second",
+    "caseId": "case-1791897333695-hoeek7",
+    "runId": "run-pi-mv6pew39-cymbi",
+    "mode": "update"
+  },
+  {
+    "at": "2026-10-13T13:15:44.898Z",
+    "event": "old-stop-denied-current-running",
+    "caseId": "case-1791897333695-hoeek7",
+    "runId": "run-pi-mv6pew39-cymbi",
+    "oldRunId": "run-pi-mv6perlt-1p59y"
+  },
+  {
+    "at": "2026-10-13T13:15:48.332Z",
+    "event": "provider-reply-observed",
+    "caseId": "case-1791897333695-hoeek7",
+    "runId": "run-pi-mv6pew39-cymbi",
+    "assistantReplies": 1,
+    "toolCalls": [
+      "review_read_documents"
+    ]
+  },
+  {
+    "at": "2026-10-13T13:15:48.460Z",
+    "event": "stopped-ledger",
+    "caseId": "case-1791897333695-hoeek7",
+    "runId": "run-pi-mv6pew39-cymbi",
+    "status": "cancelled"
+  },
+  {
+    "at": "2026-10-13T13:15:50.407Z",
+    "event": "accepted-first",
+    "caseId": "case-1791897333731-hkxf57",
+    "runId": "run-pi-mv6pf055-8vukc"
+  },
+  {
+    "at": "2026-10-13T13:15:53.634Z",
+    "event": "provider-reply-observed",
+    "caseId": "case-1791897333731-hkxf57",
+    "runId": "run-pi-mv6pf055-8vukc",
+    "assistantReplies": 1,
+    "toolCalls": [
+      "review_read_documents"
+    ]
+  },
+  {
+    "at": "2026-10-13T13:15:53.660Z",
+    "event": "stopped-ledger",
+    "caseId": "case-1791897333731-hkxf57",
+    "runId": "run-pi-mv6pf055-8vukc",
+    "status": "cancelled"
+  },
+  {
+    "at": "2026-10-13T13:15:54.481Z",
+    "event": "accepted-second",
+    "caseId": "case-1791897333731-hkxf57",
+    "runId": "run-pi-mv6pf3aa-r8ddv",
+    "mode": "restart"
+  },
+  {
+    "at": "2026-10-13T13:15:54.486Z",
+    "event": "old-stop-denied-current-running",
+    "caseId": "case-1791897333731-hkxf57",
+    "runId": "run-pi-mv6pf3aa-r8ddv",
+    "oldRunId": "run-pi-mv6pf055-8vukc"
+  },
+  {
+    "at": "2026-10-13T13:15:56.911Z",
+    "event": "provider-reply-observed",
+    "caseId": "case-1791897333731-hkxf57",
+    "runId": "run-pi-mv6pf3aa-r8ddv",
+    "assistantReplies": 1,
+    "toolCalls": [
+      "review_read_documents"
+    ]
+  },
+  {
+    "at": "2026-10-13T13:15:57.015Z",
+    "event": "stopped-ledger",
+    "caseId": "case-1791897333731-hkxf57",
+    "runId": "run-pi-mv6pf3aa-r8ddv",
+    "status": "cancelled"
+  }
+]

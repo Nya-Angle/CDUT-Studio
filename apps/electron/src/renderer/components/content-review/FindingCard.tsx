@@ -64,7 +64,7 @@ export function FindingCard({ finding, selected, onClick }: FindingCardProps): R
           {/* 严重度徽标 */}
           <span
             className={cn(
-              'inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium',
+              'inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs font-medium',
               isRed
                 ? 'bg-red-500/10 text-red-600 dark:text-red-400'
                 : 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
@@ -74,16 +74,16 @@ export function FindingCard({ finding, selected, onClick }: FindingCardProps): R
             {isRed ? '冲突' : '待处理'}
           </span>
           {/* 问题类型 */}
-          <span className="rounded-md bg-muted px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground">
+          <span className="rounded-md bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground">
             {KIND_LABELS[finding.kind]}
           </span>
           {/* 结果来源标记 */}
-          <span className="rounded-md bg-muted px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground">
+          <span className="rounded-md bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground">
             {GENERATED_BY_LABELS[finding.generatedBy]}
           </span>
         </div>
 
-        <p className="mt-1.5 text-[13px] font-medium leading-5 text-foreground">{finding.title}</p>
+        <p className="mt-1.5 text-sm font-medium leading-5 text-foreground">{finding.title}</p>
 
         {/* 详情：默认 3 行截断，选中后展开 */}
         <p className={cn('mt-1 text-xs leading-5 text-muted-foreground', selected ? 'line-clamp-none' : 'line-clamp-3')}>
@@ -97,7 +97,7 @@ export function FindingCard({ finding, selected, onClick }: FindingCardProps): R
           </p>
         )}
 
-        <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
+        <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
           <span>建议 {finding.suggestedScore !== undefined ? `${finding.suggestedScore} 分` : '待确认'}</span>
           {finding.ruleItemIds.length > 0 && (
             <span>依据 {finding.ruleItemIds.length} 条规则</span>

@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "from": "case-1791837343781-lqcytg",
+  "to": "case-1791837343772-d15dq0",
+  "beforeStopFeedback": true,
+  "afterStopFeedback": false,
+  "applicationSha": "14bc7d6c3625aaa6eec2675aa9ce4dc446475297",
+  "completedAt": "2026-10-12T20:39:19.839Z"
+}

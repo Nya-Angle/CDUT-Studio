@@ -1,0 +1,74 @@
+[
+  {
+    "at": "2026-10-14T15:32:31.910Z",
+    "event": "real-sendMessage-entered",
+    "reviewOutcomeCaptured": false
+  },
+  {
+    "at": "2026-10-14T15:32:40.339Z",
+    "event": "real-sendMessage-entered",
+    "reviewOutcomeCaptured": false
+  },
+  {
+    "at": "2026-10-14T15:32:45.114Z",
+    "event": "real-sendMessage-entered",
+    "reviewOutcomeCaptured": false
+  },
+  {
+    "at": "2026-10-14T15:32:48.779Z",
+    "event": "real-sendMessage-entered",
+    "reviewOutcomeCaptured": false
+  },
+  {
+    "at": "2026-10-14T15:35:59.250Z",
+    "event": "real-sendMessage-entered",
+    "reviewOutcomeCaptured": true
+  },
+  {
+    "at": "2026-10-14T15:36:03.176Z",
+    "event": "real-sendMessage-entered",
+    "reviewOutcomeCaptured": true
+  },
+  {
+    "at": "2026-10-14T15:37:03.481Z",
+    "event": "real-sendMessage-entered",
+    "reviewOutcomeCaptured": true
+  },
+  {
+    "at": "2026-10-14T15:37:03.572Z",
+    "event": "real-stopAndWait-pending-gate"
+  },
+  {
+    "at": "2026-10-14T15:37:04.024Z",
+    "event": "real-executor-completion-before-stop-gate"
+  },
+  {
+    "at": "2026-10-14T15:37:04.100Z",
+    "event": "real-stopAndWait-returned"
+  },
+  {
+    "at": "2026-10-14T15:37:04.123Z",
+    "event": "real-sendMessage-entered",
+    "reviewOutcomeCaptured": true
+  },
+  {
+    "at": "2026-10-14T15:37:04.917Z",
+    "event": "real-sendMessage-entered",
+    "reviewOutcomeCaptured": true
+  },
+  {
+    "at": "2026-10-14T15:37:05.492Z",
+    "event": "real-sendMessage-entered",
+    "reviewOutcomeCaptured": true
+  },
+  {
+    "at": "2026-10-14T15:37:05.561Z",
+    "event": "actual-old-onRunOutcome-invoked",
+    "status": "completed"
+  },
+  {
+    "at": "2026-10-14T15:37:05.565Z",
+    "event": "actual-old-onRunOutcome-invoked",
+    "status": "failed"
+  }
+]

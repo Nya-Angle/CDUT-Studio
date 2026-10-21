@@ -1,0 +1,12 @@
+{
+  "apps/electron/package.json": {
+    "version": "0.15.153",
+    "electron_dependency": "^43.2.0"
+  },
+  "packages/shared/package.json": {
+    "version": "0.1.65"
+  },
+  "packages/core/package.json": {
+    "version": "0.2.14"
+  }
+}

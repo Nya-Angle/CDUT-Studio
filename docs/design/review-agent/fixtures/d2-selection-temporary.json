@@ -1,0 +1,15 @@
+{
+  "templateId": "special-campus-card",
+  "version": 1,
+  "scenario": "temporary-service",
+  "scenarioObjectKey": "service-card",
+  "targets": [
+    {
+      "objectKey": "service-card",
+      "subjectId": "d2-service",
+      "title": "临时服务人员待审对象",
+      "kind": "campus-card",
+      "scenario": "temporary-service"
+    }
+  ]
+}

@@ -31,13 +31,13 @@ import WebSocket, { WebSocketServer, type RawData } from 'ws'
 import type { AddressInfo } from 'node:net'
 import { app, BrowserWindow } from 'electron'
 
-import { AGENT_IPC_CHANNELS, isChannelEnabledForRuntime, type AgentSessionMeta } from '@profer/shared'
+import { AGENT_IPC_CHANNELS, isChannelEnabledForRuntime, isReviewOwnedAgentSession, type AgentSessionMeta } from '@profer/shared'
 import { agentEventBus, runAgentHeadless, stopAgent, isAgentSessionActive, listActiveAgentRuntimeContexts, updateAgentPermissionMode, queueAgentMessage, beginAgentSessionDeletion, endAgentSessionDeletion, stopAgentAndWait, rewindAgentSession, regenerateAgentTitle } from './agent-service'
 import { publishAgentSessionProjection, updateAgentSessionUiMeta } from './agent-session-ui-projection-publisher'
 import { getUserProfile } from './user-profile-service'
 import {
   listAgentSessions,
-  getAgentSessionMeta,
+  getAgentSessionMeta, isReviewOwnedOrDeletedAgentSessionId,
   getAgentSessionDeletionOrder,
   getAgentSessionMessages,
   getAgentSessionSDKMessages,
@@ -52,7 +52,7 @@ import {
   searchAgentSessionMessages,
 } from './agent-session-manager'
 import { grantCsLabToolTrust, revokeCsLabToolTrust } from './cslab/cslab-tool-trust'
-import { getAgentSessionsDir, getConfigDir, getAgentSessionWorkspacePath, getAgentWorkspacePath, getWorkspaceFilesDir } from './config-paths'
+import { getAgentSessionsDir, getAttachmentsDir, getConfigDir, getAgentSessionWorkspacePath, getAgentWorkspacePath, getWorkspaceFilesDir } from './config-paths'
 import { getSettings } from './settings-service'
 import {
   listAgentWorkspaces,
@@ -80,6 +80,7 @@ import { listSwitchableChannels, getEnabledModels } from './bridge-model-utils'
 import { permissionService } from './agent-permission-service'
 import { askUserService } from './agent-ask-user-service'
 import { exitPlanService } from './agent-exit-plan-service'
+import { filterOrdinaryPendingRequests } from './agent-ordinary-pending-access'
 import {
   listConversations,
   createConversation,
@@ -109,7 +110,7 @@ const generateTitle = removedChatEngine('generateTitle') as unknown as (input: u
 import { saveAttachment, readAttachmentAsBase64, deleteAttachment } from './attachment-service'
 import { chatEventBus } from './chat-stream-bus'
 import { resolveAndReadFile, readFileAsDataUrl } from './file-preview-service'
-import { resolveAuthorizedRemoteFilePath } from './remote-file-access'
+import { resolveAuthorizedRemoteChatAttachmentPath, resolveAuthorizedRemoteFilePath, isReviewPrivateConfigPath } from './remote-file-access'
 import { loadWorkspaceHeatmapDaily } from './workspace-heatmap-query'
 import { RemoteAgentEventLog, type RemoteAgentEventRecord } from './remote-agent-event-log'
 import { RemoteRelayClient, type RemoteRelaySink } from './remote-relay-client'
@@ -128,7 +129,6 @@ let httpServer: HttpServer | null = null
 let wss: WebSocketServer | null = null
 let remoteRelayClient: RemoteRelayClient | null = null
 let remoteRelaySink: RemoteRelaySink | null = null
-let remoteRelayCommandContext: RemoteCommandContext = {}
 
 /** 闲置踢人定时器：定期扫描连接，清理长时间无任何入站消息（含 ping）的假死/僵尸连接。 */
 let idleSweepTimer: ReturnType<typeof setInterval> | null = null
@@ -197,8 +197,61 @@ function isPartialSdkPayload(payload: unknown): boolean {
   return p?.kind === 'sdk_message' && p.message?._partial === true
 }
 
+/** Preserve the remote replay-log boundary: hidden review streams are never written. */
+/**
+ * Outer Agent event sessionId is necessary but not sufficient: ordinary session
+ * metadata events can contain a structured reference to a private review session.
+ * Deliberately inspect ID-shaped metadata fields, not arbitrary chat text.
+ */
+export function mayPublishAgentEventToRemote(
+  sessionId: string,
+  payload?: unknown,
+): boolean {
+  if (isReviewOwnedOrDeletedAgentSessionId(sessionId)) return false
+  if (!payload || typeof payload !== 'object') return true
+  // Only structured control/metadata, not SDK user-authored message text.
+  // Projection upserts carry session.id rather than a *SessionId property.
+  const envelope = payload as { kind?: unknown; event?: unknown }
+  if (envelope.kind !== 'profer_event' && envelope.kind !== 'session_projection') return true
+  const visited = new WeakSet<object>()
+  let objectsVisited = 0
+  function containsPrivateId(value: unknown, depth = 0): boolean {
+    if (!value || typeof value !== 'object') return false
+    // Fail closed on unusually deep/large structured control events.
+    // Previously depth > 12 returned false, silently allowing a hidden ID.
+    if (depth > 32 || ++objectsVisited > 12000) return true
+    if (visited.has(value)) return false
+    visited.add(value)
+    if (Array.isArray(value)) return value.some((child) => containsPrivateId(child, depth + 1))
+    for (const [key, child] of Object.entries(value)) {
+      const sessionIdentifier = /(?:^sessionId$|SessionId$|^sessionIds$|SessionIds$|^session_id$|_session_id$|^session_ids$|_session_ids$)/.test(key)
+      if (sessionIdentifier) {
+        if (typeof child === 'string' && isReviewOwnedOrDeletedAgentSessionId(child)) return true
+        if (Array.isArray(child) && child.some((id) => typeof id === 'string' && isReviewOwnedOrDeletedAgentSessionId(id))) return true
+      }
+      // ProferEvent.session_updated/delegation_session_updated and
+      // session_projection carry session metadata as { id, owner, ... }.
+      if (key === 'session' && child && typeof child === 'object' && !Array.isArray(child)) {
+        const meta = child as Partial<AgentSessionMeta>
+        if (typeof meta.id === 'string' && isReviewOwnedOrDeletedAgentSessionId(meta.id)) return true
+        if (isReviewOwnedAgentSession(meta as AgentSessionMeta)) return true
+      }
+      if (containsPrivateId(child, depth + 1)) return true
+    }
+    return false
+  }
+  return !containsPrivateId(envelope.kind === 'profer_event' ? envelope.event : envelope)
+}
+
+/** Recheck owner visibility at replay/send time: a session may be deleted while queued. */
+export function selectOrdinaryRemoteReplayRecords<T extends { sessionId: string; payload?: unknown }>(records: readonly T[]): T[] {
+  return records.filter((record) => mayPublishAgentEventToRemote(record.sessionId, record.payload))
+}
+
 /** 真正把一条 agent_event 帧广播给所有已连接移动端客户端。 */
 function broadcastAgentFrame(sessionId: string, payload: import('@profer/shared').AgentStreamPayload): void {
+  // Filter before append: replay logs are a durable remote disclosure surface.
+  if (!mayPublishAgentEventToRemote(sessionId, payload)) return
   const record = remoteAgentEventLog.append(sessionId, payload)
   const frame = JSON.stringify({
     kind: 'agent_event',
@@ -206,7 +259,9 @@ function broadcastAgentFrame(sessionId: string, payload: import('@profer/shared'
     sessionId: record.sessionId,
     payload: record.payload,
   })
-  if (remoteRelaySink?.isOpen()) remoteRelaySink.send(frame)
+  // The sink may not preserve per-viewer cursors, but it must recheck the
+  // owner/payload boundary immediately before emitting this already-built frame.
+  if (remoteRelaySink?.isOpen() && mayPublishAgentEventToRemote(record.sessionId, record.payload)) remoteRelaySink.send(frame)
   for (const client of wss?.clients ?? []) {
     if (client.readyState !== WebSocket.OPEN) continue
     const replayState = agentReplayStates.get(client)
@@ -222,7 +277,7 @@ function broadcastAgentFrame(sessionId: string, payload: import('@profer/shared'
 }
 
 function sendAgentEventRecord(client: WebSocket, record: RemoteAgentEventRecord): void {
-  if (client.readyState !== WebSocket.OPEN) return
+  if (client.readyState !== WebSocket.OPEN || !mayPublishAgentEventToRemote(record.sessionId, record.payload)) return
   client.send(JSON.stringify({
     kind: 'agent_event',
     eventId: record.eventId,
@@ -281,7 +336,9 @@ function replayAgentEvents(client: WebSocket, requestId: unknown, cursor: unknow
     replayState.fallbackTimer = null
   }
   const normalizedCursor = cursor === null ? null : typeof cursor === 'number' ? cursor : -1
-  const replay = remoteAgentEventLog.replayAfter(normalizedCursor)
+  const rawReplay = remoteAgentEventLog.replayAfter(normalizedCursor)
+  // Old in-memory records can predate deletion; never replay owner data by trusting append-time auth.
+  const replay = { ...rawReplay, records: selectOrdinaryRemoteReplayRecords(rawReplay.records) }
   if (replay.requiresSnapshot) {
     // 日志窗口已经不完整时，不发送半段事件；客户端随后按快照重建。
     replayState.queuedLiveFrames = []
@@ -646,7 +703,7 @@ export function buildSessionItem(s: ReturnType<typeof listAgentSessions>[number]
 
 /** 会话列表（脱敏，仅暴露移动端需要的字段） */
 function buildSessionList() {
-  return listAgentSessions(true).map(buildSessionItem)
+  return listAgentSessions(true).filter((session) => !isReviewOwnedAgentSession(session)).map(buildSessionItem)
 }
 
 /**
@@ -724,6 +781,14 @@ interface RemoteCommandContext {
   activeSessionId?: string
 }
 
+/**
+ * Relay transports multiple Pocket viewers on one desktop connection. A missing
+ * sessionId must never inherit a prior viewer's LAN-only legacy fallback.
+ */
+export function handleRemoteRelayCommand(message: string, requestId: unknown = null): Promise<CommandResult> {
+  return handleRemoteCommand(message, requestId)
+}
+
 /** 处理来自移动端客户端的一条 JSON 指令消息 */
 export async function handleRemoteCommand(
   message: string,
@@ -738,6 +803,11 @@ export async function handleRemoteCommand(
   }
 
   const type = parsed?.type as string
+  // Default-deny every normal remote command that names an internal review session.
+  // Dedicated review APIs (if any) must be separately authorized in later stages.
+  if (typeof parsed.sessionId === 'string' && isReviewOwnedOrDeletedAgentSessionId(parsed.sessionId)) {
+    return { ok: false, error: '会话不存在' }
+  }
   // 旧 Pocket 的 FilePreviewDialog 没有把 sessionId 传给 WS 文件读取命令。
   // 它在打开会话时已经通过 get_sdk_messages/session_detail 等命令声明过会话，
   // 因此仅在同一条受 token 保护的连接内保存该会话作为严格授权的回退上下文。
@@ -764,7 +834,8 @@ export async function handleRemoteCommand(
       return {
         ok: true,
         data: listActiveAgentRuntimeContexts(sessionIds)
-          .filter((snapshot) => isAgentSessionActive(snapshot.sessionId)),
+          .filter((snapshot) => isAgentSessionActive(snapshot.sessionId)
+             && !isReviewOwnedOrDeletedAgentSessionId(snapshot.sessionId)),
       }
     }
 
@@ -842,9 +913,9 @@ export async function handleRemoteCommand(
       return {
         ok: true,
         data: {
-          permissions: permissionService.getPendingRequests().filter(belongsToSession),
-          askUsers: askUserService.getPendingRequests().filter(belongsToSession),
-          exitPlans: exitPlanService.getPendingRequests().filter(belongsToSession),
+          permissions: filterOrdinaryPendingRequests(permissionService.getPendingRequests()).filter(belongsToSession),
+          askUsers: filterOrdinaryPendingRequests(askUserService.getPendingRequests()).filter(belongsToSession),
+          exitPlans: filterOrdinaryPendingRequests(exitPlanService.getPendingRequests()).filter(belongsToSession),
         },
       }
     }
@@ -853,6 +924,9 @@ export async function handleRemoteCommand(
       const requestId = parsed.requestId as string
       const behavior = parsed.behavior === 'allow' ? 'allow' : parsed.behavior === 'deny' ? 'deny' : null
       if (!requestId || !behavior) return { ok: false, error: '缺少有效 requestId 或 behavior' }
+      if (!filterOrdinaryPendingRequests(permissionService.getPendingRequests()).some((request) => request.requestId === requestId)) {
+        return { ok: false, error: '权限请求不存在或已处理' }
+      }
       const sessionId = permissionService.respondToPermission(requestId, behavior, parsed.alwaysAllow === true)
       if (!sessionId) return { ok: false, error: '权限请求不存在或已处理' }
       agentEventBus.emit(sessionId, { kind: 'profer_event', event: { type: 'permission_resolved', requestId, behavior } })
@@ -863,6 +937,9 @@ export async function handleRemoteCommand(
       const requestId = parsed.requestId as string
       const answers = parsed.answers
       if (!requestId || !answers || typeof answers !== 'object' || Array.isArray(answers)) return { ok: false, error: '缺少有效 requestId 或 answers' }
+      if (!filterOrdinaryPendingRequests(askUserService.getPendingRequests()).some((request) => request.requestId === requestId)) {
+        return { ok: false, error: '提问请求不存在或已处理' }
+      }
       const sessionId = await askUserService.respondToAskUser(requestId, answers as Record<string, string>)
       if (!sessionId) return { ok: false, error: '提问请求不存在或已处理' }
       agentEventBus.emit(sessionId, { kind: 'profer_event', event: { type: 'ask_user_resolved', requestId } })
@@ -873,6 +950,9 @@ export async function handleRemoteCommand(
       const requestId = parsed.requestId as string
       const action = parsed.action as import('@profer/shared').ExitPlanModeAction
       if (!requestId || !['approve_auto', 'approve_edit', 'deny', 'feedback'].includes(action)) return { ok: false, error: '缺少有效 requestId 或 action' }
+      if (!filterOrdinaryPendingRequests(exitPlanService.getPendingRequests()).some((request) => request.requestId === requestId)) {
+        return { ok: false, error: '计划审批不存在或已处理' }
+      }
       const result = exitPlanService.respondToExitPlanMode({ requestId, action, feedback: typeof parsed.feedback === 'string' ? parsed.feedback : undefined })
       if (!result) return { ok: false, error: '计划审批不存在或已处理' }
       agentEventBus.emit(result.sessionId, { kind: 'profer_event', event: { type: 'exit_plan_mode_resolved', requestId } })
@@ -974,6 +1054,9 @@ export async function handleRemoteCommand(
             ...getWorkspaceAttachedDirectories(workspaceSlug),
             ...getWorkspaceAttachedFiles(workspaceSlug),
           ],
+          denyPath: (path) => isReviewPrivateConfigPath(
+            path, getConfigDir(), isReviewOwnedOrDeletedAgentSessionId,
+          ),
         }),
       }
     }
@@ -1445,6 +1528,11 @@ export async function handleRemoteCommand(
       const sessionId = parsed.sessionId as string
       const userMessage = typeof parsed.userMessage === 'string' ? parsed.userMessage : ''
       if (!sessionId || !userMessage) return { ok: false, error: '缺少 sessionId 或 userMessage' }
+      // A normal target session does not authorize nested references to private review sessions.
+      if (Array.isArray(parsed.mentionedSessionIds)
+        && parsed.mentionedSessionIds.some((id) => typeof id === 'string' && isReviewOwnedOrDeletedAgentSessionId(id))) {
+        return { ok: false, error: '会话不存在' }
+      }
       try {
         const uuid = await queueAgentMessage(
           {
@@ -1697,24 +1785,22 @@ export async function handleRemoteCommand(
       }
     }
 
-    case 'chat_delete_attachment': {
-      const localPath = parsed.localPath as string
-      if (!localPath) return { ok: false, error: '缺少 localPath' }
-      try {
-        deleteAttachment(localPath)
-        return { ok: true, data: { deleted: true } }
-      } catch (e) {
-        return { ok: false, error: e instanceof Error ? e.message : '附件删除失败' }
-      }
-    }
-
+    case 'chat_delete_attachment':
     case 'chat_read_attachment': {
-      const localPath = parsed.localPath as string
+      const localPath = typeof parsed.localPath === 'string' ? parsed.localPath : ''
       if (!localPath) return { ok: false, error: '缺少 localPath' }
+      // Chat is retired, but older Pocket clients can still call this path-only API.
+      // Treat it strictly as an attachment operation; never authorize all of getConfigDir().
+      const authorized = resolveAuthorizedRemoteChatAttachmentPath(localPath, getAttachmentsDir())
+      if (!authorized) return { ok: false, error: '附件路径未获授权' }
       try {
-        return { ok: true, data: readAttachmentAsBase64(localPath) }
+        if (type === 'chat_delete_attachment') {
+          deleteAttachment(authorized)
+          return { ok: true, data: { deleted: true } }
+        }
+        return { ok: true, data: readAttachmentAsBase64(authorized) }
       } catch (e) {
-        return { ok: false, error: e instanceof Error ? e.message : '附件读取失败' }
+        return { ok: false, error: e instanceof Error ? e.message : '附件操作失败' }
       }
     }
 
@@ -1733,6 +1819,8 @@ export async function handleRemoteCommand(
           ? legacyAccess.sessionId
           : context?.activeSessionId ?? ''
       if (!filePath || !sessionId) return { ok: false, error: '缺少 filePath 或 sessionId' }
+      // Legacy access.sessionId and connection fallback must enforce the same owner gate as top-level IDs.
+      if (isReviewOwnedOrDeletedAgentSessionId(sessionId)) return { ok: false, error: '会话不存在' }
       const session = getAgentSessionMeta(sessionId)
       if (!session) return { ok: false, error: '会话不存在或未绑定工作区' }
       const workspace = session.workspaceId ? getAgentWorkspace(session.workspaceId) : undefined
@@ -1752,6 +1840,11 @@ export async function handleRemoteCommand(
           ...(session.attachedFiles ?? []),
           ...getWorkspaceAttachedFiles(workspaceSlug),
         ],
+        // A workspace root includes every session folder: exclude internal review
+        // owners (including deleted tombstones) even for attached roots and symlinks.
+        denyPath: (candidate) => isReviewPrivateConfigPath(
+          candidate, getConfigDir(), isReviewOwnedOrDeletedAgentSessionId,
+        ),
       })
       if (!resolvedPath) return { ok: false, error: '文件不存在或不在当前会话授权范围内' }
 
@@ -1927,8 +2020,7 @@ export function startRemoteService(): string | null {
     remoteRelayClient = new RemoteRelayClient({
       onOpen: (sink) => {
         remoteRelaySink = sink
-        remoteRelayCommandContext = {}
-        // 让 Relay 后面的 Pocket 继续使用现有 WsClient 握手/快照协议。
+              // 让 Relay 后面的 Pocket 继续使用现有 WsClient 握手/快照协议。
         sink.send(JSON.stringify({
           kind: 'hello',
           serverTime: Date.now(),
@@ -1939,7 +2031,6 @@ export function startRemoteService(): string | null {
       },
       onClose: () => {
         remoteRelaySink = null
-        remoteRelayCommandContext = {}
       },
       onMessage: (raw, sink) => {
         let parsed: { kind?: unknown; type?: unknown; _cmdId?: unknown; requestId?: unknown; cursor?: unknown }
@@ -1963,7 +2054,9 @@ export function startRemoteService(): string | null {
         }
         if (typeof parsed.type !== 'string') return
         const requestId = parsed._cmdId ?? parsed.requestId ?? null
-        void handleRemoteCommand(raw, requestId, remoteRelayCommandContext).then((result) => {
+        // Relay multiplexes multiple viewers over one desktop socket. Never share a
+        // connection-level legacy activeSessionId across viewers: require an explicit ID.
+        void handleRemoteRelayCommand(raw, requestId).then((result) => {
           const commandId = typeof requestId === 'string' && requestId.length > 0 ? requestId : randomUUID()
           if (sink.isOpen()) sink.send(JSON.stringify({ kind: 'command_result', requestId, commandId, ...result }))
         })
@@ -2034,7 +2127,6 @@ export function stopRemoteService(): void {
   remoteRelayClient?.stop()
   remoteRelayClient = null
   remoteRelaySink = null
-  remoteRelayCommandContext = {}
   eventBusUnsubscribe?.()
   eventBusUnsubscribe = null
   chatBusUnsubscribe?.()

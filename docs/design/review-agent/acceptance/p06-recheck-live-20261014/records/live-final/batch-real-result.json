@@ -1,0 +1,76 @@
+{
+  "id": "E06-BATCH-REAL-QUEUE-AND-GATES",
+  "status": "FAIL",
+  "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+  "assertions": [
+    {
+      "name": "真实 Main 创建三个合成案卷与批次",
+      "pass": true
+    },
+    {
+      "name": "真实队列三个案卷均 done",
+      "pass": true
+    },
+    {
+      "name": "每案实际模型用量均非零",
+      "pass": false
+    }
+  ],
+  "timeline": [
+    {
+      "at": "2026-10-14T15:59:36.278Z",
+      "event": "real-batch-created",
+      "batchId": "p06-batch-live-mv8apgnb",
+      "cases": [
+        "case-1791993576123-gwcwqq",
+        "case-1791993576190-koa6b3",
+        "case-1791993576230-0oly3w"
+      ]
+    }
+  ],
+  "queue": {
+    "status": "queued",
+    "cases": [
+      {
+        "caseId": "case-1791993576123-gwcwqq",
+        "status": "done"
+      },
+      {
+        "caseId": "case-1791993576190-koa6b3",
+        "status": "done"
+      },
+      {
+        "caseId": "case-1791993576230-0oly3w",
+        "status": "done"
+      }
+    ]
+  },
+  "runs": [
+    {
+      "caseId": "case-1791993576123-gwcwqq",
+      "runId": "run-1791993576376-0mtt",
+      "status": "completed",
+      "checks": [],
+      "modelUsage": [],
+      "decisionCount": 0
+    },
+    {
+      "caseId": "case-1791993576190-koa6b3",
+      "runId": "run-1791993576382-wlfa",
+      "status": "completed",
+      "checks": [],
+      "modelUsage": [],
+      "decisionCount": 0
+    },
+    {
+      "caseId": "case-1791993576230-0oly3w",
+      "runId": "run-1791993576387-b085",
+      "status": "completed",
+      "checks": [],
+      "modelUsage": [],
+      "decisionCount": 0
+    }
+  ],
+  "error": "AssertionError [ERR_ASSERTION]: 每案实际模型用量均非零",
+  "finishedAt": "2026-10-14T15:59:36.413Z"
+}

@@ -96,7 +96,6 @@ import {
   tabGroupsAtom,
   toPersistedTabGroups,
 } from './atoms/tab-group-atoms'
-import type { TabItem } from './atoms/tab-atoms'
 import { feishuBotStatesAtom } from './atoms/feishu-atoms'
 import { dingtalkBotStatesAtom } from './atoms/dingtalk-atoms'
 import { currentConversationIdAtom, channelsAtom, channelsLoadedAtom, selectedModelAtom } from '@/atoms/conversation-atoms'
@@ -111,11 +110,12 @@ function ProferToaster(props: Omit<React.ComponentProps<typeof Toaster>, 'theme'
   return <Toaster theme={theme} {...props} />
 }
 import { toast } from 'sonner'
-import { diffCapabilities, isVisibleAgentSession } from '@profer/shared'
+import { diffCapabilities } from '@profer/shared'
 import type { WorkspaceCapabilities } from '@profer/shared'
 import { showCapabilityChangeToasts } from './lib/capabilities-toast'
 import { invalidateFileSnapshotCache, invalidateWorkspaceCapabilitiesCache } from './components/agent/mention-query-utils'
 import { getVisibleAgentWorkspaces, isAgentWorkspaceVisible } from './lib/product-feature-flags'
+import { selectRestorableAgentTabs } from './lib/agent-tab-access'
 import { GlobalShortcuts } from './components/shortcuts/GlobalShortcuts'
 import { TabSwitcher } from './components/tabs/TabSwitcher'
 import { NavigationInputProvider } from './components/navigation/NavigationInputProvider'
@@ -805,54 +805,17 @@ function TabStatePersistenceInitializer(): null {
         return
       }
 
-      // 构建有效 sessionId 集合。普通 draft 仍不恢复，但如果刷新前正打开的是
-      // 项目入口创建的持久化 draft，则必须恢复该 tab；否则 Ctrl+R 会把用户正在
-      // 使用的项目临时会话过滤掉。该会话仍保留 draft 标记，不会出现在侧栏列表。
-      const persistedDraftAgentTabIds = new Set(
-        tabState.tabs
-          .filter((tab): tab is TabItem => (
-            typeof tab === 'object'
-            && tab !== null
-            && 'type' in tab
-            && 'sessionId' in tab
-            && tab.type === 'agent'
-            && typeof tab.sessionId === 'string'
-          ))
-          .map((tab) => tab.sessionId),
-      )
+      // 旧快照可能含被隐藏的 owner、已删除 ID、伪造的工作 Tab 或过期工作区。
+      // 使用 Main 返回的会话元数据决定可恢复身份，不信任 settings.tabState 内的 title/ID。
+      // 持久化的普通项目 draft 允许恢复；内部审核 owner 一律不可恢复。
       const visibleWorkspaceIds = new Set(
         getVisibleAgentWorkspaces(agentWorkspaces).map((workspace) => workspace.id),
       )
+      // 融合上游修复：默认沙箱工作区对产品入口不可见（isAgentWorkspaceVisible 恒 false），
+      // 但其中承载的是「无工作区会话」这一最常用场景，刷新后仍必须能恢复对应 Tab。
       const defaultWorkspaceId = agentWorkspaces.find((workspace) => workspace.slug === 'default')?.id
-      const visibleAgentSessionIds = new Set(
-        agentSessions
-          .filter(
-            (session) =>
-              !session.workspaceId ||
-              session.workspaceId === defaultWorkspaceId ||
-              visibleWorkspaceIds.has(session.workspaceId),
-          )
-          .map((session) => session.id),
-      )
-      const validSessionIds = new Set(
-        agentSessions
-          .filter((session) => isVisibleAgentSession(session) || persistedDraftAgentTabIds.has(session.id))
-          .map((session) => session.id),
-      )
-
-      // 过滤 diff 类型 Tab（不持久化），同时过滤掉已被删除的会话
-      const validTabs = tabState.tabs.filter(
-        (t): t is TabItem =>
-          typeof t === 'object' &&
-          t !== null &&
-          'id' in t &&
-          'sessionId' in t &&
-          'type' in t &&
-          'title' in t &&
-          (t.type === 'agent') &&
-          validSessionIds.has(t.sessionId) &&
-          visibleAgentSessionIds.has(t.sessionId),
-      )
+      if (defaultWorkspaceId) visibleWorkspaceIds.add(defaultWorkspaceId)
+      const validTabs = selectRestorableAgentTabs(tabState.tabs, agentSessions, visibleWorkspaceIds)
       if (validTabs.length === 0) {
         restoredRef.current = true
         return

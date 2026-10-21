@@ -1,0 +1,16 @@
+bun test v1.4.0 (34cbb9a40)
+[配置] 已创建 Agent 工作区目录: /tmp/profer-workspace-profile-suu5cB/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-workspace-profile-suu5cB/agent-workspaces/profile-compatibility
+[Agent 工作区] 已创建 plugin manifest: profile-compatibility
+[Agent 工作区] 已创建个人工作区: Profile Compatibility (slug: profile-compatibility)
+[Agent 工作区] 已更新 Profer workspace-profile.md: profile-compatibility
+[配置] 已创建 Agent 工作区目录: /tmp/profer-workspace-profile-Dc2D1F/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-workspace-profile-Dc2D1F/agent-workspaces/memory-compatibility
+[Agent 工作区] 已创建 plugin manifest: memory-compatibility
+[Agent 工作区] 已创建个人工作区: Memory Compatibility (slug: memory-compatibility)
+[Agent 工作区] 已兼容迁移旧记忆目录: /tmp/profer-workspace-profile-Dc2D1F/agent-workspaces/memory-compatibility/.claude/memory → /tmp/profer-workspace-profile-Dc2D1F/agent-workspaces/memory-compatibility/.cdutai/memory（旧目录保留）
+[配置] 已创建 Agent 工作区目录: /tmp/profer-workspace-profile-LeAGxk/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/profer-workspace-profile-LeAGxk/agent-workspaces/new-profile
+[Agent 工作区] 已创建 plugin manifest: new-profile
+[Agent 工作区] 已创建个人工作区: New Profile (slug: new-profile)
+[Agent 工作区] 已更新 Profer workspace-profile.md: new-profile

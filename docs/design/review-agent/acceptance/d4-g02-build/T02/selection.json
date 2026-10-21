@@ -1,0 +1,120 @@
+{
+  "templateId": "g02-t02-review",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "g02-t02-object-a",
+      "subjectId": "g02-t02-subject-a",
+      "title": "G02-T02合成审核对象 a",
+      "businessType": "g02-mailbox-action",
+      "scenario": "act-new",
+      "scenarioSource": {
+        "sourceId": "synthetic-case-facts",
+        "sourceVersionId": "synthetic-case-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "delegated",
+          "applicability": "applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "short-term",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "multi-member",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "organization-change",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "existing-mailbox",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "policy-confirmed",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "g02-t02-object-b",
+      "subjectId": "g02-t02-subject-b",
+      "title": "G02-T02合成审核对象 b",
+      "businessType": "g02-mailbox-action",
+      "scenario": "act-change",
+      "scenarioSource": {
+        "sourceId": "synthetic-case-facts",
+        "sourceVersionId": "synthetic-case-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "delegated",
+          "applicability": "applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "short-term",
+          "applicability": "unknown",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "multi-member",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "organization-change",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "existing-mailbox",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "policy-confirmed",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

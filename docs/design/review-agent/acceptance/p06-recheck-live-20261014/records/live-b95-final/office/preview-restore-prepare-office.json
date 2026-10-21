@@ -1,0 +1,28 @@
+{
+  "id": "E06-PREVIEW-RESTORE-prepare-office",
+  "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+  "status": "PASS",
+  "assertions": [
+    {
+      "name": "真实审核 owner 工作区合成文件被普通会话拒止",
+      "pass": true
+    },
+    {
+      "name": "真实 Office 已打开授权预览 Tab",
+      "pass": true
+    },
+    {
+      "name": "真实 Office Renderer 显示合成内容",
+      "pass": true
+    },
+    {
+      "name": "重启前真实 provider 会话已持久化",
+      "pass": true
+    },
+    {
+      "name": "预览后真实页面切换正常",
+      "pass": true
+    }
+  ],
+  "finishedAt": "2026-10-14T16:31:41.831Z"
+}

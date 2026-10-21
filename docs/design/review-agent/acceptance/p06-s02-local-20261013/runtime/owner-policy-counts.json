@@ -1,0 +1,14 @@
+[
+  {
+    "caseId": "case-1791897333695-hoeek7",
+    "mode": "update",
+    "ownerCount": 1,
+    "policyVerifiedByRunAssignment": true
+  },
+  {
+    "caseId": "case-1791897333731-hkxf57",
+    "mode": "restart",
+    "ownerCount": 2,
+    "policyVerifiedByRunAssignment": true
+  }
+]

@@ -1,0 +1,60 @@
+{
+  "version": "review-c0/1",
+  "status": "IMPLEMENTED_NOT_VERIFIED",
+  "baseCommit": "8989941b6fb5651564e32d11c4215b6a6d5a5209",
+  "designEvidenceHead": "7f954661b3dbca7f0707832c2d097d9c68a965b4",
+  "schema": "packages/shared/src/types/review-v3-c0.ts",
+  "schemaBlobSha": "b7e5074a71cba3441aa76dd279c45f7021087bbc",
+  "exportsFrom": "packages/shared/src/types/index.ts",
+  "symbols": [
+    "Principal",
+    "AuthorizedCaseCommand",
+    "CanonicalPlan",
+    "PlanBinding",
+    "SourceIdentity",
+    "RunEvidenceIdentity",
+    "ExecutionEvent",
+    "BatchEntryBinding",
+    "ImportBatch",
+    "ReviewBatchAttempt",
+    "OutboxReceipt",
+    "C0ContractError",
+    "assertC0CaseAuthorization",
+    "assertC0CanonicalPlan",
+    "assertC0SourceIdentity",
+    "assertC0RunEvidenceIdentity",
+    "assertC0BatchBinding",
+    "assertC0ImportBatch",
+    "assertC0ReviewBatchAttempt",
+    "assertC0OutboxReceipt",
+    "assertC0ExecutionEvent"
+  ],
+  "realMain": "apps/electron/src/main/lib/review/review-ipc.ts",
+  "trustedBinder": "apps/electron/src/main/lib/review/review-c0-authority.ts",
+  "domainCheck": "apps/electron/src/main/lib/review/review-c0-case-service.ts",
+  "preload": "apps/electron/src/preload/index.ts",
+  "persistence": "existing V2 state.v2.json/CaseAggregate/Receipt; no CaseV3.json",
+  "legacyAdapters": {
+    "V2 local actor": "accept local reviewer shape, rebind actorId in Main",
+    "P06 scenario": "not mapped / reject unknown",
+    "D4 multi-target": "versioned Plan contract; conversion pending"
+  },
+  "tests": [
+    "apps/electron/src/main/lib/review/review-c0-ipc.test.ts",
+    "packages/shared/src/types/review-v3-c0.test.ts"
+  ],
+  "guarantees": [
+    "unknown is not pass",
+    "ImportBatch and ReviewBatchAttempt disjoint",
+    "Receipt.actor from Main",
+    "mock accepted not school acknowledged"
+  ],
+  "notImplemented": [
+    "C1 archive cascade",
+    "C3 batch finalizer",
+    "Outbox crash/crossPID",
+    "live teacher",
+    "Electron/Provider/Gold"
+  ],
+  "commit": "See PR HEAD (self-referential commit omitted)"
+}

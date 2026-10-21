@@ -37,6 +37,8 @@ declare global {
     exposedApi: Record<string, unknown>
     /** ipcRenderer.invoke 委托：测试自己赋值，reset 时清空 */
     ipcRendererInvoke: ((channel: string, ...args: unknown[]) => Promise<unknown>) | null
+    /** Registered main IPC callbacks for permission/path tests only. */
+    ipcMainHandlers: Map<string, (...args: unknown[]) => unknown>
     reset: () => void
   }
 }
@@ -46,11 +48,13 @@ globalThis.__proferElectronTestHooks = {
   registeredAccelerators: [],
   exposedApi: {},
   ipcRendererInvoke: null,
+  ipcMainHandlers: new Map(),
   reset() {
     this.createdWindows.length = 0
     this.registeredAccelerators.length = 0
     this.exposedApi = {}
     this.ipcRendererInvoke = null
+    this.ipcMainHandlers.clear()
   },
 }
 
@@ -142,9 +146,13 @@ mock.module('electron', () => ({
   },
   dialog: { showMessageBox: async () => ({ response: 0 }), showOpenDialog: async () => ({ canceled: true, filePaths: [] }) },
   ipcMain: {
-    handle: () => undefined,
+    handle: (channel: string, handler: (...args: unknown[]) => unknown) => {
+      globalThis.__proferElectronTestHooks.ipcMainHandlers.set(channel, handler)
+    },
     on: () => undefined,
-    removeHandler: () => undefined,
+    removeHandler: (channel: string) => {
+      globalThis.__proferElectronTestHooks.ipcMainHandlers.delete(channel)
+    },
   },
   Menu: {
     buildFromTemplate: () => ({ popup: () => undefined }),

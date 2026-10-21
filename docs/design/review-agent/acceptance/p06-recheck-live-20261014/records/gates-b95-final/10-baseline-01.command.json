@@ -1,0 +1,32 @@
+{
+  "name": "10-baseline-01",
+  "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014",
+  "argv": [
+    "bun",
+    "test",
+    "--isolate",
+    "--timeout",
+    "30000",
+    "apps/electron/src/main/lib/review/single-case-workspace.e2e.test.ts"
+  ],
+  "startedAt": "2026-10-14T16:26:44.426023+00:00",
+  "environment": {
+    "NO_COLOR": "1",
+    "PROFER_CONFIG_DIR": "/tmp/p06-live-gates-x409s6az/config",
+    "PROFER_USER_DATA_DIR": "/tmp/p06-live-gates-x409s6az/user-data",
+    "CI": "true"
+  },
+  "finishedAt": "2026-10-14T16:26:44.678959+00:00",
+  "exitCode": 0,
+  "files": {
+    "10-baseline-01.stdout.log": {
+      "sha256": "3ef5bcf0652439152e9669327192c25a61d0c7b2397ff9dde18bd8eeb7c51862",
+      "bytes": 1534
+    },
+    "10-baseline-01.stderr.log": {
+      "sha256": "458d1dfa18eeb0d5063b1f4e6a3275674b2eb450907aa943b18684e36aaf867b",
+      "bytes": 306
+    }
+  }
+}

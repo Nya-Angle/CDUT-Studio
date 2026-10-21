@@ -1,0 +1,92 @@
+{
+  "templateId": "g01-special-proof-seal",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "g01-s-object-a",
+      "subjectId": "sub-g01-s-object-a",
+      "title": "G01-S 合成技术目标",
+      "businessType": "g01-document-action",
+      "scenario": "proof",
+      "scenarioSource": {
+        "sourceId": "src-s-boundary",
+        "sourceVersionId": "g01-s-v1-4",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "delegated",
+          "applicability": "applicable",
+          "sourceId": "src-s-boundary",
+          "sourceVersionId": "g01-s-v1-4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "post-approval",
+          "applicability": "not-applicable",
+          "sourceId": "src-s-boundary",
+          "sourceVersionId": "g01-s-v1-4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "sealing",
+          "applicability": "not-applicable",
+          "sourceId": "src-s-boundary",
+          "sourceVersionId": "g01-s-v1-4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "policy-exception",
+          "applicability": "not-applicable",
+          "sourceId": "src-s-boundary",
+          "sourceVersionId": "g01-s-v1-4",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "g01-s-object-b",
+      "subjectId": "sub-g01-s-object-b",
+      "title": "G01-S 合成技术目标",
+      "businessType": "g01-document-action",
+      "scenario": "form",
+      "scenarioSource": {
+        "sourceId": "src-s-boundary",
+        "sourceVersionId": "g01-s-v1-4",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "delegated",
+          "applicability": "unknown",
+          "sourceId": "src-s-boundary",
+          "sourceVersionId": "g01-s-v1-4",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "post-approval",
+          "applicability": "not-applicable",
+          "sourceId": "src-s-boundary",
+          "sourceVersionId": "g01-s-v1-4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "sealing",
+          "applicability": "not-applicable",
+          "sourceId": "src-s-boundary",
+          "sourceVersionId": "g01-s-v1-4",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "policy-exception",
+          "applicability": "not-applicable",
+          "sourceId": "src-s-boundary",
+          "sourceVersionId": "g01-s-v1-4",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

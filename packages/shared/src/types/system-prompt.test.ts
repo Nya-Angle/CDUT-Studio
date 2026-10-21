@@ -16,7 +16,7 @@ describe('内置默认提示词身份纯正性', () => {
 
   test('Given 内置提示词正文 When 断言唯一身份 Then 明确锚定为 CDUT Studio Agent', () => {
     expect(BUILTIN_DEFAULT_PROMPT_STRING).toContain('CDUT Studio Agent')
-    expect(BUILTIN_DEFAULT_PROMPT_STRING).toContain('CDUT Studio 桌面应用')
+    expect(BUILTIN_DEFAULT_PROMPT_STRING).toContain('CDUT Studio desktop app')
   })
 
   test('Given 内置提示词正文 When 断言 Then 不存在「也叫/别名」式身份分裂', () => {

@@ -1,0 +1,39 @@
+bun test v1.4.0 (34cbb9a40)
+
+../../../../../../tmp/review-risk-probes-k7qaz8em/scope-risk-audit.test.ts:
+[配置] 已创建 SDK 配置目录: /tmp/review-cumulative-risk-izoDXW/sdk-config
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建 Agent 会话目录: /tmp/review-cumulative-risk-izoDXW/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/review-cumulative-risk-izoDXW/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/review-cumulative-risk-izoDXW/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/review-cumulative-risk-izoDXW/agent-workspaces/default/SESSION_09fdeede279f
+[Agent 会话] 已创建会话: 合成普通会话 (SESSION_09fdeede279f)
+[配置] 已创建 Agent 会话工作目录: /tmp/review-cumulative-risk-izoDXW/agent-workspaces/default/SESSION_b8b92f451fd1
+[Agent 会话] 已创建会话: 合成内部审核 (SESSION_b8b92f451fd1)
+[数据恢复] 主索引文件损坏: /tmp/review-cumulative-risk-izoDXW/agent-sessions.json
+[数据恢复] 从 .bak 文件恢复: /tmp/review-cumulative-risk-izoDXW/agent-sessions.json
+(pass) P01～P06-S02 独立保护负例 > 索引从不含新 owner 的备份恢复后仍必须拒绝私有会话及文件 [2.70ms]
+[审核模板] 已发布: case-audit-write-failure@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-cumulative-risk-izoDXW/agent-workspaces/default/SESSION_698466a190d9
+[Agent 会话] 已创建会话: 合成收尾异常 (SESSION_698466a190d9)
+(pass) P01～P06-S02 独立保护负例 > 运行释放时授权文件写入失败必须被观察且不跳过清理 [156.34ms]
+(pass) P01～P06-S02 独立保护负例 > 旧页面 Controller 慢返回不能覆盖重新进入后的新轮次 [8.27ms]
+155 |       release([previous])
+156 |       await pending
+157 |       const actual = store.get(atoms.reviewWorkspaceRunsByCaseAtom)[caseId]?.id
+158 |       save('AUDIT-P06-WORKSPACE-WRITER-01', { expectedRun: next.id, actualRun: actual, apiReads,
+159 |         result: actual === next.id ? 'PASS' : 'FAIL', scope: '真实 Hook/React SSR/Jotai，受控 IPC；非 Electron GUI' })
+160 |       expect(actual).toBe(next.id)
+                           ^
+error: expect(received).toBe(expected)
+
+Expected: "run-pi-workspace-next"
+Received: "run-pi-workspace-old"
+
+      at <anonymous> (/tmp/review-risk-probes-k7qaz8em/scope-risk-audit.test.ts:160:22)
+(fail) P01～P06-S02 独立保护负例 > RightPanel 的 Workspace refresh 慢回复不能绕过 Controller 屏障写旧 run [12.98ms]
+
+ 3 pass
+ 1 fail
+ 12 expect() calls
+Ran 4 tests across 1 file. [455.00ms]

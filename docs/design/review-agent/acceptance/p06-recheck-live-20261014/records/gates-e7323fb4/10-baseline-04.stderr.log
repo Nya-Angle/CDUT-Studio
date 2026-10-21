@@ -1,0 +1,11 @@
+
+apps/electron/src/main/lib/review/fixtures/all-templates-fixture.test.ts:
+(pass) 当前核心内置模板完整政策（N4/R02） > Given 六套虚构政策+精确引用 When 发布后校验 Then 全部 error 清零 [3.42ms]
+(pass) 当前核心内置模板完整政策（N4/R02） > Given seed+publish When 检查 Then 六政策与六模板全部 published [1.82ms]
+(pass) 当前核心内置模板完整政策（N4/R02） > Given 重复 seed When 再执行 Then 幂等不覆盖 [0.76ms]
+(pass) 当前核心内置模板完整政策（N4/R02） > Given 政策内容 When 校验 Then 含虚构声明（不冒充真实校规） [0.06ms]
+
+ 4 pass
+ 0 fail
+ 10 expect() calls
+Ran 4 tests across 1 file. [69.00ms]

@@ -1,0 +1,35 @@
+(pass) computePushBackCoordinates（边界碰撞与智能推回） > 历史展开态下 Y 轴按更高卡片推回 [0.02ms]
+(pass) computePetCardLayout（伴随卡片紧凑包裹矩形） > 朝右：卡片位于桌宠右侧且底边对齐 [0.10ms]
+(pass) computePetCardLayout（伴随卡片紧凑包裹矩形） > 朝左：卡片位于桌宠左侧 [0.02ms]
+(pass) computePetCardLayout（伴随卡片紧凑包裹矩形） > 历史展开态窗口向上生长 [0.02ms]
+(pass) computePetOnlyLayout（仅显示桌宠） > 仅包裹立绘并预留阴影留白 [0.04ms]
+(pass) clampPetPosition（视口内夹取） > 越界坐标被夹回内边距范围内 [0.03ms]
+(pass) clampPetPosition（视口内夹取） > 正常坐标保持不变
+(pass) PET_UNION_WIDTH（伴随态联合外框宽度） > 等于立绘 + 间距 + 卡片总宽（592px） [0.01ms]
+(pass) computeCenterPetPosition（视口物理正中央定位） > 典型 1200×800 视口：联合外框水平居中且立绘纵向居中 [0.04ms]
+(pass) computeCenterPetPosition（视口物理正中央定位） > 多分辨率下水平中心随视口线性平移 [0.02ms]
+(pass) computeCenterPetPosition（视口物理正中央定位） > 联合外框整体居中：立绘左缘 + 联合宽 / 2 === 视口中心 [0.01ms]
+(pass) computeCenterPetPosition（视口物理正中央定位） > 收起卡片时以 160px 立绘单体居中 [0.02ms]
+(pass) computeCenterPetPosition（视口物理正中央定位） > 朝向为左时立绘位于联合外框右缘，整组元素仍居中 [0.02ms]
+(pass) computeCenterPetPosition（视口物理正中央定位） > 极窄视口下水平居中退化为内边距保护 [0.01ms]
+(pass) isLegacyDefaultPosition（旧版死值/未初始化判定） > 识别旧版写死的 (24, 24) [0.02ms]
+(pass) isLegacyDefaultPosition（旧版死值/未初始化判定） > 历史散落坐标与正常坐标不判定为旧版 [0.01ms]
+(pass) isLegacyDefaultPosition（旧版死值/未初始化判定） > 缺失或非法坐标视为未初始化 [0.02ms]
+(pass) computeInteractionUnionRect / isPointInsideRect（碰撞箱稳定性） > 命中并集覆盖「立绘 + 间隙 + 卡片」，宽度等于联合外框且不含阴影留白 [0.07ms]
+(pass) computeInteractionUnionRect / isPointInsideRect（碰撞箱稳定性） > 朝向为左时并集左缘为卡片左缘 [0.02ms]
+(pass) computeInteractionUnionRect / isPointInsideRect（碰撞箱稳定性） > 立绘与卡片之间的间隙点位判定为命中（消除穿越间隙导致的穿透抖动） [0.04ms]
+(pass) computeInteractionUnionRect / isPointInsideRect（碰撞箱稳定性） > 滞后余量内判为命中、超出余量判为外部 [0.03ms]
+(pass) computeInteractionUnionRect / isPointInsideRect（碰撞箱稳定性） > 卡片收起时命中区仅包裹立绘 [0.02ms]
+
+5 tests skipped:
+(skip) shell environment loading > loads environment from macOS zsh without interactive zle initialization
+(skip) Pi Windows PowerShell tool > Given a native Windows PowerShell command When executing Then returns its stdout without requiring PATH lookup
+(skip) Pi Windows PowerShell tool > Given stderr and a non-zero exit code When executing Then preserves both for the tool result
+(skip) Pi Windows PowerShell tool > Given a command exceeding its timeout When executing Then terminates it and reports the timeout
+(skip) Pi Windows PowerShell tool > Given an aborted signal When executing Then terminates the command and reports cancellation
+
+ 3888 pass
+ 5 skip
+ 0 fail
+ 16140 expect() calls
+Ran 3893 tests across 444 files. [24.60s]

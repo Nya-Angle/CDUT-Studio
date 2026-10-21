@@ -1,0 +1,2 @@
+[FAIL] P06-S02-E01 same-case update reuses owner, late old stop denied: Error: Old stop affected new round: {"active":"completed","historic":"cancelled"}
+Error: Old stop affected new round: {"active":"completed","historic":"cancelled"}

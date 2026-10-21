@@ -1,0 +1,190 @@
+{
+  "templateId": "g05-t05",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "g05-t05-visitor-alpha",
+      "subjectId": "g05-t05-subject-alpha",
+      "title": "合成visitor对象A",
+      "businessType": "g05-t05-visitor",
+      "scenario": "single",
+      "scenarioSource": {
+        "sourceId": "src-synthetic",
+        "sourceVersionId": "g05-t05-synthetic-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "br02",
+          "applicability": "applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br03",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br04",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br05",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br06",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br07",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br08",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br09",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br10",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br11",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br12",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "g05-t05-visit-beta",
+      "subjectId": "g05-t05-subject-beta",
+      "title": "合成visit对象B",
+      "businessType": "g05-t05-visit",
+      "scenario": "delegation",
+      "scenarioSource": {
+        "sourceId": "src-synthetic",
+        "sourceVersionId": "g05-t05-synthetic-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "br02",
+          "applicability": "unknown",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "br03",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br04",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br05",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br06",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br07",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br08",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br09",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br10",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br11",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br12",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t05-synthetic-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "name": "10-baseline-03",
+  "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014",
+  "argv": [
+    "bun",
+    "test",
+    "--isolate",
+    "--timeout",
+    "30000",
+    "apps/electron/src/main/lib/review/boot-check.test.ts"
+  ],
+  "startedAt": "2026-10-14T16:26:44.850401+00:00",
+  "environment": {
+    "NO_COLOR": "1",
+    "PROFER_CONFIG_DIR": "/tmp/p06-live-gates-x409s6az/config",
+    "PROFER_USER_DATA_DIR": "/tmp/p06-live-gates-x409s6az/user-data",
+    "CI": "true"
+  },
+  "finishedAt": "2026-10-14T16:26:44.922454+00:00",
+  "exitCode": 0,
+  "files": {
+    "10-baseline-03.stdout.log": {
+      "sha256": "328949ec96c13143490e1947146e33f272568e9686a9c6cbe050e63e73e67169",
+      "bytes": 217
+    },
+    "10-baseline-03.stderr.log": {
+      "sha256": "9bfcca1b85fa5fef963f7222ef20802de7e78439dc6a2350bd8369424331f087",
+      "bytes": 566
+    }
+  }
+}

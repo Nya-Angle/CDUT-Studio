@@ -27,20 +27,49 @@ import {
 
 // ===== fixture 定位：自测试目录向上寻找仓库根的 `API Record` =====
 
-function findFixtureDir(): string {
+function findFixtureDir(): string | null {
   let dir = import.meta.dir
   for (let i = 0; i < 6; i++) {
     const candidate = join(dir, 'API Record')
     if (existsSync(candidate)) return candidate
     dir = dirname(dir)
   }
-  throw new Error('未找到 API Record fixture 目录')
+  return null
 }
 
+/**
+ * 真实抓取 fixture 目录。`API Record/` 属于本地录制资产、不入库，
+ * 缺失时跳过依赖它的用例（而不是让整个测试文件报错），
+ * 这样 CI/新克隆仍能跑其余纯解析用例。
+ */
 const FIXTURES = findFixtureDir()
+const hasFixtures = FIXTURES !== null
 
+/**
+ * Bun 的 describe.skip 仍会执行 describe body，因此依赖 fixture 的用例
+ * 不能在 describe 顶层直接 loadFixture；统一走惰性读取 + 无 fixture 时跳过。
+ */
 function loadFixture(name: string): string {
+  if (!FIXTURES) throw new Error(`缺少 API Record fixture：${name}`)
   return readFileSync(join(FIXTURES, name), 'utf8')
+}
+
+/**
+ * 有 fixture 才注册这些用例。无 fixture 时直接不注册（而非 describe.skip），
+ * 避免 Bun 在 skip 的 describe body 中仍然求值 fixture 读取。
+ */
+function describeIfFixtures(name: string, fn: () => void): void {
+  if (hasFixtures) describe(name, fn)
+}
+
+/** 惰性解析：describe 阶段不读盘，测试执行时才读。 */
+function fixtureLazy<T>(load: () => T): () => T {
+  let cached: T
+  let loaded = false
+  return () => {
+    if (!loaded) { cached = load(); loaded = true }
+    return cached
+  }
 }
 
 // ===== 通用周次解析器 =====
@@ -75,12 +104,12 @@ describe('parseWeekSpecification（通用周次展开 BDD-JW-WEEK-01）', () => 
 
 // ===== 个人课表（xskb_list.do） =====
 
-describe('parseScheduleCourses（个人课表解析 BDD-JW-SCHEDULE-01）', () => {
-  const courses = parseScheduleCourses(loadFixture('xskb_list.do'))
+describeIfFixtures('parseScheduleCourses（个人课表解析 BDD-JW-SCHEDULE-01）', () => {
+  const coursesOf = fixtureLazy(() => parseScheduleCourses(loadFixture('xskb_list.do')))
 
   it('When 解析真实课表 fixture Then 提取出多门结构化课程', () => {
-    expect(courses.length).toBeGreaterThan(5)
-    for (const c of courses) {
+    expect(coursesOf().length).toBeGreaterThan(5)
+    for (const c of coursesOf()) {
       expect(c.name.length).toBeGreaterThan(0)
       expect(c.dayOfWeek).toBeGreaterThanOrEqual(1)
       expect(c.dayOfWeek).toBeLessThanOrEqual(7)
@@ -114,22 +143,22 @@ describe('parseScheduleCourses（个人课表解析 BDD-JW-SCHEDULE-01）', () =
   })
 
   it('Given 同一单元格 kbcontent1 与 kbcontent 双副本 Then 解析结果无重复（同一课程名+星期+周次仅一条）', () => {
-    const keys = courses.map((c) => `${c.name}|${c.dayOfWeek}|${c.weekList.join(',')}|${c.location}`)
+    const keys = coursesOf().map((c) => `${c.name}|${c.dayOfWeek}|${c.weekList.join(',')}|${c.location}`)
     expect(new Set(keys).size).toBe(keys.length)
     // fixture 中「线性代数」在星期三连排三个周次段：1-5 / 9,11-13 / 14
-    const linearWednesday = courses.filter((c) => c.name.includes('线性代数') && c.dayOfWeek === 3)
+    const linearWednesday = coursesOf().filter((c) => c.name.includes('线性代数') && c.dayOfWeek === 3)
     expect(linearWednesday.length).toBe(3)
     // 双副本合并后教师信息择优保留，不得缺失
     for (const c of linearWednesday) expect(c.teacher).not.toBe('')
   })
 
   it('Given 教师语义字段（title=教师）When 解析 Then 教师信息非空', () => {
-    const withTeacher = courses.filter((c) => c.teacher)
+    const withTeacher = coursesOf().filter((c) => c.teacher)
     expect(withTeacher.length).toBeGreaterThan(0)
   })
 
   it('Given 严格周次过滤（第 7 周）When 过滤 Then 未在 7 周开课的课程坚决丢弃', () => {
-    const week7 = courses.filter((c) => c.weekList.includes(7))
+    const week7 = coursesOf().filter((c) => c.weekList.includes(7))
     expect(week7.length).toBeGreaterThan(0)
     // 「1-5(周)」的课程绝不允许串入第 7 周
     expect(week7.some((c) => parseWeekSpecification('1-5(周)').every((w) => c.weekList.includes(w)) && c.weekList.every((w) => w <= 5))).toBe(false)
@@ -137,7 +166,7 @@ describe('parseScheduleCourses（个人课表解析 BDD-JW-SCHEDULE-01）', () =
   })
 })
 
-describe('markOngoingAndNext + computeCurrentWeek（实时课程雷达 BDD-JW-SCHEDULE-02）', () => {
+describeIfFixtures('markOngoingAndNext + computeCurrentWeek（实时课程雷达 BDD-JW-SCHEDULE-02）', () => {
   /** 构造确定性合成课程（weekList 空 = 全学期排课） */
   function course(overrides: Partial<ScheduleCourse>): ScheduleCourse {
     return {
@@ -212,7 +241,7 @@ describe('markOngoingAndNext + computeCurrentWeek（实时课程雷达 BDD-JW-SC
 
   it('Given 真实课表 fixture When 标记 Then 至多一门 isNext 且不抛异常', () => {
     const courses = parseScheduleCourses(loadFixture('xskb_list.do'))
-    const cloned = courses.map((c) => ({ ...c }))
+    const cloned = coursesOf().map((c) => ({ ...c }))
     markOngoingAndNext(cloned, new Date(2026, 9, 17, 20, 0))
     expect(cloned.filter((c) => c.isNext).length).toBeLessThanOrEqual(1)
   })
@@ -220,12 +249,12 @@ describe('markOngoingAndNext + computeCurrentWeek（实时课程雷达 BDD-JW-SC
 
 // ===== 历年成绩（cjcx_list） =====
 
-describe('parseGradeRecords + buildGpaTracks（历年成绩双轨 GPA BDD-JW-GRADE-01）', () => {
-  const records = parseGradeRecords(loadFixture('cjcx_list'))
+describeIfFixtures('parseGradeRecords + buildGpaTracks（历年成绩双轨 GPA BDD-JW-GRADE-01）', () => {
+  const recordsOf = fixtureLazy(() => parseGradeRecords(loadFixture('cjcx_list')))
 
   it('When 解析成绩单 fixture Then 提取出带学期/课程代码/学分/绩点的结构化记录', () => {
-    expect(records.length).toBeGreaterThan(5)
-    const first = records[0]!
+    expect(recordsOf().length).toBeGreaterThan(5)
+    const first = recordsOf()[0]!
     expect(first.courseName.length).toBeGreaterThan(0)
     expect(first.semester).toMatch(/^\d{4}-\d{4}-\d$/)
     expect(first.credit).toBeGreaterThan(0)
@@ -233,14 +262,14 @@ describe('parseGradeRecords + buildGpaTracks（历年成绩双轨 GPA BDD-JW-GRA
   })
 
   it('Given 表头存在重复列（两个「课程性质」）When 解析 Then 按列序消歧且字段不错位', () => {
-    for (const r of records) {
+    for (const r of recordsOf()) {
       // 课程属性 ∈ {必修, 选修, ...}，绝不应错位为课程性质长文本（如「通识必修课程」以外的性质文本）
       expect(['必修', '选修', '限选', '任选', ''].some((k) => r.courseAttr.includes(k) || r.courseAttr === '')).toBe(true)
     }
   })
 
   it('When 计算双轨加权 GPA Then 最新轨与最高轨均产出有效指标，且最高轨绩点不低于最新轨', () => {
-    const tracks = buildGpaTracks(records)
+    const tracks = buildGpaTracks(recordsOf())
     expect(tracks.latest.courseCount).toBeGreaterThan(0)
     expect(tracks.latest.totalCredits).toBeGreaterThan(0)
     expect(tracks.latest.weightedGpa).toBeGreaterThan(0)
@@ -259,12 +288,12 @@ describe('parseGradeRecords + buildGpaTracks（历年成绩双轨 GPA BDD-JW-GRA
 
 // ===== 期末考场（xsksap_list） =====
 
-describe('parseExamSchedule（考场日程与座位号 BDD-JW-EXAM-01）', () => {
+describeIfFixtures('parseExamSchedule（考场日程与座位号 BDD-JW-EXAM-01）', () => {
   // fixture 为「尚未排考」的空数据页（#dataList 仅含表头）
-  const emptyExams = parseExamSchedule(loadFixture('xsksap_list'))
+  const emptyExamsOf = fixtureLazy(() => parseExamSchedule(loadFixture('xsksap_list')))
 
   it('Given 空数据页面（仅表头）When 解析 Then 返回空数组（防假死容错）', () => {
-    expect(emptyExams).toEqual([])
+    expect(emptyExamsOf()).toEqual([])
   })
 
   it('Given 空白 HTML When 解析 Then 返回空数组且不抛异常', () => {
@@ -297,27 +326,27 @@ describe('parseExamSchedule（考场日程与座位号 BDD-JW-EXAM-01）', () =>
 
 // ===== 空教室（jsjy_query2） =====
 
-describe('parseClassroomFreeRooms（自习空位矩阵 BDD-JW-ROOM-01）', () => {
+describeIfFixtures('parseClassroomFreeRooms（自习空位矩阵 BDD-JW-ROOM-01）', () => {
   // fixture 为教室周期（jszq）版式：7 天 × 6 时段 = 42 列，1 间教室样例行
-  const { periodColumns, rooms } = parseClassroomFreeRooms(loadFixture('jsjy_query2'))
+  const freeRoomsOf = fixtureLazy(() => parseClassroomFreeRooms(loadFixture('jsjy_query2')))
 
   it('When 解析空教室 fixture Then 42 列节次区间齐全且按星期正确分组', () => {
-    expect(periodColumns.length).toBe(42)
+    expect(periodColumnsOf().length).toBe(42)
     // 青果编码：0102 / 0304 / 12 / 0506 / 0708 / 091011 循环 7 天
-    expect(periodColumns[0]!.sections).toEqual([1, 2])
-    expect(periodColumns[2]!.sections).toEqual([12])
-    expect(periodColumns[5]!.sections).toEqual([9, 10, 11])
+    expect(periodColumnsOf()[0]!.sections).toEqual([1, 2])
+    expect(periodColumnsOf()[2]!.sections).toEqual([12])
+    expect(periodColumnsOf()[5]!.sections).toEqual([9, 10, 11])
     // 星期分组：首日为星期一（1），末列星期日（7）
-    expect(periodColumns[0]!.day).toBe(1)
-    expect(periodColumns[41]!.day).toBe(7)
+    expect(periodColumnsOf()[0]!.day).toBe(1)
+    expect(periodColumnsOf()[41]!.day).toBe(7)
   })
 
   it('Given 中午 12:00-13:55 空档列（tdvalue=12）When 解析 Then 标记为午休时段且严禁计作「第 12 节课」', () => {
-    const noonColumn = periodColumns.find((p) => p.tdvalue === '12')
+    const noonColumn = periodColumnsOf().find((p) => p.tdvalue === '12')
     expect(noonColumn).toBeDefined()
     expect(noonColumn!.isNoonBreak).toBe(true)
     // 红线：午休列空闲与否绝不纳入常规教学节次计数
-    const room = rooms[0]
+    const room = roomsOf()[0]
     if (room) {
       const flatFree = Object.values(room.freeSectionsByDay).flat()
       expect(flatFree.includes(12)).toBe(false)
@@ -325,15 +354,15 @@ describe('parseClassroomFreeRooms（自习空位矩阵 BDD-JW-ROOM-01）', () =>
   })
 
   it('Given 教室行 When 解析 Then 容量被提取且占用矩阵列数与表头一致', () => {
-    expect(rooms.length).toBe(1)
-    const room = rooms[0]!
+    expect(roomsOf().length).toBe(1)
+    const room = roomsOf()[0]!
     expect(room.roomName).not.toMatch(/\(\d+\/\d+\)$/)
     expect(room.capacity).toBeGreaterThan(0)
     expect(room.occupied.length).toBe(42)
   })
 
   it('Given 单元格红 J（借用占用）或黑 ◆（排课占用）When 解析 Then 判定为占用；空单元格判定为空闲', () => {
-    const room = rooms[0]!
+    const room = roomsOf()[0]!
     // fixture 首教室前几列为 Ｊ◆ / ◆ 占用
     expect(room.occupied[0]).toBe(true)
     // 全周矩阵必然存在空单元格 → 按天归组的空闲节次非空
@@ -374,35 +403,35 @@ describe('buildingMatchesRoom（楼宇宽松匹配兜底 BDD-JW-ROOM-02）', () 
 
 // ===== 培养方案（topyfamx） =====
 
-describe('parseCurriculumPlan（培养方案与修读状态 BDD-JW-PYFA-01）', () => {
-  const plan = parseCurriculumPlan(loadFixture('topyfamx'))
+describeIfFixtures('parseCurriculumPlan（培养方案与修读状态 BDD-JW-PYFA-01）', () => {
+  const planOf = fixtureLazy(() => parseCurriculumPlan(loadFixture('topyfamx')))
 
   it('When 解析培养方案 fixture Then 提取出多模块课程体系', () => {
-    expect(plan.title.length).toBeGreaterThan(0)
-    expect(plan.modules.length).toBeGreaterThan(2)
-    for (const m of plan.modules) {
+    expect(planOf().title.length).toBeGreaterThan(0)
+    expect(planOf().modules.length).toBeGreaterThan(2)
+    for (const m of planOf().modules) {
       expect(m.name.length).toBeGreaterThan(0)
       expect(m.courses.length).toBeGreaterThan(0)
     }
   })
 
   it('Given 模块注记「(应修 X / 已修 Y)」When 解析 Then 模块应修/已修学分被提取', () => {
-    const withProgress = plan.modules.find((m) => m.requiredCredits !== undefined)
+    const withProgress = planOf().modules.find((m) => m.requiredCredits !== undefined)
     expect(withProgress).toBeDefined()
     expect(withProgress!.requiredCredits!).toBeGreaterThan(0)
   })
 
   it('Given 完成情况列「已修(成绩)」或空 When 解析 Then 正确区分已修/未修并提取成绩', () => {
-    const completed = plan.modules.flatMap((m) => m.courses).filter((c) => c.status === 'completed')
-    const pending = plan.modules.flatMap((m) => m.courses).filter((c) => c.status === 'pending')
+    const completed = planOf().modules.flatMap((m) => m.courses).filter((c) => c.status === 'completed')
+    const pending = planOf().modules.flatMap((m) => m.courses).filter((c) => c.status === 'pending')
     expect(completed.length).toBeGreaterThan(0)
     expect(pending.length).toBeGreaterThan(0)
     expect(completed.some((c) => c.score !== undefined)).toBe(true)
   })
 
   it('Given 表头占两行（rowspan=2）When 解析真实 fixture Then 绝不产生名为「课程体系」的幽灵模块或「课程名称」幽灵课程', () => {
-    const allCourses = plan.modules.flatMap((m) => m.courses)
-    for (const m of plan.modules) {
+    const allCourses = planOf().modules.flatMap((m) => m.courses)
+    for (const m of planOf().modules) {
       expect(m.name).not.toBe('课程体系')
       expect(m.courses.length).toBeGreaterThan(0)
     }
@@ -435,41 +464,41 @@ describe('parseCurriculumPlan（培养方案与修读状态 BDD-JW-PYFA-01）', 
 
 // ===== 全校班级课表（viewtable.do，view-source 快照形态） =====
 
-describe('decodeViewSourceSnapshot + parseOtherClassSchedule（全校班级课表 BDD-JW-OTHER-01）', () => {
-  const raw = loadFixture(
+describeIfFixtures('decodeViewSourceSnapshot + parseOtherClassSchedule（全校班级课表 BDD-JW-OTHER-01）', () => {
+  const rawOf = fixtureLazy(() => loadFixture(
     'view-source_https___jw.cdut.edu.cn_jsxsd_xskb_viewtable.do_xnxq01id=2026-2027-1&lx=xx04id&kbjcmsid=7E5976C91D9A4146930951FD11516BCC&xx0301id=22500&rxnf=2025&xx04id=29C02ADB11CA4F618BC7A7390623D160&jx01ndi.html',
-  )
-  const courses = parseOtherClassSchedule(raw)
+  ))
+  const coursesOf = fixtureLazy(() => parseOtherClassSchedule(rawOf()))
 
   it('Given view-source 快照包装 When 还原后解析 Then 提取出课程明细（名称/代码/学分/师/室）', () => {
     // 快照还原器：还原后的 HTML 必须包含真实标签
-    const decoded = decodeViewSourceSnapshot(raw)
+    const decoded = decodeViewSourceSnapshot(rawOf())
     expect(decoded).toContain('fontcourse')
-    expect(courses.length).toBeGreaterThan(5)
-    for (const c of courses) {
+    expect(coursesOf().length).toBeGreaterThan(5)
+    for (const c of coursesOf()) {
       expect(c.name.length).toBeGreaterThan(0)
       expect(c.code.length).toBeGreaterThan(0)
     }
   })
 
   it('Given 明细分段「师[…] 室[…] (校区)」When 解析 Then 教师/教室/校区字段被归一化', () => {
-    const withTeacher = courses.filter((c) => c.teachers.length > 0)
-    const withRoom = courses.filter((c) => c.rooms.length > 0)
+    const withTeacher = coursesOf().filter((c) => c.teachers.length > 0)
+    const withRoom = coursesOf().filter((c) => c.rooms.length > 0)
     expect(withTeacher.length).toBeGreaterThan(0)
     expect(withRoom.length).toBeGreaterThan(0)
-    const withCampus = courses.find((c) => c.campus)
+    const withCampus = coursesOf().find((c) => c.campus)
     expect(withCampus).toBeDefined()
   })
 
   it('Given 真实抓取形态（非快照）When 解析 Then 不受 view-source 还原器影响', () => {
-    const decoded = decodeViewSourceSnapshot(raw)
-    expect(parseOtherClassSchedule(decoded).length).toBe(courses.length)
+    const decoded = decodeViewSourceSnapshot(rawOf())
+    expect(parseOtherClassSchedule(decoded).length).toBe(coursesOf().length)
   })
 })
 
 // ===== 防硬编码审查（红线：解析逻辑与个人样例数据零耦合） =====
 
-describe('防硬编码审查（BDD-JW-GUARD-01）', () => {
+describeIfFixtures('防硬编码审查（BDD-JW-GUARD-01）', () => {
   const sourcePath = join(import.meta.dir, '../src/main/lib/cdut/cdut-jw-client.ts')
   const source = readFileSync(sourcePath, 'utf8')
 

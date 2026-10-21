@@ -1,0 +1,7 @@
+{
+  "original_local_path": "/home/miku/Bot/CDUTStudio/.workdir/review-p06-s02-acceptance-20261013-artifacts/settle-risk-standalone.log",
+  "original_sha256": "e647572c07ff0f80c9e0f590580c22fc7f7c71b625710193e0788cd63414251f",
+  "published_sha256": "88f9a0c19dc59ace72a6320625a0cdb39b4998b5a52ae45221a8fc3d2819d9e1",
+  "replaced_synthetic_uuid_count": 1,
+  "policy": "仅去除临时合成会话 UUID；保留真实断言、EACCES/堆栈和非零退出结果"
+}

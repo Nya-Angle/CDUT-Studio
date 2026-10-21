@@ -1,0 +1,11 @@
+SHA: df0c0d5740d4522c2ea4663c8e8b93a497a70b7f
+CWD: /home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013/apps/electron
+COMMAND: bun run build:preload
+START UTC: 2026-10-12T17:51:13.352671+00:00
+
+$ bun run build:app-preload
+$ esbuild src/preload/index.ts --bundle --platform=node --format=cjs --outfile=dist/preload.cjs --external:electron
+
+  dist/preload.cjs  206.1kb
+
+⚡ Done in 14ms

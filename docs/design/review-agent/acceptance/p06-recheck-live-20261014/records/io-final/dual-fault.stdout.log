@@ -1,0 +1,1 @@
+{"id":"dual-fault","status":"FAIL","assertions":5,"failed":1,"error":"AssertionError [ERR_ASSERTION]: executor 已真正停止"}

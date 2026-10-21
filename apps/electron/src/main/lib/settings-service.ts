@@ -32,6 +32,7 @@ function getDefaultSettings(): AppSettings {
     agentRuntime: DEFAULT_AGENT_RUNTIME,
     developerModeEnabled: false,
     openEpistemicModeEnabled: false,
+    reviewAgentAutoApproval: false,
   }
 }
 
@@ -71,6 +72,10 @@ export function getSettings(): AppSettings {
       agentRuntime: normalizeAgentRuntime(data.agentRuntime),
       developerModeEnabled,
       openEpistemicModeEnabled: developerModeEnabled && data.openEpistemicModeEnabled === true,
+      // AI 代批：严格布尔归一（非 true 一律视为关；Agent 不能经 updateSettings 之外的路径改写）
+      reviewAgentAutoApproval: data.reviewAgentAutoApproval === true,
+      reviewAgentAutoApprovalGrantedAt: typeof data.reviewAgentAutoApprovalGrantedAt === 'string' ? data.reviewAgentAutoApprovalGrantedAt : undefined,
+      reviewAgentAutoApprovalGrantedBy: typeof data.reviewAgentAutoApprovalGrantedBy === 'string' ? data.reviewAgentAutoApprovalGrantedBy : undefined,
     }
     return _settingsCache
   } catch (error) {

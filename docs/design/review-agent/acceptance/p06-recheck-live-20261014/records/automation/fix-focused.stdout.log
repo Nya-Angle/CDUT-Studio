@@ -1,0 +1,94 @@
+bun test v1.4.0 (34cbb9a40)
+[配置] 已创建 SDK 配置目录: /tmp/review-main-bridge-447oHM/sdk-config
+[身份] 设备身份: Linux (Bot) (SESSION_cf03386d5035)
+[渠道管理] 已创建渠道: 合成审核渠道 (SESSION_a8dc36a8c4be)
+[设置] 已更新 keys: agentChannelId, agentModelId
+[审核模板] 已发布: bridge-SESSION_d7532ec88490@1
+[渠道管理] 已应用渠道配置迁移或预设模型更新
+[配置] 已创建 Agent 会话目录: /tmp/review-main-bridge-447oHM/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/review-main-bridge-447oHM/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/review-main-bridge-447oHM/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-447oHM/agent-workspaces/default/SESSION_fec8f899b9d2
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_d7532ec88490 (SESSION_fec8f899b9d2)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_d7532ec88490 (SESSION_fec8f899b9d2)
+[审核模板] 已发布: bridge-SESSION_8b57e03e30d3@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-447oHM/agent-workspaces/default/SESSION_053235fcfc54
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_8b57e03e30d3 (SESSION_053235fcfc54)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_8b57e03e30d3 (SESSION_053235fcfc54)
+[审核模板] 已发布: bridge-SESSION_2d5c85c8b2a1@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-447oHM/agent-workspaces/default/SESSION_48fa64498b90
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_2d5c85c8b2a1 (SESSION_48fa64498b90)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_2d5c85c8b2a1 (SESSION_48fa64498b90)
+[审核模板] 已发布: bridge-SESSION_49032ea8187f@1
+[审核模板] 已发布: bridge-SESSION_20d028634672@1
+[渠道管理] 已更新渠道: 合成审核渠道 (SESSION_a8dc36a8c4be)
+[渠道管理] 已更新渠道: 合成审核渠道 (SESSION_a8dc36a8c4be)
+[审核模板] 已发布: bridge-SESSION_14ab2b790de5@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-447oHM/agent-workspaces/default/SESSION_7465af054a21
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_14ab2b790de5 (SESSION_7465af054a21)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_14ab2b790de5 (SESSION_7465af054a21)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_14ab2b790de5 (SESSION_7465af054a21)
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-447oHM/agent-workspaces/default/SESSION_6d3215f414b8
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_14ab2b790de5 (SESSION_6d3215f414b8)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_14ab2b790de5 (SESSION_6d3215f414b8)
+[渠道管理] 已创建渠道: 独立合成渠道 (SESSION_c25ef01bb6d5)
+[审核模板] 已发布: bridge-SESSION_619575b241d2@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-447oHM/agent-workspaces/default/SESSION_e8a36ffa0dfa
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_619575b241d2 (SESSION_e8a36ffa0dfa)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_619575b241d2 (SESSION_e8a36ffa0dfa)
+[审核模板] 已发布: bridge-SESSION_763b05646a29@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-447oHM/agent-workspaces/default/SESSION_9be1b45584e2
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_763b05646a29 (SESSION_9be1b45584e2)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_763b05646a29 (SESSION_9be1b45584e2)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_763b05646a29 (SESSION_9be1b45584e2)
+[审核模板] 已发布: bridge-SESSION_0c3876b87479@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-447oHM/agent-workspaces/default/SESSION_0a01e5b8c9ad
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_0c3876b87479 (SESSION_0a01e5b8c9ad)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_0c3876b87479 (SESSION_0a01e5b8c9ad)
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-447oHM/agent-workspaces/default/SESSION_f16b9eb68d4a
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_0c3876b87479 (SESSION_f16b9eb68d4a)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_0c3876b87479 (SESSION_f16b9eb68d4a)
+[审核专区] IPC 处理器注册完成
+[审核模板] 已发布: bridge-SESSION_3a7c6eabf845@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-447oHM/agent-workspaces/default/SESSION_6bfc17a2bd28
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_3a7c6eabf845 (SESSION_6bfc17a2bd28)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_3a7c6eabf845 (SESSION_6bfc17a2bd28)
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/work/tmp/profer-test-boot-1791990615576
+[审核模板] 已发布: comprehensive-assessment-v2@3
+[配置] 已创建 SDK 配置目录: /tmp/review-startup-io-EQxQDh/sdk-config
+[审核模板] 已发布: startup-SESSION_fb4a77d021a1@1
+[配置] 已创建 Agent 会话目录: /tmp/review-startup-io-EQxQDh/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/review-startup-io-EQxQDh/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/review-startup-io-EQxQDh/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/review-startup-io-EQxQDh/agent-workspaces/default/SESSION_9762fbb21cf7
+[Agent 会话] 已创建会话: 合成 owner (SESSION_9762fbb21cf7)
+[审核模板] 已发布: startup-SESSION_69a1a8acd8d5@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-startup-io-EQxQDh/agent-workspaces/default/SESSION_dd5147b2ef2e
+[Agent 会话] 已创建会话: 合成 owner (SESSION_dd5147b2ef2e)
+[审核模板] 已发布: startup-SESSION_30186357149e@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-startup-io-EQxQDh/agent-workspaces/default/SESSION_bfee2c3843bf
+[Agent 会话] 已创建会话: 合成 owner (SESSION_bfee2c3843bf)
+[审核模板] 已发布: pi-review-submit-same-turn@1
+[审核模板] 已发布: pi-review-submit-next-turn@1
+[审核模板] 已发布: pi-review-submit-inherit-reads@1
+[审核模板] 已发布: pi-review-submit-reconcile-reads@1
+[审核模板] 已发布: bg-probe-template-1c777414@1
+[审核模板] 已发布: bg-probe-template-5556e265@1
+[审核模板] 已发布: bg-probe-template-5f6760d6@1
+[审核模板] 已发布: bg-probe-template-7de90c2e@1
+[审核模板] 已发布: bg-probe-template-9608f18a@1
+[审核模板] 已发布: bg-probe-template-87dc58e9@1
+[审核模板] 已发布: bg-probe-template-b408ed49@1
+[审核模板] 已发布: bg-probe-template-bebc6af9@1
+[审核模板] 已发布: bg-probe-template-61e543b6@1
+[审核模板] 已发布: bg-probe-template-174543f9@1
+[审核模板] 已发布: bg-probe-template-727d311a@1
+[审核模板] 已发布: bg-probe-template-f37d9bc3@1
+[审核模板] 已发布: bg-probe-template-fa9a49f5@1
+[审核模板] 已发布: bg-probe-template-a3dbfc96@1
+[审核模板] 已发布: bg-probe-template-8e367c4d@1
+[审核模板] 已发布: bg-probe-template-24bbedcf@1
+[审核模板] 已发布: bg-probe-template-5459ef60@1
+[审核模板] 已发布: bg-probe-template-02e03400@1
+[审核模板] 已发布: bg-probe-template-bfac1b1d@1
+[审核模板] 已发布: bg-probe-template-6bcab120@1

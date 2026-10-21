@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "review-c0/1",
+  "synthetic": true,
+  "provenance": "main-window-owner-derived",
+  "principal": {
+    "principalId": "local-reviewer",
+    "source": "local",
+    "role": "reviewer",
+    "sessionId": "local-main-webcontents:91",
+    "assurance": "local-device",
+    "scope": {
+      "caseIds": [
+        "c1"
+      ],
+      "actions": [
+        "UPDATE_FIELDS_V2"
+      ]
+    }
+  }
+}

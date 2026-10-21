@@ -161,10 +161,26 @@ cmd.exe /c ".\apps\electron\out\win-unpacked\CDUT Studio.exe --enable-logging"
 | `browser-controller.ts` / `browser-*.ts` | 内嵌浏览器控制、策略、截图与会话 |
 | `feishu-bridge.ts` / `feishu/` | 飞书集成：消息同步、任务通知、卡片渲染、OAuth 认证 |
 | `cdut/cdut-auth-manager.ts` | CDUT 专区「特区账户」认证：隐藏窗口 headless 统一身份认证（CAS）、办事大厅画像抓取（学院/专业/班级/头像）、10 分钟静默保活、OS 级加密凭据持久化 |
-| `review/` | 内容审核专区服务矩阵（案卷存储、文档切块、白名单网关、双路径预审、报告导出） |
+| `review/` | 内容审核专区服务矩阵：项目 Pi Agent 负责通用审核推理，案卷范围的材料能力库按需列出/检索/读取文档与表格、单页核验图像；受控工具校验引用、规则材料覆盖与人工确认边界，运行记录把能力调用和模型用量反馈到界面。批量审核当前分支状态、已实现范围与接手步骤见 [审核当前状态与开发者交接](docs/design/review-agent/17-current-state-and-handoff.md) |
 | `runtime-init.ts` / `git-detector.ts` / `shell-env.ts` | 运行时初始化：Shell 环境注入、Bun/Git/Node 检测与自适应配置 |
 | `config-paths.ts` | 配置路径管理：`~/.cdutai/` 目录结构与默认 Skills 播种 |
 | `changelog-service.ts` / `github-release-service.ts` | 版本更新日志与 GitHub Release 展示（只读，不涉及自动更新） |
+
+批量审核复验入口见 [24 号独立验收](docs/design/review-agent/24-batch-review-independent-final-acceptance.md)。队列失败提示须保留失败数量；无已完成案卷时待人工分流明确为零。Electron 回放的缺模型负例须核对持久化错误原因，不能仅检查 `failed` 状态。
+
+直接审核的启动恢复先隔离旧 `queued/running` 轮次授权，再原子写入中断终态。恢复 I/O 失败时，磁盘状态仍须如实记录为未确认，旧工具、binding 与 admission 不得放行；恢复写盘成功也不代表完整 LIVE 验收完成。当前实机证据与门禁以 [29 号台账](docs/design/review-agent/29-background-session-preflight-audit.md) 为准。
+
+Pi 查询必须携带既有 `canUseTool` 回调，普通 auto/plan/bypass 与直接审核的受控工具校验都在这个 Main 回调中执行。`permissionMode` 字段本身不能代替实际工具审批；需见证真实工具与权限请求。
+
+直接审核 outcome 的终态失写必须在回调返回前隔离原 assignment 并清除原 ACK，不能等待 executor Promise 后续收尾才拒止。失败日志和磁盘 running/未撤销事实仍须保存；隔离不会伪造持久成功。
+
+2026-10-15 同步：本仓库 main 将整合原项目 `c179f257` 与审核分支 `60e805cf` 的完整受控源码。通用 Office 解析使用上游新引擎，文件预览使用只读侧栏；审核材料引用继续保留弹窗入口和专用 DOCX/XLSX 结构提取。同步记录见 [48 号](docs/design/review-agent/48-upstream-cloud-main-integration-20261015.md)。P06 实机结论继续限定于原冻结版本，未签收门禁不因本次 main 同步而升级；后续工作按 [47 号](docs/design/review-agent/47-p06-evidence-driven-followup-plan-20261015.md) 执行。
+
+上游整合基线与冲突处理见 [25 号整合记录](docs/design/review-agent/25-upstream-review-integration.md)，后续同步与真实 dev 记录见 [26 号复验](docs/design/review-agent/26-upstream-refresh-dev-acceptance.md)。PDF 走上游高精解析引擎，同时保留审核的 DOCX/Excel 结构与 HTML/EML 读取。Pi 自动压缩统一在任务结束、会话空闲后执行；审核会话保留约 70% 阈值、运行账本与审核压缩指令，普通会话按共享阈值处理。
+
+2026-10-11 使用者已授权向上游提交当前阶段成果的 Draft PR，取代此前不提交 PR 的安排。模板与解析保留项见 [28 号交付状态](docs/design/review-agent/28-review-stage-delivery-status.md)。后台会话继续在测试仓库 Draft PR #21 的 `feat/review-owned-background-sessions` 开发，按 [27 号最小规范](docs/design/review-agent/27-background-review-session-proposal.md)复用既有 Pi 和 V2。
+
+2026-10-13 已授权补齐进入 P06 前的 Main 接线与 A0。直接案卷入口现在由 Main 创建 `owner:review-case` 会话、准备 V2/指派、调用既有 `runAgent`；只有真实 `onRunOwned` 才回复已受理。Renderer 保留材料准备与事项识别，受理后只回读业务状态，不建普通聊天或持有运行 Promise；按案卷/runId 停止并等待现有执行器释放。旧 prepare/abort/指派 IPC 排除新 owner。禁止重新造执行引擎或数据库。A0 证据、外部 Relay/Pocket 阻断、P06 后续范围和合并门禁分别登记；本轮不合并、不解除 Draft，P05 PARTIAL/LIVE 未运行项不能因接线自动关闭。 已完成的本地 Main/A0 和下一批 P06 范围见 [34 号](docs/design/review-agent/34-pre-p06-main-a0-acceptance-20261013.md)，不得重复接线或将局部通过写为生产放行。 2026-10-13 的 P06-S02 实机/累计 P01～P06-S02 风险见 [37](docs/design/review-agent/37-p06-s02-local-acceptance-20261013.md)/[38](docs/design/review-agent/38-p01-p06-s02-cumulative-risk-audit-20261013.md)：E01/E02 PASS、E05 FAIL，四项生产缺口 OPEN；已有 CI 绿灯不等于新反例通过。当前只推公开测试仓库，先修复并纳入保护断言，不推进 P07/P08 或合并。
 
 ---
 
@@ -340,3 +356,5 @@ CDUT 内网青果教务系统部署有瑞数（RuiShu）动态安全反爬 WAF�
 - **macOS arm64 验收**：`.github/workflows/macos-package.yml` 手动触发，仅产出无签名、无公证的 arm64 验收包（Actions Artifact），需用户明确确认后方可作为测试资产加入 Pre-release，不进入 Windows 国内更新源。
 - **构建验证 workflow**：`release.yml` 为仅手动触发的构建验证，绝不因 tag 自动构建或写入 GitHub Release。
 - **辅助脚本/校验**：`scripts/verify-release-preflight.cjs`（发版预检）、`scripts/release-asset-contract.cjs`（资产契约）、`scripts/build-releases-json.cjs`（`release:releases-json`）、`scripts/push-mac-release.cjs`（`release:mac`）。
+
+P06 实机批量补修：case/group 级检查不依赖非空 subjectIds 判定有效工具结果；无有效提交继续生成 execution-failed。真实验收状态仍见 docs/design/review-agent/29-background-session-preflight-audit.md。

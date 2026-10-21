@@ -1,0 +1,204 @@
+{
+  "templateId": "g06-t01",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "g06-t01-test-1",
+      "subjectId": "g06-t01-subject-1",
+      "title": "专利申请与校内权属审查合成对象1",
+      "businessType": "g06-patent-action",
+      "scenario": "br-01",
+      "scenarioSource": {
+        "sourceId": "src-axis-br-01",
+        "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "ax-01",
+          "applicability": "applicable",
+          "sourceId": "src-axis-ax-01",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-02",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-02",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "ax-03",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-ax-03",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-04",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-ax-04",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-05",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-ax-05",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-06",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-ax-06",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-07",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-ax-07",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-08",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-ax-08",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-09",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-ax-09",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-10",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-ax-10",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-11",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-ax-11",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-12",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-ax-12",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "g06-t01-test-2",
+      "subjectId": "g06-t01-subject-2",
+      "title": "专利申请与校内权属审查合成对象2",
+      "businessType": "g06-patent-action",
+      "scenario": "br-02",
+      "scenarioSource": {
+        "sourceId": "src-axis-br-02",
+        "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "ax-01",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-ax-01",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-02",
+          "applicability": "applicable",
+          "sourceId": "src-axis-ax-02",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-03",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-03",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "ax-04",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-04",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "ax-05",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-05",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "ax-06",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-06",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "ax-07",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-07",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "ax-08",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-08",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "ax-09",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-09",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "ax-10",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-10",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "ax-11",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-11",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "ax-12",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-12",
+          "sourceVersionId": "g06-t01-v01-e3bb29673e317bf6",
+          "decidedBy": "undetermined"
+        }
+      ]
+    }
+  ]
+}

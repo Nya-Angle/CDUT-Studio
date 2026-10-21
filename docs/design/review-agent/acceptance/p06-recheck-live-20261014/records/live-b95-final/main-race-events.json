@@ -1,0 +1,148 @@
+[
+  {
+    "at": "2026-10-14T16:26:53.138Z",
+    "event": "real-sendMessage-entered",
+    "reviewOutcomeCaptured": true
+  },
+  {
+    "at": "2026-10-14T16:26:54.691Z",
+    "event": "real-pi-query-entered"
+  },
+  {
+    "at": "2026-10-14T16:26:55.547Z",
+    "event": "real-pi-assistant-received",
+    "inputTokens": 7855,
+    "outputTokens": 0
+  },
+  {
+    "at": "2026-10-14T16:26:56.159Z",
+    "event": "real-pi-assistant-received",
+    "inputTokens": 7855,
+    "outputTokens": 0
+  },
+  {
+    "at": "2026-10-14T16:26:56.209Z",
+    "event": "real-pi-assistant-received",
+    "inputTokens": 7855,
+    "outputTokens": 0
+  },
+  {
+    "at": "2026-10-14T16:26:56.260Z",
+    "event": "real-pi-assistant-received",
+    "inputTokens": 7855,
+    "outputTokens": 0
+  },
+  {
+    "at": "2026-10-14T16:26:56.331Z",
+    "event": "real-pi-assistant-received",
+    "inputTokens": 7855,
+    "outputTokens": 0
+  },
+  {
+    "at": "2026-10-14T16:26:56.381Z",
+    "event": "real-pi-assistant-received",
+    "inputTokens": 7855,
+    "outputTokens": 0
+  },
+  {
+    "at": "2026-10-14T16:26:56.669Z",
+    "event": "real-pi-assistant-received",
+    "inputTokens": 7855,
+    "outputTokens": 0
+  },
+  {
+    "at": "2026-10-14T16:26:56.678Z",
+    "event": "real-pi-assistant-received",
+    "inputTokens": 7855,
+    "outputTokens": 112
+  },
+  {
+    "at": "2026-10-14T16:26:56.683Z",
+    "event": "real-pi-assistant-received",
+    "inputTokens": 7855,
+    "outputTokens": 112
+  },
+  {
+    "at": "2026-10-14T16:26:56.937Z",
+    "event": "real-pi-assistant-received",
+    "inputTokens": 0,
+    "outputTokens": 0
+  },
+  {
+    "at": "2026-10-14T16:26:56.994Z",
+    "event": "real-sendMessage-entered",
+    "reviewOutcomeCaptured": true
+  },
+  {
+    "at": "2026-10-14T16:26:57.797Z",
+    "event": "real-pi-query-entered"
+  },
+  {
+    "at": "2026-10-14T16:26:58.186Z",
+    "event": "real-pi-assistant-received",
+    "inputTokens": 0,
+    "outputTokens": 0
+  },
+  {
+    "at": "2026-10-14T16:26:58.574Z",
+    "event": "real-sendMessage-entered",
+    "reviewOutcomeCaptured": true
+  },
+  {
+    "at": "2026-10-14T16:26:58.681Z",
+    "event": "real-stopAndWait-pending-gate"
+  },
+  {
+    "at": "2026-10-14T16:26:59.198Z",
+    "event": "real-executor-completion-before-stop-gate"
+  },
+  {
+    "at": "2026-10-14T16:26:59.266Z",
+    "event": "real-stopAndWait-returned"
+  },
+  {
+    "at": "2026-10-14T16:26:59.295Z",
+    "event": "real-sendMessage-entered",
+    "reviewOutcomeCaptured": true
+  },
+  {
+    "at": "2026-10-14T16:26:59.875Z",
+    "event": "real-pi-query-entered"
+  },
+  {
+    "at": "2026-10-14T16:26:59.980Z",
+    "event": "real-pi-assistant-received",
+    "inputTokens": 0,
+    "outputTokens": 0
+  },
+  {
+    "at": "2026-10-14T16:27:00.154Z",
+    "event": "real-sendMessage-entered",
+    "reviewOutcomeCaptured": true
+  },
+  {
+    "at": "2026-10-14T16:27:00.770Z",
+    "event": "real-sendMessage-entered",
+    "reviewOutcomeCaptured": true
+  },
+  {
+    "at": "2026-10-14T16:27:00.840Z",
+    "event": "actual-old-onRunOutcome-invoked",
+    "status": "completed"
+  },
+  {
+    "at": "2026-10-14T16:27:00.845Z",
+    "event": "actual-old-onRunOutcome-invoked",
+    "status": "failed"
+  },
+  {
+    "at": "2026-10-14T16:27:01.313Z",
+    "event": "real-pi-query-entered"
+  },
+  {
+    "at": "2026-10-14T16:27:01.437Z",
+    "event": "real-pi-assistant-received",
+    "inputTokens": 0,
+    "outputTokens": 0
+  }
+]

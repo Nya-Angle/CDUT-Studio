@@ -1,0 +1,204 @@
+{
+  "templateId": "g06-t08",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "g06-t08-test-1",
+      "subjectId": "g06-t08-subject-1",
+      "title": "动物实验伦理材料核验合成对象1",
+      "businessType": "g06-animal-ethics-scope",
+      "scenario": "br-01",
+      "scenarioSource": {
+        "sourceId": "src-axis-br-01",
+        "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "cond-01",
+          "applicability": "applicable",
+          "sourceId": "src-axis-cond-01",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cond-02",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cond-02",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "cond-03",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cond-03",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cond-04",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cond-04",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cond-05",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cond-05",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cond-06",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cond-06",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cond-07",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cond-07",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cond-08",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cond-08",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cond-09",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cond-09",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cond-10",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cond-10",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cond-11",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cond-11",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cond-12",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cond-12",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "g06-t08-test-2",
+      "subjectId": "g06-t08-subject-2",
+      "title": "动物实验伦理材料核验合成对象2",
+      "businessType": "g06-animal-ethics-scope",
+      "scenario": "br-02",
+      "scenarioSource": {
+        "sourceId": "src-axis-br-02",
+        "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "cond-01",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cond-01",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cond-02",
+          "applicability": "applicable",
+          "sourceId": "src-axis-cond-02",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cond-03",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cond-03",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "cond-04",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cond-04",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "cond-05",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cond-05",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "cond-06",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cond-06",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "cond-07",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cond-07",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "cond-08",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cond-08",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "cond-09",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cond-09",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "cond-10",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cond-10",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "cond-11",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cond-11",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "cond-12",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cond-12",
+          "sourceVersionId": "g06-t08-v01-95d82865daec9494",
+          "decidedBy": "undetermined"
+        }
+      ]
+    }
+  ]
+}

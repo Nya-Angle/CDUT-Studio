@@ -1,0 +1,71 @@
+{
+  "id": "enospc",
+  "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+  "status": "PASS",
+  "assertions": [
+    {
+      "name": "真实 Main 已受理且当前授权有效",
+      "pass": true
+    },
+    {
+      "name": "故障卷为独立有界 tmpfs",
+      "pass": true
+    },
+    {
+      "name": "实际内核 ENOSPC 已触发",
+      "pass": true
+    },
+    {
+      "name": "生产原子 tmp 写命中 ENOSPC",
+      "pass": true
+    },
+    {
+      "name": "最后一份 assignment 原件未截断",
+      "pass": true
+    },
+    {
+      "name": "真实 Main 当前进程 fail-closed",
+      "pass": true
+    },
+    {
+      "name": "恢复后真实下一笔写入后补 revokedAt",
+      "pass": true
+    },
+    {
+      "name": "恢复后旧授权仍拒绝",
+      "pass": true
+    }
+  ],
+  "timeline": [
+    {
+      "at": "2026-10-14T16:14:56.290Z",
+      "event": "real-main-accepted",
+      "caseId": "case-1791975357051-t8kypw",
+      "runId": "run-pi-mv8b96lw-48qsg",
+      "runStatus": "running",
+      "phase": "accepted"
+    },
+    {
+      "at": "2026-10-14T16:14:56.294Z",
+      "event": "bounded-tmpfs-full",
+      "filled": 8388608,
+      "diskError": {
+        "code": "ENOSPC",
+        "errno": -28,
+        "syscall": "write"
+      },
+      "availableBlocks": 0
+    },
+    {
+      "at": "2026-10-14T16:14:56.295Z",
+      "event": "real-main-atomic-revoke-ENOSPC",
+      "threw": true,
+      "code": "ENOSPC",
+      "errno": -28,
+      "syscall": "write",
+      "atomicTemporaryPath": "review-agent-assignments.json.tmp",
+      "targetConfirmed": true
+    }
+  ],
+  "finishedAt": "2026-10-14T16:14:56.304Z"
+}

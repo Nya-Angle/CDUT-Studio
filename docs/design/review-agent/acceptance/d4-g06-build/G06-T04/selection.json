@@ -1,0 +1,190 @@
+{
+  "templateId": "g06-t04",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "g06-t04-test-1",
+      "subjectId": "g06-t04-subject-1",
+      "title": "已有成果记录更正与去重合成对象1",
+      "businessType": "g06-record-change",
+      "scenario": "br-01",
+      "scenarioSource": {
+        "sourceId": "src-axis-br-01",
+        "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "br-07",
+          "applicability": "applicable",
+          "sourceId": "src-axis-br-07",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cx-01",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cx-01",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "cx-02",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cx-02",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cx-03",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cx-03",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cx-04",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cx-04",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cx-05",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cx-05",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cx-06",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cx-06",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cx-07",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cx-07",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cx-08",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cx-08",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cx-09",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cx-09",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cx-10",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-cx-10",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "g06-t04-test-2",
+      "subjectId": "g06-t04-subject-2",
+      "title": "已有成果记录更正与去重合成对象2",
+      "businessType": "g06-record-change",
+      "scenario": "br-02",
+      "scenarioSource": {
+        "sourceId": "src-axis-br-02",
+        "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "br-07",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-br-07",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cx-01",
+          "applicability": "applicable",
+          "sourceId": "src-axis-cx-01",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "cx-02",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cx-02",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "cx-03",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cx-03",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "cx-04",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cx-04",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "cx-05",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cx-05",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "cx-06",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cx-06",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "cx-07",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cx-07",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "cx-08",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cx-08",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "cx-09",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cx-09",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "cx-10",
+          "applicability": "unknown",
+          "sourceId": "src-axis-cx-10",
+          "sourceVersionId": "g06-t04-v01-d222b07422fdad32",
+          "decidedBy": "undetermined"
+        }
+      ]
+    }
+  ]
+}

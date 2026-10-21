@@ -1,0 +1,26 @@
+
+apps/electron/scripts/packaging-guards.test.ts:
+(pass) Windows 打包宿主门禁 > Given macOS 或 Linux 宿主 When 请求 Windows 打包 Then 在构建前明确失败 [0.11ms]
+(pass) Windows 打包宿主门禁 > Given Windows 宿主 When 请求 Windows 打包 Then 允许继续 [0.25ms]
+(pass) Windows 打包宿主门禁 > Given 组合平台参数 When 其中包含 Windows Then 不允许用参数顺序绕过门禁 [0.12ms]
+(pass) Windows 随包 CLI 契约 > Given 目录只有非空 profer.exe When 验证 Then 通过 [0.46ms]
+(pass) Windows 随包 CLI 契约 > Given CLI 缺失或只有无扩展名文件 When 验证 Then 拒绝 [0.22ms]
+(pass) Windows 随包 CLI 契约 > Given 两种宿主 CLI 并存或 exe 为空 When 验证 Then 拒绝 [0.25ms]
+(pass) 平台打包入口配置 > Given 当前品牌打包配置 When Windows workflow 检查主程序和安装包 Then 文件名与实际产物一致 [0.37ms]
+(pass) 平台打包入口配置 > Given electron-builder 配置 When 选择平台 Then 只复制对应 CLI 文件名 [0.08ms]
+(pass) 平台打包入口配置 > Given electron-builder 配置 When 打包 macOS Then 挂上签名补签钩子 [0.05ms]
+(pass) 平台打包入口配置 > Given 发布脚本 When 校验 macOS 产物 Then 使用共享签名契约而非 spctl [0.40ms]
+(pass) 平台打包入口配置 > Given Windows 发布脚本 When 启动构建 Then 宿主门禁总是最先执行 [0.09ms]
+(pass) macOS 签名契约 > Given 改名后 App 和旧品牌残留 When 查找解包目录 Then 只选当前产品且支持嵌套目录 [0.22ms]
+(pass) macOS 签名契约 > Given bundle id When 构造 designated requirement Then 只锚定 identifier [0.04ms]
+(pass) macOS 签名契约 > Given codesign 输出 When 解析 Then 兼容显式与缺省派生两种 DR 写法 [0.06ms]
+(pass) macOS 签名契约 > Given 未签名的 App 产物 When 断言契约 Then 失败并指出 DR 不符 [0.04ms]
+(pass) 核心静态资产与打包配置完整性门禁 > Given 应用打包依赖 When 检查核心打包配置与关键资源 Then 配置文件和图标必须存在且非空 [0.67ms]
+(pass) 内置技能库（default-skills）完整性与安全水位门禁 > Given 内置技能库 When 检查 default-skills 目录 Then 17 个关键技能及其 SKILL.md 必须完整存在且非空 [0.55ms]
+(pass) 内置技能库（default-skills）完整性与安全水位门禁 > Given 重型文档技能 When 检查核心执行脚本与 XML 规范 Then 核心脚本与 Schemas 必须完整存在 [0.10ms]
+(pass) 内置技能库（default-skills）完整性与安全水位门禁 > Given 技能同步源 When 统计 default-skills 资源文件数 Then 文件总数必须达到安全水位（>=200） [0.76ms]
+
+ 19 pass
+ 0 fail
+ 152 expect() calls
+Ran 19 tests across 1 file. [54.00ms]

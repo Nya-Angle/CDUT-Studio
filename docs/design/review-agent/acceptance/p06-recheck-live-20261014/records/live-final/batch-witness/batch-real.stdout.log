@@ -1,0 +1,1 @@
+{"id":"E06-BATCH-REAL-QUEUE-AND-GATES","status":"FAIL","assertions":5,"error":"Error: Error: Error invoking remote method 'review-v2:batch-group-preview': Error: 问题组已失效或不再存在，请刷新批次"}

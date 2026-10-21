@@ -99,7 +99,7 @@ export interface RoundTripPayload {
   kind: RoundTripKind
   caseId: string
   /** 独立副本标识（本地来源，不冒充校方） */
-  actor: { actorId: string; actorSource: 'local' | 'mock' | 'school' }
+  actor: { actorId: string; actorSource: import('@profer/shared').ActorSource }
   projection: CaseProjection
   /** 副本填写内容：补件材料说明 / 评分 */
   reply: Record<string, unknown>
@@ -114,7 +114,7 @@ export interface RoundTripReceipt {
 }
 
 /** 导出往返包（投影过滤 + 哈希随包） */
-export function exportRoundTripPackage(aggregate: CaseAggregateV2, kind: RoundTripKind, actor: { actorId: string; actorSource: 'local' | 'mock' | 'school' }, fieldVisibility: Record<string, 'public' | 'internal'>, reply: Record<string, unknown>) {
+export function exportRoundTripPackage(aggregate: CaseAggregateV2, kind: RoundTripKind, actor: { actorId: string; actorSource: import('@profer/shared').ActorSource }, fieldVisibility: Record<string, 'public' | 'internal'>, reply: Record<string, unknown>) {
   const projection = projectForRole(aggregate, kind === 'judge-rating-reply' ? 'judge' : 'student', fieldVisibility, actor.actorId)
   return exportHandoffPackage<Omit<RoundTripPayload, never>>({ kind, caseId: aggregate.caseV2.id, actor, projection, reply })
 }

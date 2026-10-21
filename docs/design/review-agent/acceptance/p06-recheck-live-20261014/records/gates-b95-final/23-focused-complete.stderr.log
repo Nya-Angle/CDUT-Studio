@@ -1,0 +1,370 @@
+
+apps/electron/src/main/lib/review-owner-index-recovery.p06-fix01.test.ts:
+[数据恢复] 主索引文件损坏: /tmp/p06-owner-recovery-K4YHoT/agent-sessions.json
+(pass) P06-FIX-01 owner identity survives index recovery > old pre-owner .bak rollback cannot open ordinary IPC, remote events or private paths [2.58ms]
+(pass) P06-FIX-01 owner identity survives index recovery > both tombstoned and still-live owners survive recovery from an obsolete backup [1.30ms]
+(pass) P06-FIX-01 owner identity survives index recovery > missing metadata owner fields cannot turn a journalled owner into a normal session [0.36ms]
+[数据恢复] 主索引文件损坏: /tmp/p06-owner-recovery-K4YHoT/agent-sessions.json
+[数据恢复] .bak 文件也损坏: /tmp/p06-owner-recovery-K4YHoT/agent-sessions.json.bak
+[Agent 会话] 身份索引不可确认，拒绝普通访问: warn: Agent 会话索引损坏且无法恢复，已拒绝普通会话访问
+      at readIndex (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/agent-session-manager.ts:358:15)
+      at isReviewOwnedOrDeletedAgentSessionId (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/agent-session-manager.ts:478:19)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review-owner-index-recovery.p06-fix01.test.ts:81:20)
+
+[数据恢复] 主索引文件损坏: /tmp/p06-owner-recovery-K4YHoT/agent-sessions.json
+[数据恢复] .bak 文件也损坏: /tmp/p06-owner-recovery-K4YHoT/agent-sessions.json.bak
+(pass) P06-FIX-01 owner identity survives index recovery > all three damaged index files must fail closed for owner and unknown IDs [0.56ms]
+(pass) P06-FIX-01 owner identity survives index recovery > a new Bun process still denies an orphaned owner after old index recovery [78.79ms]
+(pass) P06-FIX-01 owner identity survives index recovery > deny journal itself is private, while an ordinary workspace remains usable [0.57ms]
+(pass) P06-FIX-01 owner identity survives index recovery > valid old index owners are backfilled before a later backup rollback [0.56ms]
+(pass) P06-FIX-01 owner identity survives index recovery > unwritable / invalid deny journal refuses new owner BEFORE index creation [0.41ms]
+[Agent 会话] 身份索引不可确认，拒绝普通访问: warn: 审核会话身份安全记录存在不完整条目
+      at readOwnerFences (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/agent-session-manager.ts:186:55)
+      at isReviewOwnedOrDeletedAgentSessionId (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/agent-session-manager.ts:477:9)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review-owner-index-recovery.p06-fix01.test.ts:147:22)
+
+(pass) P06-FIX-01 owner identity survives index recovery > torn deny journal fails closed rather than interpreting the partial line as ordinary [0.24ms]
+
+apps/electron/src/main/lib/agent-orchestrator-permission-wiring.p06.test.ts:
+(pass) P06 普通 Pi 权限真实接线 > auto Write 确实进入现有权限 pending，人工拒绝传回 Adapter [401.50ms]
+(pass) P06 普通 Pi 权限真实接线 > 同一真实查询的回调支持 Read、plan 拒止和运行中恢复 bypass [90.71ms]
+
+apps/electron/src/main/lib/review/review-batch-case-fallback.p06.test.ts:
+(pass) P06 live batch semantic outcome with zero subjects > case tool result remains complete without subject IDs [5.47ms]
+(pass) P06 live batch semantic outcome with zero subjects > group tool result remains complete without subject IDs [0.16ms]
+(pass) P06 live batch semantic outcome with zero subjects > unsubmitted case result still fails closed [0.18ms]
+
+apps/electron/src/main/lib/review/review-pi-run-bridge.main.test.ts:
+(pass) 后台 Main 入口与受理边界 > 真实执行权之前保持 preparing，ACK 不泄漏内部 ID，Main 在页面无等待时继续收尾 [8.22ms]
+(pass) 后台 Main 入口与受理边界 > 忙碌和重复启动不产生第二个运行或结束原运行 [2.22ms]
+(pass) 后台 Main 入口与受理边界 > 停止只接受当前案卷/运行，错误身份不触发执行器，正确停止持久 cancelled [2.64ms]
+(pass) 后台 Main 入口与受理边界 > 模型停用和非法请求在建内部会话前拒绝 [0.97ms]
+(pass) 后台 Main 入口与受理边界 > 预设不符合审核档案的旧 owner 不复用，防止加载普通工具配置 [3.36ms]
+(pass) 后台 Main 入口与受理边界 > 审核独立模型优先，运行中改设置不改变当前执行输入 [2.02ms]
+(pass) 后台 Main 入口与受理边界 > P06-S01 newest active assignment wins an exact-millisecond tie [0.42ms]
+(pass) 后台 Main 入口与受理边界 > P06-S01 same case reused owner: old failure, stop and revoked grant cannot affect second run [3.58ms]
+(pass) 后台 Main 入口与受理边界 > P06-S01 stop must release before restart; late callback never mutates new owner [3.57ms]
+(pass) 后台 Main 入口与受理边界 > 实际注册 IPC 拒绝非主窗口，旧 prepare/abort/指派入口不能操作新 owner [3.19ms]
+
+apps/electron/src/main/lib/review/review-startup-io-recovery.p06.test.ts:
+[审核V2] 中断运行恢复未持久化，旧授权保持拒止: startup-SESSION_315a3fbe5e46/run-pi-mv8c4vaj-9l5ap.json EACCES: permission denied, open '/tmp/review-startup-io-ODNuo3/review-cases/startup-SESSION_315a3fbe5e46/runs-v2/run-pi-mv8c4vaj-9l5ap.json.tmp'
+    path: "/tmp/review-startup-io-ODNuo3/review-cases/startup-SESSION_315a3fbe5e46/runs-v2/run-pi-mv8c4vaj-9l5ap.json.tmp",
+ syscall: "open",
+   errno: -13,
+    code: "EACCES"
+
+      at saveRunV2 (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/run-store-v2.ts:28:3)
+      at markStaleRunsInterrupted (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/run-store-v2.ts:69:11)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-startup-io-recovery.p06.test.ts:46:14)
+
+(pass) P06 启动恢复 I/O 故障隔离 > 恢复原文件与目录同时不可写时，磁盘仍 running，旧工具与 binding 必须拒绝 [2.86ms]
+(pass) P06 启动恢复 I/O 故障隔离 > 原文件只读但目录可写时，恢复通过原子替换持久 failed，旧授权拒绝 [1.37ms]
+[审核V2] 中断运行恢复未持久化，旧授权保持拒止: startup-SESSION_90c85ffe1fdf/run-pi-mv8c4van-ilwnn.json EACCES: permission denied, open '/tmp/review-startup-io-ODNuo3/review-cases/startup-SESSION_90c85ffe1fdf/runs-v2/run-pi-mv8c4van-ilwnn.json.tmp'
+    path: "/tmp/review-startup-io-ODNuo3/review-cases/startup-SESSION_90c85ffe1fdf/runs-v2/run-pi-mv8c4van-ilwnn.json.tmp",
+ syscall: "open",
+   errno: -13,
+    code: "EACCES"
+
+      at saveRunV2 (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/run-store-v2.ts:28:3)
+      at markStaleRunsInterrupted (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/run-store-v2.ts:69:11)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-startup-io-recovery.p06.test.ts:67:18)
+
+(pass) P06 启动恢复 I/O 故障隔离 > 修复目录写入后可再次持久化 interrupted；新轮次和普通指派仍可用 [1.87ms]
+
+apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts:
+(pass) P01 direct Pi review can reuse runAgent without navigating to a chat tab > review tool writes a complete result; existing onRunOutcome does not overwrite completed V2 run [8.16ms]
+(pass) P01 direct Pi review can reuse runAgent without navigating to a chat tab > without complete submission, an otherwise successful Agent turn remains partially-completed [1.54ms]
+(pass) P01 direct Pi review can reuse runAgent without navigating to a chat tab > an error cannot be reported as successful review after late SDK success [1.43ms]
+(pass) P01 direct Pi review can reuse runAgent without navigating to a chat tab > a user stop persists cancelled rather than completed [1.50ms]
+(pass) P01 direct Pi review can reuse runAgent without navigating to a chat tab > a busy run without ownership cannot falsely finish another run [1.33ms]
+(pass) P03-S01 Main-owned Pi stage must not depend on review page lifetime > after runtime ownership, losing its WebContents does not lose final V2 ledger state [1.45ms]
+(pass) P03-S01 Main-owned Pi stage must not depend on review page lifetime > V2 running alone is NOT an acceptance acknowledgement before onRunOwned [1.46ms]
+(pass) P03-S02 Main admission ACK and single-owner lifecycle > ACK only after onRunOwned, while Main owns the subsequent long Pi turn [2.62ms]
+(pass) P03-S02 Main admission ACK and single-owner lifecycle > busy rejection before ownership closes only the newly prepared V2 run [1.81ms]
+(pass) P03-S02 Main admission ACK and single-owner lifecycle > an early return without onRunOwned cannot emit a false ACK or orphan running [1.66ms]
+(pass) P03-S02 Main admission ACK and single-owner lifecycle > a duplicate admission for the same assignment is rejected without cancelling its owner [1.98ms]
+(pass) P03-S02 Main admission ACK and single-owner lifecycle > preflight failure after token grant preserves ACK but eventually produces failed V2 result [1.85ms]
+(pass) P03-S02 Main admission ACK and single-owner lifecycle > untrusted or stale binding cannot start even when V2 has a historical run [1.33ms]
+[审核后台] 可信运行回调落盘失败: case=bg-probe-case-8acba8f8, run=run-pi-mv8c4vd0-c895y, assignment=ASSIGNMENT_99b525e65806 23 | 
+24 | export function saveRunV2(run: ReviewRunV2): void {
+25 |   const filePath = runPath(run.caseId, run.id)
+26 |   mkdirSync(runsDir(run.caseId), { recursive: true })
+27 |   const tmp = `${filePath}.tmp`
+28 |   writeFileSync(tmp, JSON.stringify(run, null, 2), 'utf-8')
+       ^
+EISDIR: illegal operation on a directory, open '/tmp/cdut-review-background-p01-XhzHuU/review-cases/bg-probe-case-8acba8f8/runs-v2/run-pi-mv8c4vd0-c895y.json.tmp'
+    path: "/tmp/cdut-review-background-p01-XhzHuU/review-cases/bg-probe-case-8acba8f8/runs-v2/run-pi-mv8c4vd0-c895y.json.tmp",
+ syscall: "open",
+   errno: -21,
+    code: "EISDIR"
+
+      at saveRunV2 (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/run-store-v2.ts:28:3)
+      at finishPiReviewRunV2 (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/pi-case-review-service.ts:1060:3)
+      at onRunOutcome (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:165:11)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts:393:7)
+
+[审核后台] 终态未确认后的指派撤销未持久化（已进程内隔离）失败: case=bg-probe-case-8acba8f8, run=run-pi-mv8c4vd0-c895y, assignment=ASSIGNMENT_99b525e65806 24 |       // 备份失败不阻塞写入
+25 |     }
+26 |   }
+27 | 
+28 |   // 写入临时文件
+29 |   writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf-8')
+       ^
+EISDIR: illegal operation on a directory, open '/tmp/cdut-review-background-p01-XhzHuU/review-agent-assignments.json.tmp'
+    path: "/tmp/cdut-review-background-p01-XhzHuU/review-agent-assignments.json.tmp",
+ syscall: "open",
+   errno: -21,
+    code: "EISDIR"
+
+      at writeJsonFileAtomic (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/safe-file.ts:29:3)
+      at writeAll (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:93:3)
+      at revokeAssignment (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:151:3)
+      at onRunOutcome (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:178:11)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts:393:7)
+
+(pass) P06-FIX-03 durable revoke-failure containment > 终态和撤销同时失写时，outcome 回调返回前即拒绝旧授权，不等待 executor Promise 收尾 [2.50ms]
+(pass) P06-FIX-03 durable revoke-failure containment > a live direct Pi grant becomes unusable when its V2 run is already terminal, even with an unrevoked disk row [1.53ms]
+(pass) P06-FIX-03 durable revoke-failure containment > a malformed persistent assignment file cannot be overwritten by new grants or authorize old tools [1.27ms]
+[审核后台] 可信运行回调落盘失败: case=bg-probe-case-b85bf0f9, run=run-pi-mv8c4vd6-6qvhw, assignment=ASSIGNMENT_2d51fea5f411 73 | function readAll(): ReviewAgentAssignment[] {
+74 |   const path = assignmentsPath()
+75 |   if (!existsSync(path)) return []
+76 |   // Missing file is a fresh profile. A present but corrupt/unreadable file
+77 |   // is NOT an empty authorization ledger: fail closed and never overwrite it.
+78 |   const parsed = JSON.parse(readFileSync(path, 'utf-8')) as { assignments?: ReviewAgentAssignment[] }
+                                 ^
+EISDIR: illegal operation on a directory, read
+ syscall: "read",
+   errno: -21,
+    code: "EISDIR"
+
+      at readAll (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:78:29)
+      at findActivePiReviewAssignment (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:235:10)
+      at getPiReviewBindingForSession (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/pi-case-review-service.ts:527:22)
+      at isCurrent (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:48:19)
+      at onRunOutcome (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:164:30)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts:439:16)
+
+[审核后台] 终态未确认后的指派撤销未持久化（已进程内隔离）失败: case=bg-probe-case-b85bf0f9, run=run-pi-mv8c4vd6-6qvhw, assignment=ASSIGNMENT_2d51fea5f411 73 | function readAll(): ReviewAgentAssignment[] {
+74 |   const path = assignmentsPath()
+75 |   if (!existsSync(path)) return []
+76 |   // Missing file is a fresh profile. A present but corrupt/unreadable file
+77 |   // is NOT an empty authorization ledger: fail closed and never overwrite it.
+78 |   const parsed = JSON.parse(readFileSync(path, 'utf-8')) as { assignments?: ReviewAgentAssignment[] }
+                                 ^
+EISDIR: illegal operation on a directory, read
+ syscall: "read",
+   errno: -21,
+    code: "EISDIR"
+
+      at readAll (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:78:29)
+      at revokeAssignment (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:140:15)
+      at onRunOutcome (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:178:11)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts:439:16)
+
+[审核后台] V2 运行状态持久化失败: case=bg-probe-case-b85bf0f9, run=run-pi-mv8c4vd6-6qvhw, assignment=ASSIGNMENT_2d51fea5f411 73 | function readAll(): ReviewAgentAssignment[] {
+74 |   const path = assignmentsPath()
+75 |   if (!existsSync(path)) return []
+76 |   // Missing file is a fresh profile. A present but corrupt/unreadable file
+77 |   // is NOT an empty authorization ledger: fail closed and never overwrite it.
+78 |   const parsed = JSON.parse(readFileSync(path, 'utf-8')) as { assignments?: ReviewAgentAssignment[] }
+                                 ^
+EISDIR: illegal operation on a directory, read
+ syscall: "read",
+   errno: -21,
+    code: "EISDIR"
+
+      at readAll (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:78:29)
+      at findActivePiReviewAssignment (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:235:10)
+      at getPiReviewBindingForSession (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/pi-case-review-service.ts:527:22)
+      at isCurrent (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:48:19)
+      at closeIfCurrent (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:56:8)
+      at closeSafely (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:110:7)
+      at finishExecution (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:125:9)
+
+[审核后台] 指派撤销未持久化（已进程内隔离）失败: case=bg-probe-case-b85bf0f9, run=run-pi-mv8c4vd6-6qvhw, assignment=ASSIGNMENT_2d51fea5f411 73 | function readAll(): ReviewAgentAssignment[] {
+74 |   const path = assignmentsPath()
+75 |   if (!existsSync(path)) return []
+76 |   // Missing file is a fresh profile. A present but corrupt/unreadable file
+77 |   // is NOT an empty authorization ledger: fail closed and never overwrite it.
+78 |   const parsed = JSON.parse(readFileSync(path, 'utf-8')) as { assignments?: ReviewAgentAssignment[] }
+                                 ^
+EISDIR: illegal operation on a directory, read
+ syscall: "read",
+   errno: -21,
+    code: "EISDIR"
+
+      at readAll (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:78:29)
+      at revokeAssignment (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:140:15)
+      at finishExecution (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:136:9)
+
+(pass) P06-FIX-03 durable revoke-failure containment > failed revoke write after true ACK is observed: no unhandled rejection, Main ACK clears, grant locally denied [42.18ms]
+[审核后台] V2 运行状态持久化失败: case=bg-probe-case-f2c3ab68, run=run-pi-mv8c4vec-hai12, assignment=ASSIGNMENT_7e04af494064 73 | function readAll(): ReviewAgentAssignment[] {
+74 |   const path = assignmentsPath()
+75 |   if (!existsSync(path)) return []
+76 |   // Missing file is a fresh profile. A present but corrupt/unreadable file
+77 |   // is NOT an empty authorization ledger: fail closed and never overwrite it.
+78 |   const parsed = JSON.parse(readFileSync(path, 'utf-8')) as { assignments?: ReviewAgentAssignment[] }
+                           ^
+SyntaxError: JSON Parse error: Expected '}'
+      at readAll (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:78:23)
+      at findActivePiReviewAssignment (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:235:10)
+      at getPiReviewBindingForSession (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/pi-case-review-service.ts:527:22)
+      at isCurrent (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:48:19)
+      at closeIfCurrent (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:56:8)
+      at closeSafely (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:110:7)
+      at finishExecution (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:121:9)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts:496:39)
+
+[审核后台] 指派撤销未持久化（已进程内隔离）失败: case=bg-probe-case-f2c3ab68, run=run-pi-mv8c4vec-hai12, assignment=ASSIGNMENT_7e04af494064 73 | function readAll(): ReviewAgentAssignment[] {
+74 |   const path = assignmentsPath()
+75 |   if (!existsSync(path)) return []
+76 |   // Missing file is a fresh profile. A present but corrupt/unreadable file
+77 |   // is NOT an empty authorization ledger: fail closed and never overwrite it.
+78 |   const parsed = JSON.parse(readFileSync(path, 'utf-8')) as { assignments?: ReviewAgentAssignment[] }
+                           ^
+SyntaxError: JSON Parse error: Expected '}'
+      at readAll (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:78:23)
+      at revokeAssignment (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:140:15)
+      at finishExecution (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:136:9)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts:496:39)
+
+(pass) P06-FIX-03 durable revoke-failure containment > pre-ACK executor rejection under corrupt assignment storage settles the caller and releases the duplicate fence [32.01ms]
+[审核后台] 指派撤销未持久化（已进程内隔离）失败: case=bg-probe-case-55d744df, run=run-pi-mv8c4vf8-c5tep, assignment=ASSIGNMENT_0f921402aeb5 24 |       // 备份失败不阻塞写入
+25 |     }
+26 |   }
+27 | 
+28 |   // 写入临时文件
+29 |   writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf-8')
+       ^
+EACCES: permission denied, open '/tmp/cdut-review-background-p01-XhzHuU/review-agent-assignments.json.tmp'
+    path: "/tmp/cdut-review-background-p01-XhzHuU/review-agent-assignments.json.tmp",
+ syscall: "open",
+   errno: -13,
+    code: "EACCES"
+
+      at writeJsonFileAtomic (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/safe-file.ts:29:3)
+      at writeAll (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:93:3)
+      at revokeAssignment (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-agent-assignment.ts:151:3)
+      at finishExecution (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:136:9)
+
+(pass) P06-FIX-03 durable revoke-failure containment > EACCES from a readonly grants file leaves persistent revokedAt unconfirmed and denies the local grant [51.96ms]
+[审核V2] 运行文件解析失败: bg-probe-case-e57a44b9/run-pi-mv8c4vgo-vbapb EISDIR: illegal operation on a directory, read
+ syscall: "read",
+   errno: -21,
+    code: "EISDIR"
+
+      at getRunV2 (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/run-store-v2.ts:84:23)
+      at onRunOutcome (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:158:27)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts:551:16)
+
+[审核后台] 可信运行回调落盘失败: case=bg-probe-case-e57a44b9, run=run-pi-mv8c4vgo-vbapb, assignment=ASSIGNMENT_bba28b7bbd56 159 |         const active = admittedByCase.get(binding.caseId)
+160 |         const ownsThisRun = active?.runId === binding.runId && active.assignmentId === binding.assignmentId
+161 |         // The tool may have already completed V2. A late callback must not
+162 |         // reopen a terminal run or mutate a newer assignment.
+163 |         if (ownsThisRun && (!persisted || persisted.status === 'running' || persisted.status === 'queued')) {
+164 |           if (!persisted || !isCurrent(binding)) throw new Error('无法确认当前审核轮次及 V2 持久运行状态')
+                                                                 ^
+error: 无法确认当前审核轮次及 V2 持久运行状态
+      at onRunOutcome (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-pi-admission.ts:164:60)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts:551:16)
+
+(pass) P06-FIX-03 durable revoke-failure containment > invalid V2 final-state persistence is not accepted as terminal and cannot leave a stale ACK [46.98ms]
+(pass) P06-FIX-03 durable revoke-failure containment > a successful durable revoke still reports revokedAt and leaves an ordinary independent grant working [1.91ms]
+
+apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts:
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 多选导入保留成功文件并汇报单文件失败 [2.54ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 辅助审核设置按当前案卷保存模板版本与可编辑规则 [0.57ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 文件依据生成的规则摘要可改写并立即进入当前案卷缓存 [0.63ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 人工修正 AI 申报事项后更新当前案卷缓存 [0.69ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 重新打开工作台时恢复已有案卷，材料入口有可用的当前任务 [0.43ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > Given 两份依据 When 生成大纲 Then 两包分别请求并保留各自结果 [0.66ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > Given 已有审核结果 When 导入或切换领域 Then 不切案且即时核验过期标记 [0.55ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > Given 审核过程中输入发生变化 When 旧快照结果返回 Then 仍标为过期 [0.48ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > K05 主场景：A 审核中切到 B，A 返回只落 A、不污染 B、不切回 [0.46ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > H09 恢复：selectCase 拉回最近运行与过期标记 [0.23ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > K05 交错：同案大纲（慢）与识别（快）都保留，互不覆盖 [0.55ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 选择代次：慢的 selectCase(A) 不把界面切回 A [0.25ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 同案互斥：审核进行中拒绝再次发起，且切走后守卫不解除 [0.41ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 一键审核复用已有中间产物，只调用一次最终审核 [1.53ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 已有审核结果可分别沿用会话更新或创建新会话从头审核 [0.40ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > Pi 审核启动前先识别逐事项规则所需的申报事项 [1.58ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > Pi 审核前自动重解析迁移过来的旧版 HTML/EML 失败材料 [1.25ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 阶段 3：一键审核提交同 ID V2 案卷并将主结果写入 V2 run [0.74ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 阶段 2 P0：无审核依据时不启动运行 [0.26ms]
+[审核专区] 生成规则大纲失败 636 |   test('阶段 2 P0：大纲生成失败显示失败，不伪装成缺少用户材料', async () => {
+637 |     const { api, calls } = makeApi()
+638 |     api.getCase = async (caseId) => makeCase(caseId, {
+639 |       documents: [{ id: 'application-1', fileName: '申报.txt', role: 'application', mimeType: 'text/plain', sizeBytes: 1, parseStatus: 'parsed', blocks: [], origin: 'upload' } as never],
+640 |     })
+641 |     api.generateRuleOutline = async () => { throw new Error('模型出口超时') }
+                                                            ^
+error: 模型出口超时
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts:641:55)
+      at generateRuleOutline (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/renderer/components/content-review/review-actions-controller.ts:796:37)
+      at runFullReview (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/renderer/components/content-review/review-actions-controller.ts:1020:22)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts:645:19)
+
+[审核专区] 一键审核失败 636 |   test('阶段 2 P0：大纲生成失败显示失败，不伪装成缺少用户材料', async () => {
+637 |     const { api, calls } = makeApi()
+638 |     api.getCase = async (caseId) => makeCase(caseId, {
+639 |       documents: [{ id: 'application-1', fileName: '申报.txt', role: 'application', mimeType: 'text/plain', sizeBytes: 1, parseStatus: 'parsed', blocks: [], origin: 'upload' } as never],
+640 |     })
+641 |     api.generateRuleOutline = async () => { throw new Error('模型出口超时') }
+                                                            ^
+error: 模型出口超时
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts:641:55)
+      at generateRuleOutline (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/renderer/components/content-review/review-actions-controller.ts:796:37)
+      at runFullReview (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/renderer/components/content-review/review-actions-controller.ts:1020:22)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts:645:19)
+
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 阶段 2 P0：大纲生成失败显示失败，不伪装成缺少用户材料 [1.22ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 阶段 2 P0：人工复核与覆盖缺口将完成运行标为部分完成 [0.39ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 阶段 2 P0：重启恢复时状态与最近运行和输入过期标记一致 [0.23ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 操作代次与互斥：同类第二次点击被拒；完成后结果正常落位 [0.27ms]
+[审核专区] 开始审核失败 701 |     const actions = createReviewActionsController(store, api)
+702 |     await actions.selectCase('case-A')
+703 | 
+704 |     const runPromise = actions.runReview()
+705 |     await actions.selectCase('case-B')
+706 |     ;(shift('run-1') ).reject(new Error('模型超时'))
+                                        ^
+error: 模型超时
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts:706:35)
+
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 错误按案隔离：失败发生时已切走则不污染当前视图 [0.41ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 领域包切换按案落位：响应期间切走也只更新原案卷缓存 [0.29ms]
+(pass) Main 后台审核前台接线 > ACK 前不显示已受理，ACK 后释放前台等待且切案不污染新案 [0.78ms]
+(pass) Main 后台审核前台接线 > 新页面从持久 V2 回读 running/failed，无需原 Hook 或旧内存 [0.37ms]
+(pass) Main 后台审核前台接线 > 重新选择案卷时 V2 running 不能覆盖 Main 的未受理状态 [0.30ms]
+(pass) Main 后台审核前台接线 > 停止动作只发案卷与本轮 ID，回读取消结果 [0.40ms]
+(pass) Main 后台审核前台接线 > P06-S02 a slow first snapshot cannot repaint the newer run of the same case [0.45ms]
+(pass) Main 后台审核前台接线 > P06-S02 late first acceptance response cannot replace second round UI status [0.40ms]
+[审核专区] 审核未完成 863 | 
+864 |   test('预检失败的业务错误卡和提示只显示原因，不显示 IPC 包装', async () => {
+865 |     const fixture = backgroundFixture()
+866 |     const store = createStore()
+867 |     const actions = createReviewActionsController(store, fixture.api, async () => {
+868 |       throw new Error("Error invoking remote method 'review-v2:start-background-pi-review': Error: 审核渠道或模型未配置")
+                      ^
+error: Error invoking remote method 'review-v2:start-background-pi-review': Error: 审核渠道或模型未配置
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts:868:17)
+      at runFullReview (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/renderer/components/content-review/review-actions-controller.ts:982:29)
+      at async <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts:871:19)
+
+(pass) Main 后台审核前台接线 > 预检失败的业务错误卡和提示只显示原因，不显示 IPC 包装 [0.48ms]
+
+apps/electron/src/renderer/components/content-review/review-workspace-recheck-independent.test.ts:
+(pass) P06-RECHECK equivalent real writer witnesses > old Hook refresh cannot commit after a newer real Controller request [2.94ms]
+(pass) P06-RECHECK equivalent real writer witnesses > old Hook refresh cannot commit after a newer real Hook request [0.54ms]
+
+apps/electron/src/renderer/components/content-review/review-workspace-write-fence.p06-fix02.test.ts:
+(pass) P06-FIX-02 shared Jotai commit identity > same-store token is invalidated by another writer and only for its case [0.11ms]
+(pass) P06-FIX-02 shared Jotai commit identity > two Controller instances: unmounted old reader cannot restore failed run after new accepted run [1.68ms]
+(pass) P06-FIX-02 shared Jotai commit identity > unmount without replacement revokes old pending display reads [1.25ms]
+(pass) P06-FIX-02 shared Jotai commit identity > real React/Jotai Workspace Hook refresh cannot commit a late cancelled snapshot after next Controller run [0.77ms]
+(pass) P06-FIX-02 shared Jotai commit identity > real Workspace Hook apply captures token before mutation IPC and cannot overwrite newer run or observations [1.75ms]
+
+ 87 pass
+ 0 fail
+ 334 expect() calls
+Ran 87 tests across 9 files. [1.60s]

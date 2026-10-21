@@ -1,0 +1,29 @@
+{
+  "name": "permission-wiring-after-fix",
+  "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014",
+  "argv": [
+    "bun",
+    "test",
+    "--isolate",
+    "--timeout",
+    "30000",
+    "apps/electron/src/main/lib/agent-orchestrator-permission-wiring.p06.test.ts"
+  ],
+  "startedAt": "2026-10-14T15:30:29.562104+00:00",
+  "environment": {
+    "NO_COLOR": "1"
+  },
+  "finishedAt": "2026-10-14T15:30:30.918648+00:00",
+  "exitCode": 0,
+  "files": {
+    "permission-wiring-after-fix.stdout.log": {
+      "sha256": "390f9ce5a1a57eb057a711d1ac5988ae3cd4131d337a6a18fab85d00b1a288f7",
+      "bytes": 5299
+    },
+    "permission-wiring-after-fix.stderr.log": {
+      "sha256": "9f7dd6452cb3cf7abb59f1aa69e266e36b61c7076a66e52eab25f8f689fe6a7d",
+      "bytes": 409
+    }
+  }
+}

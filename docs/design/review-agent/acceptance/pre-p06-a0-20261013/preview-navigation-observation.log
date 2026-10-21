@@ -1,0 +1,1 @@
+@profer/electron dev: [electron] [app] (node:3993187) electron: Failed to load URL: http://localhost:5176/?window=agent-preview with error: ERR_BLOCKED_BY_CLIENT

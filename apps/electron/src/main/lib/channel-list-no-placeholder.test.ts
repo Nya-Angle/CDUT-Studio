@@ -60,20 +60,20 @@ describe('listChannels 占位渠道', () => {
 })
 
 describe('服务端渠道同步时的本地状态保留', () => {
-  test('Given 用户在代管渠道上勾选过 1M When 服务端下发新模型列表 Then 保留勾选与启停状态', () => {
+  test('Given 用户在代管渠道上配置过运行参数 When 服务端下发新模型列表 Then 保留本地状态', () => {
     const merged = mergeServerChannelModels(
       [
         { id: 'deepseek-v4-pro', name: 'DeepSeek V4 Pro', enabled: true },
         { id: 'deepseek-v4-flash', name: 'DeepSeek V4 Flash', enabled: true },
       ],
       [
-        { id: 'deepseek-v4-pro', name: 'DeepSeek V4 Pro', enabled: false, context1m: false },
+        { id: 'deepseek-v4-pro', name: 'DeepSeek V4 Pro', enabled: false, context1m: false, contextWindow: 400_000, maxTokens: 32_000 },
         { id: 'deepseek-v4-flash', name: 'DeepSeek V4 Flash', enabled: true, context1m: true },
       ],
     )
 
     expect(merged).toEqual([
-      { id: 'deepseek-v4-pro', name: 'DeepSeek V4 Pro', enabled: false, context1m: false },
+      { id: 'deepseek-v4-pro', name: 'DeepSeek V4 Pro', enabled: false, context1m: false, contextWindow: 400_000, maxTokens: 32_000 },
       { id: 'deepseek-v4-flash', name: 'DeepSeek V4 Flash', enabled: true, context1m: true },
     ])
   })

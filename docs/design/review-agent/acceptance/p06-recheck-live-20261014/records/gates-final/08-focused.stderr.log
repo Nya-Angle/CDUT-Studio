@@ -1,0 +1,35 @@
+(pass) Main 后台审核前台接线 > ACK 前不显示已受理，ACK 后释放前台等待且切案不污染新案 [0.78ms]
+(pass) Main 后台审核前台接线 > 新页面从持久 V2 回读 running/failed，无需原 Hook 或旧内存 [0.35ms]
+(pass) Main 后台审核前台接线 > 重新选择案卷时 V2 running 不能覆盖 Main 的未受理状态 [0.29ms]
+(pass) Main 后台审核前台接线 > 停止动作只发案卷与本轮 ID，回读取消结果 [0.40ms]
+(pass) Main 后台审核前台接线 > P06-S02 a slow first snapshot cannot repaint the newer run of the same case [0.41ms]
+(pass) Main 后台审核前台接线 > P06-S02 late first acceptance response cannot replace second round UI status [0.40ms]
+[审核专区] 审核未完成 863 | 
+864 |   test('预检失败的业务错误卡和提示只显示原因，不显示 IPC 包装', async () => {
+865 |     const fixture = backgroundFixture()
+866 |     const store = createStore()
+867 |     const actions = createReviewActionsController(store, fixture.api, async () => {
+868 |       throw new Error("Error invoking remote method 'review-v2:start-background-pi-review': Error: 审核渠道或模型未配置")
+                      ^
+error: Error invoking remote method 'review-v2:start-background-pi-review': Error: 审核渠道或模型未配置
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts:868:17)
+      at runFullReview (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/renderer/components/content-review/review-actions-controller.ts:982:29)
+      at async <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts:871:19)
+
+(pass) Main 后台审核前台接线 > 预检失败的业务错误卡和提示只显示原因，不显示 IPC 包装 [0.49ms]
+
+apps/electron/src/renderer/components/content-review/review-workspace-recheck-independent.test.ts:
+(pass) P06-RECHECK equivalent real writer witnesses > old Hook refresh cannot commit after a newer real Controller request [8.20ms]
+(pass) P06-RECHECK equivalent real writer witnesses > old Hook refresh cannot commit after a newer real Hook request [0.49ms]
+
+apps/electron/src/renderer/components/content-review/review-workspace-write-fence.p06-fix02.test.ts:
+(pass) P06-FIX-02 shared Jotai commit identity > same-store token is invalidated by another writer and only for its case [0.13ms]
+(pass) P06-FIX-02 shared Jotai commit identity > two Controller instances: unmounted old reader cannot restore failed run after new accepted run [1.85ms]
+(pass) P06-FIX-02 shared Jotai commit identity > unmount without replacement revokes old pending display reads [1.35ms]
+(pass) P06-FIX-02 shared Jotai commit identity > real React/Jotai Workspace Hook refresh cannot commit a late cancelled snapshot after next Controller run [0.96ms]
+(pass) P06-FIX-02 shared Jotai commit identity > real Workspace Hook apply captures token before mutation IPC and cannot overwrite newer run or observations [1.85ms]
+
+ 83 pass
+ 0 fail
+ 324 expect() calls
+Ran 83 tests across 8 files. [1.59s]

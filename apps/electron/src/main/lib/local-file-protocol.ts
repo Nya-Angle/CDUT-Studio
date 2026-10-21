@@ -11,6 +11,7 @@ import { existsSync, realpathSync, statSync } from 'node:fs'
 import { resolve, sep } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { net } from 'electron'
+import { isReviewPrivateDesktopPath } from './review-private-file-access'
 
 type RegisteredEntry = {
   root: string
@@ -52,6 +53,9 @@ function isInsideDirectory(target: string, root: string): boolean {
 function registerEntry(path: string, isDirectory: boolean): string {
   pruneEntries()
   const root = realpathExisting(path)
+  if (isReviewPrivateDesktopPath(path) || isReviewPrivateDesktopPath(root)) {
+    throw new Error('审核内部会话路径不可注册')
+  }
   const st = statSync(root)
   if (isDirectory && !st.isDirectory()) {
     throw new Error(`不是目录: ${path}`)
@@ -102,5 +106,8 @@ export function handleProferFileRequest(request: Request): Promise<Response> | R
     return new Response('Not Found', { status: 404 })
   }
 
+  // Directory tokens can address arbitrary descendants; check the final target
+  // every time, including after the review session has been deleted.
+  if (isReviewPrivateDesktopPath(target)) return new Response('Forbidden', { status: 403 })
   return net.fetch(pathToFileURL(target).toString())
 }

@@ -1,0 +1,338 @@
+{
+  "id": "E05",
+  "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+  "status": "PASS",
+  "timeline": [
+    {
+      "at": "2026-10-14T16:26:54.146Z",
+      "event": "old-main-accepted",
+      "caseId": "case-1791975357085-tbbbrx",
+      "runId": "run-pi-mv8bojt7-n1mrb",
+      "runStatus": "running",
+      "phase": "accepted"
+    },
+    {
+      "at": "2026-10-14T16:26:56.756Z",
+      "event": "real-provider-reply-before-race",
+      "assistantReplies": 1,
+      "toolCalls": [
+        "review_read_documents"
+      ]
+    },
+    {
+      "at": "2026-10-14T16:26:56.887Z",
+      "event": "old-response-held",
+      "runIds": [
+        "run-pi-mv8bojt7-n1mrb",
+        "run-pi-mv8baajk-3wl3k",
+        "run-pi-mv8b0mcq-vae6u",
+        "run-pi-mv8b0h9z-lq0tz",
+        "run-pi-mv8ab09h-od977",
+        "run-pi-mv89v6g4-mhamp",
+        "run-pi-mv89v3f1-g258o",
+        "run-pi-mv88r81m-vnhyb",
+        "run-pi-mv7zxda6-jleo9",
+        "run-pi-mv7zxbyw-jd5mo",
+        "run-pi-mv7zw1g7-3yq80",
+        "run-pi-mv7zw0ed-1j6p0"
+      ]
+    },
+    {
+      "at": "2026-10-14T16:26:56.926Z",
+      "event": "real-review-page-unmounted"
+    },
+    {
+      "at": "2026-10-14T16:26:57.080Z",
+      "event": "new-main-accepted-before-reentry",
+      "caseId": "case-1791975357085-tbbbrx",
+      "runId": "run-pi-mv8bomsd-hm6xf",
+      "runStatus": "running",
+      "phase": "accepted"
+    },
+    {
+      "at": "2026-10-14T16:26:57.923Z",
+      "event": "real-review-page-remounted-new-state",
+      "main": {
+        "caseId": "case-1791975357085-tbbbrx",
+        "runId": "run-pi-mv8bomsd-hm6xf",
+        "runStatus": "running",
+        "phase": "accepted"
+      },
+      "renderer": {
+        "runId": "run-pi-mv8bomsd-hm6xf",
+        "runStatus": "running",
+        "status": "running",
+        "stage": "checks",
+        "message": "审核中，可切换页面",
+        "error": null
+      },
+      "oldStopFeedbackVisible": false,
+      "buttons": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "🧑‍💻",
+        "",
+        "预审工作台",
+        "V2 案卷",
+        "模板编排",
+        "批次管理",
+        "载入演示案卷",
+        "",
+        "添加依据",
+        "上传依据",
+        "添加申报材料",
+        "清空",
+        "",
+        "添加证明材料",
+        "停止审核",
+        "○ 需要先完成一份与当前案卷输入一致的审核运行。",
+        "○ 有 1 项计划检查没有结果记录，请重新运行审核。",
+        "退回补件",
+        "全部",
+        "AI Agent",
+        "人工"
+      ]
+    },
+    {
+      "at": "2026-10-14T16:26:58.054Z",
+      "event": "after-late-delivery",
+      "main": {
+        "caseId": "case-1791975357085-tbbbrx",
+        "runId": "run-pi-mv8bomsd-hm6xf",
+        "runStatus": "running",
+        "phase": "accepted"
+      },
+      "renderer": {
+        "runId": "run-pi-mv8bomsd-hm6xf",
+        "runStatus": "running",
+        "status": "running",
+        "stage": "checks",
+        "message": "审核中，可切换页面",
+        "error": null
+      },
+      "oldStopFeedbackVisible": false,
+      "buttons": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "🧑‍💻",
+        "",
+        "预审工作台",
+        "V2 案卷",
+        "模板编排",
+        "批次管理",
+        "载入演示案卷",
+        "",
+        "添加依据",
+        "上传依据",
+        "添加申报材料",
+        "清空",
+        "",
+        "添加证明材料",
+        "停止审核",
+        "○ 需要先完成一份与当前案卷输入一致的审核运行。",
+        "○ 有 1 项计划检查没有结果记录，请重新运行审核。",
+        "退回补件",
+        "全部",
+        "AI Agent",
+        "人工"
+      ]
+    }
+  ],
+  "assertions": [
+    {
+      "name": "旧轮真实 provider 回执已见证",
+      "pass": true
+    },
+    {
+      "name": "旧真实 Main 回复包含旧 run",
+      "pass": true
+    },
+    {
+      "name": "旧轮真实停止 cancelled",
+      "pass": true
+    },
+    {
+      "name": "新轮页面外 accepted/running",
+      "pass": true
+    },
+    {
+      "name": "旧回复确实交付至真实 Controller",
+      "pass": true
+    },
+    {
+      "name": "Main 仍为新 run accepted/running",
+      "pass": true
+    },
+    {
+      "name": "Renderer/Jotai 仍为新 run running",
+      "pass": true
+    },
+    {
+      "name": "旧错误和 stop feedback 没有复活",
+      "pass": true
+    },
+    {
+      "name": "重进后新轮真实停止仍可用",
+      "pass": true
+    }
+  ],
+  "providerWitness": {
+    "assistantReplies": 1,
+    "toolCalls": [
+      "review_read_documents"
+    ]
+  },
+  "beforeDelivery": {
+    "main": {
+      "caseId": "case-1791975357085-tbbbrx",
+      "runId": "run-pi-mv8bomsd-hm6xf",
+      "runStatus": "running",
+      "phase": "accepted"
+    },
+    "renderer": {
+      "runId": "run-pi-mv8bomsd-hm6xf",
+      "runStatus": "running",
+      "status": "running",
+      "stage": "checks",
+      "message": "审核中，可切换页面",
+      "error": null
+    },
+    "oldStopFeedbackVisible": false,
+    "buttons": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "🧑‍💻",
+      "",
+      "预审工作台",
+      "V2 案卷",
+      "模板编排",
+      "批次管理",
+      "载入演示案卷",
+      "",
+      "添加依据",
+      "上传依据",
+      "添加申报材料",
+      "清空",
+      "",
+      "添加证明材料",
+      "停止审核",
+      "○ 需要先完成一份与当前案卷输入一致的审核运行。",
+      "○ 有 1 项计划检查没有结果记录，请重新运行审核。",
+      "退回补件",
+      "全部",
+      "AI Agent",
+      "人工"
+    ]
+  },
+  "ipcWitness": {
+    "delivered": true,
+    "events": [
+      {
+        "event": "real-ipc-listRunsV2-issued",
+        "at": 1791995216784
+      },
+      {
+        "event": "real-main-response-captured",
+        "at": 1791995216789,
+        "runIds": [
+          "run-pi-mv8bojt7-n1mrb",
+          "run-pi-mv8baajk-3wl3k",
+          "run-pi-mv8b0mcq-vae6u",
+          "run-pi-mv8b0h9z-lq0tz",
+          "run-pi-mv8ab09h-od977",
+          "run-pi-mv89v6g4-mhamp",
+          "run-pi-mv89v3f1-g258o",
+          "run-pi-mv88r81m-vnhyb",
+          "run-pi-mv7zxda6-jleo9",
+          "run-pi-mv7zxbyw-jd5mo",
+          "run-pi-mv7zw1g7-3yq80",
+          "run-pi-mv7zw0ed-1j6p0"
+        ]
+      },
+      {
+        "event": "old-response-delivered-to-production-controller",
+        "at": 1791995218043,
+        "runIds": [
+          "run-pi-mv8bojt7-n1mrb",
+          "run-pi-mv8baajk-3wl3k",
+          "run-pi-mv8b0mcq-vae6u",
+          "run-pi-mv8b0h9z-lq0tz",
+          "run-pi-mv8ab09h-od977",
+          "run-pi-mv89v6g4-mhamp",
+          "run-pi-mv89v3f1-g258o",
+          "run-pi-mv88r81m-vnhyb",
+          "run-pi-mv7zxda6-jleo9",
+          "run-pi-mv7zxbyw-jd5mo",
+          "run-pi-mv7zw1g7-3yq80",
+          "run-pi-mv7zw0ed-1j6p0"
+        ]
+      }
+    ]
+  },
+  "afterDelivery": {
+    "main": {
+      "caseId": "case-1791975357085-tbbbrx",
+      "runId": "run-pi-mv8bomsd-hm6xf",
+      "runStatus": "running",
+      "phase": "accepted"
+    },
+    "renderer": {
+      "runId": "run-pi-mv8bomsd-hm6xf",
+      "runStatus": "running",
+      "status": "running",
+      "stage": "checks",
+      "message": "审核中，可切换页面",
+      "error": null
+    },
+    "oldStopFeedbackVisible": false,
+    "buttons": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "🧑‍💻",
+      "",
+      "预审工作台",
+      "V2 案卷",
+      "模板编排",
+      "批次管理",
+      "载入演示案卷",
+      "",
+      "添加依据",
+      "上传依据",
+      "添加申报材料",
+      "清空",
+      "",
+      "添加证明材料",
+      "停止审核",
+      "○ 需要先完成一份与当前案卷输入一致的审核运行。",
+      "○ 有 1 项计划检查没有结果记录，请重新运行审核。",
+      "退回补件",
+      "全部",
+      "AI Agent",
+      "人工"
+    ]
+  },
+  "cleanup": {
+    "caseId": "case-1791975357085-tbbbrx",
+    "runId": "run-pi-mv8bomsd-hm6xf",
+    "runStatus": "cancelled",
+    "completedAt": "2026-10-14T16:26:58.183Z",
+    "phase": "incomplete"
+  },
+  "finishedAt": "2026-10-14T16:26:58.259Z"
+}

@@ -1,0 +1,268 @@
+(node:1737993) [UNDICI-EHPA] Warning: EnvHttpProxyAgent is experimental, expect them to change at any time.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1738015) [UNDICI-EHPA] Warning: EnvHttpProxyAgent is experimental, expect them to change at any time.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[E2E] 配置就绪：E2E 对照渠道 / minimax-m3（custom）
+[main] [配置] 已创建 SDK 配置目录: /home/miku/Bot/CDUTStudio/cdut-studio-review-agent/work/e2e/config-ctl/sdk-config
+[main] [协作工具] EventBus 阻塞事件监听已注册
+[main:err] [1738023:1021/021457.155520:WARNING:ui/ozone/platform/wayland/common/wayland_object.cc:119] Binding to wl_shm version 1 but version 2 is available.
+[main:err] [1738023:1021/021457.155606:WARNING:ui/ozone/platform/wayland/common/wayland_object.cc:119] Binding to zwp_pointer_gestures_v1 version 1 but version 3 is available.
+[1738023:1021/021457.155642:WARNING:ui/ozone/platform/wayland/common/wayland_object.cc:119] Binding to zwp_linux_dmabuf_v1 version 4 but version 5 is available.
+[1738023:1021/021457.155676:WARNING:ui/ozone/platform/wayland/common/wayland_object.cc:119] Binding to wp_color_manager_v1 version 1 but version 2 is available.
+[1738023:1021/021457.155686:WARNING:ui/ozone/platform/wayland/common/wayland_object.cc:119] Binding to wp_cursor_shape_manager_v1 version 1 but version 2 is available.
+[main:err] 
+DevTools listening on ws://127.0.0.1:9444/devtools/browser/876f130b-fa69-4ada-87cd-ed1cb25a47f8
+[main] [运行时初始化] 开始初始化运行时环境...
+[main] [Node.js 检测] 开始检测 Node.js 运行时...
+[main] [Node.js 检测] 找到 Node.js: /home/miku/.nvm/versions/node/v22.23.2/bin/node (22.23.2)
+[main] [Bun 检测] 开始检测 Bun 运行时（可选组件）...
+[main] [Bun 检测] 找到 Bun (system): /home/miku/.nvm/versions/node/v22.23.2/bin/bun (1.4.0)
+[main] [Git 检测] 开始检测 Git 运行时...
+[main] [Git 检测] 找到 Git: /usr/bin/git (2.53.0)
+[main] [运行时初始化] 已写入磁盘缓存
+[main] [运行时初始化] 初始化完成 (耗时 37ms)
+[main] [运行时初始化] 状态: {
+  node: '✅ 22.23.2',
+  bun: '✅ 1.4.0 (system)',
+  git: '✅ 2.53.0',
+  shell: '⏭️ 跳过（非 Windows）',
+  envLoaded: '✅'
+}
+[main] [IPC] 正在注册 IPC 处理器...
+[main] [配置] 已创建 Agent 工作区目录: /home/miku/Bot/CDUTStudio/cdut-studio-review-agent/work/e2e/config-ctl/agent-workspaces
+[main] [配置] 已创建 Agent 工作区: /home/miku/Bot/CDUTStudio/cdut-studio-review-agent/work/e2e/config-ctl/agent-workspaces/default
+[main] [Agent 工作区] 已创建 plugin manifest: default
+[main] [Agent 工作区] 已创建默认工作区
+[main] [IPC] IPC 处理器注册完成
+[main] [审核专区] IPC 处理器注册完成
+[main] [Remote] 未启用（设置页未开启移动模式，且 PROFER_REMOTE 未设置）
+[main] [配置] 默认配置目录名: ~/.cdutai-dev/（开发模式）；实际路径可由 PROFER_CONFIG_DIR 覆盖
+[main] [AgentFabric] 未启用（设置 PROFER_AGENT_FABRIC=1 或 agent-fabric.json enabled=true）
+[main:err] [1738023:1021/021457.326609:WARNING:ui/ozone/platform/wayland/host/wayland_surface.cc:170] Server doesn't support zcr_alpha_compositing_v1.
+[1738023:1021/021457.326625:WARNING:ui/ozone/platform/wayland/host/wayland_surface.cc:185] Server doesn't support overlay_prioritizer.
+[1738023:1021/021457.326628:WARNING:ui/ozone/platform/wayland/host/wayland_surface.cc:200] Server doesn't support wp_content_type_v1
+[main] System tray created
+[main] [启动] 开机自启动: 已关闭
+[main] [工作区监听] 已启动文件监听: /home/miku/Bot/CDUTStudio/cdut-studio-review-agent/work/e2e/config-ctl/agent-workspaces
+[main] [全局快捷键] 注册成功: show-main-window → CommandOrControl+Shift+P
+[main] [速课堂评测] 隐蔽评测服务已在 127.0.0.1:36723 静默启动
+[main] [Bridge Registry] 自愈守护已启动
+[main] [定时任务] 调度器已启动，tick 周期 30s
+[main] [设置] 系统主题变化: 深色
+[main:err] [1738023:1021/021457.636859:WARNING:dbus/exported_object.cc:302] Unknown method: message_type: MESSAGE_METHOD_CALL
+destination: :1.2553
+path: /StatusNotifierItem
+interface: org.freedesktop.DBus.Introspectable
+member: Introspect
+sender: :1.25
+serial: 301370
+
+
+[main] [设置] 系统主题变化: 深色
+[main] [CdutAuthManager] 启动已清空特区账户分区存储，登录态复位为未登录
+[main:err] (electron) 'console-message' arguments are deprecated and will be removed. Please use Event<WebContentsConsoleMessageEventParams> object instead.
+[main:err] [1738023:1021/021458.189172:INFO:CONSOLE:789] "[vite] connecting...", source: http://localhost:5174/@vite/client (789)
+[main] [renderer:verbose] http://localhost:5174/@vite/client:789 [vite] connecting...
+[main] Warning: Cannot access the `require` function: "TypeError [ERR_INVALID_ARG_VALUE]: The argument 'filename' must be a file URL object, file URL string, or absolute path string. Received undefined".
+[main] Warning: Cannot polyfill `DOMMatrix`, rendering may be broken.
+Warning: Cannot polyfill `ImageData`, rendering may be broken.
+Warning: Cannot polyfill `Path2D`, rendering may be broken.
+[main] Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+[main] Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+[main] [文档解析] PDF 高精解析完成: 6 页, 6 块, 拦截幽灵字符 0
+[main] [renderer:verbose] http://localhost:5174/@vite/client:912 [vite] connected.
+[main:err] [1738023:1021/021458.642522:INFO:CONSOLE:912] "[vite] connected.", source: http://localhost:5174/@vite/client (912)
+[main] [renderer:info] http://localhost:5174/@fs/home/miku/Bot/CDUTStudio/cdut-studio-review-agent/apps/electron/node_modules/.vite/deps/chunk-EKGHCEOM.js?v=407f9e38:21609 %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[main] [renderer:warning] http://localhost:5174/@fs/home/miku/Bot/CDUTStudio/cdut-studio-review-agent/apps/electron/node_modules/.vite/deps/jotai_utils.js?v=407f9e38:36 [DEPRECATED] atomFamily is deprecated and will be removed in v3. Please use the `jotai-family` package instead: https://github.com/jotaijs/jotai-family
+[main:err] [1738023:1021/021459.236755:INFO:CONSOLE:21609] "%cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold", source: http://localhost:5174/@fs/home/miku/Bot/CDUTStudio/cdut-studio-review-agent/apps/electron/node_modules/.vite/deps/chunk-EKGHCEOM.js?v=407f9e38 (21609)
+[1738023:1021/021459.236865:INFO:CONSOLE:36] "[DEPRECATED] atomFamily is deprecated and will be removed in v3. Please use the `jotai-family` package instead: https://github.com/jotaijs/jotai-family", source: http://localhost:5174/@fs/home/miku/Bot/CDUTStudio/cdut-studio-review-agent/apps/electron/node_modules/.vite/deps/jotai_utils.js?v=407f9e38 (36)
+[main] [皮肤] 注册表: forest-dark(dark,内置), forest-light(light,内置), mist-paper-dark(dark,内置), ocean-dark(dark,内置), ocean-light(light,内置), slate-dark(dark,内置), slate-light(light,内置), terminal-dark(dark,内置)
+[main] [配置] 已创建 Agent 会话目录: /home/miku/Bot/CDUTStudio/cdut-studio-review-agent/work/e2e/config-ctl/agent-sessions
+[main] [配置] 已创建 Agent 会话工作目录: /home/miku/Bot/CDUTStudio/cdut-studio-review-agent/work/e2e/config-ctl/agent-workspaces/default/fe8a5c96-28c8-408e-8acc-a157d1bfa630
+[main] [Agent 会话] 已创建会话: 审核：E2E 全流程案卷 (fe8a5c96-28c8-408e-8acc-a157d1bfa630)
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (fe8a5c96-28c8-408e-8acc-a157d1bfa630)
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (fe8a5c96-28c8-408e-8acc-a157d1bfa630)
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (fe8a5c96-28c8-408e-8acc-a157d1bfa630)
+[main] [Agent 编排] 请求路由: {
+  sessionId: 'fe8a5c96-28c8-408e-8acc-a157d1bfa630',
+  requestSource: 'agent-message',
+  channelId: 'e2e-ctl',
+  modelId: 'minimax-m3',
+  provider: 'custom'
+}
+[main] [Agent 编排] Resume 状态: sdkSessionId=无, proma sessionId=fe8a5c96-28c8-408e-8acc-a157d1bfa630
+[Agent 编排] 启动 Pi runtime，模型: minimax-m3, resume: 无
+[main] [Agent 编排] 使用 session 级别 cwd: /home/miku/Bot/CDUTStudio/cdut-studio-review-agent/work/e2e/config-ctl/agent-workspaces/default/fe8a5c96-28c8-408e-8acc-a157d1bfa630 (默认工作区/fe8a5c96-28c8-408e-8acc-a157d1bfa630)
+[Agent 编排] 无 sdkSessionId，将作为新会话启动（回填历史上下文）
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (fe8a5c96-28c8-408e-8acc-a157d1bfa630)
+[main] [Pi 桥接] 已挂载 28 个工具（激活组: cdut-tools, collaboration, preview）
+[main] [Agent 编排] 权限模式: bypassPermissions
+[main] [设置] 已更新 keys: agentChannelIds
+[设置] 已更新 keys: agentChannelIds
+[main] [renderer:info] http://localhost:5174/main.tsx?t=1792520096453:815 [ScratchPad] 初始化完成，已加载内容: false
+[main:err] [1738023:1021/021500.218316:INFO:CONSOLE:815] "[ScratchPad] 初始化完成，已加载内容: false", source: http://localhost:5174/main.tsx?t=1792520096453 (815)
+[main] [设置] 已更新 keys: agentChannelIds
+[main] [设置] 已更新 keys: agentChannelIds
+[main] [renderer:info] http://localhost:5174/main.tsx?t=1792520096453:815 [ScratchPad] 初始化完成，已加载内容: false
+[main:err] [1738023:1021/021500.233767:INFO:CONSOLE:815] "[ScratchPad] 初始化完成，已加载内容: false", source: http://localhost:5174/main.tsx?t=1792520096453 (815)
+[main] [设置] 已更新 keys: tabState
+[main] [配置] 已同步默认 Skill: automation
+[main] [配置] 已同步默认 Skill: brainstorming
+[main] [配置] 已同步默认 Skill: docx
+[main] [配置] 已同步默认 Skill: executing-plans
+[main] [配置] 已同步默认 Skill: find-skills
+[main] [配置] 已同步默认 Skill: guizang-ppt-skill
+[配置] 已同步默认 Skill: in-app-browser
+[配置] 已同步默认 Skill: lark-delivery
+[main] [配置] 已同步默认 Skill: pdf
+[main] [配置] 已同步默认 Skill: pptx
+[main] [配置] 已同步默认 Skill: profer-coach
+[main] [配置] 已同步默认 Skill: session-cleaner
+[main] [配置] 已同步默认 Skill: skill-creator
+[main] [配置] 已同步默认 Skill: tool-builder
+[main] [配置] 已同步默认 Skill: user-sense
+[main] [配置] 已同步默认 Skill: writing-plans
+[main] [配置] 已同步默认 Skill: xlsx
+[main] [配置] 已创建 Agent 会话工作目录: /home/miku/Bot/CDUTStudio/cdut-studio-review-agent/work/e2e/config-ctl/agent-workspaces/default/ecbe468c-18bc-46a7-90aa-8f161813c91a
+[main] [Agent 会话] 已创建会话: 新 Agent 会话 (ecbe468c-18bc-46a7-90aa-8f161813c91a)
+[main] [Skill 路由] {"sessionId":"fe8a5c96-28c8-408e-8acc-a157d1bfa630","allowed":["brainstorming","docx","executing-plans","find-skills","lark-delivery","pdf","profer-coach","session-cleaner","skill-creator","tool-builder","user-sense","writing-plans","xlsx"],"blocked":[{"slug":"automation","code":"tool-group-disabled"},{"slug":"guizang-ppt-skill","code":"tool-group-disabled"},{"slug":"in-app-browser","code":"tool-group-disabled"},{"slug":"pptx","code":"tool-group-disabled"}],"selected":[{"slug":"docx","reason":"word-artifact"},{"slug":"pdf","reason":"pdf-artifact"}],"diagnostics":[{"slug":"pdf","code":"budget-deferred"}]}
+[main] [代理配置] 配置文件不存在，使用默认配置
+[main] [配置] 已创建 Pi 检查点目录: /home/miku/Bot/CDUTStudio/cdut-studio-review-agent/work/e2e/config-ctl/agent-checkpoints
+[main] [Agent 编排] 开始通过 Adapter 遍历事件流...
+[main] [Agent 编排] SDK 路由输入: {
+  sessionId: 'fe8a5c96-28c8-408e-8acc-a157d1bfa630',
+  channelId: 'e2e-ctl',
+  provider: 'custom',
+  configuredModelId: 'minimax-m3',
+  effectiveSdkModelId: 'minimax-m3',
+  oneMillionContextEnabled: false,
+  betaCount: 0,
+  authMode: 'api-key',
+  agentUrlOrigin: 'https://liufengzi.qd.je',
+  agentUrlPathname: '/v1',
+  appProxyEnabled: true
+}
+[main] [Pi 审核看门狗] 已启用 session=fe8a5c96-28c8-408e-8acc-a157d1bfa630 首字节阈值=285s 整轮无进展阈值=20min
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (fe8a5c96-28c8-408e-8acc-a157d1bfa630)
+[main] [Agent 编排] 已保存 SDK session_id: 01a15a86-1aed-72c6-93f4-090020f4d645
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (fe8a5c96-28c8-408e-8acc-a157d1bfa630)
+[main] [Agent 编排] SDK 确认模型: minimax-m3
+[main] [Agent 编排] 缓存 contextWindow: 512000
+[main] [设置] 已更新 keys: scratchPadActive
+[main] [设置] 已更新 keys: agentWorkspaceId
+[main] [设置] 已更新 keys: mainWindowState
+[main] [设置] 已更新 keys: tabState
+[main:err] [Agent 编排] ═══ SDK assistant 错误 原始数据 ═══
+[Agent 编排] error.errorType: provider_error
+[main:err] [Agent 编排] error.message: A server error occurred. Please try again.
+[Agent 编排] message.content 文本块: [
+  'r021/r025/r028 三条规则未确认时不能用 not-applicable，已自动改回。第三批：补齐 case 通用/权限/语义（F 系列与 S 系列剩余、student-name/id 等）。\n' +
+    '\n' +
+    '我将先看完整 transcript 看是否曾有 d2- 规则对应表，然后调整批次节奏。'
+]
+[main:err] [Agent 编排] 完整 assistantMsg (JSON keys): [
+  'type',
+  'message',
+  'parent_tool_use_id',
+  'session_id',
+  'uuid',
+  'error',
+  '_channelModelId'
+]
+[main:err] [Agent 编排] assistantMsg JSON (截断): {"type":"assistant","message":{"content":[{"type":"text","text":"r021/r025/r028 三条规则未确认时不能用 not-applicable，已自动改回。第三批：补齐 case 通用/权限/语义（F 系列与 S 系列剩余、student-name/id 等）。\n\n我将先看完整 transcript 看是否曾有 d2- 规则对应表，然后调整批次节奏。"},{"type":"tool_use","id":"call_function_e4r7bvm1iqop_1","name":"review_submit_result","input":{}}],"usage":{"input_tokens":0,"output_tokens":0,"cache_read_input_tokens":0,"cache_creation_input_tokens":0},"model":"minimax-m3","stop_reason":"error"},"parent_tool_use_id":null,"session_id":"01a15a86-1aed-72c6-93f4-090020f4d645","uuid":"12e92949-1af3-4065-80a5-abb022b46387","error":{"message":"A server error occurred. Please try again.","errorType":"provider_error"},"_channelModelId":"minimax-m3"}
+[Agent 编排] ═══ SDK assistant 错误 原始数据 结束 ═══
+[main] [Agent 编排] #1268 断流保消息：分离正文（A server error occurred. Please try again.），正文长度=146
+[main] [Agent 编排] 可重试错误 (断流保消息): 连接中断：A server error occurred. Please try again.
+[main] [Agent 编排] 第 1 次重试，等待 1.123s...
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (fe8a5c96-28c8-408e-8acc-a157d1bfa630)
+[main] [Pi 审核看门狗] 已启用 session=fe8a5c96-28c8-408e-8acc-a157d1bfa630 首字节阈值=285s 整轮无进展阈值=20min
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (fe8a5c96-28c8-408e-8acc-a157d1bfa630)
+[main] [Agent 编排] 已保存 SDK session_id: 01a15a87-5285-72c6-93f4-0903108c03f7
+[Agent 编排] SDK 确认模型: minimax-m3
+[Agent 编排] 缓存 contextWindow: 512000
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (fe8a5c96-28c8-408e-8acc-a157d1bfa630)
+[main] [Agent 编排] result 到达: sessionId=fe8a5c96-28c8-408e-8acc-a157d1bfa630, subtype=success, terminal_reason=completed, keepChannelOpen=false
+[main] [Agent 编排] 重试成功，已在第 2 次尝试后恢复
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (fe8a5c96-28c8-408e-8acc-a157d1bfa630)
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (fe8a5c96-28c8-408e-8acc-a157d1bfa630)
+{
+  "scenario": "flow-full",
+  "ok": true,
+  "result": {
+    "steps": [
+      {
+        "name": "createCase",
+        "ok": true
+      },
+      {
+        "name": "import:evidence.pdf",
+        "ok": true,
+        "parseStatus": "parsed"
+      },
+      {
+        "name": "import:evidence.docx",
+        "ok": true,
+        "parseStatus": "partial"
+      },
+      {
+        "name": "attachD4Plan",
+        "checks": 60,
+        "fingerprint": "71bfc0d6b9faadabc27392f8b0e558a099fd725c10d5e1a631e2cbfaef6ccf3b"
+      },
+      {
+        "name": "startPiReview",
+        "phase": "accepted",
+        "runId": "run-pi-mvh06oqi-7bgob"
+      },
+      {
+        "name": "piReviewOutcome",
+        "phase": "incomplete",
+        "runId": "run-pi-mvh06oqi-7bgob",
+        "elapsedMs": 195899,
+        "error": null
+      },
+      {
+        "name": "listRuns",
+        "count": 1,
+        "runs": [
+          {
+            "id": "run-pi-mvh06oqi-7bgob",
+            "status": "partially-completed",
+            "checks": 60
+          }
+        ]
+      },
+      {
+        "name": "getRun",
+        "status": "partially-completed",
+        "checkCount": 60,
+        "observations": 0
+      },
+      {
+        "name": "observations",
+        "count": 0
+      },
+      {
+        "name": "formalDecision",
+        "ok": false,
+        "code": "AGENT_DECISION_DISABLED"
+      },
+      {
+        "name": "manualDisposition",
+        "ok": true,
+        "code": null,
+        "checkId": "check-d2-ac714b61714011573c93-case-student-id-student-name",
+        "revision": 4,
+        "dispositionCount": 1
+      },
+      {
+        "name": "exportReport",
+        "file": "/home/miku/Bot/CDUTStudio/cdut-studio-review-agent/work/e2e/config-ctl/review-cases/case-ec045b57c91340a4ae739a7538b31b36/reports/report-mvh0avx7.md",
+        "decision": null
+      }
+    ],
+    "runId": "run-pi-mvh06oqi-7bgob",
+    "caseId": "case-ec045b57c91340a4ae739a7538b31b36",
+    "pollTimedOut": false
+  }
+}

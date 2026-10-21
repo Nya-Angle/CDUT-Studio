@@ -1,0 +1,14 @@
+{
+  "id": "d4-g01-p-synthetic",
+  "templateId": "g01-political-procedure",
+  "templateVersion": 1,
+  "title": "政审材料程序审核 合成技术预审",
+  "objectType": "document",
+  "caseFields": {},
+  "subjects": [],
+  "documents": [],
+  "stage": "draft",
+  "revision": 0,
+  "createdAt": "2026-10-17T00:00:00Z",
+  "updatedAt": "2026-10-17T00:00:00Z"
+}

@@ -1,0 +1,11 @@
+
+apps/electron/src/main/lib/review/boot-check.test.ts:
+(pass) runBootCheckV2（M5） > Given 首次启动 When 检查 Then 注入当前默认模板并提示发布 [8.60ms]
+(pass) runBootCheckV2（M5） > Given 二次启动 When 检查 Then 幂等（不再注入） [3.48ms]
+(pass) runBootCheckV2（M5） > Given V1 案卷无 v2 文件 When 检查 Then 列入可迁移 [2.94ms]
+(pass) runBootCheckV2（M5） > Given 内置草稿已存在 When ensureBuiltinTemplateDrafts Then 不覆盖 [2.71ms]
+
+ 4 pass
+ 0 fail
+ 8 expect() calls
+Ran 4 tests across 1 file. [66.00ms]

@@ -1,0 +1,175 @@
+bun test v1.4.0 (34cbb9a40)
+
+apps/electron/src/main/lib/review/review-pi-run-bridge.main.test.ts:
+[配置] 已创建 SDK 配置目录: /tmp/review-main-bridge-KJbMPW/sdk-config
+[身份] 设备身份: Linux (Bot) (22191343-602d-459b-8c7f-8a6b0ebec0c3)
+[渠道管理] 已创建渠道: 合成审核渠道 (8f446309-f42b-4329-b074-d2f4e204043a)
+[设置] 已更新 keys: agentChannelId, agentModelId
+[审核模板] 已发布: bridge-93f7c327-900f-44de-b1ed-7fafa0c5c367@1
+[渠道管理] 已应用渠道配置迁移或预设模型更新
+[配置] 已创建 Agent 会话目录: /tmp/review-main-bridge-KJbMPW/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/review-main-bridge-KJbMPW/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/review-main-bridge-KJbMPW/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-KJbMPW/agent-workspaces/default/4b46ff2c-a648-4dc6-8120-8d4bd4dee43c
+[Agent 会话] 已创建会话: 审核：bridge-93f7c327-900f-44de-b1ed-7fafa0c5c367 (4b46ff2c-a648-4dc6-8120-8d4bd4dee43c)
+[Agent 会话] 已更新会话: 审核：bridge-93f7c327-900f-44de-b1ed-7fafa0c5c367 (4b46ff2c-a648-4dc6-8120-8d4bd4dee43c)
+(pass) 后台 Main 入口与受理边界 > 真实执行权之前保持 preparing，ACK 不泄漏内部 ID，Main 在页面无等待时继续收尾 [9.25ms]
+[审核模板] 已发布: bridge-bd02b863-f478-4a74-bcf4-1a2550c885d8@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-KJbMPW/agent-workspaces/default/3680ab99-62f6-4db6-8ff0-d55cf9a38bd8
+[Agent 会话] 已创建会话: 审核：bridge-bd02b863-f478-4a74-bcf4-1a2550c885d8 (3680ab99-62f6-4db6-8ff0-d55cf9a38bd8)
+[Agent 会话] 已更新会话: 审核：bridge-bd02b863-f478-4a74-bcf4-1a2550c885d8 (3680ab99-62f6-4db6-8ff0-d55cf9a38bd8)
+(pass) 后台 Main 入口与受理边界 > 忙碌和重复启动不产生第二个运行或结束原运行 [1.95ms]
+[审核模板] 已发布: bridge-8d3d4177-7fa1-4ab1-af39-f55b953fb8fe@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-KJbMPW/agent-workspaces/default/5bc8c2c5-0180-4eb3-bc97-40b8a06eef1c
+[Agent 会话] 已创建会话: 审核：bridge-8d3d4177-7fa1-4ab1-af39-f55b953fb8fe (5bc8c2c5-0180-4eb3-bc97-40b8a06eef1c)
+[Agent 会话] 已更新会话: 审核：bridge-8d3d4177-7fa1-4ab1-af39-f55b953fb8fe (5bc8c2c5-0180-4eb3-bc97-40b8a06eef1c)
+[审核模板] 已发布: bridge-6469ea9c-d8a4-43fc-a8a9-9cc450e86d75@1
+(pass) 后台 Main 入口与受理边界 > 停止只接受当前案卷/运行，错误身份不触发执行器，正确停止持久 cancelled [2.64ms]
+[审核模板] 已发布: bridge-b4ce11d9-c647-4fd9-96c8-ed5b96730936@1
+[渠道管理] 已更新渠道: 合成审核渠道 (8f446309-f42b-4329-b074-d2f4e204043a)
+[渠道管理] 已更新渠道: 合成审核渠道 (8f446309-f42b-4329-b074-d2f4e204043a)
+(pass) 后台 Main 入口与受理边界 > 模型停用和非法请求在建内部会话前拒绝 [0.91ms]
+[审核模板] 已发布: bridge-7fbe8d4e-17c9-43d1-aa50-36da1e0ca633@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-KJbMPW/agent-workspaces/default/5b10f978-727c-4247-a180-751da9786faf
+[Agent 会话] 已创建会话: 审核：bridge-7fbe8d4e-17c9-43d1-aa50-36da1e0ca633 (5b10f978-727c-4247-a180-751da9786faf)
+[Agent 会话] 已更新会话: 审核：bridge-7fbe8d4e-17c9-43d1-aa50-36da1e0ca633 (5b10f978-727c-4247-a180-751da9786faf)
+[Agent 会话] 已更新会话: 审核：bridge-7fbe8d4e-17c9-43d1-aa50-36da1e0ca633 (5b10f978-727c-4247-a180-751da9786faf)
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-KJbMPW/agent-workspaces/default/d9a0751b-e287-4a9f-a6e5-2d0f0e97cabf
+[Agent 会话] 已创建会话: 审核：bridge-7fbe8d4e-17c9-43d1-aa50-36da1e0ca633 (d9a0751b-e287-4a9f-a6e5-2d0f0e97cabf)
+[Agent 会话] 已更新会话: 审核：bridge-7fbe8d4e-17c9-43d1-aa50-36da1e0ca633 (d9a0751b-e287-4a9f-a6e5-2d0f0e97cabf)
+(pass) 后台 Main 入口与受理边界 > 预设不符合审核档案的旧 owner 不复用，防止加载普通工具配置 [3.55ms]
+[渠道管理] 已创建渠道: 独立合成渠道 (561d8681-2a55-4f3b-9829-210fe8e02823)
+[审核模板] 已发布: bridge-b50cd9eb-fead-4b92-a464-9c60351e304e@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-KJbMPW/agent-workspaces/default/01074101-4c76-44e4-af59-09fd900a8dcd
+[Agent 会话] 已创建会话: 审核：bridge-b50cd9eb-fead-4b92-a464-9c60351e304e (01074101-4c76-44e4-af59-09fd900a8dcd)
+[Agent 会话] 已更新会话: 审核：bridge-b50cd9eb-fead-4b92-a464-9c60351e304e (01074101-4c76-44e4-af59-09fd900a8dcd)
+(pass) 后台 Main 入口与受理边界 > 审核独立模型优先，运行中改设置不改变当前执行输入 [2.14ms]
+[审核专区] IPC 处理器注册完成
+[审核模板] 已发布: bridge-9b8cf763-95e7-4374-b11d-77aaa91f59c8@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-KJbMPW/agent-workspaces/default/6752dd03-ee34-4c0c-b269-bea1d4fcbe06
+[Agent 会话] 已创建会话: 审核：bridge-9b8cf763-95e7-4374-b11d-77aaa91f59c8 (6752dd03-ee34-4c0c-b269-bea1d4fcbe06)
+[Agent 会话] 已更新会话: 审核：bridge-9b8cf763-95e7-4374-b11d-77aaa91f59c8 (6752dd03-ee34-4c0c-b269-bea1d4fcbe06)
+(pass) 后台 Main 入口与受理边界 > 实际注册 IPC 拒绝非主窗口，旧 prepare/abort/指派入口不能操作新 owner [3.57ms]
+
+apps/electron/src/main/lib/review/review-background-state.p03-main.test.ts:
+(pass) P03-MAIN-S01 read-only Pi business state > no Pi run is not-started; ordinary V2 run cannot become a Pi ACK [0.08ms]
+(pass) P03-MAIN-S01 read-only Pi business state > persisted running and queued MUST NOT grant page-leave ACK [0.04ms]
+(pass) P03-MAIN-S01 read-only Pi business state > only actual onRunOwned acknowledgement becomes accepted [0.03ms]
+(pass) P03-MAIN-S01 read-only Pi business state > pending business interaction is distinct from completed review [0.02ms]
+(pass) P03-MAIN-S01 read-only Pi business state > partial/cancel/fail/paused remain incomplete, never approved [0.04ms]
+(pass) P03-MAIN-S01 read-only Pi business state > snapshot never returns owner sessionId, assignmentId or raw transcript [0.05ms]
+[审核专区] IPC 处理器注册完成
+(pass) P03-MAIN-S01 read-only Pi business state > real Review IPC registers read-only channel and rejects invalid and unknown case IDs [0.38ms]
+
+apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts:
+[审核模板] 已发布: bg-probe-template-d3d66dec@1
+(pass) P01 direct Pi review can reuse runAgent without navigating to a chat tab > review tool writes a complete result; existing onRunOutcome does not overwrite completed V2 run [5.91ms]
+[审核模板] 已发布: bg-probe-template-694cd0a5@1
+(pass) P01 direct Pi review can reuse runAgent without navigating to a chat tab > without complete submission, an otherwise successful Agent turn remains partially-completed [1.49ms]
+[审核模板] 已发布: bg-probe-template-d77b40f1@1
+(pass) P01 direct Pi review can reuse runAgent without navigating to a chat tab > an error cannot be reported as successful review after late SDK success [1.60ms]
+[审核模板] 已发布: bg-probe-template-9fd13e39@1
+(pass) P01 direct Pi review can reuse runAgent without navigating to a chat tab > a user stop persists cancelled rather than completed [1.53ms]
+[审核模板] 已发布: bg-probe-template-ba5b89d2@1
+(pass) P01 direct Pi review can reuse runAgent without navigating to a chat tab > a busy run without ownership cannot falsely finish another run [1.23ms]
+[审核模板] 已发布: bg-probe-template-208ca4ff@1
+(pass) P03-S01 Main-owned Pi stage must not depend on review page lifetime > after runtime ownership, losing its WebContents does not lose final V2 ledger state [1.47ms]
+[审核模板] 已发布: bg-probe-template-924bb615@1
+(pass) P03-S01 Main-owned Pi stage must not depend on review page lifetime > V2 running alone is NOT an acceptance acknowledgement before onRunOwned [1.50ms]
+[审核模板] 已发布: bg-probe-template-48ab121c@1
+(pass) P03-S02 Main admission ACK and single-owner lifecycle > ACK only after onRunOwned, while Main owns the subsequent long Pi turn [1.92ms]
+[审核模板] 已发布: bg-probe-template-8e258be4@1
+(pass) P03-S02 Main admission ACK and single-owner lifecycle > busy rejection before ownership closes only the newly prepared V2 run [1.71ms]
+[审核模板] 已发布: bg-probe-template-6566f3d4@1
+(pass) P03-S02 Main admission ACK and single-owner lifecycle > an early return without onRunOwned cannot emit a false ACK or orphan running [1.66ms]
+[审核模板] 已发布: bg-probe-template-02eb92b7@1
+(pass) P03-S02 Main admission ACK and single-owner lifecycle > a duplicate admission for the same assignment is rejected without cancelling its owner [2.11ms]
+[审核模板] 已发布: bg-probe-template-e813b41e@1
+(pass) P03-S02 Main admission ACK and single-owner lifecycle > preflight failure after token grant preserves ACK but eventually produces failed V2 result [1.80ms]
+[审核模板] 已发布: bg-probe-template-da4a34c2@1
+(pass) P03-S02 Main admission ACK and single-owner lifecycle > untrusted or stale binding cannot start even when V2 has a historical run [1.36ms]
+
+apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts:
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 多选导入保留成功文件并汇报单文件失败 [2.79ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 辅助审核设置按当前案卷保存模板版本与可编辑规则 [0.64ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 文件依据生成的规则摘要可改写并立即进入当前案卷缓存 [0.70ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 人工修正 AI 申报事项后更新当前案卷缓存 [0.52ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 重新打开工作台时恢复已有案卷，材料入口有可用的当前任务 [0.48ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > Given 两份依据 When 生成大纲 Then 两包分别请求并保留各自结果 [0.68ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > Given 已有审核结果 When 导入或切换领域 Then 不切案且即时核验过期标记 [0.60ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > Given 审核过程中输入发生变化 When 旧快照结果返回 Then 仍标为过期 [0.52ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > K05 主场景：A 审核中切到 B，A 返回只落 A、不污染 B、不切回 [0.57ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > H09 恢复：selectCase 拉回最近运行与过期标记 [0.27ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > K05 交错：同案大纲（慢）与识别（快）都保留，互不覆盖 [0.65ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 选择代次：慢的 selectCase(A) 不把界面切回 A [0.38ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 同案互斥：审核进行中拒绝再次发起，且切走后守卫不解除 [0.50ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 一键审核复用已有中间产物，只调用一次最终审核 [1.51ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 已有审核结果可分别沿用会话更新或创建新会话从头审核 [0.43ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > Pi 审核启动前先识别逐事项规则所需的申报事项 [1.66ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > Pi 审核前自动重解析迁移过来的旧版 HTML/EML 失败材料 [1.07ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 阶段 3：一键审核提交同 ID V2 案卷并将主结果写入 V2 run [0.76ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 阶段 2 P0：无审核依据时不启动运行 [0.28ms]
+[审核专区] 生成规则大纲失败 636 |   test('阶段 2 P0：大纲生成失败显示失败，不伪装成缺少用户材料', async () => {
+637 |     const { api, calls } = makeApi()
+638 |     api.getCase = async (caseId) => makeCase(caseId, {
+639 |       documents: [{ id: 'application-1', fileName: '申报.txt', role: 'application', mimeType: 'text/plain', sizeBytes: 1, parseStatus: 'parsed', blocks: [], origin: 'upload' } as never],
+640 |     })
+641 |     api.generateRuleOutline = async () => { throw new Error('模型出口超时') }
+                                                            ^
+error: 模型出口超时
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013/apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts:641:55)
+      at generateRuleOutline (/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013/apps/electron/src/renderer/components/content-review/review-actions-controller.ts:781:37)
+      at runFullReview (/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013/apps/electron/src/renderer/components/content-review/review-actions-controller.ts:1005:22)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013/apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts:645:19)
+
+[审核专区] 一键审核失败 636 |   test('阶段 2 P0：大纲生成失败显示失败，不伪装成缺少用户材料', async () => {
+637 |     const { api, calls } = makeApi()
+638 |     api.getCase = async (caseId) => makeCase(caseId, {
+639 |       documents: [{ id: 'application-1', fileName: '申报.txt', role: 'application', mimeType: 'text/plain', sizeBytes: 1, parseStatus: 'parsed', blocks: [], origin: 'upload' } as never],
+640 |     })
+641 |     api.generateRuleOutline = async () => { throw new Error('模型出口超时') }
+                                                            ^
+error: 模型出口超时
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013/apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts:641:55)
+      at generateRuleOutline (/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013/apps/electron/src/renderer/components/content-review/review-actions-controller.ts:781:37)
+      at runFullReview (/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013/apps/electron/src/renderer/components/content-review/review-actions-controller.ts:1005:22)
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013/apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts:645:19)
+
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 阶段 2 P0：大纲生成失败显示失败，不伪装成缺少用户材料 [2.64ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 阶段 2 P0：人工复核与覆盖缺口将完成运行标为部分完成 [0.57ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 阶段 2 P0：重启恢复时状态与最近运行和输入过期标记一致 [0.24ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 操作代次与互斥：同类第二次点击被拒；完成后结果正常落位 [0.33ms]
+[审核专区] 开始审核失败 701 |     const actions = createReviewActionsController(store, api)
+702 |     await actions.selectCase('case-A')
+703 | 
+704 |     const runPromise = actions.runReview()
+705 |     await actions.selectCase('case-B')
+706 |     ;(shift('run-1') ).reject(new Error('模型超时'))
+                                        ^
+error: 模型超时
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013/apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts:706:35)
+
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 错误按案隔离：失败发生时已切走则不污染当前视图 [4.13ms]
+(pass) review-actions-controller（M0/H05 并发与按案写入） > 领域包切换按案落位：响应期间切走也只更新原案卷缓存 [0.46ms]
+(pass) Main 后台审核前台接线 > ACK 前不显示已受理，ACK 后释放前台等待且切案不污染新案 [0.89ms]
+(pass) Main 后台审核前台接线 > 新页面从持久 V2 回读 running/failed，无需原 Hook 或旧内存 [0.42ms]
+(pass) Main 后台审核前台接线 > 重新选择案卷时 V2 running 不能覆盖 Main 的未受理状态 [0.31ms]
+(pass) Main 后台审核前台接线 > 停止动作只发案卷与本轮 ID，回读取消结果 [0.46ms]
+[审核专区] 审核未完成 810 | 
+811 |   test('预检失败的业务错误卡和提示只显示原因，不显示 IPC 包装', async () => {
+812 |     const fixture = backgroundFixture()
+813 |     const store = createStore()
+814 |     const actions = createReviewActionsController(store, fixture.api, async () => {
+815 |       throw new Error("Error invoking remote method 'review-v2:start-background-pi-review': Error: 审核渠道或模型未配置")
+                      ^
+error: Error invoking remote method 'review-v2:start-background-pi-review': Error: 审核渠道或模型未配置
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013/apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts:815:17)
+      at runFullReview (/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013/apps/electron/src/renderer/components/content-review/review-actions-controller.ts:967:29)
+      at async <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013/apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts:818:19)
+
+(pass) Main 后台审核前台接线 > 预检失败的业务错误卡和提示只显示原因，不显示 IPC 包装 [0.53ms]
+
+ 57 pass
+ 0 fail
+ 192 expect() calls
+Ran 57 tests across 4 files. [474.00ms]

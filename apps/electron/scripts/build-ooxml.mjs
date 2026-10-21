@@ -12,8 +12,23 @@ const require = createRequire(path.join(appRoot, 'package.json'))
 const sourceDir = path.dirname(require.resolve('@silurus/ooxml'))
 const publicDir = path.join(appRoot, 'src', 'renderer', 'public', 'vendor', 'ooxml')
 
+// 解析失败时回退到逐级向上查找（Bun workspace 会把依赖 hoist 到 monorepo 顶层）。
 if (!fs.existsSync(sourceDir)) {
-  throw new Error(`@silurus/ooxml dist directory does not exist: ${sourceDir}`)
+  const checked = []
+  let from = appRoot
+  let found
+  for (;;) {
+    const dist = path.join(from, 'node_modules', '@silurus', 'ooxml', 'dist')
+    checked.push(dist)
+    if (fs.existsSync(dist)) { found = dist; break }
+    const parent = path.dirname(from)
+    if (parent === from) break
+    from = parent
+  }
+  if (!found) {
+    throw new Error(`@silurus/ooxml dist 目录不存在；已尝试：\\n${checked.join('\\n')}`)
+  }
+  sourceDir = found
 }
 
 fs.rmSync(publicDir, { recursive: true, force: true })

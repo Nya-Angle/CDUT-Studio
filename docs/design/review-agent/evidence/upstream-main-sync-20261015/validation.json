@@ -1,0 +1,202 @@
+{
+  "recordedAt": "2026-10-15T14:06:08.431013+00:00",
+  "upstreamSha": "c179f2575d5bb5abdc883268fb885d1a6449325e",
+  "reviewSha": "60e805cfa5b55865add80856f2e9a27f6271de08",
+  "mainBefore": "dd5a553c34a92b559559a7cb3c4e9c3f67fd9c8e",
+  "os": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "bun": "1.4.0",
+  "node": "v22.23.2",
+  "commands": [
+    {
+      "name": "02-typecheck-integrated",
+      "sourceSha": "c179f2575d5bb5abdc883268fb885d1a6449325e",
+      "cwd": "<integration-checkout>",
+      "argv": [
+        "bun",
+        "run",
+        "typecheck"
+      ],
+      "startedAt": "2026-10-15T13:59:22.707816+00:00",
+      "environment": {
+        "NO_COLOR": "1"
+      },
+      "workingTreeDirty": true,
+      "finishedAt": "2026-10-15T13:59:54.043170+00:00",
+      "exitCode": 2,
+      "files": {
+        "02-typecheck-integrated.stdout.log": {
+          "sha256": "485e192ec157abdb0447654ff2014476a015cfd84f3c3dcde52db4ad5be585c4",
+          "bytes": 1358
+        },
+        "02-typecheck-integrated.stderr.log": {
+          "sha256": "8277b6b0db2d97d9c202472974204c9b592713f39cd8665934c5d44892357069",
+          "bytes": 33
+        }
+      }
+    },
+    {
+      "name": "03-typecheck-compatible",
+      "sourceSha": "c179f2575d5bb5abdc883268fb885d1a6449325e",
+      "cwd": "<integration-checkout>",
+      "argv": [
+        "bun",
+        "run",
+        "typecheck"
+      ],
+      "startedAt": "2026-10-15T14:03:03.428428+00:00",
+      "environment": {
+        "NO_COLOR": "1"
+      },
+      "workingTreeDirty": true,
+      "finishedAt": "2026-10-15T14:03:36.745754+00:00",
+      "exitCode": 0,
+      "files": {
+        "03-typecheck-compatible.stdout.log": {
+          "sha256": "5b84d668c2e2922dca6bd49e230be8406972702c2313539f5ca1cd4270d32196",
+          "bytes": 428
+        },
+        "03-typecheck-compatible.stderr.log": {
+          "sha256": "8277b6b0db2d97d9c202472974204c9b592713f39cd8665934c5d44892357069",
+          "bytes": 33
+        }
+      }
+    },
+    {
+      "name": "04-boundaries",
+      "sourceSha": "c179f2575d5bb5abdc883268fb885d1a6449325e",
+      "cwd": "<integration-checkout>",
+      "argv": [
+        "bun",
+        "run",
+        "check:boundaries"
+      ],
+      "startedAt": "2026-10-15T14:03:52.931601+00:00",
+      "environment": {
+        "NO_COLOR": "1"
+      },
+      "workingTreeDirty": true,
+      "finishedAt": "2026-10-15T14:03:53.218040+00:00",
+      "exitCode": 0,
+      "files": {
+        "04-boundaries.stdout.log": {
+          "sha256": "7c12341190370579829bb125d1338070e12652e36c5c6ea19282bffd769e56af",
+          "bytes": 38
+        },
+        "04-boundaries.stderr.log": {
+          "sha256": "21f6953e48c36416639e37cfd5ac857c3b93042937908b6bd6089ca264f4932f",
+          "bytes": 34
+        }
+      }
+    },
+    {
+      "name": "05-build",
+      "sourceSha": "c179f2575d5bb5abdc883268fb885d1a6449325e",
+      "cwd": "<integration-checkout>",
+      "argv": [
+        "bun",
+        "run",
+        "electron:build"
+      ],
+      "startedAt": "2026-10-15T14:03:52.931518+00:00",
+      "environment": {
+        "NO_COLOR": "1"
+      },
+      "workingTreeDirty": true,
+      "finishedAt": "2026-10-15T14:04:48.981147+00:00",
+      "exitCode": 0,
+      "files": {
+        "05-build.stdout.log": {
+          "sha256": "eca0cd50db2dedbe97e1fb59d3be1deaaa82c90b868642b88dbebc038627a76e",
+          "bytes": 128252
+        },
+        "05-build.stderr.log": {
+          "sha256": "890b155b17f990e81d3c162b125f8ac510cba0de95dafab3ec023be678b42743",
+          "bytes": 44
+        }
+      }
+    },
+    {
+      "name": "06-skin-contract",
+      "sourceSha": "c179f2575d5bb5abdc883268fb885d1a6449325e",
+      "cwd": "<integration-checkout>",
+      "argv": [
+        "bun",
+        "run",
+        "--filter=@profer/electron",
+        "check:skin-contract"
+      ],
+      "startedAt": "2026-10-15T14:04:56.861351+00:00",
+      "environment": {
+        "NO_COLOR": "1"
+      },
+      "workingTreeDirty": true,
+      "finishedAt": "2026-10-15T14:04:56.940401+00:00",
+      "exitCode": 0,
+      "files": {
+        "06-skin-contract.stdout.log": {
+          "sha256": "d384ac67c7120c21185ff43fa0845ca1b3771f57299b29054c6b44746743bc12",
+          "bytes": 3556
+        },
+        "06-skin-contract.stderr.log": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "name": "07-typecheck-identity-compat",
+      "sourceSha": "6ff93be71399683fb21c9b5e36cedce05d1945b8",
+      "cwd": "<integration-checkout>",
+      "argv": [
+        "bun",
+        "run",
+        "typecheck"
+      ],
+      "startedAt": "2026-10-15T14:12:42.553361+00:00",
+      "environment": {
+        "NO_COLOR": "1"
+      },
+      "workingTreeDirty": true,
+      "finishedAt": "2026-10-15T14:13:18.266264+00:00",
+      "exitCode": 0,
+      "files": {
+        "07-typecheck-identity-compat.stdout.log": {
+          "sha256": "5b84d668c2e2922dca6bd49e230be8406972702c2313539f5ca1cd4270d32196",
+          "bytes": 428
+        },
+        "07-typecheck-identity-compat.stderr.log": {
+          "sha256": "8277b6b0db2d97d9c202472974204c9b592713f39cd8665934c5d44892357069",
+          "bytes": 33
+        }
+      }
+    },
+    {
+      "name": "08-frozen-install",
+      "sourceSha": "6ff93be71399683fb21c9b5e36cedce05d1945b8",
+      "cwd": "<integration-checkout>",
+      "argv": [
+        "bun",
+        "install",
+        "--frozen-lockfile"
+      ],
+      "startedAt": "2026-10-15T14:13:04.149590+00:00",
+      "environment": {
+        "NO_COLOR": "1"
+      },
+      "workingTreeDirty": true,
+      "finishedAt": "2026-10-15T14:13:04.283992+00:00",
+      "exitCode": 0,
+      "files": {
+        "08-frozen-install.stdout.log": {
+          "sha256": "0100d1372e47c4a765c5f7b1d71b2f9b1bdabb72ea5018c285dc0cac569aebe3",
+          "bytes": 99
+        },
+        "08-frozen-install.stderr.log": {
+          "sha256": "b17e7d1ebdbf4f86ab3481a0355d53a2bc425a2d93414a2b4abf5a0591256eab",
+          "bytes": 62
+        }
+      }
+    }
+  ],
+  "note": "Commands ran on the uncommitted integrated working tree, not on pristine sourceSha. Raw stdout/stderr remain in the separate private local directory; hashes here identify those original files. No provider or Electron live acceptance was performed for this synchronization."
+}

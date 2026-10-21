@@ -6,6 +6,7 @@ import { join } from 'path'
 import { createConnection } from 'net'
 import { existsSync } from 'fs'
 import { getDevInstanceId, resolveDevAppName, resolveDevUserDataPath } from './lib/dev-instance'
+import { installProcessGuards } from './lib/process-guards'
 import { appendDevDiagnostic } from './lib/dev-diagnostics-log'
 import { isCdutDomain } from './lib/cdut/yanhu/yanhu-domain-gatekeeper'
 
@@ -168,6 +169,10 @@ for (const key of Object.keys(process.env)) {
 
 import { createApplicationMenu, installTextContextMenus } from './menu'
 import { registerIpcHandlers, setRendererReadyHandler, stopAllGoalsForProcessExit } from './ipc'
+import { installC11LocalAuthorWorkbench } from './lib/review/review-v3-main-local-author-workbench'
+import { installC11LocalNativeProductIntake } from './lib/review/review-v3-main-local-product-intake'
+import { installC11NativeD4TechnicalPlan } from './lib/review/review-v3-main-d4-local-plan'
+import { installC11NativeB1TechnicalPlan } from './lib/review/review-v3-main-b1-local-plan'
 import { setRemoteServiceEnabled, startRemoteService, stopRemoteService } from './lib/remote-service'
 import { startAgentFabricService, stopAgentFabricService } from './lib/agent-fabric/agent-fabric-service'
 import { createTray, destroyTray, getTray } from './tray'
@@ -868,6 +873,10 @@ function sendToMainWindow(channel: string, data?: unknown): void {
   }
 }
 
+// 最早期安装全局兜底：任何子系统（含审核后台链路）的遗漏异常只记录、不终止进程，
+// 否则主进程退出会连带丢失窗口与未保存状态。
+installProcessGuards()
+
 app.whenReady().then(bootstrap).catch(handleBootstrapFailure)
 
 /**
@@ -905,6 +914,12 @@ async function bootstrap(): Promise<void> {
 
   // Register IPC handlers
   registerIpcHandlers()
+  // Only the REAL Electron application bootstrap installs local Main authority.
+  // Tests which register standalone review IPC retain their uninstalled baseline.
+  installC11LocalAuthorWorkbench()
+  installC11LocalNativeProductIntake()
+  installC11NativeD4TechnicalPlan()
+  installC11NativeB1TechnicalPlan()
 
   // 远程服务（remote-service）：显式启动参数 PROFER_REMOTE=1 兼容保留；
   // 设置页开启「启用移动端连接」后，下次启动自动恢复监听（正式版与开发版一致）。

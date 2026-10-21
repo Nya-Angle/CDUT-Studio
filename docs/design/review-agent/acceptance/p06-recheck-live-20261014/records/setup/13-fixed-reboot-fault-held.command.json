@@ -1,0 +1,37 @@
+{
+  "name": "13-fixed-reboot-fault-held",
+  "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014",
+  "argv": [
+    "xvfb-run",
+    "-a",
+    "-s",
+    "-screen 0 1600x1000x24",
+    "bun",
+    "run",
+    "dev"
+  ],
+  "startedAt": "2026-10-14T15:11:36.924069+00:00",
+  "environment": {
+    "NO_COLOR": "1",
+    "PROFER_DEV": "1",
+    "PROFER_DEV_INSTANCE": "p06-recheck-live-auth-20261014",
+    "PROFER_VITE_PORT": "5176",
+    "QA_PROFILE_ROOT": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile",
+    "PROFER_CONFIG_DIR": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile/config",
+    "PROFER_USER_DATA_DIR": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile/user-data",
+    "ELECTRON_OVERRIDE_DIST_PATH": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile/electron-dist"
+  },
+  "finishedAt": "2026-10-14T15:14:00.138714+00:00",
+  "exitCode": 1,
+  "files": {
+    "13-fixed-reboot-fault-held.stdout.log": {
+      "sha256": "156b31b80299a4ebc68ba54b165e77a822a21968c4deabe040a3c396ac7fe8d4",
+      "bytes": 20400
+    },
+    "13-fixed-reboot-fault-held.stderr.log": {
+      "sha256": "7d77ac5e8748a129fcfe08415b0d4b6c94861b1df89e89d550cb37d39aa5e43c",
+      "bytes": 81
+    }
+  }
+}

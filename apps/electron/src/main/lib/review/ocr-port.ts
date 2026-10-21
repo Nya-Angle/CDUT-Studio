@@ -18,6 +18,7 @@ export interface OcrRequest {
   pageAssetPath: string
   language: string
   signal?: AbortSignal
+  timeoutMs?: number
 }
 
 export interface OcrResult {

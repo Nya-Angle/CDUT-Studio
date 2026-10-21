@@ -1,0 +1,82 @@
+[
+  {
+    "caseId": "case-1791897333695-hoeek7",
+    "runId": "run-pi-mv6perlt-1p59y",
+    "status": "cancelled",
+    "inputManifestHash": "822d114efcedd042fb3954c1833569df079d6d097464a2edfc1f7a95f73993e3",
+    "startedAt": "2026-10-13T13:15:38.945Z",
+    "completedAt": "2026-10-13T13:15:44.293Z",
+    "coverage": {
+      "documents": [
+        {
+          "documentVersionId": "doc-1791897333711-sj8q5b-v1",
+          "status": "read"
+        }
+      ],
+      "plannedChecks": 1,
+      "completedChecks": 0,
+      "effectiveVerdicts": 0,
+      "pendingChecks": 1
+    }
+  },
+  {
+    "caseId": "case-1791897333695-hoeek7",
+    "runId": "run-pi-mv6pew39-cymbi",
+    "status": "cancelled",
+    "inputManifestHash": "74bb77fd9e8e8008f67c746474aaecbe4587569206f11c2dcf21728264d13c0a",
+    "startedAt": "2026-10-13T13:15:44.757Z",
+    "completedAt": "2026-10-13T13:15:48.438Z",
+    "coverage": {
+      "documents": [
+        {
+          "documentVersionId": "doc-2-mv6pew2r-v1",
+          "status": "read"
+        }
+      ],
+      "plannedChecks": 1,
+      "completedChecks": 0,
+      "effectiveVerdicts": 0,
+      "pendingChecks": 1
+    }
+  },
+  {
+    "caseId": "case-1791897333731-hkxf57",
+    "runId": "run-pi-mv6pf055-8vukc",
+    "status": "cancelled",
+    "inputManifestHash": "5fc03c7faf84893208a507dc581824c65a9ddbe20543cc47dba643360c51696f",
+    "startedAt": "2026-10-13T13:15:50.009Z",
+    "completedAt": "2026-10-13T13:15:53.638Z",
+    "coverage": {
+      "documents": [
+        {
+          "documentVersionId": "doc-1791897333736-pr19mk-v1",
+          "status": "read"
+        }
+      ],
+      "plannedChecks": 1,
+      "completedChecks": 0,
+      "effectiveVerdicts": 0,
+      "pendingChecks": 1
+    }
+  },
+  {
+    "caseId": "case-1791897333731-hkxf57",
+    "runId": "run-pi-mv6pf3aa-r8ddv",
+    "status": "cancelled",
+    "inputManifestHash": "5fc03c7faf84893208a507dc581824c65a9ddbe20543cc47dba643360c51696f",
+    "startedAt": "2026-10-13T13:15:54.082Z",
+    "completedAt": "2026-10-13T13:15:56.994Z",
+    "coverage": {
+      "documents": [
+        {
+          "documentVersionId": "doc-1791897333736-pr19mk-v1",
+          "status": "read"
+        }
+      ],
+      "plannedChecks": 1,
+      "completedChecks": 0,
+      "effectiveVerdicts": 0,
+      "pendingChecks": 1
+    }
+  }
+]

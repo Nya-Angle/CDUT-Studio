@@ -1,0 +1,1420 @@
+{
+  "id": "E06-BATCH-REAL-QUEUE-AND-GATES",
+  "status": "PASS",
+  "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+  "assertions": [
+    {
+      "name": "真实 Main 创建三个合成案卷与批次",
+      "pass": true
+    },
+    {
+      "name": "真实队列三个案卷均 done",
+      "pass": true
+    },
+    {
+      "name": "真实 Pi query 与有用量的 provider 回执已命中",
+      "pass": true
+    },
+    {
+      "name": "每案有真实检查记录",
+      "pass": true
+    },
+    {
+      "name": "默认辅助不会自动形成正式决定",
+      "pass": true
+    },
+    {
+      "name": "真实 B 路径拒绝过期问题组",
+      "pass": true
+    },
+    {
+      "name": "真实 C 路径拒绝未开启全局代批",
+      "pass": true
+    },
+    {
+      "name": "真实批次 Renderer 已回显",
+      "pass": true
+    },
+    {
+      "name": "已提交真实语义检查没有同时产生错误的缺结果 fallback",
+      "pass": true
+    }
+  ],
+  "timeline": [
+    {
+      "at": "2026-10-14T16:27:23.497Z",
+      "event": "real-batch-created",
+      "batchId": "p06-batch-live-mv8bp756",
+      "cases": [
+        "case-1791995243376-4r6jyy",
+        "case-1791995243410-vjyro6",
+        "case-1791995243461-pt58o1"
+      ]
+    },
+    {
+      "at": "2026-10-14T16:27:40.622Z",
+      "event": "real-model-queue-finished",
+      "status": "queued",
+      "cases": [
+        {
+          "caseId": "case-1791995243376-4r6jyy",
+          "status": "done"
+        },
+        {
+          "caseId": "case-1791995243410-vjyro6",
+          "status": "done"
+        },
+        {
+          "caseId": "case-1791995243461-pt58o1",
+          "status": "done"
+        }
+      ]
+    }
+  ],
+  "queue": {
+    "status": "queued",
+    "cases": [
+      {
+        "caseId": "case-1791995243376-4r6jyy",
+        "status": "done"
+      },
+      {
+        "caseId": "case-1791995243410-vjyro6",
+        "status": "done"
+      },
+      {
+        "caseId": "case-1791995243461-pt58o1",
+        "status": "done"
+      }
+    ]
+  },
+  "runs": [
+    {
+      "caseId": "case-1791995243376-4r6jyy",
+      "runId": "run-1791995243569-taji",
+      "status": "completed",
+      "checks": [
+        {
+          "ruleId": "section-all-budget",
+          "status": "compliant",
+          "sourceRefCount": 1
+        }
+      ],
+      "modelUsage": [],
+      "decisionCount": 0
+    },
+    {
+      "caseId": "case-1791995243410-vjyro6",
+      "runId": "run-1791995246708-qz0t",
+      "status": "completed",
+      "checks": [
+        {
+          "ruleId": "section-all-budget",
+          "status": "non-compliant",
+          "sourceRefCount": 1
+        }
+      ],
+      "modelUsage": [],
+      "decisionCount": 0
+    },
+    {
+      "caseId": "case-1791995243461-pt58o1",
+      "runId": "run-1791995251761-dgq4",
+      "status": "completed",
+      "checks": [
+        {
+          "ruleId": "section-all-budget",
+          "status": "awaiting-supplement",
+          "sourceRefCount": 1
+        }
+      ],
+      "modelUsage": [],
+      "decisionCount": 0
+    }
+  ],
+  "providerWitness": [
+    {
+      "at": "2026-10-14T16:27:23.578Z",
+      "event": "real-pi-query-entered"
+    },
+    {
+      "at": "2026-10-14T16:27:24.421Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:24.533Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:24.582Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:24.632Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:24.681Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:24.731Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:24.779Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 3449,
+      "outputTokens": 89
+    },
+    {
+      "at": "2026-10-14T16:27:24.779Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 3449,
+      "outputTokens": 89
+    },
+    {
+      "at": "2026-10-14T16:27:25.405Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:25.483Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:25.534Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:25.605Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:25.656Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:25.827Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:25.877Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:25.927Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:25.976Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:26.026Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:26.077Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:26.127Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:26.178Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:26.229Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:26.278Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:26.329Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:26.390Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:26.440Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:26.491Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:26.577Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:26.627Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:26.677Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:26.693Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 562,
+      "outputTokens": 271
+    },
+    {
+      "at": "2026-10-14T16:27:26.693Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 562,
+      "outputTokens": 271
+    },
+    {
+      "at": "2026-10-14T16:27:26.714Z",
+      "event": "real-pi-query-entered"
+    },
+    {
+      "at": "2026-10-14T16:27:27.204Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:27.254Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:27.303Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:27.353Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:27.397Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 3448,
+      "outputTokens": 37
+    },
+    {
+      "at": "2026-10-14T16:27:27.397Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 3448,
+      "outputTokens": 37
+    },
+    {
+      "at": "2026-10-14T16:27:28.077Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:28.142Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:28.193Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:28.243Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:28.294Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:28.344Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:28.407Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:28.432Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 171,
+      "outputTokens": 79
+    },
+    {
+      "at": "2026-10-14T16:27:28.432Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 171,
+      "outputTokens": 79
+    },
+    {
+      "at": "2026-10-14T16:27:28.900Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:28.960Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.010Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.061Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.110Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.160Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.209Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.259Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.309Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.358Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.408Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.459Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.509Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.559Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.609Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.659Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.710Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.761Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.810Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.860Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.910Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:29.960Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:30.010Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:30.093Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:30.144Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:30.194Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:30.245Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:30.295Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:30.346Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:30.397Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:30.419Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 405,
+      "outputTokens": 447
+    },
+    {
+      "at": "2026-10-14T16:27:30.420Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 405,
+      "outputTokens": 447
+    },
+    {
+      "at": "2026-10-14T16:27:30.913Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:30.983Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:31.033Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:31.084Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:31.134Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:31.183Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:31.233Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:31.284Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:31.333Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:31.383Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:31.433Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:31.482Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:31.531Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:31.582Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:31.631Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:31.680Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:31.730Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:31.755Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 1183,
+      "outputTokens": 237
+    },
+    {
+      "at": "2026-10-14T16:27:31.755Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 1183,
+      "outputTokens": 237
+    },
+    {
+      "at": "2026-10-14T16:27:31.767Z",
+      "event": "real-pi-query-entered"
+    },
+    {
+      "at": "2026-10-14T16:27:32.049Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:32.155Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:32.206Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:32.256Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:32.288Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 3448,
+      "outputTokens": 37
+    },
+    {
+      "at": "2026-10-14T16:27:32.288Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 3448,
+      "outputTokens": 37
+    },
+    {
+      "at": "2026-10-14T16:27:33.064Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:33.114Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:33.165Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:33.216Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:33.266Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:33.317Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:33.367Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:33.417Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:33.466Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:33.530Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:33.581Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:33.631Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:33.681Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:33.712Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 170,
+      "outputTokens": 175
+    },
+    {
+      "at": "2026-10-14T16:27:33.712Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 170,
+      "outputTokens": 175
+    },
+    {
+      "at": "2026-10-14T16:27:34.173Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:34.223Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:34.273Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:34.324Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:34.374Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:34.425Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:34.476Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:34.525Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:34.576Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:34.625Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:34.676Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:34.725Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:34.775Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:34.825Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:34.832Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 851,
+      "outputTokens": 143
+    },
+    {
+      "at": "2026-10-14T16:27:34.832Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 851,
+      "outputTokens": 143
+    },
+    {
+      "at": "2026-10-14T16:27:35.535Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:35.621Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:35.672Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:35.793Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:35.843Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:35.894Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:35.944Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:36.000Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:36.051Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:36.101Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:36.116Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 572,
+      "outputTokens": 151
+    },
+    {
+      "at": "2026-10-14T16:27:36.116Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 572,
+      "outputTokens": 151
+    },
+    {
+      "at": "2026-10-14T16:27:36.772Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:36.881Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:36.931Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:36.982Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:37.033Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:37.084Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:37.133Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:37.184Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:37.234Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:37.285Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:37.336Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:37.386Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:37.434Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:37.485Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:37.536Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:37.586Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:37.637Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:37.688Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:37.739Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:37.788Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:37.838Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:37.888Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:37.903Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 176,
+      "outputTokens": 249
+    },
+    {
+      "at": "2026-10-14T16:27:37.903Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 176,
+      "outputTokens": 249
+    },
+    {
+      "at": "2026-10-14T16:27:38.232Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:38.293Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:38.344Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:38.394Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:38.444Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:38.495Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:38.559Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:38.609Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:38.659Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:38.709Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:38.760Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:38.810Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:38.860Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:38.884Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 143,
+      "outputTokens": 159
+    },
+    {
+      "at": "2026-10-14T16:27:38.884Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 143,
+      "outputTokens": 159
+    },
+    {
+      "at": "2026-10-14T16:27:39.445Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:39.548Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:39.599Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:39.650Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:39.701Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:39.752Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:39.802Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:39.852Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:39.903Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:39.954Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:40.006Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:40.056Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:40.107Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:40.157Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:40.208Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:40.258Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:40.308Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:40.359Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:40.410Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:40.460Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:40.510Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:40.560Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    {
+      "at": "2026-10-14T16:27:40.578Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 1038,
+      "outputTokens": 308
+    },
+    {
+      "at": "2026-10-14T16:27:40.578Z",
+      "event": "real-pi-assistant-received",
+      "inputTokens": 1038,
+      "outputTokens": 308
+    }
+  ],
+  "modelUsageScope": "V2 modelUsage 当前仅收集图像路径；真实文字 Pi 用量由实际 SDK 回执单独见证。前两次错误地要求该 V2 字段非空的失败原样保留。",
+  "staleGroupPreview": {
+    "allowed": false,
+    "error": "Error: Error invoking remote method 'review-v2:batch-group-preview': Error: 问题组已失效或不再存在，请刷新批次"
+  },
+  "autoApprovalDenial": {
+    "allowed": false,
+    "error": "Error: Error invoking remote method 'review-v2:batch-action': Error: 全局 AI 代批授权未开启，不得自动通过"
+  },
+  "scope": "真实 Pi/provider 三案队列与 B/C 拒止子集；完整人工处置/补件回流/自动通过/幂等矩阵仍 PARTIAL",
+  "finishedAt": "2026-10-14T16:27:41.000Z"
+}

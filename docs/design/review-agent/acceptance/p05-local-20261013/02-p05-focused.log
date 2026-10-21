@@ -1,0 +1,345 @@
+SHA: df0c0d5740d4522c2ea4663c8e8b93a497a70b7f
+CWD: /home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013
+COMMAND: bun test --isolate --timeout 30000 apps/electron/src/main/lib/review/review-feishu-owner-boundary.p05.test.ts apps/electron/src/main/lib/review/review-relay-multi-viewer-contract.p05.test.ts apps/electron/src/main/lib/review/review-remote-indirect-access.p05.test.ts apps/electron/src/main/lib/review/review-remote-path-access.p05.test.ts apps/electron/src/main/lib/review/review-remote-reconnect-search.p05.test.ts apps/electron/src/main/lib/review/review-remote-websocket-relay.p05.test.ts
+START UTC: 2026-10-12T17:50:31.452495+00:00
+
+bun test v1.4.0 (34cbb9a40)
+
+apps/electron/src/main/lib/review/review-remote-indirect-access.p05.test.ts:
+[配置] 已创建配置目录: /home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013-artifacts/profile/config
+[配置] 已创建 SDK 配置目录: /home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013-artifacts/profile/config/sdk-config
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建 Agent 会话目录: /tmp/p05-pocket-OiH9Yd/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/p05-pocket-OiH9Yd/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p05-pocket-OiH9Yd/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-OiH9Yd/agent-workspaces/default/ca6c0811-fa82-47da-9387-a51369690dd9
+[Agent 会话] 已创建会话: hidden-fae2baca-2 (ca6c0811-fa82-47da-9387-a51369690dd9)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-OiH9Yd/agent-workspaces/default/834d04ad-abe1-4b3c-9cf6-22b28b208570
+[Agent 会话] 已创建会话: ordinary-fae2baca-2 (834d04ad-abe1-4b3c-9cf6-22b28b208570)
+(pass) P05-S01 remote indirect owner boundaries > global and scoped pending interaction snapshots exclude hidden owner for all three kinds [5.99ms]
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-OiH9Yd/agent-workspaces/default/c7b2e6da-01ac-4f25-9ce4-c880ea0676cd
+[Agent 会话] 已创建会话: hidden-e50cc4a6-0 (c7b2e6da-01ac-4f25-9ce4-c880ea0676cd)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-OiH9Yd/agent-workspaces/default/49de325d-854f-49c7-92d3-dfbd49a298bb
+[Agent 会话] 已创建会话: ordinary-e50cc4a6-0 (49de325d-854f-49c7-92d3-dfbd49a298bb)
+(pass) P05-S01 remote indirect owner boundaries > requestId alone cannot approve internal permissions, ordinary permissions still respond [1.28ms]
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-OiH9Yd/agent-workspaces/default/8c0a0df7-326a-4742-90a2-44e4daa880ff
+[Agent 会话] 已创建会话: hidden-79f196c5-c (8c0a0df7-326a-4742-90a2-44e4daa880ff)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-OiH9Yd/agent-workspaces/default/9bde0bab-76ee-4d99-aadb-1baff3309f65
+[Agent 会话] 已创建会话: ordinary-79f196c5-c (9bde0bab-76ee-4d99-aadb-1baff3309f65)
+(pass) P05-S01 remote indirect owner boundaries > requestId alone cannot resolve internal AskUser or ExitPlan, ordinary requests still respond [0.61ms]
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-OiH9Yd/agent-workspaces/default/d25aefa3-e081-4caf-9d54-5812428a6ffe
+[Agent 会话] 已创建会话: hidden-70cdace4-6 (d25aefa3-e081-4caf-9d54-5812428a6ffe)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-OiH9Yd/agent-workspaces/default/bb6e04c6-ac4b-482c-809b-c2c1b558bf5d
+[Agent 会话] 已创建会话: ordinary-70cdace4-6 (bb6e04c6-ac4b-482c-809b-c2c1b558bf5d)
+[配置] 已创建 Pi 检查点目录: /tmp/p05-pocket-OiH9Yd/agent-checkpoints
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-pocket-OiH9Yd/agent-workspaces/default/d25aefa3-e081-4caf-9d54-5812428a6ffe
+[Agent 会话] 已删除会话: hidden-70cdace4-6 (d25aefa3-e081-4caf-9d54-5812428a6ffe)
+(pass) P05-S01 remote indirect owner boundaries > both legacy file command aliases deny nested and connection-context owner IDs before path access [2.54ms]
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-OiH9Yd/agent-workspaces/default/15c788fd-10ab-4243-96c2-1b78ef712f1f
+[Agent 会话] 已创建会话: hidden-628dc3d0-f (15c788fd-10ab-4243-96c2-1b78ef712f1f)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-pocket-OiH9Yd/agent-workspaces/default/7a5d2e33-611c-4cab-bc68-5fc0f7657ff1
+[Agent 会话] 已创建会话: ordinary-628dc3d0-f (7a5d2e33-611c-4cab-bc68-5fc0f7657ff1)
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-pocket-OiH9Yd/agent-workspaces/default/15c788fd-10ab-4243-96c2-1b78ef712f1f
+[Agent 会话] 已删除会话: hidden-628dc3d0-f (15c788fd-10ab-4243-96c2-1b78ef712f1f)
+(pass) P05-S01 remote indirect owner boundaries > old replay records and delayed live queue recheck owner after deletion without dropping normal order [0.67ms]
+
+apps/electron/src/main/lib/review/review-remote-reconnect-search.p05.test.ts:
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建 Agent 工作区目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-57e4d365
+[Agent 工作区] 已创建 plugin manifest: p05-ws-57e4d365
+[Agent 工作区] 已创建个人工作区: p05-ws-57e4d365- (slug: p05-ws-57e4d365)
+[配置] 已创建 Agent 会话目录: /tmp/p05-reconnect-search-MdrGSN/agent-sessions
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-57e4d365/1705144f-3777-4f1a-b674-62bf87ac5330
+[Agent 会话] 已创建会话: normal-57e4d365- (1705144f-3777-4f1a-b674-62bf87ac5330)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-57e4d365/b43c1f51-b17b-4532-9715-8bb5d099d55c
+[Agent 会话] 已创建会话: private-57e4d365- (b43c1f51-b17b-4532-9715-8bb5d099d55c)
+[配置] 已创建 Pi 检查点目录: /tmp/p05-reconnect-search-MdrGSN/agent-checkpoints
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-57e4d365/b43c1f51-b17b-4532-9715-8bb5d099d55c
+[Agent 会话] 已删除会话: private-57e4d365- (b43c1f51-b17b-4532-9715-8bb5d099d55c)
+(pass) P05-S04 Pocket reconnect, snapshot and search > session-list and runtime-context snapshot exclude owner before and after deletion [2.85ms]
+[配置] 已创建 Agent 工作区: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-b184c024
+[Agent 工作区] 已创建 plugin manifest: p05-ws-b184c024
+[Agent 工作区] 已创建个人工作区: p05-ws-b184c024- (slug: p05-ws-b184c024)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-b184c024/9c910364-d3ee-4951-acdf-4d5df6b516ca
+[Agent 会话] 已创建会话: normal-b184c024- (9c910364-d3ee-4951-acdf-4d5df6b516ca)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-b184c024/6914a1b1-a7b2-4fed-8153-f7b5d2c1f20f
+[Agent 会话] 已创建会话: private-b184c024- (6914a1b1-a7b2-4fed-8153-f7b5d2c1f20f)
+[Agent 会话] 已更新会话: normal-b184c024- (9c910364-d3ee-4951-acdf-4d5df6b516ca)
+(pass) P05-S04 Pocket reconnect, snapshot and search > Pocket search retains ordinary session and shared files but hides attached private owner paths [2.64ms]
+[配置] 已创建 Agent 工作区: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-e391f301
+[Agent 工作区] 已创建 plugin manifest: p05-ws-e391f301
+[Agent 工作区] 已创建个人工作区: p05-ws-e391f301- (slug: p05-ws-e391f301)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-e391f301/6710323d-312d-4a79-ae38-1dc2f0fadece
+[Agent 会话] 已创建会话: normal-e391f301- (6710323d-312d-4a79-ae38-1dc2f0fadece)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-e391f301/947f019d-1406-4ea4-aa0c-4430fc7e317f
+[Agent 会话] 已创建会话: private-e391f301- (947f019d-1406-4ea4-aa0c-4430fc7e317f)
+[Agent 会话] 已更新会话: normal-e391f301- (6710323d-312d-4a79-ae38-1dc2f0fadece)
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-e391f301/947f019d-1406-4ea4-aa0c-4430fc7e317f
+[Agent 会话] 已删除会话: private-e391f301- (947f019d-1406-4ea4-aa0c-4430fc7e317f)
+(pass) P05-S04 Pocket reconnect, snapshot and search > search by private filename and stale parent directory remains empty after deletion [2.71ms]
+[配置] 已创建 Agent 工作区: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-fee26205
+[Agent 工作区] 已创建 plugin manifest: p05-ws-fee26205
+[Agent 工作区] 已创建个人工作区: p05-ws-fee26205- (slug: p05-ws-fee26205)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-fee26205/b6ec5f19-9289-4440-81f4-b28a51af864a
+[Agent 会话] 已创建会话: normal-fee26205- (b6ec5f19-9289-4440-81f4-b28a51af864a)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-fee26205/27af75c4-2d7e-4a40-a258-376f85aa5bbc
+[Agent 会话] 已创建会话: private-fee26205- (27af75c4-2d7e-4a40-a258-376f85aa5bbc)
+[Agent 会话] 已更新会话: normal-fee26205- (b6ec5f19-9289-4440-81f4-b28a51af864a)
+(pass) P05-S04 Pocket reconnect, snapshot and search > search skips symlink aliases to private files and directories, including explicit attached paths [1.20ms]
+[配置] 已创建 Agent 工作区: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-96371a44
+[Agent 工作区] 已创建 plugin manifest: p05-ws-96371a44
+[Agent 工作区] 已创建个人工作区: p05-ws-96371a44- (slug: p05-ws-96371a44)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-96371a44/0534f31d-c99d-4277-93a1-7799df25d26d
+[Agent 会话] 已创建会话: normal-96371a44- (0534f31d-c99d-4277-93a1-7799df25d26d)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-96371a44/8d386bb7-abe7-415a-9bfb-57452a5b66fa
+[Agent 会话] 已创建会话: private-96371a44- (8d386bb7-abe7-415a-9bfb-57452a5b66fa)
+(pass) P05-S04 Pocket reconnect, snapshot and search > pure search keeps normal attached paths when private filter is enabled [0.98ms]
+[配置] 已创建 Agent 工作区: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-c179d422
+[Agent 工作区] 已创建 plugin manifest: p05-ws-c179d422
+[Agent 工作区] 已创建个人工作区: p05-ws-c179d422- (slug: p05-ws-c179d422)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-c179d422/d90f69a8-3ff3-4b47-8f36-1af227c0245f
+[Agent 会话] 已创建会话: normal-c179d422- (d90f69a8-3ff3-4b47-8f36-1af227c0245f)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-c179d422/1348ad66-e9c0-4b9e-8ee5-c1c6e94750f2
+[Agent 会话] 已创建会话: private-c179d422- (1348ad66-e9c0-4b9e-8ee5-c1c6e94750f2)
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-c179d422/1348ad66-e9c0-4b9e-8ee5-c1c6e94750f2
+[Agent 会话] 已删除会话: private-c179d422- (1348ad66-e9c0-4b9e-8ee5-c1c6e94750f2)
+(pass) P05-S04 Pocket reconnect, snapshot and search > nested mention session IDs cannot inject private owner into an ordinary Pocket queue [2.64ms]
+[配置] 已创建 Agent 工作区: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-843c7c8a
+[Agent 工作区] 已创建 plugin manifest: p05-ws-843c7c8a
+[Agent 工作区] 已创建个人工作区: p05-ws-843c7c8a- (slug: p05-ws-843c7c8a)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-843c7c8a/a66450ca-536a-41e0-b29e-ae2bdd9919b8
+[Agent 会话] 已创建会话: normal-843c7c8a- (a66450ca-536a-41e0-b29e-ae2bdd9919b8)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-843c7c8a/bbf2f308-e0ec-4d20-ae8d-2617604add36
+[Agent 会话] 已创建会话: private-843c7c8a- (bbf2f308-e0ec-4d20-ae8d-2617604add36)
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-843c7c8a/bbf2f308-e0ec-4d20-ae8d-2617604add36
+[Agent 会话] 已删除会话: private-843c7c8a- (bbf2f308-e0ec-4d20-ae8d-2617604add36)
+(pass) P05-S04 Pocket reconnect, snapshot and search > in-process reconnect replay filters stale owner records while preserving ordinary cursor order [1.38ms]
+[配置] 已创建 Agent 工作区: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-1ad8cb52
+[Agent 工作区] 已创建 plugin manifest: p05-ws-1ad8cb52
+[Agent 工作区] 已创建个人工作区: p05-ws-1ad8cb52- (slug: p05-ws-1ad8cb52)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-1ad8cb52/d3267dad-1ec8-4fd5-91a9-b9a6d85cb2ae
+[Agent 会话] 已创建会话: normal-1ad8cb52- (d3267dad-1ec8-4fd5-91a9-b9a6d85cb2ae)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-reconnect-search-MdrGSN/agent-workspaces/p05-ws-1ad8cb52/dae48451-2541-42ab-a4e6-ab00437deae0
+[Agent 会话] 已创建会话: private-1ad8cb52- (dae48451-2541-42ab-a4e6-ab00437deae0)
+(pass) P05-S04 Pocket reconnect, snapshot and search > out-of-window resume forces snapshot rather than incomplete private/event replay [0.76ms]
+
+apps/electron/src/main/lib/review/review-relay-multi-viewer-contract.p05.test.ts:
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建 Agent 会话目录: /tmp/p05-s06-relay-Q7f6ib/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/p05-s06-relay-Q7f6ib/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p05-s06-relay-Q7f6ib/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-s06-relay-Q7f6ib/agent-workspaces/default/7fba9b35-39f7-444d-9726-0c6691044e03
+[Agent 会话] 已创建会话: P05-S06 ordinary (7fba9b35-39f7-444d-9726-0c6691044e03)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-s06-relay-Q7f6ib/agent-workspaces/default/578a8ead-b193-4f32-a6ba-12153a23c0c9
+[Agent 会话] 已创建会话: private (578a8ead-b193-4f32-a6ba-12153a23c0c9)
+
+════════════════════════════════════════════════════
+[Remote] Profer 移动版已启动
+[Remote] 本机访问:  http://127.0.0.1:44819
+[Remote] 移动端访问:  http://172.27.62.99:44819
+[Remote] 访问 Token: p05-s06-local-14caec67-4538-4981-86b8-8f06e00ccdea（首次在移动端输入一次）
+════════════════════════════════════════════════════
+
+[Remote] 服务已在 127.0.0.1:44819 就绪
+(pass) P05-S06 desktop Relay routing contract (synthetic hub, real WS) > two viewers with same business requestId retain separate _cmdId results [31.17ms]
+(pass) P05-S06 desktop Relay routing contract (synthetic hub, real WS) > separate viewer cannot inherit old file-preview session; resumed viewer still requires snapshot [61.29ms]
+(pass) P05-S06 desktop Relay routing contract (synthetic hub, real WS) > two viewers may reuse the same _cmdId; center correlation must be unique and restored [31.05ms]
+(pass) P05-S06 desktop Relay routing contract (synthetic hub, real WS) > old reply after disconnect cannot settle a new viewer reusing the same _cmdId [51.52ms]
+[配置] 已创建 Pi 检查点目录: /tmp/p05-s06-relay-Q7f6ib/agent-checkpoints
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-s06-relay-Q7f6ib/agent-workspaces/default/578a8ead-b193-4f32-a6ba-12153a23c0c9
+[Agent 会话] 已删除会话: private (578a8ead-b193-4f32-a6ba-12153a23c0c9)
+(pass) P05-S06 desktop Relay routing contract (synthetic hub, real WS) > owner deletion keeps Relay command denied while ordinary commands remain visible [31.46ms]
+(pass) P05-S06 structured AgentStreamPayload integrity > deeply nested structured owner reference is suppressed, including deleted IDs [0.22ms]
+(pass) P05-S06 structured AgentStreamPayload integrity > embedded session.id and projection upsert cannot disclose hidden metadata [0.10ms]
+(pass) P05-S06 structured AgentStreamPayload integrity > invalid control event depth fails closed; replay filters old records [0.13ms]
+[Remote] 移动版服务已停止
+
+apps/electron/src/main/lib/review/review-remote-path-access.p05.test.ts:
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建附件目录: /tmp/p05-remote-path-Znoj9V/attachments
+[附件服务] 已删除附件: synthetic-chat-989bb130-0e8d-4252-bf70-8fa46b472b8e/normal.txt
+(pass) P05-S03 path-only remote access isolation > legacy Chat attachment reads work for relative and absolute paths strictly within attachment storage [13.04ms]
+[配置] 已创建 Agent 工作区目录: /tmp/p05-remote-path-Znoj9V/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-59cea7cf
+[Agent 工作区] 已创建 plugin manifest: p05-path-59cea7cf
+[Agent 工作区] 已创建个人工作区: P05 Path 59cea7cf- (slug: p05-path-59cea7cf)
+[配置] 已创建 Agent 会话目录: /tmp/p05-remote-path-Znoj9V/agent-sessions
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-59cea7cf/8d642393-9800-4d32-93f7-c67db9c56907
+[Agent 会话] 已创建会话: normal-59cea7cf- (8d642393-9800-4d32-93f7-c67db9c56907)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-59cea7cf/24a4dbda-f454-42e0-96ef-9c0bf54184c9
+[Agent 会话] 已创建会话: private-59cea7cf- (24a4dbda-f454-42e0-96ef-9c0bf54184c9)
+(pass) P05-S03 path-only remote access isolation > legacy Chat cannot read or delete private review files, app config or symlink escape [1.58ms]
+[配置] 已创建 Agent 工作区: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-30d27a0e
+[Agent 工作区] 已创建 plugin manifest: p05-path-30d27a0e
+[Agent 工作区] 已创建个人工作区: P05 Path 30d27a0e- (slug: p05-path-30d27a0e)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-30d27a0e/8ad6c418-8c33-417e-92d3-b4ef3447753f
+[Agent 会话] 已创建会话: normal-30d27a0e- (8ad6c418-8c33-417e-92d3-b4ef3447753f)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-30d27a0e/0d42a584-a27f-4c5e-87d8-def9ec73d0bf
+[Agent 会话] 已创建会话: private-30d27a0e- (0d42a584-a27f-4c5e-87d8-def9ec73d0bf)
+(pass) P05-S03 path-only remote access isolation > ordinary Pocket reads own session and shared workspace files under both preview aliases [2.82ms]
+[配置] 已创建 Agent 工作区: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-673afc92
+[Agent 工作区] 已创建 plugin manifest: p05-path-673afc92
+[Agent 工作区] 已创建个人工作区: P05 Path 673afc92- (slug: p05-path-673afc92)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-673afc92/eba76532-977b-48f1-a32d-cc5b8f152c0f
+[Agent 会话] 已创建会话: normal-673afc92- (eba76532-977b-48f1-a32d-cc5b8f152c0f)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-673afc92/d00be6e1-802f-4d6f-a03e-0c547bb360a5
+[Agent 会话] 已创建会话: private-673afc92- (d00be6e1-802f-4d6f-a03e-0c547bb360a5)
+[配置] 已创建 Pi 检查点目录: /tmp/p05-remote-path-Znoj9V/agent-checkpoints
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-673afc92/d00be6e1-802f-4d6f-a03e-0c547bb360a5
+[Agent 会话] 已删除会话: private-673afc92- (d00be6e1-802f-4d6f-a03e-0c547bb360a5)
+(pass) P05-S03 path-only remote access isolation > a broad shared workspace root does not grant ordinary Pocket access to private sibling session [2.18ms]
+[配置] 已创建 Agent 工作区: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-5bbae18b
+[Agent 工作区] 已创建 plugin manifest: p05-path-5bbae18b
+[Agent 工作区] 已创建个人工作区: P05 Path 5bbae18b- (slug: p05-path-5bbae18b)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-5bbae18b/b595c6e0-847e-459a-8ca9-625f3ed93afc
+[Agent 会话] 已创建会话: normal-5bbae18b- (b595c6e0-847e-459a-8ca9-625f3ed93afc)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-5bbae18b/efc7d613-a565-4262-b78f-eb2d0b5f153b
+[Agent 会话] 已创建会话: private-5bbae18b- (efc7d613-a565-4262-b78f-eb2d0b5f153b)
+[Agent 会话] 已更新会话: normal-5bbae18b- (b595c6e0-847e-459a-8ca9-625f3ed93afc)
+(pass) P05-S03 path-only remote access isolation > symlink aliases and even explicitly attached private roots/files cannot override owner fence [1.90ms]
+[配置] 已创建 Agent 工作区: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-28595f87
+[Agent 工作区] 已创建 plugin manifest: p05-path-28595f87
+[Agent 工作区] 已创建个人工作区: P05 Path 28595f87- (slug: p05-path-28595f87)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-28595f87/c672d882-b154-4ffa-b0ef-4d4826ec2bf9
+[Agent 会话] 已创建会话: normal-28595f87- (c672d882-b154-4ffa-b0ef-4d4826ec2bf9)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-28595f87/16604345-bfd7-40a4-9da1-85b3eacbc506
+[Agent 会话] 已创建会话: private-28595f87- (16604345-bfd7-40a4-9da1-85b3eacbc506)
+[配置] 已创建 Agent 工作区: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-other-5575d5ba
+[Agent 工作区] 已创建 plugin manifest: p05-other-5575d5ba
+[Agent 工作区] 已创建个人工作区: P05 Other 5575d5ba- (slug: p05-other-5575d5ba)
+(pass) P05-S03 path-only remote access isolation > remote realpath rejects cross-workspace traversal and outside symlink without breaking normal files [1.42ms]
+[配置] 已创建 Agent 工作区: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-14bc7f8e
+[Agent 工作区] 已创建 plugin manifest: p05-path-14bc7f8e
+[Agent 工作区] 已创建个人工作区: P05 Path 14bc7f8e- (slug: p05-path-14bc7f8e)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-14bc7f8e/4c6e686a-2ace-4127-8e27-a518052d190e
+[Agent 会话] 已创建会话: normal-14bc7f8e- (4c6e686a-2ace-4127-8e27-a518052d190e)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-14bc7f8e/69426bd6-d2a3-4c27-8bc8-e50c95aa7ba6
+[Agent 会话] 已创建会话: private-14bc7f8e- (69426bd6-d2a3-4c27-8bc8-e50c95aa7ba6)
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-remote-path-Znoj9V/agent-workspaces/p05-path-14bc7f8e/69426bd6-d2a3-4c27-8bc8-e50c95aa7ba6
+[Agent 会话] 已删除会话: private-14bc7f8e- (69426bd6-d2a3-4c27-8bc8-e50c95aa7ba6)
+(pass) P05-S03 path-only remote access isolation > review-private file helper recognizes transcript/checkpoint paths and owner tombstones only [1.49ms]
+
+apps/electron/src/main/lib/review/review-feishu-owner-boundary.p05.test.ts:
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建 Agent 工作区目录: /tmp/p05-feishu-7yKZPY/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-bbdeb388-3
+[Agent 工作区] 已创建 plugin manifest: p05-feishu-bbdeb388-3
+[Agent 工作区] 已创建个人工作区: P05 Feishu bbdeb388-3 (slug: p05-feishu-bbdeb388-3)
+[配置] 已创建 Agent 会话目录: /tmp/p05-feishu-7yKZPY/agent-sessions
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-bbdeb388-3/5dfd8639-5f7f-42df-94f0-ecb0ba7eb354
+[Agent 会话] 已创建会话: private-bbdeb388-3 (5dfd8639-5f7f-42df-94f0-ecb0ba7eb354)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-bbdeb388-3/60ad2263-a55b-40fa-b056-18f9c12f10fb
+[Agent 会话] 已创建会话: ordinary-bbdeb388-3 (60ad2263-a55b-40fa-b056-18f9c12f10fb)
+[飞书 Bridge] 已恢复 1 个聊天绑定
+(pass) P05-S02 Feishu owner-boundary security > restore from old persisted chat bindings skips live owner but preserves ordinary binding [4.99ms]
+[配置] 已创建 Agent 工作区: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-5630c545-0
+[Agent 工作区] 已创建 plugin manifest: p05-feishu-5630c545-0
+[Agent 工作区] 已创建个人工作区: P05 Feishu 5630c545-0 (slug: p05-feishu-5630c545-0)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-5630c545-0/3a60e2d5-5046-4b61-a0d5-812f915c6857
+[Agent 会话] 已创建会话: private-5630c545-0 (3a60e2d5-5046-4b61-a0d5-812f915c6857)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-5630c545-0/fba048a6-fbae-402e-b4eb-8b25d51a4b71
+[Agent 会话] 已创建会话: ordinary-5630c545-0 (fba048a6-fbae-402e-b4eb-8b25d51a4b71)
+[配置] 已创建 Pi 检查点目录: /tmp/p05-feishu-7yKZPY/agent-checkpoints
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-5630c545-0/3a60e2d5-5046-4b61-a0d5-812f915c6857
+[Agent 会话] 已删除会话: private-5630c545-0 (3a60e2d5-5046-4b61-a0d5-812f915c6857)
+(pass) P05-S02 Feishu owner-boundary security > old binding to deleted owner remains suppressed after metadata deletion [1.01ms]
+[配置] 已创建 Agent 工作区: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-215231e1-c
+[Agent 工作区] 已创建 plugin manifest: p05-feishu-215231e1-c
+[Agent 工作区] 已创建个人工作区: P05 Feishu 215231e1-c (slug: p05-feishu-215231e1-c)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-215231e1-c/ed3aa7f0-b464-4169-9b2c-a11fab03b777
+[Agent 会话] 已创建会话: private-215231e1-c (ed3aa7f0-b464-4169-9b2c-a11fab03b777)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-215231e1-c/82035552-84d5-4172-aaa7-0715ab5bc73a
+[Agent 会话] 已创建会话: ordinary-215231e1-c (82035552-84d5-4172-aaa7-0715ab5bc73a)
+(pass) P05-S02 Feishu owner-boundary security > binding updates cannot target hidden owner or mutate stale hidden binding [0.71ms]
+[配置] 已创建 Agent 工作区: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-df58d5ad-d
+[Agent 工作区] 已创建 plugin manifest: p05-feishu-df58d5ad-d
+[Agent 工作区] 已创建个人工作区: P05 Feishu df58d5ad-d (slug: p05-feishu-df58d5ad-d)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-df58d5ad-d/160072a6-ca9f-4cd4-aec8-b00f14fcbc08
+[Agent 会话] 已创建会话: private-df58d5ad-d (160072a6-ca9f-4cd4-aec8-b00f14fcbc08)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-df58d5ad-d/06d31863-1055-47d4-8206-536c1e4cd3b6
+[Agent 会话] 已创建会话: ordinary-df58d5ad-d (06d31863-1055-47d4-8206-536c1e4cd3b6)
+[飞书 Session 镜像] 已创建群: session=06d31863, chat=synthetic-chat
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-df58d5ad-d/160072a6-ca9f-4cd4-aec8-b00f14fcbc08
+[Agent 会话] 已删除会话: private-df58d5ad-d (160072a6-ca9f-4cd4-aec8-b00f14fcbc08)
+(pass) P05-S02 Feishu owner-boundary security > direct mirror creation / streaming cannot bind live or deleted owner, normal mirror still works [1.44ms]
+[配置] 已创建 Agent 工作区: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-3d8fbb3a-8
+[Agent 工作区] 已创建 plugin manifest: p05-feishu-3d8fbb3a-8
+[Agent 工作区] 已创建个人工作区: P05 Feishu 3d8fbb3a-8 (slug: p05-feishu-3d8fbb3a-8)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-3d8fbb3a-8/44662064-b868-43cd-8e3c-3bcd037afbf9
+[Agent 会话] 已创建会话: private-3d8fbb3a-8 (44662064-b868-43cd-8e3c-3bcd037afbf9)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-3d8fbb3a-8/dc0ecda4-dde9-4a65-beaa-e35986ddda59
+[Agent 会话] 已创建会话: ordinary-3d8fbb3a-8 (dc0ecda4-dde9-4a65-beaa-e35986ddda59)
+(pass) P05-S02 Feishu owner-boundary security > old hidden chat cannot stop run, start run from message, disclose /now or change model [1.90ms]
+[配置] 已创建 Agent 工作区: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-6107a048-9
+[Agent 工作区] 已创建 plugin manifest: p05-feishu-6107a048-9
+[Agent 工作区] 已创建个人工作区: P05 Feishu 6107a048-9 (slug: p05-feishu-6107a048-9)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-6107a048-9/640190da-d9cc-4fb1-8d06-33639dac29ca
+[Agent 会话] 已创建会话: private-6107a048-9 (640190da-d9cc-4fb1-8d06-33639dac29ca)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-6107a048-9/a2fdf6ad-c930-449e-a8ce-810dd5f3edbe
+[Agent 会话] 已创建会话: ordinary-6107a048-9 (a2fdf6ad-c930-449e-a8ce-810dd5f3edbe)
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-6107a048-9/640190da-d9cc-4fb1-8d06-33639dac29ca
+[Agent 会话] 已删除会话: private-6107a048-9 (640190da-d9cc-4fb1-8d06-33639dac29ca)
+(pass) P05-S02 Feishu owner-boundary security > Agent EventBus handler refuses private and tombstoned owner before updating mirrors or buffers [0.92ms]
+[配置] 已创建 Agent 工作区: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-e14f6128-3
+[Agent 工作区] 已创建 plugin manifest: p05-feishu-e14f6128-3
+[Agent 工作区] 已创建个人工作区: P05 Feishu e14f6128-3 (slug: p05-feishu-e14f6128-3)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-e14f6128-3/4b2cc4fa-7622-4f48-bd3c-4aab715c720c
+[Agent 会话] 已创建会话: private-e14f6128-3 (4b2cc4fa-7622-4f48-bd3c-4aab715c720c)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-feishu-7yKZPY/agent-workspaces/p05-feishu-e14f6128-3/f5057adb-7925-455f-892b-5ecd5df88dba
+[Agent 会话] 已创建会话: ordinary-e14f6128-3 (f5057adb-7925-455f-892b-5ecd5df88dba)
+(pass) P05-S02 Feishu owner-boundary security > manager and bridge mirror guards do not dispatch to connected bridges for owner [0.87ms]
+
+apps/electron/src/main/lib/review/review-remote-websocket-relay.p05.test.ts:
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建 Agent 工作区目录: /tmp/p05-real-ws-1Y7mFj/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p05-real-ws-1Y7mFj/agent-workspaces/p05-ws-678ae1e0
+[Agent 工作区] 已创建 plugin manifest: p05-ws-678ae1e0
+[Agent 工作区] 已创建个人工作区: P05 WS 678ae1e0- (slug: p05-ws-678ae1e0)
+[配置] 已创建 Agent 会话目录: /tmp/p05-real-ws-1Y7mFj/agent-sessions
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-real-ws-1Y7mFj/agent-workspaces/p05-ws-678ae1e0/8f21378d-700c-4017-8466-a805a14ba541
+[Agent 会话] 已创建会话: ordinary-loopback (8f21378d-700c-4017-8466-a805a14ba541)
+[配置] 已创建 Agent 会话工作目录: /tmp/p05-real-ws-1Y7mFj/agent-workspaces/p05-ws-678ae1e0/4f1e3501-0cd5-4347-a53e-3c8e5d181748
+[Agent 会话] 已创建会话: private-loopback (4f1e3501-0cd5-4347-a53e-3c8e5d181748)
+
+════════════════════════════════════════════════════
+[Remote] Profer 移动版已启动
+[Remote] 本机访问:  http://127.0.0.1:34507
+[Remote] 移动端访问:  http://172.27.62.99:34507
+[Remote] 访问 Token: p05-ws-token-db556da6-70bd-49ba-8860-8c1f5574da02（首次在移动端输入一次）
+════════════════════════════════════════════════════
+
+[Remote] 服务已在 127.0.0.1:34507 就绪
+[Remote] 移动端客户端已连接
+[Remote] 移动端客户端断开
+(pass) P05-S05 local WebSocket real socket isolation > authenticated handshake and invalid token rejection use real sockets [25.27ms]
+[Remote] 移动端客户端已连接
+[Remote] 移动端客户端已连接
+(pass) P05-S05 local WebSocket real socket isolation > two viewers keep independent replay gates, and private owner events do not reach either [61.98ms]
+[Remote] 移动端客户端断开
+[Remote] 移动端客户端断开
+[Remote] 移动端客户端已连接
+[Remote] 移动端客户端断开
+[Remote] 移动端客户端已连接
+(pass) P05-S05 local WebSocket real socket isolation > reconnect resumes ordered ordinary events and returns a completion acknowledgement [62.01ms]
+[Remote] 移动端客户端断开
+[Remote] 移动端客户端已连接
+[配置] 已创建 Pi 检查点目录: /tmp/p05-real-ws-1Y7mFj/agent-checkpoints
+[Agent 会话] 已清理 session 工作目录: /tmp/p05-real-ws-1Y7mFj/agent-workspaces/p05-ws-678ae1e0/4f1e3501-0cd5-4347-a53e-3c8e5d181748
+[Agent 会话] 已删除会话: private-loopback (4f1e3501-0cd5-4347-a53e-3c8e5d181748)
+(pass) P05-S05 local WebSocket real socket isolation > old owner tombstone and nested owner ID are suppressed for live and reconnect [108.36ms]
+[Remote] 移动端客户端断开
+[Remote] 移动端客户端已连接
+(pass) P05-S05 local WebSocket real socket isolation > invalid resume cursor requests fresh snapshot without replaying old events [24.63ms]
+[Remote] 移动端客户端断开
+[Remote] 移动端客户端已连接
+(pass) P05-S05 local WebSocket real socket isolation > ordinary LAN viewer retains legacy active session file preview fallback [36.75ms]
+(pass) P05-S05 local WebSocket real socket isolation > Relay stateless command boundary does not borrow sessionId from another viewer [0.49ms]
+[Remote] 移动端客户端断开
+(pass) P05-S05 actual RelayClient loopback transport (mocked ticket only) > real socket sends relay_auth and reconnects after server close without carrying old sink [2027.58ms]
+[Remote] 移动版服务已停止
+
+ 43 pass
+ 0 fail
+ 213 expect() calls
+Ran 43 tests across 6 files. [3.65s]

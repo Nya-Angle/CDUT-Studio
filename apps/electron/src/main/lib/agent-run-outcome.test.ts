@@ -73,6 +73,32 @@ describe('Agent typed run outcome', () => {
     expect(outcomes[0]?.status).toBe('failed')
   })
 
+  test('终态失败必须把真实原因（resultErrors）带给 owner，而不是只给「执行出错」标签', () => {
+    // 复现真实缺陷：编排层只置 endReason=error、不传 resultErrors 时，
+    // owner 拿到的 error 只有 endReasonLabel（「执行出错」），真实原因丢失，
+    // 后台审核运行记录就变成不可诊断的「执行出错」。
+    const watchdogReason = '模型请求 95 秒无任何数据返回（渠道：AMD Radeon，模型：GLM-5.3-Flash），本轮审核已中止。'
+
+    const withoutErrors = fixture()
+    withoutErrors.reporter.onComplete({
+      resultSubtype: 'error_during_execution',
+      endReason: 'error',
+      endReasonLabel: '执行出错',
+    })
+    withoutErrors.reporter.finish()
+    expect(withoutErrors.outcomes[0]).toEqual({ status: 'failed', error: '执行出错' })
+
+    const withErrors = fixture()
+    withErrors.reporter.onComplete({
+      resultSubtype: 'error_during_execution',
+      resultErrors: [watchdogReason],
+      endReason: 'error',
+      endReasonLabel: '执行出错',
+    })
+    withErrors.reporter.finish()
+    expect(withErrors.outcomes[0]).toEqual({ status: 'failed', error: watchdogReason })
+  })
+
   test('调用方 callback 抛错不能改变运行结果或重复回传', () => {
     let calls = 0
     const reporter = createAgentRunOutcomeReporter(() => { calls++; throw new Error('consumer error') })

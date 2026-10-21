@@ -1,0 +1,33 @@
+[
+  {
+    "id": "AUDIT-P03-P05-INDEX-01",
+    "at": "2026-10-13T13:45:10.857Z",
+    "blockedBefore": true,
+    "blockedAfter": false,
+    "metadataMissingAfter": true,
+    "readableAfter": true,
+    "eventPublishedAfter": true,
+    "privatePathBlockedAfter": false,
+    "expected": "普通入口/事件/私有路径仍拒绝",
+    "result": "FAIL"
+  },
+  {
+    "id": "AUDIT-P06-REMOUNT-01",
+    "at": "2026-10-13T13:45:10.872Z",
+    "expectedRun": "run-pi-new-page",
+    "actualRun": "run-pi-old-page",
+    "expectedState": "running",
+    "actualState": "failed",
+    "result": "FAIL",
+    "scope": "真实 Controller/Jotai，受控旧 IPC 回复，不是真实模型注入"
+  },
+  {
+    "id": "AUDIT-P06-WORKSPACE-WRITER-01",
+    "at": "2026-10-13T13:45:10.885Z",
+    "expectedRun": "run-pi-workspace-next",
+    "actualRun": "run-pi-workspace-old",
+    "apiReads": 1,
+    "result": "FAIL",
+    "scope": "真实 Hook/React SSR/Jotai，受控 IPC；非 Electron GUI"
+  }
+]

@@ -3182,17 +3182,29 @@ export function buildYanhuBrowserTools(
       definition: {
         name: 'yanhu_capture_visual',
         description:
-          '截取当前网页视口，建立「视觉图像平面 ↔ DOM 物理平面」双平面平行坐标标定，返回 4~8 个地标基准点的坐标对照表（供 yanhu_click_visual 换算）。当页面包含复杂图形 / 验证码 / Canvas 排课表，或 PageDigest 返回大量 [Occluded]、文本极度稀疏、无法用 [BID] 定位时调用。截图本身只用于界面预览，不进入对话上下文。',
-        parameters: { type: 'object', properties: {} },
+          '截取当前网页视口，建立「视觉图像平面 ↔ DOM 物理平面」双平面平行坐标标定，返回 4~8 个地标基准点的坐标对照表（供 yanhu_click_visual 换算）。当页面包含复杂图形 / 验证码 / Canvas 排课表，或 PageDigest 返回大量 [Occluded]、文本极度稀疏、无法用 [BID] 定位时调用。截图本身只用于界面预览，不进入对话上下文（需要把截图一并交给模型核对时，显式传 includeImage=true）。',
+        parameters: {
+          type: 'object',
+          properties: {
+            includeImage: {
+              type: 'boolean',
+              description: '是否在结果中附带视口截图 Base64（默认 false，仅返回地标标定块以节省上下文）',
+            },
+          },
+        },
       },
       label: () => '👁 视觉截图与坐标标定',
-      execute: async () => {
+      execute: async (args) => {
         const tabId = tabResolver()
         const captured = await captureVisualSnapshot(tabId)
         if (!captured) {
           return { content: '截图失败：当前标签无可用视口（可能已休眠或正在加载中）。', isError: true }
         }
-        return { content: formatVisualSnapshot(captured.snapshot) }
+        const base = formatVisualSnapshot(captured.snapshot)
+        if (args.includeImage === true) {
+          return { content: `${base}\n\n[视口截图 dataURL]\n${captured.dataUrl}` }
+        }
+        return { content: base }
       },
     })
 

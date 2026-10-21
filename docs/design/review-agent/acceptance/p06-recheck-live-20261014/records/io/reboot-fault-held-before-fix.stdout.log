@@ -1,0 +1,1 @@
+{"id":"reboot-still-faulted","status":"FAIL","assertions":1,"failed":1,"error":"AssertionError [ERR_ASSERTION]: 重启后旧工具授权仍拒绝"}

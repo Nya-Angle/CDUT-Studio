@@ -1,0 +1,109 @@
+{
+  "id": "E06-BATCH-REAL-QUEUE-AND-GATES",
+  "status": "FAIL",
+  "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+  "assertions": [
+    {
+      "name": "真实 Main 创建三个合成案卷与批次",
+      "pass": true
+    },
+    {
+      "name": "真实队列三个案卷均 done",
+      "pass": true
+    },
+    {
+      "name": "每案实际模型用量均非零",
+      "pass": false
+    }
+  ],
+  "timeline": [
+    {
+      "at": "2026-10-14T16:11:15.921Z",
+      "event": "real-batch-created",
+      "batchId": "p06-batch-live-mv8b4gko",
+      "cases": [
+        "case-1791994275823-308iag",
+        "case-1791994275856-18ol9a",
+        "case-1791994275887-55nu8v"
+      ]
+    }
+  ],
+  "queue": {
+    "status": "queued",
+    "cases": [
+      {
+        "caseId": "case-1791994275823-308iag",
+        "status": "done"
+      },
+      {
+        "caseId": "case-1791994275856-18ol9a",
+        "status": "done"
+      },
+      {
+        "caseId": "case-1791994275887-55nu8v",
+        "status": "done"
+      }
+    ]
+  },
+  "runs": [
+    {
+      "caseId": "case-1791994275823-308iag",
+      "runId": "run-1791994275927-0ja5",
+      "status": "completed",
+      "checks": [
+        {
+          "ruleId": "section-all-budget",
+          "status": "compliant",
+          "sourceRefCount": 1
+        },
+        {
+          "ruleId": "section-all-budget",
+          "status": "execution-failed",
+          "sourceRefCount": 0
+        }
+      ],
+      "modelUsage": [],
+      "decisionCount": 0
+    },
+    {
+      "caseId": "case-1791994275856-18ol9a",
+      "runId": "run-1791994282294-71my",
+      "status": "completed",
+      "checks": [
+        {
+          "ruleId": "section-all-budget",
+          "status": "non-compliant",
+          "sourceRefCount": 1
+        },
+        {
+          "ruleId": "section-all-budget",
+          "status": "execution-failed",
+          "sourceRefCount": 0
+        }
+      ],
+      "modelUsage": [],
+      "decisionCount": 0
+    },
+    {
+      "caseId": "case-1791994275887-55nu8v",
+      "runId": "run-1791994295299-e9ra",
+      "status": "completed",
+      "checks": [
+        {
+          "ruleId": "section-all-budget",
+          "status": "awaiting-supplement",
+          "sourceRefCount": 1
+        },
+        {
+          "ruleId": "section-all-budget",
+          "status": "execution-failed",
+          "sourceRefCount": 0
+        }
+      ],
+      "modelUsage": [],
+      "decisionCount": 0
+    }
+  ],
+  "error": "AssertionError [ERR_ASSERTION]: 每案实际模型用量均非零",
+  "finishedAt": "2026-10-14T16:11:49.485Z"
+}

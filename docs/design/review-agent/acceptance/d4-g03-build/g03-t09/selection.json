@@ -1,0 +1,176 @@
+{
+  "templateId": "g03-t09",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "item-a",
+      "subjectId": "g03-t09-subject-a",
+      "title": "SYNTHETIC 仪器送样检测委托对象A",
+      "businessType": "g03-sample-service",
+      "scenario": "p-internal-entrust",
+      "scenarioSource": {
+        "sourceId": "synthetic-choice",
+        "sourceVersionId": "synthetic-g03-t09-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "c-multiple-samples",
+          "applicability": "applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-hazard",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-proxy",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-accredited-report",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-fee",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-attachment",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-auto-approval",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-confidential",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-partial-acceptance",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-change",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "item-b",
+      "subjectId": "g03-t09-subject-b",
+      "title": "SYNTHETIC 仪器送样检测委托对象B",
+      "businessType": "g03-sample-service",
+      "scenario": "p-external-entrust",
+      "scenarioSource": {
+        "sourceId": "synthetic-choice",
+        "sourceVersionId": "synthetic-g03-t09-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "c-multiple-samples",
+          "applicability": "unknown",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "c-hazard",
+          "applicability": "applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-proxy",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-accredited-report",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-fee",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-attachment",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-auto-approval",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-confidential",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-partial-acceptance",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-change",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t09-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

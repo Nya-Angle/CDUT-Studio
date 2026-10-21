@@ -1,0 +1,74 @@
+name: Review V3 local Electron Gate E
+on:
+  pull_request:
+    paths:
+      - 'scripts/qa/review-v3-local-*'
+      - '.github/workflows/review-v3-local-electron.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  real-electron-gui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PROFER_DEV: '1'
+      PROFER_DEV_INSTANCE: 'review-v3-local-qa'
+      PROFER_VITE_PORT: '5176'
+      CI: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install desktop dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xdotool openbox libgtk-3-0 libnss3 libgbm1 libasound2t64 fonts-noto-cjk
+          echo "QA_REPORT_DIR=$GITHUB_WORKSPACE/qa-artifacts" >> "$GITHUB_ENV"
+          echo "PROFER_CONFIG_DIR=$RUNNER_TEMP/review-v3-gui-qa-$GITHUB_RUN_ID/config" >> "$GITHUB_ENV"
+          echo "PROFER_USER_DATA_DIR=$RUNNER_TEMP/review-v3-gui-qa-$GITHUB_RUN_ID/user-data" >> "$GITHUB_ENV"
+      - name: Actual Electron build and native original
+        shell: bash
+        run: |
+          set -euo pipefail
+          bun install --frozen-lockfile
+          mkdir -p "$QA_REPORT_DIR" "$PROFER_USER_DATA_DIR"
+          git rev-parse HEAD | tee "$QA_REPORT_DIR/sha.txt"
+          node scripts/qa/review-v3-local-seed.mjs | tee "$QA_REPORT_DIR/seed.txt"
+          (cd apps/electron && bun run build:main && bun run build:preload && bun run build:resources)
+      - name: Genuine GUI and physical file chooser
+        shell: bash
+        timeout-minutes: 12
+        run: |
+          set -euo pipefail
+          xvfb-run -a -s '-screen 0 1600x1000x24' bash -c '
+            set -euo pipefail
+            (cd apps/electron && bun run dev:vite) > "$QA_REPORT_DIR/vite.log" 2>&1 &
+            VITE_PID=$!
+            openbox --sm-disable > "$QA_REPORT_DIR/window-manager.log" 2>&1 &
+            WM_PID=$!
+            ELECTRON_PID=""
+            cleanup(){ kill "$VITE_PID" "$WM_PID" || true; if [[ -n "$ELECTRON_PID" ]]; then kill "$ELECTRON_PID" || true; fi; }
+            trap cleanup EXIT
+            for attempt in $(seq 1 100); do
+              if curl --silent --fail http://localhost:5176/ > /dev/null; then break; fi
+              sleep 1
+            done
+            curl --silent --fail http://localhost:5176/ > /dev/null
+            (cd apps/electron && bunx electron . --no-sandbox --disable-gpu --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222) > "$QA_REPORT_DIR/electron.log" 2>&1 &
+            ELECTRON_PID=$!
+            node scripts/qa/review-v3-local-electron.mjs
+          '
+      - name: Upload actual logs and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-v3-real-electron
+          path: qa-artifacts
+          retention-days: 14
+          if-no-files-found: warn

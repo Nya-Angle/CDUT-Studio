@@ -1,0 +1,17 @@
+{
+  "commit": "6ff93be71399683fb21c9b5e36cedce05d1945b8",
+  "runId": 38748810136,
+  "jobId": 116469443207,
+  "url": "https://github.com/Fuck-GH-Admin/cdut-studio-review-agent/actions/runs/38748810136",
+  "conclusion": "failure",
+  "exitCode": 1,
+  "tests": 3988,
+  "files": 456,
+  "pass": 3982,
+  "skip": 5,
+  "fail": 1,
+  "expectCalls": 16448,
+  "rawLogSha256": "6741c5c789b7b4208f07de817b3e3d669c893a4b597c8bc3ab3c860866da3e31",
+  "failure": "Upstream identity prompt is now English; the existing test still requires the former Chinese desktop product phrase.",
+  "correction": "Preserve the same product identity assertion, expecting CDUT Studio desktop app. Do not change production prompts or review risk probes."
+}
