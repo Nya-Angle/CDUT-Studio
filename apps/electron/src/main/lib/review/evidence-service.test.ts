@@ -55,6 +55,20 @@ describe('buildEvidenceLinks（多对多，A04）', () => {
     expect(again).toHaveLength(1)
   })
 
+  test('Given 单次命令重复主体 When 批量绑定 Then 只建立一个主体事实关系', () => {
+    const links = buildEvidenceLinks([], {
+      documentVersionId: 'doc-photo-v1', subjectIds: ['s1', 's1', 's2', 's2'],
+      supportsFact: '  参与活动  ', linkedBy: 'user',
+    })
+    expect(links).toHaveLength(2)
+    expect(links.map(link => link.subjectId)).toEqual(['s1', 's2'])
+    expect(links.every(link => link.supportsFact === '参与活动')).toBeTrue()
+    expect(buildEvidenceLinks(links, {
+      documentVersionId: 'doc-photo-v1', subjectIds: ['s1', 's2'],
+      supportsFact: '参与活动', linkedBy: 'ai',
+    })).toHaveLength(2)
+  })
+
   test('Given candidate 被拒绝 When 重复绑定同事实 Then 不复活（rejected 保留）', () => {
     let links = buildEvidenceLinks([], { documentVersionId: 'doc-x-v1', subjectIds: ['s1'], supportsFact: '事实A', linkedBy: 'ai', now: '2026-01-01T00:00:00Z' })
     links = transitionEvidenceLink(links, links[0]!.id, 'rejected')

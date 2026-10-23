@@ -63,7 +63,8 @@ import {
 import { appModeAtom } from '@/atoms/app-mode'
 import { tabsAtom, activeTabIdAtom, activeSessionIdAtom, openTab, updateTabTitle, closeTab, tabMruAtom } from '@/atoms/tab-atoms'
 import { syncActiveTabSideEffectsForStore } from '@/lib/active-tab-side-effects'
-import { openFilePreviewTab } from '@/components/diff/preview-opener'
+import { openFilePreviewTabAuthorized } from '@/components/diff/preview-opener'
+import { canOpenOrdinaryWorkTab, ensureOrdinaryWorkTabOwner, markAgentSessionRevoked, revokedAgentSessionIdsAtom } from '@/lib/agent-tab-access'
 import type { AgentStreamState } from '@/atoms/agent-atoms'
 import { agentDiffUnseenChangesAtom, agentDiffUnseenFilesAtom, agentDiffPanelTabAtom, agentSidePanelOpenAtom } from '@/atoms/agent-atoms'
 import { autoPreviewEnabledAtom, previewFileMapAtom, agentInterruptionMapAtom } from '@/atoms/preview-atoms'
@@ -544,10 +545,15 @@ export function useGlobalAgentListeners(options: UseGlobalAgentListenersOptions 
         })
       }
 
-      const knownSessions = store.get(agentSessionsAtom)
-      // 直接用当前列表 apply：applyActivation 内部会通过 upsertAgentSession
-      // 将 event 中的子 Agent 信息插入列表，无需等待 listAgentSessions() 异步返回。
-      applyActivation(knownSessions)
+      // External notification may precede list hydration, but an old review-owner
+      // event can also outlive deletion. Only Main-authorized unknown IDs may upsert.
+      if (!canOpenOrdinaryWorkTab(store.get(agentSessionsAtom), event.sessionId)) {
+        void ensureOrdinaryWorkTabOwner(store, event.sessionId, window.electronAPI.getAgentSessionMeta,
+          () => effectActive && !store.get(revokedAgentSessionIdsAtom).has(event.sessionId),
+        ).then((authorized) => { if (authorized) applyActivation(store.get(agentSessionsAtom)) })
+        return
+      }
+      applyActivation(store.get(agentSessionsAtom))
     }
 
     /** 发送阻塞通知（带提示音 + 会话导航） */
@@ -657,16 +663,18 @@ export function useGlobalAgentListeners(options: UseGlobalAgentListenersOptions 
       const seq = (autoPreviewSeq.get(sid) ?? 0) + 1
       autoPreviewSeq.set(sid, seq)
       return buildAutoPreviewFile(sid, targetPath)
-        .then((previewFile) => {
-          if (autoPreviewSeq.get(sid) !== seq) return null
+        .then(async (previewFile) => {
+          const stillCurrent = () => effectActive && autoPreviewSeq.get(sid) === seq
+          if (!stillCurrent() || !await ensureOrdinaryWorkTabOwner(store, sid,
+            window.electronAPI.getAgentSessionMeta, stillCurrent)) return null
           store.set(previewFileMapAtom, (prev) => {
             const m = new Map(prev)
             m.set(sid, previewFile)
             return m
           })
           if (openSurface) {
-            // 文件预览统一进入右侧边栏：不再创建顶栏预览 Tab，也不改写用户的分屏布局。
-            openFilePreviewTab(store, sid, previewFile, { activate: false })
+            // 保留上游侧栏预览，并在异步返回时重新核对会话归属和本轮资格。
+            if (!await openFilePreviewTabAuthorized(store, sid, previewFile, { activate: false }, stillCurrent)) return null
           }
           return previewFile
         })
@@ -715,10 +723,15 @@ export function useGlobalAgentListeners(options: UseGlobalAgentListenersOptions 
     const unsubscribeDelegationIndicatorTabs = store.sub(agentSessionIndicatorMapAtom, ensureDelegationChildTabs)
 
     // ===== 1. 流式事件 =====
-    const cleanupEvent = window.electronAPI.onAgentStreamEvent(
-      (streamEvent: AgentStreamEvent) => {
+    // Unknown-ID stream events are queued in-order until Main confirms ordinary
+    // ownership. This avoids both leaked review-owner SDK messages and dropped
+    // legitimate early ordinary streams while renderer session lists hydrate.
+    const unknownStreamQueues = new Map<string, AgentStreamEvent[]>()
+    const dispatchOrdinaryStreamEvent = (streamEvent: AgentStreamEvent): void => {
         unstable_batchedUpdates(() => {
         const { sessionId, payload } = streamEvent
+        // A deletion already observed in this renderer cannot be undone by an older queued event.
+        if (store.get(revokedAgentSessionIdsAtom).has(sessionId)) return
 
         // 终态（run_complete / run_error）的语义由专用 IPC（STREAM_COMPLETE / STREAM_ERROR）
         // 统一承担：agent-service 在刷新恢复时会为终态 payload 补发同名 IPC，因此这里直接跳过。
@@ -729,22 +742,34 @@ export function useGlobalAgentListeners(options: UseGlobalAgentListenersOptions 
 
         if (payload.kind === 'session_projection') {
           if (payload.operation === 'upsert') {
-            store.set(agentSessionsAtom, (previous) => upsertAgentSessionProjection(previous, payload.session))
-            // 草稿晋升后必须同步解除 renderer 的内存草稿标记：可见性判定同时看持久化
-            // draft 与内存标记，迟一步会话就会卡在「已跑起来但仍被当草稿隐藏」。
-            store.set(draftSessionIdsAtom, (previous) => syncDraftSessionId(previous, payload.session))
-            if (payload.session.permissionMode) {
-              store.set(agentPermissionModeMapAtom, (previous) => {
-                const next = new Map(previous)
-                next.set(payload.session.id, payload.session.permissionMode)
-                return next
-              })
-              store.set(agentPlanModeSessionsAtom, (previous) =>
-                updatePlanModeSessionSet(previous, payload.session.id, payload.session.permissionMode === 'plan')
-              )
+            const applyProjection = (): void => {
+              if (!effectActive || store.get(revokedAgentSessionIdsAtom).has(payload.session.id)) return
+              store.set(agentSessionsAtom, (previous) => upsertAgentSessionProjection(previous, payload.session))
+              store.set(draftSessionIdsAtom, (previous) => syncDraftSessionId(previous, payload.session))
+              if (payload.session.permissionMode) {
+                store.set(agentPermissionModeMapAtom, (previous) => {
+                  const next = new Map(previous)
+                  next.set(payload.session.id, payload.session.permissionMode)
+                  return next
+                })
+                store.set(agentPlanModeSessionsAtom, (previous) =>
+                  updatePlanModeSessionSet(previous, payload.session.id, payload.session.permissionMode === 'plan')
+                )
+              }
+              store.set(tabsAtom, (tabs) => updateTabTitle(tabs, payload.session.id, payload.session.title))
             }
-            store.set(tabsAtom, (tabs) => updateTabTitle(tabs, payload.session.id, payload.session.title))
+            // Legacy queued projection may arrive after owner deletion, stripped of owner.
+            // Unknown IDs MUST be resolved with Main before entering ordinary session atoms.
+            if (canOpenOrdinaryWorkTab(store.get(agentSessionsAtom), payload.session.id)) {
+              applyProjection()
+            } else {
+              void ensureOrdinaryWorkTabOwner(store, payload.session.id,
+                window.electronAPI.getAgentSessionMeta,
+                () => effectActive && !store.get(revokedAgentSessionIdsAtom).has(payload.session.id),
+              ).then((authorized) => { if (authorized) applyProjection() })
+            }
           } else {
+            markAgentSessionRevoked(store, payload.sessionId)
             store.set(agentSessionsAtom, (previous) => previous.filter((session) => session.id !== payload.sessionId))
           }
           return
@@ -758,7 +783,7 @@ export function useGlobalAgentListeners(options: UseGlobalAgentListenersOptions 
             const previewPath = proferEvent.filePath
             const sequence = (autoPreviewSeq.get(sessionId) ?? 0) + 1
             autoPreviewSeq.set(sessionId, sequence)
-            buildAutoPreviewFile(sessionId, previewPath).then((previewFile) => {
+            buildAutoPreviewFile(sessionId, previewPath).then(async (previewFile) => {
               if (!effectActive) return
               if (!previewFile || autoPreviewSeq.get(sessionId) !== sequence) {
                 void window.electronAPI.reportAgentFilePreview({
@@ -779,19 +804,17 @@ export function useGlobalAgentListeners(options: UseGlobalAgentListenersOptions 
                 previewRequestId: proferEvent.requestId,
                 previewRevision: proferEvent.revision,
               }
-              store.set(previewFileMapAtom, (prev) => {
-                const next = new Map(prev)
-                next.set(sessionId, nextFile)
-                return next
-              })
+              // Office preview must not silently time out when a work tab was refused:
+              // a normal early event gets one Main-authenticated metadata lookup.
+              const opened = await openFilePreviewTabAuthorized(store, sessionId, nextFile, {},
+                () => effectActive && autoPreviewSeq.get(sessionId) === sequence
+                  && !store.get(revokedAgentSessionIdsAtom).has(sessionId))
+              if (!opened) throw new Error('会话已删除、无权限或无法创建正式预览 Tab')
               store.set(agentDiffRefreshVersionAtom, (prev) => {
                 const next = new Map(prev)
                 next.set(sessionId, (prev.get(sessionId) ?? 0) + 1)
                 return next
               })
-              // 正式预览（PPTX 回执链路）：在右侧边栏渲染该文件——OfficePreview 必须在
-              // 可见 pane 里渲染并回执 ready/error，展开侧栏保证它落在当前渲染的容器上。
-              openFilePreviewTab(store, sessionId, nextFile)
             }).catch((error: unknown) => {
               if (!effectActive) return
               void window.electronAPI.reportAgentFilePreview({
@@ -830,24 +853,37 @@ export function useGlobalAgentListeners(options: UseGlobalAgentListenersOptions 
             activateExternalAgentRun(proferEvent)
           } else if (proferEvent.type === 'delegation_session_updated' || proferEvent.type === 'session_updated') {
             const incomingSession = proferEvent.session
-            store.set(agentSessionsAtom, (previous) => {
-              const current = previous.find((session) => session.id === incomingSession.id)
-              if (current && (incomingSession.revision ?? 0) < (current.revision ?? 0)) return previous
-              return upsertAgentSession(previous, incomingSession)
-            })
-            if (incomingSession.permissionMode) {
-              store.set(agentPermissionModeMapAtom, (previous) => {
-                const current = store.get(agentSessionsAtom).find((session) => session.id === incomingSession.id)
+            const applyUpdate = (): void => {
+              if (!effectActive || store.get(revokedAgentSessionIdsAtom).has(incomingSession.id)) return
+              store.set(agentSessionsAtom, (previous) => {
+                const current = previous.find((session) => session.id === incomingSession.id)
                 if (current && (incomingSession.revision ?? 0) < (current.revision ?? 0)) return previous
-                const next = new Map(previous)
-                next.set(incomingSession.id, incomingSession.permissionMode!)
-                return next
+                return upsertAgentSession(previous, incomingSession)
               })
-              store.set(agentPlanModeSessionsAtom, (previous) => updatePlanModeSessionSet(previous, incomingSession.id, incomingSession.permissionMode === 'plan'))
+              if (incomingSession.permissionMode) {
+                store.set(agentPermissionModeMapAtom, (previous) => {
+                  const current = store.get(agentSessionsAtom).find((session) => session.id === incomingSession.id)
+                  if (current && (incomingSession.revision ?? 0) < (current.revision ?? 0)) return previous
+                  const next = new Map(previous)
+                  next.set(incomingSession.id, incomingSession.permissionMode!)
+                  return next
+                })
+                store.set(agentPlanModeSessionsAtom, (previous) =>
+                  updatePlanModeSessionSet(previous, incomingSession.id, incomingSession.permissionMode === 'plan'))
+              }
+              store.set(tabsAtom, (tabs) => updateTabTitle(tabs, incomingSession.id, incomingSession.title))
             }
-            store.set(tabsAtom, (tabs) => updateTabTitle(tabs, incomingSession.id, incomingSession.title))
+            if (canOpenOrdinaryWorkTab(store.get(agentSessionsAtom), incomingSession.id)) {
+              applyUpdate()
+            } else {
+              void ensureOrdinaryWorkTabOwner(store, incomingSession.id,
+                window.electronAPI.getAgentSessionMeta,
+                () => effectActive && !store.get(revokedAgentSessionIdsAtom).has(incomingSession.id),
+              ).then((authorized) => { if (authorized) applyUpdate() })
+            }
             // 委派子会话的后台 Tab 由会话列表与流指示统一补齐；本事件只负责收敛会话和权限状态。
           } else if (proferEvent.type === 'session_deleted') {
+            markAgentSessionRevoked(store, proferEvent.sessionId)
             store.set(agentSessionsAtom, (previous) => previous.filter((session) => session.id !== proferEvent.sessionId))
             // 同步关闭该会话的顶栏 Tab（closeTab 会级联清除其浏览器工作标签），避免僵尸 Tab。
             const currentTabs = store.get(tabsAtom)
@@ -871,7 +907,7 @@ export function useGlobalAgentListeners(options: UseGlobalAgentListenersOptions 
         const knownSessions = store.get(agentSessionsAtom)
         if (!knownSessions.some((s) => s.id === sessionId)) {
           window.electronAPI.listAgentSessions(store.get(sidebarViewModeAtom) === 'archived')
-            .then((sessions) => store.set(agentSessionsAtom, (prev) => mergeFetchedAgentSessions(prev, sessions)))
+            .then((sessions) => store.set(agentSessionsAtom, (prev) => mergeFetchedAgentSessions(prev, sessions, store.get(revokedAgentSessionIdsAtom))))
             .catch(console.error)
         }
 
@@ -1296,8 +1332,42 @@ export function useGlobalAgentListeners(options: UseGlobalAgentListenersOptions 
           }
         }
         }) // unstable_batchedUpdates
+    }
+    const cleanupEvent = window.electronAPI.onAgentStreamEvent((streamEvent: AgentStreamEvent) => {
+      const { sessionId, payload } = streamEvent
+      if (!effectActive || store.get(revokedAgentSessionIdsAtom).has(sessionId)) return
+      // A delete notification must revoke queued events immediately. A projection
+      // carries no secret SDK content and has its own async Main auth when unknown.
+      const isDeletion = payload.kind === 'session_projection' && payload.operation === 'delete'
+        || payload.kind === 'profer_event' && payload.event.type === 'session_deleted'
+      if (isDeletion || payload.kind === 'session_projection' || payload.kind === 'catalog_invalidation') {
+        dispatchOrdinaryStreamEvent(streamEvent)
+        return
       }
-    )
+      if (canOpenOrdinaryWorkTab(store.get(agentSessionsAtom), sessionId)) {
+        dispatchOrdinaryStreamEvent(streamEvent)
+        return
+      }
+      const waiting = unknownStreamQueues.get(sessionId)
+      if (waiting) {
+        // One Main query per unknown ID; bounded buffering prevents unlimited memory
+        // retention if an old window or malicious legacy emitter never resolves.
+        if (waiting.length < 4096) waiting.push(streamEvent)
+        return
+      }
+      const queued = [streamEvent]
+      unknownStreamQueues.set(sessionId, queued)
+      void ensureOrdinaryWorkTabOwner(store, sessionId, window.electronAPI.getAgentSessionMeta,
+        () => effectActive && !store.get(revokedAgentSessionIdsAtom).has(sessionId),
+      ).then((authorized) => {
+        unknownStreamQueues.delete(sessionId)
+        if (!authorized) return
+        for (const event of queued) {
+          if (!effectActive || store.get(revokedAgentSessionIdsAtom).has(sessionId)) break
+          dispatchOrdinaryStreamEvent(event)
+        }
+      }).catch(() => { unknownStreamQueues.delete(sessionId) })
+    })
 
     // 大刷新会清空 renderer Jotai，但 main 中的 Agent run 仍可能继续执行。
     // listener 已安装后再请求重连：main 会先绑定新 webContents 并按顺序回放本轮事件。
@@ -1538,7 +1608,7 @@ export function useGlobalAgentListeners(options: UseGlobalAgentListenersOptions 
           window.electronAPI
             .listAgentSessions(store.get(sidebarViewModeAtom) === 'archived')
             .then((sessions) => {
-              store.set(agentSessionsAtom, (prev) => mergeFetchedAgentSessions(prev, sessions))
+              store.set(agentSessionsAtom, (prev) => mergeFetchedAgentSessions(prev, sessions, store.get(revokedAgentSessionIdsAtom)))
               // 从持久化 meta 对齐 stoppedByUser 状态
               store.set(stoppedByUserSessionsAtom, new Set<string>(
                 sessions.filter((s) => s.stoppedByUser).map((s) => s.id)
@@ -1560,6 +1630,7 @@ export function useGlobalAgentListeners(options: UseGlobalAgentListenersOptions 
 
     const cleanupComplete = window.electronAPI.onAgentStreamComplete(
       (data: AgentStreamCompletePayload) => {
+        if (store.get(revokedAgentSessionIdsAtom).has(data.sessionId)) return
         if (restoreTerminalGate.defer(data.sessionId, () => handleStreamComplete(data))) return
         handleStreamComplete(data)
       }
@@ -1593,6 +1664,7 @@ export function useGlobalAgentListeners(options: UseGlobalAgentListenersOptions 
 
     const cleanupError = window.electronAPI.onAgentStreamError(
       (data: { sessionId: string; error: string }) => {
+        if (store.get(revokedAgentSessionIdsAtom).has(data.sessionId)) return
         if (restoreTerminalGate.defer(data.sessionId, () => handleStreamError(data))) return
         handleStreamError(data)
       }
@@ -1600,6 +1672,7 @@ export function useGlobalAgentListeners(options: UseGlobalAgentListenersOptions 
 
     // ===== 4. 标题更新 =====
     const cleanupTitleUpdated = window.electronAPI.onAgentTitleUpdated(({ sessionId, title }) => {
+      if (store.get(revokedAgentSessionIdsAtom).has(sessionId)) return
       // 先使用事件 payload 立即同步标签页，避免依赖会话列表旧快照比较。
       store.set(tabsAtom, (tabs) => updateTabTitle(tabs, sessionId, title))
       store.set(agentSessionsAtom, (prev) =>
@@ -1610,15 +1683,25 @@ export function useGlobalAgentListeners(options: UseGlobalAgentListenersOptions 
       window.electronAPI
         .listAgentSessions(store.get(sidebarViewModeAtom) === 'archived')
         .then((sessions) => {
-          store.set(agentSessionsAtom, (prev) => mergeFetchedAgentSessions(prev, sessions))
+          store.set(agentSessionsAtom, (prev) => mergeFetchedAgentSessions(prev, sessions, store.get(revokedAgentSessionIdsAtom)))
         })
         .catch(console.error)
     })
 
     const cleanupSessionUpdated = window.electronAPI.onAgentSessionUpdated(({ session }) => {
-      store.set(agentSessionsAtom, (previous) => upsertAgentSession(previous, session))
-      store.set(tabsAtom, (tabs) => updateTabTitle(tabs, session.id, session.title))
-      store.set(draftSessionIdsAtom, (previous) => syncDraftSessionId(previous, session))
+      const applyUpdate = (): void => {
+        if (!effectActive || store.get(revokedAgentSessionIdsAtom).has(session.id)) return
+        store.set(agentSessionsAtom, (previous) => upsertAgentSession(previous, session))
+        store.set(tabsAtom, (tabs) => updateTabTitle(tabs, session.id, session.title))
+        store.set(draftSessionIdsAtom, (previous) => syncDraftSessionId(previous, session))
+      }
+      if (canOpenOrdinaryWorkTab(store.get(agentSessionsAtom), session.id)) {
+        applyUpdate()
+      } else {
+        void ensureOrdinaryWorkTabOwner(store, session.id, window.electronAPI.getAgentSessionMeta,
+          () => effectActive && !store.get(revokedAgentSessionIdsAtom).has(session.id),
+        ).then((authorized) => { if (authorized) applyUpdate() })
+      }
     })
 
     // 独立规划窗口启动 Todo Agent 后，主进程通过 TODO_AGENT_SESSION_READY 把会话交接给主窗口。
@@ -1626,19 +1709,28 @@ export function useGlobalAgentListeners(options: UseGlobalAgentListenersOptions 
     // 与 PlanningView.startTodoInWorkspace（主窗口中启动）保持同等效果，补齐跨窗口断链。
     const cleanupTodoSessionReady = window.electronAPI.onTodoAgentSessionReady(
       ({ todo, session }) => {
-        if (!isAgentWorkspaceIdVisible(session.workspaceId, store.get(agentWorkspacesAtom))) return
-        store.set(agentSessionsAtom, (previous) => upsertAgentSession(previous, session))
-        if (session.workspaceId) {
-          store.set(currentAgentWorkspaceIdAtom, session.workspaceId)
-          window.electronAPI.updateSettings({ agentWorkspaceId: session.workspaceId })
-            .catch(console.error)
+        const activateTodo = (): void => {
+          if (!effectActive || store.get(revokedAgentSessionIdsAtom).has(session.id)
+            || !isAgentWorkspaceIdVisible(session.workspaceId, store.get(agentWorkspacesAtom))) return
+          store.set(agentSessionsAtom, (previous) => upsertAgentSession(previous, session))
+          if (session.workspaceId) {
+            store.set(currentAgentWorkspaceIdAtom, session.workspaceId)
+            window.electronAPI.updateSettings({ agentWorkspaceId: session.workspaceId })
+              .catch(console.error)
+          }
+          makeNavigateToSession(session.id, session.title)()
+          store.set(agentPendingPromptAtom, {
+            sessionId: session.id,
+            message: buildTodoAgentPrompt(todo.id, session.agentRuntime ?? 'pi', todo),
+          })
         }
-        makeNavigateToSession(session.id, session.title)()
-        store.set(agentPendingPromptAtom, {
-          sessionId: session.id,
-          // non-Pi runtime 需要内联 Todo 快照，Pi 走 mcp__planning__get_todo。
-          message: buildTodoAgentPrompt(todo.id, session.agentRuntime ?? 'pi', todo),
-        })
+        if (canOpenOrdinaryWorkTab(store.get(agentSessionsAtom), session.id)) {
+          activateTodo()
+        } else {
+          void ensureOrdinaryWorkTabOwner(store, session.id, window.electronAPI.getAgentSessionMeta,
+            () => effectActive && !store.get(revokedAgentSessionIdsAtom).has(session.id),
+          ).then((authorized) => { if (authorized) activateTodo() })
+        }
       },
     )
 

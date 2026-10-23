@@ -1,0 +1,162 @@
+{
+  "templateId": "g03-t10",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "item-a",
+      "subjectId": "g03-t10-subject-a",
+      "title": "SYNTHETIC 实体宣传品布设与公共位置使用对象A",
+      "businessType": "g03-publicity-placement",
+      "scenario": "p-poster",
+      "scenarioSource": {
+        "sourceId": "synthetic-choice",
+        "sourceVersionId": "synthetic-g03-t10-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "c-commercial",
+          "applicability": "applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t10-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-physical-risk",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t10-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-linked-event",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t10-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-change",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t10-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-restricted-site",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t10-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-external",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t10-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-multiple-points",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t10-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-dynamic-qr",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t10-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-sponsor",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t10-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "item-b",
+      "subjectId": "g03-t10-subject-b",
+      "title": "SYNTHETIC 实体宣传品布设与公共位置使用对象B",
+      "businessType": "g03-publicity-placement",
+      "scenario": "p-banner",
+      "scenarioSource": {
+        "sourceId": "synthetic-choice",
+        "sourceVersionId": "synthetic-g03-t10-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "c-commercial",
+          "applicability": "unknown",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t10-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "c-physical-risk",
+          "applicability": "applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t10-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-linked-event",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t10-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-change",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t10-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-restricted-site",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t10-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-external",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t10-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-multiple-points",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t10-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-dynamic-qr",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t10-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-sponsor",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t10-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

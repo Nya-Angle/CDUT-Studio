@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "domain": "G07",
+  "businessTemplate": "G07-T04",
+  "technicalTemplateId": "g07-t04",
+  "commonCodeSha": "a7a6a11d4840ad64cfc858c17b35f35180adf063",
+  "original": {
+    "branchCommit": "4f914de38ec971d119fbeef20f44d82939aa70de",
+    "gitBlobSha1": "9a629e8c6e6e9bf4c348fe413c32b564e50f580d",
+    "path": "docs/design/review-agent/business-templates/G07/G07-T04/C-e0-r02/C-v0.1-original/G07-T04_正式业务模板_MD_v0.1.md",
+    "version": "C-v0.1",
+    "contentBytesUtf8": 81721,
+    "sha256": "009a13599a34a5a78407a953d19810637636ee2f4dd4821d12cb9a44bad54bb5",
+    "sha256VerifiedBy": "G07 GitHub Actions technical test"
+  },
+  "objectBusinessType": "g07-settlement-line",
+  "ruleCount": 36,
+  "extractedSourceLineCount": 1029,
+  "sourceMdLocation": "docs/design/review-agent/acceptance/d4-g07-build/T04/source/frozen-C-v0.1.md",
+  "moduleCount": 15,
+  "authoredTaskCount": 66,
+  "sourceBindingCount": 66,
+  "scenarios": {
+    "core": "core",
+    "structuredConditions": [
+      "BR-01",
+      "BR-02",
+      "BR-03",
+      "BR-04",
+      "BR-05",
+      "BR-06",
+      "BR-07",
+      "BR-08",
+      "BR-09",
+      "BR-10",
+      "BR-11",
+      "BR-12"
+    ],
+    "semanticOnlyConditions": [
+      "BR-13",
+      "BR-14",
+      "BR-15",
+      "BR-16",
+      "BR-17",
+      "BR-18"
+    ]
+  },
+  "sharedLocks": [],
+  "status": "PARTIAL",
+  "technicalPreReviewOnly": true,
+  "publicationAllowed": false,
+  "knownGaps": [
+    {
+      "type": "SEMANTIC_ONLY_CONDITION",
+      "anchor": "BR-13",
+      "detail": "COMMON-02 单模板附加条件轴最大13；本分支仅留在核心规则原文及原件引用，不假称结构化条件已执行",
+      "owner": "ENGINE_OR_AUTHORING"
+    },
+    {
+      "type": "SEMANTIC_ONLY_CONDITION",
+      "anchor": "BR-14",
+      "detail": "COMMON-02 单模板附加条件轴最大13；本分支仅留在核心规则原文及原件引用，不假称结构化条件已执行",
+      "owner": "ENGINE_OR_AUTHORING"
+    },
+    {
+      "type": "SEMANTIC_ONLY_CONDITION",
+      "anchor": "BR-15",
+      "detail": "COMMON-02 单模板附加条件轴最大13；本分支仅留在核心规则原文及原件引用，不假称结构化条件已执行",
+      "owner": "ENGINE_OR_AUTHORING"
+    },
+    {
+      "type": "SEMANTIC_ONLY_CONDITION",
+      "anchor": "BR-16",
+      "detail": "COMMON-02 单模板附加条件轴最大13；本分支仅留在核心规则原文及原件引用，不假称结构化条件已执行",
+      "owner": "ENGINE_OR_AUTHORING"
+    },
+    {
+      "type": "SEMANTIC_ONLY_CONDITION",
+      "anchor": "BR-17",
+      "detail": "COMMON-02 单模板附加条件轴最大13；本分支仅留在核心规则原文及原件引用，不假称结构化条件已执行",
+      "owner": "ENGINE_OR_AUTHORING"
+    },
+    {
+      "type": "SEMANTIC_ONLY_CONDITION",
+      "anchor": "BR-18",
+      "detail": "COMMON-02 单模板附加条件轴最大13；本分支仅留在核心规则原文及原件引用，不假称结构化条件已执行",
+      "owner": "ENGINE_OR_AUTHORING"
+    },
+    {
+      "type": "POLICY",
+      "detail": "校本现行制度、授权与资金/预算/税票/银行权威事实缺少有权认证；源以 policy-candidate/unknown 进入 D2，不能输出正式符合或付款",
+      "owner": "POLICY_EXTERNAL"
+    },
+    {
+      "type": "HUMAN_ONLY",
+      "detail": "自动可付净额、实付、会计冲销或结清非默认能力；只生成待财务核实建议，不直接算账",
+      "owner": "HUMAN_EXTERNAL"
+    }
+  ],
+  "sharedModuleLocks": [],
+  "sourceSections": {
+    "status": "ALL_HEADING_SECTIONS_LINKED_TO_TASK_OR_RULEBOOK",
+    "locatorFile": "T04/source/coverage-ledger.json"
+  },
+  "technicalEvidence": {
+    "workflowRunId": 39051441393,
+    "workflowStatus": "SUCCESS",
+    "runtimePlan": "runtime/T04/d2-plan.json",
+    "piRun": "runtime/T04/pi-run.json",
+    "d3Export": "runtime/T04/d3-export.json",
+    "verdict": "runtime/T04/technical-verdict.json",
+    "subjects": 2,
+    "checks": 132,
+    "ruleChecks": 72,
+    "d3Fingerprint": "33dfd7491cfe8cedd9421791a1d99b6fbb678d4d2be5668c9381586f40319176",
+    "d2Fingerprint": "69888173cf49fe73d0e4458ba632a46ac5358f48b00526b8cfc3391719895971",
+    "piComplete": true,
+    "onlineModelAccuracyVerified": false
+  },
+  "remaining": {
+    "engine": "Additive condition axes limited to 13 and explicit complete BR fidelity not proven",
+    "policy": "Authority/effective versions unconfirmed",
+    "external": "No live school accounting/OA/official payment connectors",
+    "human": "No auto payable net/ledger closeout",
+    "test": "Original D private Gold not read; no online model or blind semantic audit"
+  },
+  "productionUsable": false
+}

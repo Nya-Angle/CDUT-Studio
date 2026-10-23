@@ -23,6 +23,8 @@ export function createEmptyCase(input: {
   academicYear: string
   /** 审核领域包 ID（P1/D14）；缺省时由解析函数回落综测包 */
   domainPackId?: string
+  /** 项目创建时固定使用的已发布模板版本。 */
+  reviewTemplate?: { templateId: string; version: number }
 }): ReviewCase {
   const now = new Date().toISOString()
   const reviewCase: ReviewCase = {
@@ -39,6 +41,7 @@ export function createEmptyCase(input: {
     evidences: [],
     isDemo: false,
     ...(input.domainPackId ? { domainPackId: input.domainPackId } : {}),
+    ...(input.reviewTemplate ? { reviewTemplate: input.reviewTemplate } : {}),
   }
   saveCase(reviewCase)
   console.log(`[审核专区] 已创建案卷: ${reviewCase.id}（${reviewCase.title}）`)

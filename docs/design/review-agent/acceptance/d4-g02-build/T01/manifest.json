@@ -1,0 +1,144 @@
+{
+  "schema": "g02-d4-build-manifest-v1",
+  "templateId": "g02-t01-review",
+  "businessOriginal": {
+    "filename": "G02-T01_正式业务模板_MD_v0.1.md",
+    "sha256": "9d16ba80053266dfee3c89e4fbccf1bbd8b408d58c4189e8f7f12bc0a7b235cb",
+    "version": "C-v0.1",
+    "lines": 680,
+    "obtainedFrom": "ChatGPT Library raw file; bytes independently SHA256-verified; original not committed",
+    "originalStage": "BUSINESS_MD_DRAFT_WITH_GAPS"
+  },
+  "fixedCommonParent": "a7a6a11d4840ad64cfc858c17b35f35180adf063",
+  "workspaceFile": "workspace.json",
+  "selectionFile": "selection.json",
+  "caseFile": "case.json",
+  "coverageFile": "coverage-ledger.json",
+  "moduleVersions": [
+    {
+      "moduleId": "g02-t01-rules-1",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t01-rules-2",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t01-rules-3",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t01-rules-4",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t01-contract",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t01-axis-act-new",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t01-axis-act-change",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t01-axis-act-renew",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t01-axis-act-terminate",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t01-axis-multi-source",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t01-axis-delegated",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t01-axis-third-party",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t01-axis-personal-data",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t01-axis-sensitive-data",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t01-axis-api-delivery",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t01-axis-policy-confirmed",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t01-axis-source-approved",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t01-axis-delivered",
+      "version": 1,
+      "scope": "workspace-local"
+    }
+  ],
+  "sharedModuleLocks": [],
+  "ruleSourceCount": 32,
+  "coverageEntries": 158,
+  "notes": [
+    "C原文不是学校现行校规",
+    "技术预审不自动批准",
+    "真实 Gold 未读",
+    "T03 v0.1.1 不继承旧 v0.1 E/D 签署"
+  ],
+  "status": "PARTIAL",
+  "syntheticOnly": true,
+  "publicationAllowed": false,
+  "technicalVerification": {
+    "sourceSHA256Verified": true,
+    "authoringValidation": "PASS",
+    "d3TransferRoundTrip": "PASS",
+    "d2Plan": "PASS",
+    "d2Subjects": 2,
+    "d2Checks": 106,
+    "d2Fingerprint": "67a401f5e9ecfe5e9bd2f7afee5e32f0d9d5f6f8a596a5731bc6aae7888bb145",
+    "d2PlanFile": "runtime-plan.json",
+    "d2Cli": "PASS",
+    "syntheticMaterialAndScopedEvidenceLink": "PASS",
+    "piPreparedSubmittedVerified": "PASS",
+    "piReceiptFile": "pi-receipt.json",
+    "testRunUrl": "https://github.com/Fuck-GH-Admin/cdut-studio-review-agent/actions/runs/39050708080",
+    "testCount": "13 total over G02 / 0 failures",
+    "evidenceArtifact": "https://github.com/Fuck-GH-Admin/cdut-studio-review-agent/actions/runs/39050708080/artifacts/12107312149"
+  },
+  "incompleteResponsibilities": [
+    "2026年校本政策适用版本与审批角色未由学校权威来源核实",
+    "正式部门审批与系统执行事件未接入可信学校端接口",
+    "复杂跨文书合法替代关系及校务阶段状态依赖人审/外部来源",
+    "尚未开展独立Gold及在线模型准确率验证"
+  ]
+}

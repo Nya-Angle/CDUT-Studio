@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CDUT Studio · 离线任务回复</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#1c2731;background:#f4f7f8}
+*{box-sizing:border-box}body{margin:0}.wrap{max-width:850px;margin:36px auto;padding:0 18px 60px}
+header{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:18px}
+h1{font-size:23px;margin:0}h2{font-size:18px;margin:0 0 14px}p{line-height:1.6}
+.card{background:#fff;border:1px solid #dbe3e7;border-radius:14px;padding:22px;margin-bottom:16px}
+.subtle{font-size:13px;color:#60717c}.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+label{display:block;font-weight:600;margin:12px 0 6px}textarea,input[type=text],input[type=number]{width:100%;font:inherit;border:1px solid #bfcdd4;border-radius:8px;padding:10px;background:#fff}
+textarea{min-height:110px}button,.filepick{border:0;border-radius:9px;background:#087c70;color:white;font-weight:600;cursor:pointer;padding:11px 16px;font:inherit}
+button:disabled{background:#b5c6c8;cursor:default}.filepick input{display:none}
+.dim{display:grid;grid-template-columns:minmax(130px,1fr) 125px auto;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #eef1f3}
+.dim input[type=number]{width:110px}.error{color:#ad2929}.ok{color:#16704e}
+.pill{font-size:12px;padding:4px 8px;border-radius:99px;background:#e0f4ee;color:#137562}
+.mini{font-size:12px;color:#6d7780}.hidden{display:none}
+</style>
+</head>
+<body><div class="wrap">
+<header><div><h1>CDUT Studio · 独立离线回复</h1><div class="subtle">无需联网或登录学校系统。本地填写，不上传任何数据。</div></div><span class="pill">本地身份 · 非校方认证</span></header>
+<section class="card"><h2>1. 打开任务包</h2><p class="subtle">选择由审核负责人导出的 T09 任务 JSON。请使用新的工作副本，不在原始案卷中直接填写。</p>
+<label class="filepick">选择任务包 <input id="taskFile" type="file" accept=".json,application/json"></label><div id="notice" class="subtle" role="status" style="margin-top:12px"></div></section>
+<section class="card hidden" id="taskCard">
+<h2 id="taskTitle">2. 填写回复</h2><div id="caseInfo" class="subtle"></div>
+<div id="taskInfo"></div><div id="replyForm"></div>
+<div class="row" style="margin-top:18px"><button id="exportButton">生成并下载回复包</button><span class="mini">导出后请把回复 JSON 交给原案卷负责人导入。</span></div>
+</section>
+<section class="card"><h2>说明</h2><p class="subtle">回复会携带任务 ID、案卷/模板版本、填写角色与完整性摘要。文件摘要用于检查误改或损坏，不代表实名认证。负责人导入时还需核对当前案卷版本、目标补件或评分分配，并确认正式应用。旧包不会自动覆盖新数据。</p></section>
+</div>
+<script>
+(() => {
+'use strict';
+const $ = id => document.getElementById(id);
+let task = null, attached = [];
+const notice = (message, bad=false) => { $('notice').textContent=message;$('notice').className=bad?'error':'ok'; };
+const canon = v => {
+  if (v===null || typeof v!=='object') return JSON.stringify(v) ?? 'null';
+  if (Array.isArray(v)) return '['+v.map(canon).join(',')+']';
+  return '{'+Object.keys(v).filter(k=>v[k]!==undefined).sort().map(k=>JSON.stringify(k)+':'+canon(v[k])).join(',')+'}';
+};
+const sha = async data => {
+  const buf=typeof data==='string'?new TextEncoder().encode(data):data;
+  const digest=await crypto.subtle.digest('SHA-256',buf);
+  return [...new Uint8Array(digest)].map(x=>x.toString(16).padStart(2,'0')).join('');
+};
+const uuid=()=>crypto.randomUUID();
+const own = obj=>{const {hash,...rest}=obj;return rest;};
+const verify=async obj=>obj && obj.format==='cdut-review-offline/1' && obj.type==='task' && typeof obj.hash==='string' && await sha(canon(own(obj)))===obj.hash;
+const el=(tag,text)=>{const a=document.createElement(tag);if(text!==undefined)a.textContent=text;return a;};
+const download=(name,body)=>{
+  const url=URL.createObjectURL(new Blob([body],{type:'application/json;charset=utf-8'}));
+  const anchor=el('a');anchor.href=url;anchor.download=name;document.body.appendChild(anchor);anchor.click();anchor.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+};
+const readableFile=async file=>{
+  const data=new Uint8Array(await file.arrayBuffer());const hash=await sha(data);
+  let binary='';for(let i=0;i<data.length;i+=8192)binary+=String.fromCharCode(...data.subarray(i,i+8192));
+  return {name:file.name,mimeType:file.type||'application/octet-stream',dataBase64:btoa(binary),sha256:hash};
+};
+function renderTask(){
+ const box=$('taskCard'),form=$('replyForm'),desc=$('taskInfo');
+ box.classList.remove('hidden');form.replaceChildren();desc.replaceChildren();
+ $('caseInfo').textContent='案卷：'+task.caseId+' ｜ 版本 '+task.baseRevision+' ｜ 收件人：'+task.recipient.actorId;
+ const t=task.task;
+ const fields=Object.entries(task.publicContext?.fields||{});
+ if(fields.length){
+   const section=el('div');section.append(el('h3','可见申请信息'));
+   for(const [key,value] of fields)section.append(el('p',key+'：'+(typeof value==='object'?JSON.stringify(value):String(value))));
+   desc.append(section);
+ }
+ if(task.assets?.length){
+   const section=el('div');section.append(el('h3','随任务提供的资料'));
+   for(const asset of task.assets){
+     const button=el('button','查看 / 保存：'+asset.name);
+     button.type='button';button.style.margin='4px 8px 4px 0';
+     button.addEventListener('click',()=>{
+       const binary=atob(asset.dataBase64);
+       const bytes=Uint8Array.from(binary,x=>x.charCodeAt(0));
+       const url=URL.createObjectURL(new Blob([bytes],{type:asset.mimeType||'application/octet-stream'}));
+       const a=el('a');a.href=url;a.download=asset.name;document.body.append(a);a.click();a.remove();
+       setTimeout(()=>URL.revokeObjectURL(url),1000);
+     });
+     section.append(button);
+   }
+   desc.append(section);
+ }
+ $('taskTitle').textContent='2. '+(t.kind==='student-reply'?'学生补件回复':'评委独立评分');
+ if(t.kind==='student-reply'){
+  desc.append(el('p','补件事项：'+t.reason));
+  desc.append(el('p','需要提供：'+t.requiredElements.join('、')));
+  if(t.deadline)desc.append(el('p','期限：'+t.deadline));
+  const label=el('label','补件说明');label.htmlFor='replyNote';form.append(label);
+  const note=el('textarea');note.id='replyNote';note.placeholder='说明本次补充了哪些证明、对应哪个事项';form.append(note);
+  form.append(el('label','补交材料（可多选，将完整文件放入离线回复包）'));
+  const upload=el('input');upload.type='file';upload.multiple=true;upload.id='attachments';form.append(upload);
+  const status=el('div');status.className='subtle';status.id='assetStatus';form.append(status);
+  upload.addEventListener('change',async()=>{
+   try{
+    attached=[];status.textContent='正在读取附件…';
+    for(const file of upload.files)attached.push(await readableFile(file));
+    status.textContent='已装入 '+attached.length+' 份附件（随包携带原始字节）';
+   }catch(err){attached=[];status.textContent='读取附件失败：'+err.message;}
+  });
+ }else{
+  desc.append(el('p','评分任务：'+t.assignmentId+' ｜ 量表版本 '+t.rubricVersion));
+  for(const dimension of t.dimensions){
+   const row=el('div');row.className='dim';row.dataset.dimensionId=dimension.id;
+   row.append(el('span',dimension.title+'（'+dimension.min+'～'+dimension.max+'）'));
+   const number=el('input');number.type='number';number.step='any';number.min=dimension.min;number.max=dimension.max;number.placeholder='请输入分数';number.className='score';row.append(number);
+   const lab=el('label');lab.style.margin='0';const check=el('input');check.type='checkbox';check.className='na';check.disabled=!dimension.allowNA;check.addEventListener('change',()=>{number.disabled=check.checked;if(check.checked)number.value='';});lab.append(check,el('span',' N/A'));row.append(lab);form.append(row);
+  }
+  form.append(el('label','公开评语'));const feedback=el('textarea');feedback.id='feedback';feedback.placeholder='向申请人公开的评语';form.append(feedback);
+  form.append(el('label','内部评语（仅向组织者提交）'));const internal=el('textarea');internal.id='internal';form.append(internal);
+ }
+}
+$('taskFile').addEventListener('change',async(event)=>{
+  try{
+   const file=event.target.files?.[0];if(!file)return;
+   const data=JSON.parse(await file.text());
+   if(!await verify(data))throw Error('不是有效的任务包，或文件摘要已变化');
+   if(!data.caseId || !data.recipient?.actorId || !['student-reply','judge-rating-reply'].includes(data.task?.kind))throw Error('任务信息不完整');
+   for(const asset of data.assets||[]){
+    const binary=atob(asset.dataBase64);const bytes=Uint8Array.from(binary,x=>x.charCodeAt(0));
+    if(await sha(bytes)!==asset.sha256)throw Error('原件附件哈希不一致');
+   }
+   task=data;attached=[];notice('任务包已读取且摘要一致');renderTask();
+  }catch(err){task=null;$('taskCard').classList.add('hidden');notice('无法打开任务包：'+err.message,true);}
+});
+$('exportButton').addEventListener('click',async()=>{
+ try{
+  if(!task)return;
+  const t=task.task;let reply;
+  if(t.kind==='student-reply'){
+   const note=$('replyNote').value.trim();
+   if(!note && !attached.length)throw Error('请输入说明或上传补件材料');
+   reply={kind:t.kind,supplementId:t.supplementId,note,assets:attached};
+  }else{
+   const scores=[];
+   for(const dimension of t.dimensions){
+    const row=[...document.querySelectorAll('.dim')].find(e=>e.dataset.dimensionId===dimension.id);
+    const na=row.querySelector('.na').checked,field=row.querySelector('.score');
+    if(!na && field.value.trim()==='')throw Error('请填写 '+dimension.title+'，或在允许时选 N/A');
+    const value=na?null:Number(field.value);
+    if(!na && (!Number.isFinite(value)||value<dimension.min||value>dimension.max))throw Error(dimension.title+' 超出范围');
+    scores.push({dimensionId:dimension.id,score:value,na});
+   }
+   reply={kind:t.kind,assignmentId:t.assignmentId,rubricVersion:t.rubricVersion,
+      scores,publicFeedback:$('feedback').value.trim(),internalNotes:$('internal').value.trim()};
+  }
+  const base={type:'reply',format:'cdut-review-offline/1',packageId:uuid(),actionId:uuid(),
+    caseId:task.caseId,baseRevision:task.baseRevision,lock:task.lock,createdAt:new Date().toISOString(),
+    requestPackageId:task.packageId,requestHash:task.hash,respondent:task.recipient,reply};
+  const pkg={...base,hash:await sha(canon(base))};
+  download('cdut-'+t.kind+'-'+task.caseId+'-'+pkg.packageId+'.json',JSON.stringify(pkg,null,2));
+  notice('回复包已生成。请把文件交回原案卷负责人；此操作尚未提交业务数据。');
+ }catch(err){notice('无法生成回复包：'+err.message,true);}
+});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "templateId": "special-campus-card",
+  "version": 1,
+  "scenario": "family",
+  "scenarioObjectKey": "family-card",
+  "targets": [
+    {
+      "objectKey": "family-card",
+      "subjectId": "d2-family",
+      "title": "家属卡待审对象",
+      "kind": "campus-card",
+      "scenario": "family"
+    }
+  ]
+}

@@ -28,6 +28,7 @@ afterAll(() => rmSync(CONFIG_DIR, { recursive: true, force: true }))
 const actor = { actorId: 'reviewer-1', actorSource: 'local' as const, role: 'reviewer' as const }
 const student = { actorId: 'student-1', actorSource: 'local' as const, role: 'student' as const }
 const teacher = { actorId: 'teacher-1', actorSource: 'local' as const, role: 'teacher' as const }
+const workflowSystem = { actorId: 'trusted-auto-stage', actorSource: 'system' as const, role: 'system' as const }
 
 const store = { getTemplate, saveDraft, publish: publishTemplate }
 seedComprehensiveFixture(store)
@@ -55,7 +56,7 @@ describe('全链路旅程（自检探查）', () => {
   let run: ReviewRunV2 | undefined
 
   test('1. 建案 → 带槽登记两个真实文件 → 提交（状态+首任务一次落盘）', async () => {
-    const created = await createCaseFromTemplate('comprehensive-assessment-v2', 2, { title: '旅程测试', fieldValues: { studentName: '旅程同学', studentId: 'J001', academicYear: '2025-2026', applicant: '旅程同学' }, subjects: [{ id: 's1', title: '省级一等奖', type: 'item', fieldValues: { category: 'competition', level: 'national-1', declaredScore: 8, eventId: 'E1' } }] }, actor, caseId)
+    const created = await createCaseFromTemplate('comprehensive-assessment-v2', 2, { title: '旅程测试', fieldValues: { studentName: '旅程同学', studentId: 'J001', academicYear: '2025-2026', applicant: '旅程同学' }, subjects: [{ id: 's1', title: '省级一等奖', type: 'item', fieldValues: { category: 'competition', level: 'national-1', declaredScore: 8, activityDate: '2026-09-01', eventId: 'E1' } }] }, actor, caseId)
     expect(created.ok).toBe(true)
     const fileA = join(CONFIG_DIR, 'form.txt')
     writeFileSync(fileA, '综合测评申报表：姓名 旅程同学，等级 national-1')
@@ -81,7 +82,7 @@ describe('全链路旅程（自检探查）', () => {
   test('2. 真实执行器运行：引用校验过滤伪造 observations，规则白名单过滤伪造 checks', async () => {
     const template = getTemplate('comprehensive-assessment-v2', 2)!
     const aggregate = readAggregate(caseId)!
-    const executors: Record<NodeKind, NodeExecutor> = assembleV2Executors(aggregate!, template, { client: fakeClient as never })
+    const executors: Record<NodeKind, NodeExecutor> = await assembleV2Executors(aggregate!, template, { client: fakeClient as never })
     run = await runReviewCaseV2(aggregate.caseV2, template, executors, {})
     expect(run.status).toBe('completed')
     // extract 产物：伪造引用被丢弃（只剩合法引用的 observations）
@@ -90,11 +91,21 @@ describe('全链路旅程（自检探查）', () => {
     // summarize 产物：伪造规则 FAKE 被白名单过滤
     expect(run.checks.every((check) => (check as { ruleId: string }).ruleId !== 'FAKE')).toBeTrue()
     expect(run.coverage.documents.length).toBeGreaterThan(0) // 材料账本真实产出
+    // 真实模板首阶段属于 system，必须由可信系统处理并推进至 reviewer 初审。
+    const before = readAggregate(caseId)!
+    const automaticTask = before.tasks.find((task) => task.status === 'open' && task.stageId === 'auto-check')!
+    const advanced = await recordStageDecision(caseId, {
+      requestId: 'j-auto-stage-pass', actor: workflowSystem, expectedRevision: before.caseV2.revision,
+      payload: { action: 'stage-pass', taskId: automaticTask.id, reason: '自动核对完成，交付初审' },
+    }, getTemplate('comprehensive-assessment-v2', 2)!)
+    expect(advanced.ok).toBeTrue()
+    expect(readAggregate(caseId)!.tasks.some((task) =>
+      task.stageId === 'first-review' && task.assigneeRole === 'reviewer' && task.status === 'open')).toBeTrue()
   })
 
   test('3. 退回补件 → 判不足 → 再次回复（修复前被拒）→ 判满足 → 原阶段任务回流', async () => {
     let agg = readAggregate(caseId)!
-    const openTask = agg.tasks.find((task) => task.status === 'open')!
+    const openTask = agg.tasks.find((task) => task.status === 'open' && task.stageId === 'first-review')!
     const back = await recordStageDecision(caseId, { requestId: 'j-dec-1', actor, expectedRevision: agg.caseV2.revision, payload: { action: 'return-for-supplement', taskId: openTask.id, reason: '缺日期要素', supplementRequiredElements: ['日期'], supplementReason: '证书需含日期' } }, getTemplate('comprehensive-assessment-v2', 2)!)
     expect(back.ok).toBe(true)
     agg = back.ok ? back.aggregate : agg
@@ -104,8 +115,18 @@ describe('全链路旅程（自检探查）', () => {
     expect(ins.ok).toBe(true)
     agg = ins.ok ? ins.aggregate : agg
     expect(agg.caseV2.stage).toBe('awaiting-supplement')
+    // RUN-19：补件回复必须引用“请求后新登记”的原件；这里走真实材料登记，而不是复用旧版本。
+    const newCert = join(CONFIG_DIR, 'journey-new-cert.txt')
+    writeFileSync(newCert, '新证书：省级一等奖，颁发单位 省教育厅，日期 2026-10-01')
+    const regNew = await registerMaterial(caseId, {
+      requestId: 'j-reg-sup-new', actor, expectedRevision: agg.caseV2.revision,
+      payload: { sourcePath: newCert, role: 'evidence', materialSlotId: 'certificates' },
+    })
+    expect(regNew.ok).toBeTrue()
+    agg = readAggregate(caseId)!
+    const newCertVersionId = agg.caseV2.documents.find((document) => document.fileName === 'journey-new-cert.txt')!.versionId
     // 再次回复（修复前 INVALID_TRANSITION）
-    const reply = await respondSupplementV2(caseId, { requestId: 'j-sup-2', actor: student, expectedRevision: agg.caseV2.revision, payload: { supplementId: sup.id, note: '已补含日期的新证书', documentVersionIds: [agg.caseV2.documents[1]!.versionId] } })
+    const reply = await respondSupplementV2(caseId, { requestId: 'j-sup-2', actor: student, expectedRevision: agg.caseV2.revision, payload: { supplementId: sup.id, note: '已补含日期的新证书', documentVersionIds: [newCertVersionId] } })
     expect(reply.ok).toBe(true)
     agg = reply.ok ? reply.aggregate : agg
     expect(agg.supplements[0]!.responses).toHaveLength(1)
@@ -115,14 +136,21 @@ describe('全链路旅程（自检探查）', () => {
     expect(done.ok).toBe(true)
     agg = done.ok ? done.aggregate : agg
     expect(agg.caseV2.stage).toBe('reviewing')
-    // 回流任务 = 退回来源阶段（本旅程从 auto-check 退回，回流同阶段）
+    // 回流任务 = 退回来源阶段（实际为 reviewer 初审 first-review）
     expect(agg.tasks.some((task) => task.stageId === sup.originStageId && task.status === 'open')).toBeTrue()
   })
 
   test('4. 终审驳回 → 申诉更正 → 投影立即终审生效且 actor=复核人', async () => {
     let agg = readAggregate(caseId)!
-    const openTask = agg.tasks.find((task) => task.status === 'open')!
-    const reject = await recordStageDecision(caseId, { requestId: 'j-dec-2', actor, expectedRevision: agg.caseV2.revision, payload: { action: 'final-reject', taskId: openTask.id, reason: '材料存疑' } }, getTemplate('comprehensive-assessment-v2', 2)!)
+    const firstTask = agg.tasks.find((task) => task.status === 'open' && task.stageId === 'first-review')!
+    const firstPass = await recordStageDecision(caseId, {
+      requestId: 'j-review-pass', actor, expectedRevision: agg.caseV2.revision,
+      payload: { action: 'stage-pass', taskId: firstTask.id, reason: '初审核对后送终审' },
+    }, getTemplate('comprehensive-assessment-v2', 2)!)
+    expect(firstPass.ok).toBeTrue()
+    agg = firstPass.ok ? firstPass.aggregate : agg
+    const openTask = agg.tasks.find((task) => task.status === 'open' && task.stageId === 'final-review')!
+    const reject = await recordStageDecision(caseId, { requestId: 'j-dec-2', actor: teacher, expectedRevision: agg.caseV2.revision, payload: { action: 'final-reject', taskId: openTask.id, reason: '材料存疑' } }, getTemplate('comprehensive-assessment-v2', 2)!)
     expect(reject.ok).toBe(true)
     agg = reject.ok ? reject.aggregate : agg
     expect(agg.caseV2.stage).toBe('decided')

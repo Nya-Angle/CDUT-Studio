@@ -86,6 +86,9 @@ export * from './planning'
 export * from './review'
 export * from './review-v2'
 export * from './review-v2-contracts'
+export * from './review-authoring-v1'
+export * from './review-d2'
+export * from './review-d3'
 
 // CDUT 专区特区账户相关类型
 export * from './cdut'
@@ -95,6 +98,15 @@ export * from './study'
 
 // 下一代高精 PDF 解析引擎（全要素文档 AST 契约）
 export * from './pdf'
+
+// Review V3 C0 frozen cross-track contracts (no second Case store).
+export * from './review-v3-c0'
+
+// Review V3 signed CR-A-001 proposal-only event transport; C0/1 stays frozen.
+export * from './review-v3-execution'
+
+// Review V3 C-owned durable Run evidence snapshot; not a Decision/Gold ACK.
+export * from './review-v3-run'
 
 // CDUT Science (CSLab) 相关类型
 export * from './cslab'

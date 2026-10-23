@@ -1,0 +1,64 @@
+{
+  "templateId": "d4-g04-t06",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "object-a",
+      "subjectId": "subject-a",
+      "title": "校内群体活动安全审批与备案 合成对象 A",
+      "businessType": "g04-event-session",
+      "scenario": "meeting",
+      "scenarioSource": {
+        "sourceId": "src-synthetic",
+        "sourceVersionId": "synthetic-t06-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "public-event",
+          "applicability": "applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t06-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "multi-session",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t06-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "object-b",
+      "subjectId": "subject-b",
+      "title": "校内群体活动安全审批与备案 合成对象 B",
+      "businessType": "g04-event-session",
+      "scenario": "other-event",
+      "scenarioSource": {
+        "sourceId": "src-synthetic",
+        "sourceVersionId": "synthetic-t06-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "public-event",
+          "applicability": "unknown",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t06-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "multi-session",
+          "applicability": "applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t06-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

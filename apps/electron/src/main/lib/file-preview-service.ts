@@ -375,8 +375,19 @@ export function readFileAsDataUrl(filePath: string, basePaths?: string[]): { res
   }
 }
 
+export interface PreparePdfPreviewOptions {
+  /**
+   * 只栅格化这些页（1 基）。
+   *
+   * 逐页截图（审核材料登记、Agent 单页核验）只需要目标页；若不限定，查看器会在
+   * 每次加载时先把整份文档全量栅格化一遍，再渲染目标页。26 页的真实 PDF 实测
+   * 单次全量栅格化约 34 秒，逐页串行截图会放大成几十倍等待（历史「登记卡住」根因）。
+   */
+  pages?: number[]
+}
+
 /** 为内联 PDF 预览生成临时 HTML 文件（使用 cdut-file:// 加载 PDF，无体积膨胀） */
-export async function preparePdfPreview(filePath: string, basePaths?: string[]): Promise<{ resolvedPath: string; tmpHtmlUrl: string } | null> {
+export async function preparePdfPreview(filePath: string, basePaths?: string[], options: PreparePdfPreviewOptions = {}): Promise<{ resolvedPath: string; tmpHtmlUrl: string } | null> {
   const safePath = resolveTargetPath(filePath, basePaths)
   if (!existsSync(safePath)) return null
   const st = statSync(safePath)
@@ -387,6 +398,8 @@ export async function preparePdfPreview(filePath: string, basePaths?: string[]):
   let pdfWorkerUrl: string
   let standardFontDataUrl: string
   let registerFilePath: (path: string) => string
+  // 去重并保留调用方顺序：只渲染显式要求的页，未要求则空数组表示整份文档。
+  const initialPages = [...new Set((options.pages ?? []).filter((page) => Number.isInteger(page) && page >= 1))]
   try {
     const { registerProferDirectoryPath, registerProferFilePath } = await import('./local-file-protocol')
     registerFilePath = registerProferFilePath
@@ -481,6 +494,8 @@ export async function preparePdfPreview(filePath: string, basePaths?: string[]):
     const pdfScriptUrl = ${JSON.stringify(pdfScriptUrl)};
     const pdfWorkerUrl = ${JSON.stringify(pdfWorkerUrl)};
     const standardFontDataUrl = ${JSON.stringify(standardFontDataUrl)};
+    // 空数组表示不限定，按整份文档渲染；非空时只渲染这些页，避免逐页截图时反复全量栅格化。
+    const initialPages = ${JSON.stringify(initialPages)};
     const STEPS = [0.5, 0.75, 1, 1.25, 1.5, 2, 3];
     let stepIdx = 2;
     let pdfDoc = null;
@@ -638,7 +653,10 @@ export async function preparePdfPreview(filePath: string, basePaths?: string[]):
       if (e.data?.type === 'agent-preview:select-pdf-page') {
         const page = Number(e.data.page);
         if (!Number.isInteger(page) || page < 1 || !pdfDoc || page > pdfDoc.numPages) return;
-        await renderPages([page]);
+        // 已经只渲染了目标页（initialPages 限定）时无需重复栅格化，直接回报完成。
+        const wrappers = container.querySelectorAll('.page-wrapper');
+        const alreadySolePage = wrappers.length === 1 && wrappers[0].dataset.page === String(page);
+        if (!alreadySolePage) await renderPages([page]);
         window.parent.postMessage({ type: 'agent-preview:pdf-page-rendered', page }, '*');
       }
     });
@@ -650,7 +668,11 @@ export async function preparePdfPreview(filePath: string, basePaths?: string[]):
         url: fileUrl,
         standardFontDataUrl,
       }).promise;
-      await renderAll();
+      if (initialPages.length > 0) {
+        await renderPages(initialPages.filter((page) => Number.isInteger(page) && page >= 1 && page <= pdfDoc.numPages));
+      } else {
+        await renderAll();
+      }
       window.parent.postMessage({ type: 'agent-preview:pdf-ready', pageCount: pdfDoc.numPages }, '*');
     } catch (err) {
       container.innerHTML = '<div class="error">PDF 加载失败: ' + err.message + '<\\/div>';

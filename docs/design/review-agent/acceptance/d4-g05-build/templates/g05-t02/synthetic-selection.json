@@ -1,0 +1,218 @@
+{
+  "templateId": "g05-t02",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "g05-t02-activity-alpha",
+      "subjectId": "g05-t02-subject-alpha",
+      "title": "合成activity对象A",
+      "businessType": "g05-t02-activity",
+      "scenario": "student-team",
+      "scenarioSource": {
+        "sourceId": "src-synthetic",
+        "sourceVersionId": "g05-t02-synthetic-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "br03",
+          "applicability": "applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br04",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br05",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br06",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br07",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br08",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br09",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br10",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br11",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br12",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br13",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br14",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br15",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "g05-t02-member-beta",
+      "subjectId": "g05-t02-subject-beta",
+      "title": "合成member对象B",
+      "businessType": "g05-t02-member",
+      "scenario": "department-team",
+      "scenarioSource": {
+        "sourceId": "src-synthetic",
+        "sourceVersionId": "g05-t02-synthetic-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "br03",
+          "applicability": "unknown",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "br04",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br05",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br06",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br07",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br08",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br09",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br10",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br11",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br12",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br13",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br14",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "br15",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "g05-t02-synthetic-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

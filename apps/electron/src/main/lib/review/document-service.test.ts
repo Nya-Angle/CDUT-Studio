@@ -21,7 +21,7 @@ import { afterAll, describe, expect, test } from 'bun:test'
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import type { ReviewDocumentBlock, SourceDocument } from '@profer/shared'
-import { parseFileIntoSourceDocument, parseTextIntoBlocks, slugifyFileName } from './document-service'
+import { parseCsvIntoCellBlocks, parseFileIntoSourceDocument, parseTextIntoBlocks, slugifyFileName } from './document-service'
 
 /** 测试用临时目录根：仓库 work/tmp/（严禁落到系统 /tmp） */
 const workTmpRoot = join(import.meta.dir, '../../../../../../work/tmp')
@@ -137,9 +137,8 @@ describe('parseFileIntoSourceDocument', () => {
     expect(document.parseStatus).toBe('failed')
     expect(typeof document.parseError).toBe('string')
     expect((document.parseError ?? '').length).toBeGreaterThan(0)
-    // 不伪造解析结果：仍保留单个占位块
-    expect(document.blocks).toHaveLength(1)
-    expect(document.blocks[0]!.kind).toBe('paragraph')
+    // 解析失败没有可读文本块；错误原因与原件路径另行保留。
+    expect(document.blocks).toHaveLength(0)
   })
 })
 
@@ -195,10 +194,92 @@ describe('parseFileIntoSourceDocument / 文本类文件入口（行为不回归�
     expect(document.parseStatus).toBe('parsed')
     expect(document.mimeType).toBe('text/csv')
     expect(document.blocks.map((block: ReviewDocumentBlock) => block.kind)).toEqual([
-      'heading',
-      'table-cell',
-      'table-cell',
+      'heading', 'heading', 'table-cell', 'table-cell', 'table-cell', 'table-cell',
     ])
+    expect(document.blocks[2]?.table).toEqual({ sheet: 'CSV', row: 2, column: 1 })
+    expect(document.blocks[3]?.table).toEqual({ sheet: 'CSV', row: 2, column: 2 })
+  })
+
+  test('Given HTML 申报材料 When 导入 Then 提取可读正文和实体字符并忽略脚本', async () => {
+    const filePath = join(testRoot, '申报说明.html')
+    writeFileSync(filePath, '<html><head><title>不应进入正文</title></head><body><h1>申报说明</h1><p>获奖等级：省级二等奖 &amp; 个人项目</p><script>secret()</script></body></html>', 'utf-8')
+
+    const document = await parseFileIntoSourceDocument(filePath, '申报说明.html', 'application')
+
+    expect(document.parseStatus).toBe('parsed')
+    expect(document.mimeType).toBe('text/html')
+    expect(document.blocks.map((block) => block.text).join('\n')).toContain('获奖等级：省级二等奖 & 个人项目')
+    expect(document.blocks.map((block) => block.text).join('\n')).not.toContain('secret')
+    expect(document.blocks.map((block) => block.text).join('\n')).not.toContain('不应进入正文')
+  })
+
+  test('Given multipart EML 邮件 When 导入 Then 提取邮件头和纯文本正文', async () => {
+    const filePath = join(testRoot, '补充说明.eml')
+    writeFileSync(filePath, [
+      'From: reviewer@example.edu',
+      'To: student@example.edu',
+      'Subject: =?UTF-8?B?6KGl5YWF5paH5Lu2?=',
+      'MIME-Version: 1.0',
+      'Content-Type: multipart/alternative; boundary="part-1"',
+      '',
+      '--part-1',
+      'Content-Type: text/plain; charset="utf-8"',
+      'Content-Transfer-Encoding: quoted-printable',
+      '',
+      '=E8=AF=B7=E8=A1=A5=E4=BA=A4=E5=AE=8C=E6=95=B4=E8=AF=81=E4=B9=A6=E3=80=82',
+      '--part-1',
+      'Content-Type: text/html; charset="utf-8"',
+      '',
+      '<p>备用 HTML 正文</p>',
+      '--part-1--',
+      '',
+    ].join('\r\n'), 'utf-8')
+
+    const document = await parseFileIntoSourceDocument(filePath, '补充说明.eml', 'evidence')
+    const extracted = document.blocks.map((block) => block.text).join('\n')
+
+    expect(document.parseStatus).toBe('parsed')
+    expect(document.mimeType).toBe('message/rfc822')
+    expect(extracted).toContain('From: reviewer@example.edu')
+    expect(extracted).toContain('Subject: 补充文件')
+    expect(extracted).toContain('请补交完整证书。')
+    expect(extracted).not.toContain('备用 HTML 正文')
+  })
+})
+
+describe('T02 / imported original version and CSV source precision', () => {
+  test('quoted newlines, doubled quotes and numeric-looking IDs remain in their actual CSV cells', async () => {
+    const content = '学号,项目,备注\r\n0000123,"成果\r\n二等奖","他说""已获奖"""\r\n0000124,普通,完整'
+    const blocks = parseCsvIntoCellBlocks('成绩.csv', content)
+    expect(blocks).toHaveLength(9)
+    expect(blocks.find((b) => b.table?.row === 2 && b.table.column === 1)?.text).toBe('0000123')
+    expect(blocks.find((b) => b.table?.row === 2 && b.table.column === 2)?.text).toBe('成果\r\n二等奖')
+    expect(blocks.find((b) => b.table?.row === 2 && b.table.column === 3)?.text).toBe('他说"已获奖"')
+    expect(blocks.find((b) => b.table?.row === 3 && b.table.column === 1)?.text).toBe('0000124')
+  })
+
+  test('two physical originals with identical names must not share document or source block identity', async () => {
+    const firstPath = join(testRoot, '同名原件-A.txt')
+    const secondPath = join(testRoot, '同名原件-B.txt')
+    writeFileSync(firstPath, '第一份独立原件')
+    writeFileSync(secondPath, '第二份独立原件')
+    const [first, second] = await Promise.all([
+      parseFileIntoSourceDocument(firstPath, '证书.txt', 'evidence'),
+      parseFileIntoSourceDocument(secondPath, '证书.txt', 'evidence'),
+    ])
+    expect(first.id).not.toBe(second.id)
+    expect(first.blocks[0]?.id).not.toBe(second.blocks[0]?.id)
+    expect(first.blocks[0]?.text).toContain('第一份')
+    expect(second.blocks[0]?.text).toContain('第二份')
+  })
+
+  test('an empty CSV cannot claim it was fully parsed', async () => {
+    const path = join(testRoot, '空白表.csv')
+    writeFileSync(path, '\r\n\r\n')
+    const parsed = await parseFileIntoSourceDocument(path, '空白表.csv', 'evidence')
+    expect(parsed.parseStatus).toBe('partial')
+    expect(parsed.blocks).toHaveLength(0)
+    expect(parsed.parseError).toContain('可用单元格')
   })
 })
 
@@ -253,10 +334,43 @@ describe('parseFileIntoSourceDocument / 图片与未知二进制', () => {
     expect(block.text).toBe('')
     // imageAssetPath 是原件在案卷目录内的相对路径，供后续 Vision 送模型
     expect(block.imageAssetPath).toBe(assetRelativePath)
-    expect(document.parseError ?? '').toContain('多模态')
+    expect(document.parseError ?? '').toContain('视觉模型')
   })
 
-  test('Given 未知二进制文件 When 解析 Then parseStatus 为 failed 且保留单个占位块（既有行为不回归）', async () => {
+  test('Given JPG 图片 When 导入 Then 保留视觉材料块而不是报成不支持格式', async () => {
+    const filePath = join(testRoot, '证明.jpg')
+    writeFileSync(filePath, Buffer.from([0xff, 0xd8, 0xff, 0xd9]))
+
+    const document = await parseFileIntoSourceDocument(filePath, '证明.jpg', 'evidence', 'source-docs/doc-jpg.jpg')
+
+    expect(document.parseStatus).toBe('partial')
+    expect(document.mimeType).toBe('image/jpeg')
+    expect(document.blocks[0]).toMatchObject({ kind: 'image', imageAssetPath: 'source-docs/doc-jpg.jpg' })
+    expect(document.parseError ?? '').toContain('视觉模型')
+  })
+
+  test('F04 损坏的 PNG 与伪装扩展名不得伪造视觉来源块', async () => {
+    const truncated = join(testRoot, '损坏原件.png')
+    const disguised = join(testRoot, '伪装图片.png')
+    writeFileSync(truncated, ONE_PIXEL_PNG.subarray(0, 25))
+    writeFileSync(disguised, '%PDF-1.4 fake')
+    for (const path of [truncated, disguised]) {
+      const result = await parseFileIntoSourceDocument(path, '原件.png', 'evidence', 'source-docs/原件.png')
+      expect(result.parseStatus).toBe('failed')
+      expect(result.blocks).toHaveLength(0)
+      expect(result.parseError).toContain('图片文件损坏')
+    }
+  })
+
+  test('F04 已删除的图片登记时明确失败，而不是报告已收录', async () => {
+    const missing = join(testRoot, '不存在的证明.jpg')
+    const result = await parseFileIntoSourceDocument(missing, '不存在的证明.jpg', 'evidence')
+    expect(result.parseStatus).toBe('failed')
+    expect(result.blocks).toHaveLength(0)
+    expect(result.parseError).toContain('图片原件不可读取')
+  })
+
+  test('Given 未知二进制文件 When 解析 Then parseStatus 为 failed 且不伪造可读块', async () => {
     const filePath = join(testRoot, '原始数据.bin')
     writeFileSync(filePath, Buffer.from([0x00, 0x01, 0x02, 0xfe, 0xff]))
 
@@ -264,7 +378,6 @@ describe('parseFileIntoSourceDocument / 图片与未知二进制', () => {
 
     expect(document.parseStatus).toBe('failed')
     expect((document.parseError ?? '').length).toBeGreaterThan(0)
-    expect(document.blocks).toHaveLength(1)
-    expect(document.blocks[0]!.kind).toBe('paragraph')
+    expect(document.blocks).toHaveLength(0)
   })
 })

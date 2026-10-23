@@ -1,4 +1,4 @@
-import type { AgentSessionMeta, AgentSessionUiProjection } from '@profer/shared'
+import { isReviewOwnedAgentSession, type AgentSessionMeta, type AgentSessionUiProjection } from '@profer/shared'
 
 /**
  * 草稿标记集合的幂等增删。
@@ -49,8 +49,8 @@ export function replaceAgentSessionInFreshnessOrder(
   sessions: readonly AgentSessionMeta[],
   updated: AgentSessionMeta,
 ): AgentSessionMeta[] {
-  const others = sessions.filter((session) => session.id !== updated.id)
-  return sortAgentSessionsByUpdatedAtDesc([updated, ...others])
+  const others = sessions.filter((session) => session.id !== updated.id && !isReviewOwnedAgentSession(session))
+  return sortAgentSessionsByUpdatedAtDesc(isReviewOwnedAgentSession(updated) ? others : [updated, ...others])
 }
 
 /**
@@ -65,6 +65,8 @@ export function upsertAgentSessionProjection(
   projection: AgentSessionUiProjection,
 ): AgentSessionMeta[] {
   const existing = sessions.find((session) => session.id === projection.id)
+  // A delayed legacy projection must never resurrect a known internal owner.
+  if (isReviewOwnedAgentSession(existing)) return sessions.filter((session) => session.id !== projection.id)
   if (existing && projection.revision < (existing.revision ?? 0)) return [...sessions]
   const next: AgentSessionMeta = {
     ...(existing ?? {}),
@@ -103,7 +105,7 @@ export function upsertAgentSessionProjection(
     lastInterruptLabel: projection.lastInterruptLabel ?? undefined,
     lastInterruptAt: projection.lastInterruptAt ?? undefined,
   }
-  const others = sessions.filter((session) => session.id !== projection.id)
+  const others = sessions.filter((session) => session.id !== projection.id && !isReviewOwnedAgentSession(session))
   return sortAgentSessionsByUpdatedAtDesc([next, ...others])
 }
 
@@ -112,10 +114,13 @@ export function upsertAgentSession(
   incoming: AgentSessionMeta,
 ): AgentSessionMeta[] {
   const existing = sessions.find((session) => session.id === incoming.id)
+  if (isReviewOwnedAgentSession(incoming) || isReviewOwnedAgentSession(existing)) {
+    return sessions.filter((session) => session.id !== incoming.id && !isReviewOwnedAgentSession(session))
+  }
   const merged: AgentSessionMeta = existing
     ? { ...existing, ...incoming }
     : incoming
-  const others = sessions.filter((session) => session.id !== incoming.id)
+  const others = sessions.filter((session) => session.id !== incoming.id && !isReviewOwnedAgentSession(session))
   return sortAgentSessionsByUpdatedAtDesc([merged, ...others])
 }
 
@@ -135,15 +140,19 @@ export function upsertAgentSession(
 export function mergeFetchedAgentSessions(
   prev: readonly AgentSessionMeta[],
   fetched: readonly AgentSessionMeta[],
+  revokedIds: ReadonlySet<string> = new Set<string>(),
 ): AgentSessionMeta[] {
-  const fetchedIds = new Set(fetched.map((session) => session.id))
-  const snapshotWatermark = fetched.reduce(
+  const visibleFetched = fetched.filter((session) => !isReviewOwnedAgentSession(session) && !revokedIds.has(session.id))
+  const fetchedIds = new Set(visibleFetched.map((session) => session.id))
+  const snapshotWatermark = visibleFetched.reduce(
     (max, session) => Math.max(max, session.updatedAt),
     0,
   )
   const survivingLocalOnly = prev.filter(
     (session) =>
-      !fetchedIds.has(session.id) && session.updatedAt >= snapshotWatermark,
+      !isReviewOwnedAgentSession(session)
+      && !revokedIds.has(session.id)
+      && !fetchedIds.has(session.id) && session.updatedAt >= snapshotWatermark,
   )
-  return sortAgentSessionsByUpdatedAtDesc([...fetched, ...survivingLocalOnly])
+  return sortAgentSessionsByUpdatedAtDesc([...visibleFetched, ...survivingLocalOnly])
 }

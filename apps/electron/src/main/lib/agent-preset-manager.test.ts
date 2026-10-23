@@ -105,13 +105,14 @@ describe('listAgentPresets', () => {
     expect(minimal!.suppressPromptSections).toEqual(['subagents', 'memory', 'task-graph', 'automation'])
   })
 
-  test('无配置时返回三个内置预设', () => {
+  test('无配置时返回四个内置预设', () => {
     const presets = listAgentPresets(WS_A)
-    expect(presets.length).toBe(3)
+    expect(presets.length).toBe(4)
     const ids = presets.map((p) => p.id)
     expect(ids).toContain(BUILTIN_PRESET_STANDARD)
     expect(ids).toContain(BUILTIN_PRESET_CODE)
     expect(ids).toContain(BUILTIN_PRESET_MINIMAL)
+    expect(ids).toContain('review-operator')
   })
 
   test('内置预设均标记 isBuiltin，且 standard 无提示词段（行为与默认一致）', () => {
@@ -137,8 +138,8 @@ describe('listAgentPresets', () => {
     expect(minimal.promptSections?.[0]).toContain('all product capability groups are disabled for this session')
   })
 
-  test('无工作区时仅返回内置三预设', () => {
-    expect(listAgentPresets(undefined).length).toBe(3)
+  test('无工作区时仅返回内置四预设', () => {
+    expect(listAgentPresets(undefined).length).toBe(4)
     expect(listAgentPresets(undefined).every((p) => p.isBuiltin)).toBe(true)
   })
 })
@@ -146,7 +147,7 @@ describe('listAgentPresets', () => {
 describe('全局预设与作用域引用', () => {
   test('Given builtin-meta When listing Then only one read-only definition exists', () => {
     const presets = listGlobalAgentPresets()
-    expect(presets.filter((preset) => preset.scope === 'builtin-meta')).toHaveLength(3)
+    expect(presets.filter((preset) => preset.scope === 'builtin-meta')).toHaveLength(4)
   })
 
   test('Given user-global MCP whitelist is empty When creating Then empty whitelist is preserved', () => {
@@ -219,6 +220,7 @@ describe('全局预设与作用域引用', () => {
     disableGlobalPresetInWorkspace(WS_A, { presetId: BUILTIN_PRESET_STANDARD, presetScope: 'builtin-meta' })
     disableGlobalPresetInWorkspace(WS_A, { presetId: BUILTIN_PRESET_CODE, presetScope: 'builtin-meta' })
     disableGlobalPresetInWorkspace(WS_A, { presetId: BUILTIN_PRESET_MINIMAL, presetScope: 'builtin-meta' })
+    disableGlobalPresetInWorkspace(WS_A, { presetId: 'review-operator', presetScope: 'builtin-meta' })
     expect(getDefaultPresetId(WS_A)).toBe('')
   })
 
@@ -598,7 +600,7 @@ describe('自定义预设 CRUD', () => {
     expect(created.isBuiltin).toBe(false)
 
     const presets = listAgentPresets(WS_A)
-    expect(presets.length).toBe(4)
+    expect(presets.length).toBe(5)
     expect(presets.find((p) => p.id === created.id)?.name).toBe('研究模式')
     expect(getAgentPreset(WS_A, created.id).id).toBe(created.id)
   })
@@ -609,8 +611,8 @@ describe('自定义预设 CRUD', () => {
 
   test('工作区隔离：A 区自定义预设对 B 区不可见', () => {
     createAgentPreset(WS_A, { name: 'A区专属', description: '' })
-    expect(listAgentPresets(WS_A).length).toBe(4)
-    expect(listAgentPresets(WS_B).length).toBe(3)
+    expect(listAgentPresets(WS_A).length).toBe(5)
+    expect(listAgentPresets(WS_B).length).toBe(4)
   })
 
   test('无工作区创建自定义预设被拒绝', () => {
@@ -857,9 +859,9 @@ describe('预设导出 / 导入文件', () => {
   test('内置预设可导出，导入后转为自定义预设', () => {
     const json = serializeAgentPresetsForExport(listAgentPresets(WS_A))
     const result = importAgentPresets(WS_B, json)
-    // 内置三预设 + 重名冲突：WS_B 本就有三个同名内置预设，全部追加「（导入）」后缀
-    expect(result.imported).toHaveLength(3)
-    expect(result.renamedNames.sort()).toEqual(['代码', '极简', '标准'])
+    // 内置四预设 + 重名冲突：WS_B 本就有四个同名内置预设，全部追加「（导入）」后缀
+    expect(result.imported).toHaveLength(4)
+    expect(result.renamedNames.sort()).toEqual(['代码', '审核操作员', '极简', '标准'])
     for (const preset of result.imported) {
       expect(preset.isBuiltin).toBe(false)
       expect(preset.name.endsWith('（导入）')).toBe(true)

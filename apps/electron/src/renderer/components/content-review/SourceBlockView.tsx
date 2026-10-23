@@ -19,7 +19,8 @@ import type {
   ReviewSourceAnchor,
   SourceDocument,
 } from '@profer/shared'
-import { reviewFocusAtom, reviewRuleLocateAtom } from '@/atoms/review-atoms'
+import { FilePreviewDialog } from '@/components/file-browser/FilePreviewDialog'
+import { reviewCaseAtom, reviewFocusAtom, reviewRuleLocateAtom } from '@/atoms/review-atoms'
 import { cn } from '@/lib/utils'
 
 /** 高亮颜色（三色均带 ring 与圆角，过渡用 transition-all） */
@@ -62,6 +63,7 @@ export function SourceBlockView({
   const rootRef = React.useRef<HTMLDivElement>(null)
   const focus = useAtomValue(reviewFocusAtom)
   const ruleLocate = useAtomValue(reviewRuleLocateAtom)
+  const reviewCase = useAtomValue(reviewCaseAtom)
 
   // 派生：本块是否命中某条定位请求，以及命中哪一路（focus / 规则定位）。
   // 返回命中锚点本身，精度降级角标要读它的 precision。
@@ -86,7 +88,26 @@ export function SourceBlockView({
   // 临时高亮状态（2.5 秒后自动清除）
   const [activeHighlight, setActiveHighlight] = React.useState<'red' | 'yellow' | 'blue' | null>(null)
   const [precisionBadge, setPrecisionBadge] = React.useState<string | null>(null)
+  const [imagePreview, setImagePreview] = React.useState<{ path: string; url: string; fileName: string } | null>(null)
+  const [largeImageOpen, setLargeImageOpen] = React.useState(false)
   const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  React.useEffect(() => {
+    if (block.kind !== 'image' || !reviewCase?.id) {
+      setImagePreview(null)
+      return
+    }
+    let active = true
+    const fileName = block.imageAssetPath?.split(/[\\/]/).pop() || document.fileName
+    void window.reviewAPI.getImagePreviewPath({ caseId: reviewCase.id, documentId: document.id, blockId: block.id })
+      .then(async (path) => {
+        if (!path) return
+        const url = await window.electronAPI.registerPreviewPath(path)
+        if (active && url) setImagePreview({ path, url, fileName })
+      })
+      .catch((error) => console.warn('[审核专区] 图片缩略图加载失败', error))
+    return () => { active = false }
+  }, [block.id, block.imageAssetPath, block.kind, document.fileName, document.id, reviewCase?.id])
 
   // 焦点定位 + 高亮：focus nonce 变化 或 规则定位 nonce 变化 时触发。
   // 用拼接字符串做依赖键：任一 nonce 变化即重新执行（同块重复点击也能再次闪）。
@@ -151,6 +172,7 @@ export function SourceBlockView({
     <div
       ref={rootRef}
       data-block-id={block.id}
+      data-source-document-id={document.id}
       className={cn(
         'relative rounded-md transition-all duration-200',
         dense ? 'px-2 py-1' : 'px-3 py-1.5',
@@ -158,17 +180,24 @@ export function SourceBlockView({
       )}
     >
       {block.kind === 'heading' ? (
-        <p className={cn('font-semibold text-foreground', dense ? 'text-[13px]' : 'text-sm')}>{text}</p>
+        <p className={cn('font-semibold text-foreground', dense ? 'text-sm' : 'text-sm')}>{text}</p>
       ) : block.kind === 'image' ? (
-        <div className="flex items-start gap-2 text-[13px] leading-6 text-foreground/80">
-          <FileText size={14} className="mt-1 shrink-0 text-muted-foreground" />
-          <span className="whitespace-pre-wrap break-words">{text}</span>
+        <div className="flex items-start gap-2 text-sm leading-6 text-foreground/80">
+          {imagePreview ? (
+            <button type="button" onClick={() => setLargeImageOpen(true)} title="点击查看大图" aria-label={`预览图片：${imagePreview.fileName}`} className="shrink-0 overflow-hidden rounded border border-border/60 bg-background p-1 hover:border-primary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <img src={imagePreview.url} alt={block.imageAlt || imagePreview.fileName} className="max-h-32 max-w-28 object-contain" />
+            </button>
+          ) : (
+            <div className="flex h-20 w-16 shrink-0 items-center justify-center rounded border border-border/60 bg-background text-muted-foreground"><FileText size={18} /></div>
+          )}
+          <span className="min-w-0 whitespace-pre-wrap break-words">{text || `图片 · ${block.page ? `第 ${block.page} 页` : document.fileName}`}</span>
+          {imagePreview && <FilePreviewDialog open={largeImageOpen} filePath={imagePreview.path} fileName={imagePreview.fileName} onClose={() => setLargeImageOpen(false)} />}
         </div>
       ) : (
         <p
           className={cn(
             'whitespace-pre-wrap break-words text-foreground/80',
-            dense ? 'font-mono text-[12px] leading-5' : 'text-[13px] leading-6',
+            dense ? 'font-mono text-xs leading-5' : 'text-sm leading-6',
             block.kind === 'list-item' && 'pl-3 relative before:absolute before:left-0 before:top-2 before:size-1 before:rounded-full before:bg-muted-foreground/50',
           )}
         >
@@ -180,7 +209,7 @@ export function SourceBlockView({
       {precisionBadge && (
         <span
           title={precisionBadge}
-          className="absolute -top-2 right-1 rounded bg-muted px-1 py-0.5 text-[10px] leading-3 text-muted-foreground shadow-sm"
+          className="absolute -top-2 right-1 rounded bg-muted px-1 py-0.5 text-xs leading-3 text-muted-foreground shadow-sm"
         >
           {precisionBadge}
         </span>

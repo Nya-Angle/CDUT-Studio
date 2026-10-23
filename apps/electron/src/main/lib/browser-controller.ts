@@ -26,6 +26,7 @@ import { hasAcknowledgedBrowserRiskDisclaimer } from './browser-risk-disclaimer'
 import { buildPromaBrowserUserAgent } from './browser-identity'
 import { assertBrowserScript, buildBrowserDomActionExpression, type BrowserDomActionInput, BUILD_READ_ELEMENT_VALUE_FUNCTION, BUILD_WRITE_ELEMENT_VALUE_FUNCTION, normalizeFilledText } from './browser-script-policy'
 import { getSettings } from './settings-service'
+import { isReviewOwnedOrDeletedAgentSessionId } from './agent-session-manager'
 import { getBrowserHostSurfaceColor } from './titlebar-overlay'
 import { hasUsableBrowserBounds, resolveBrowserPageHostBounds, resolveBrowserViewportLayout, sameBrowserBounds, shouldApplyBrowserLayoutRevision } from './browser-view-layout'
 import { recordHistory } from './browser-start-page-store'
@@ -343,6 +344,7 @@ export class BrowserController {
   }
 
   private emit(browserSession: BrowserSessionRecord): void {
+    if (isReviewOwnedOrDeletedAgentSessionId(browserSession.sessionId)) return
     if (!this.owner || this.owner.isDestroyed()) return
     this.owner.webContents.send(AGENT_IPC_CHANNELS.BROWSER_STATE_CHANGED, this.buildState(browserSession))
   }
@@ -634,6 +636,7 @@ export class BrowserController {
       this.trace(browserSession, tab, 'navigate', '已忽略畸形的划词回投', 'failed')
       return
     }
+    if (isReviewOwnedOrDeletedAgentSessionId(browserSession.sessionId)) return
     if (!this.owner || this.owner.isDestroyed()) return
     this.owner.webContents.send(AGENT_IPC_CHANNELS.BROWSER_LOCAL_FILE_SELECTION, {
       sessionId: browserSession.sessionId,
@@ -758,7 +761,7 @@ export class BrowserController {
       item.cancel()
       const sessionId = [...this.sessions.entries()].find(([, record]) => record.browserSession === browserSession)?.[0]
       const url = (typeof item.getURL?.() === 'string' && item.getURL()) || (Array.isArray(item.getURLChain?.()) && item.getURLChain().find(Boolean)) || ''
-      if (!sessionId || !this.owner || this.owner.isDestroyed()) return
+      if (!sessionId || isReviewOwnedOrDeletedAgentSessionId(sessionId) || !this.owner || this.owner.isDestroyed()) return
       const payload: BrowserDownloadBlockedEvent = {
         sessionId,
         fileName: item.getFilename() || '未知文件',

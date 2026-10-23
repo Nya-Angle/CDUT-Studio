@@ -1,0 +1,71 @@
+{
+  "templateId": "g08-t03",
+  "sourceSha256": "f8acf03994262e621d4afac6e608d34d90b114b7103372bef25fc7a4b50f88ec",
+  "originalBusinessSha256": "53ee6a8dd1931ba9fe193289ce1a41b07bb35489325ad19d07dcfb02cccf00af",
+  "version": "C-MD-v0.1.1-r31-r01",
+  "selectedSource": "author/g08-t03-bc-r31-r01-20261016@1df64a1a9b7f994deaa596e0f05cb877770235a4",
+  "frozenCodeSha": "a7a6a11d4840ad64cfc858c17b35f35180adf063",
+  "sourceTextNotRepublished": true,
+  "rules": 52,
+  "narrativeInvariants": 7,
+  "modules": 19,
+  "sourceBindings": 59,
+  "primaryAxes": [
+    "initial",
+    "query",
+    "feedback",
+    "followup",
+    "withdraw"
+  ],
+  "conditions": [
+    "sensitive",
+    "urgent",
+    "multi",
+    "school",
+    "college",
+    "shandong",
+    "evidence",
+    "event"
+  ],
+  "sourceAuthority": "NOT_VERIFIED",
+  "publicationAllowed": false,
+  "d1Validation": "PASS",
+  "d3ExportImport": "PASS",
+  "d2Compiler": "PASS",
+  "piCaseRun": "PASS_PENDING_ONLY",
+  "onlineModel": "NOT_RUN",
+  "gold": "NOT_READ",
+  "state": "READY_FOR_INTEGRATION",
+  "technicalScope": "D1/D3/D2/Pi synthetic pre-review only; all check results require human/source confirmation",
+  "validatedG08CodeSha": "fd42de23b4814a4c4e8fd30527f816e14550988f",
+  "g08CiRunId": 39051306961,
+  "g08CiStatus": "SUCCESS",
+  "g08CiTests": {
+    "pass": 12,
+    "fail": 0
+  },
+  "actualPlanFingerprint": "fec3b9b611e90e2700864c9ba18caccdeffee560ddf2fd6b6cbf733dec87f317",
+  "actualTransferFingerprint": "5b5f36d6c48a7132f0f8ab01854a5efc7133856bb84a92920cc8257e36148c75",
+  "actualChecks": 82,
+  "actualSubjects": 2,
+  "supportedActions": [
+    "initial",
+    "query",
+    "feedback",
+    "followup",
+    "withdraw"
+  ],
+  "otherSyntheticActionChecks": {
+    "query": 42,
+    "followup": 44,
+    "withdraw": 39
+  },
+  "evidenceArtifactId": 12107009207,
+  "formalUniversityAuthority": "NOT_VERIFIED",
+  "businessSemanticCorrectness": "NOT_SIGNED_BY_E",
+  "policyAndExternalRestrictions": [
+    "University rules are policy candidates, not approved current mandatory rules",
+    "No authenticated real custody/complaint backend; changes or official handling only by authorized school staff",
+    "Real online model and independent Gold scoring outside current technical gate"
+  ]
+}

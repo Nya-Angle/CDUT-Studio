@@ -1,0 +1,29 @@
+{
+  "templateId": "archive-access",
+  "version": 1,
+  "targets": [
+    {
+      "objectKey": "item-1/read",
+      "subjectId": "d2-item1-read",
+      "title": "档案查阅",
+      "kind": "archive-operation",
+      "itemId": "item-1",
+      "operation": "read"
+    },
+    {
+      "objectKey": "item-1/copy",
+      "subjectId": "d2-item1-copy",
+      "title": "档案复制",
+      "kind": "archive-operation",
+      "itemId": "item-1",
+      "operation": "copy"
+    },
+    {
+      "objectKey": "item-1",
+      "subjectId": "d2-item1-open",
+      "title": "档案开放状态",
+      "kind": "archive-item",
+      "itemId": "item-1"
+    }
+  ]
+}

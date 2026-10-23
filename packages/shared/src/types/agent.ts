@@ -808,9 +808,14 @@ export type AgentContextMode = 'classic' | 'index'
  * 存储在 ~/.proma/agent-sessions.json 中，
  * 类似 ConversationMeta，独立存储。
  */
+/** Main-owned internal session identity; ordinary Agent UI cannot mint this field. */
+export type AgentSessionOwner = { kind: 'review-case'; caseId: string }
+
 export interface AgentSessionMeta {
   /** 会话唯一标识 */
   id: string
+  /** 业务私有会话归属，只能由可信 Main 在创建时设置；旧会话缺省为普通会话。 */
+  owner?: AgentSessionOwner
   /** UI 投影版本；旧会话缺省为 0，写入时单调递增。 */
   revision?: number
   /** 会话标题 */
@@ -939,8 +944,15 @@ export interface AgentSessionMeta {
 }
 
 /** Whether an Agent session may be shown in user-facing session lists. */
-export function isVisibleAgentSession(session: Pick<AgentSessionMeta, 'draft'>): boolean {
-  return !session.draft
+export function isReviewOwnedAgentSession(
+  session: Pick<AgentSessionMeta, 'owner'> | null | undefined,
+): boolean {
+  return session?.owner?.kind === 'review-case'
+}
+
+/** Only ordinary sessions are eligible for general conversation surfaces. */
+export function isVisibleAgentSession(session: Pick<AgentSessionMeta, 'draft' | 'owner'>): boolean {
+  return !session.draft && !isReviewOwnedAgentSession(session)
 }
 
 /**

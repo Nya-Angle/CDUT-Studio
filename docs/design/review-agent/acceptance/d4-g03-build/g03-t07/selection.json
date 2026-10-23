@@ -1,0 +1,134 @@
+{
+  "templateId": "g03-t07",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "item-a",
+      "subjectId": "g03-t07-subject-a",
+      "title": "SYNTHETIC 指定仪器培训考核与独立操作资格对象A",
+      "businessType": "g03-instrument-qualification",
+      "scenario": "p-first-training",
+      "scenarioSource": {
+        "sourceId": "synthetic-choice",
+        "sourceVersionId": "synthetic-g03-t07-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "c-multi-device",
+          "applicability": "applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t07-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-delegation",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t07-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-safety",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t07-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-fee",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t07-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-outside-cert",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t07-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-retraining",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t07-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-high-risk",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t07-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "item-b",
+      "subjectId": "g03-t07-subject-b",
+      "title": "SYNTHETIC 指定仪器培训考核与独立操作资格对象B",
+      "businessType": "g03-instrument-qualification",
+      "scenario": "p-exam",
+      "scenarioSource": {
+        "sourceId": "synthetic-choice",
+        "sourceVersionId": "synthetic-g03-t07-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "c-multi-device",
+          "applicability": "unknown",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t07-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "c-delegation",
+          "applicability": "applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t07-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-safety",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t07-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-fee",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t07-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-outside-cert",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t07-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-retraining",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t07-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-high-risk",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t07-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

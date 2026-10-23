@@ -1,0 +1,58 @@
+{
+  "templateId": "g08-t02",
+  "sourceSha256": "7bd277cc24889805102e16d9f2de079434dd8f6ffe90ad00fc5872f169cd2418",
+  "originalBusinessSha256": "7bd277cc24889805102e16d9f2de079434dd8f6ffe90ad00fc5872f169cd2418",
+  "version": "C-MD-v0.1",
+  "selectedSource": "ChatGPT Library complete original",
+  "frozenCodeSha": "a7a6a11d4840ad64cfc858c17b35f35180adf063",
+  "sourceTextNotRepublished": true,
+  "rules": 51,
+  "narrativeInvariants": 6,
+  "modules": 17,
+  "sourceBindings": 57,
+  "primaryAxes": [
+    "self",
+    "proxy"
+  ],
+  "conditions": [
+    "valuable",
+    "dispute",
+    "card",
+    "sensitive",
+    "venue",
+    "handover"
+  ],
+  "sourceAuthority": "NOT_VERIFIED",
+  "publicationAllowed": false,
+  "d1Validation": "PASS",
+  "d3ExportImport": "PASS",
+  "d2Compiler": "PASS",
+  "piCaseRun": "PASS_PENDING_ONLY",
+  "onlineModel": "NOT_RUN",
+  "gold": "NOT_READ",
+  "state": "READY_FOR_INTEGRATION",
+  "technicalScope": "D1/D3/D2/Pi synthetic pre-review only; all check results require human/source confirmation",
+  "validatedG08CodeSha": "fd42de23b4814a4c4e8fd30527f816e14550988f",
+  "g08CiRunId": 39051306961,
+  "g08CiStatus": "SUCCESS",
+  "g08CiTests": {
+    "pass": 12,
+    "fail": 0
+  },
+  "actualPlanFingerprint": "f2b7dabd3a4e0088e14b5a031c1308559a448bf00e359b56c9f0b25c5bc8a6b9",
+  "actualTransferFingerprint": "4f58d9bf5519d92c3b2011e33e50eb99ba47d1e9edb94966277f29a026e7f9e0",
+  "actualChecks": 107,
+  "actualSubjects": 2,
+  "supportedActions": [
+    "self",
+    "proxy"
+  ],
+  "evidenceArtifactId": 12107009207,
+  "formalUniversityAuthority": "NOT_VERIFIED",
+  "businessSemanticCorrectness": "NOT_SIGNED_BY_E",
+  "policyAndExternalRestrictions": [
+    "University rules are policy candidates, not approved current mandatory rules",
+    "No authenticated real custody/complaint backend; changes or official handling only by authorized school staff",
+    "Real online model and independent Gold scoring outside current technical gate"
+  ]
+}

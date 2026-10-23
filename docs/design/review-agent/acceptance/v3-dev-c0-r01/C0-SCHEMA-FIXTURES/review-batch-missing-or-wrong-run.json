@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "review-c0/1",
+  "kind": "review",
+  "batchAttemptId": "ba1",
+  "entries": [
+    {
+      "schemaVersion": "review-c0/1",
+      "batchAttemptId": "ba1",
+      "caseId": "c1",
+      "entryRunId": "",
+      "inputHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "planFingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "templateVersion": "1",
+      "revision": 1,
+      "decisionId": "d1",
+      "decisionBasedOnRunId": "r2"
+    }
+  ],
+  "status": "finalized",
+  "expected": "BATCH_ATTEMPT_MISMATCH",
+  "note": "Schema fixture only; C3 finalizer still missing"
+}

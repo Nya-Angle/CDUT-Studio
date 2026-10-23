@@ -118,6 +118,24 @@ describe('Pi runtime 智谱团队版认证', () => {
 })
 
 describe('渠道模型 1M 偏好归一', () => {
+  test('Given DeepSeek 渠道模型配置了精确 token 上限 When buildModel Then 使用配置的上下文与输出值', async () => {
+    const sdk = await import('@earendil-works/pi-coding-agent')
+    const result = await buildModel(sdk, {
+      ...BASE_PI_AGENT_OPTIONS,
+      sessionId: 'session-deepseek-flash-explicit-limits',
+      apiKey: 'deepseek-test-key',
+      provider: 'deepseek',
+      baseUrl: 'https://api.deepseek.com',
+      model: 'deepseek-flash',
+      context1m: false,
+      contextWindow: 400_000,
+      maxTokens: 32_000,
+    })
+
+    expect(result.model.contextWindow).toBe(400_000)
+    expect(result.model.maxTokens).toBe(32_000)
+  })
+
   test('Given 强制开启 When 归一窗口 Then 至少 1M', () => {
     expect(applyModel1MContextPreference(500_000, true)).toBe(1_000_000)
     // 本来就大于 1M 的窗口（Codex 1.05M）不得被降下来

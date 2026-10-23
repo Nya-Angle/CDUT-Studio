@@ -1,0 +1,176 @@
+{
+  "templateId": "g06-t07",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "g06-t07-test-1",
+      "subjectId": "g06-t07-subject-1",
+      "title": "涉人研究伦理材料核验合成对象1",
+      "businessType": "g06-human-ethics-scope",
+      "scenario": "br-01",
+      "scenarioSource": {
+        "sourceId": "src-axis-br-01",
+        "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "br-03",
+          "applicability": "applicable",
+          "sourceId": "src-axis-br-03",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-01",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-01",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "ax-02",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-ax-02",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-03",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-ax-03",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-04",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-ax-04",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-05",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-ax-05",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-06",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-ax-06",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-07",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-ax-07",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-08",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-ax-08",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-09",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-ax-09",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "g06-t07-test-2",
+      "subjectId": "g06-t07-subject-2",
+      "title": "涉人研究伦理材料核验合成对象2",
+      "businessType": "g06-human-ethics-scope",
+      "scenario": "br-02",
+      "scenarioSource": {
+        "sourceId": "src-axis-br-02",
+        "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "br-03",
+          "applicability": "not-applicable",
+          "sourceId": "src-axis-br-03",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-01",
+          "applicability": "applicable",
+          "sourceId": "src-axis-ax-01",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "ax-02",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-02",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "ax-03",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-03",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "ax-04",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-04",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "ax-05",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-05",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "ax-06",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-06",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "ax-07",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-07",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "ax-08",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-08",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "ax-09",
+          "applicability": "unknown",
+          "sourceId": "src-axis-ax-09",
+          "sourceVersionId": "g06-t07-v01-00fb0f834316ab78",
+          "decidedBy": "undetermined"
+        }
+      ]
+    }
+  ]
+}

@@ -161,7 +161,7 @@ export function CdutZoneView(): React.ReactElement {
 
   // 若在子页面中登出/登录态失效，强制退回专区首页并恢复边栏
   React.useEffect(() => {
-    if (!isConnected && activeSubView !== null) {
+    if (!isConnected && activeSubView !== null && activeSubView !== 'material-review') {
       setActiveSubView(null)
       if (sidebarRestore !== null) setSidebarCollapsed(sidebarRestore)
       setSidebarRestore(null)
@@ -413,6 +413,17 @@ export function CdutZoneView(): React.ReactElement {
                     </div>
                   ))}
                 </div>
+
+                {/* 本地候选审核不依赖 CDUT 校园账户；正式校园能力仍受独立登录保护。 */}
+                <Button
+                  type="button"
+                  data-testid="cdut-local-review-entry"
+                  variant="outline"
+                  onClick={() => handleSelectModule('material-review')}
+                  className="w-full justify-center gap-2 border-primary/30 bg-primary/5 text-primary"
+                >
+                  <span>进入本地材料审核（无需校园账号）</span>
+                </Button>
 
                 {/* 本地安全承诺 */}
                 <div className="flex items-center gap-2 text-xs text-muted-foreground/80">

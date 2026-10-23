@@ -52,6 +52,36 @@ function normalizedName(name: string): string {
 }
 
 /**
+ * 审核工具的真实 outcome。
+ *
+ * 审核工具不会抛错到模型层，而是返回结构化 JSON：
+ * - `{ ok: false }` 或整批 `results[].ok === false` → failure（业务上确实失败）；
+ * - `tool_result.is_error === true` → failure；
+ * - 其余 → success。
+ * 无法解析的结果保守记为 success（工具已执行完），不再记为 unknown——
+ * unknown 只应留给真正的外部/未知能力。
+ */
+function reviewToolOutcome(resultText: string, isError: boolean): ToolFact['outcome'] {
+  if (isError) return 'failure'
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(resultText)
+  } catch {
+    return 'success'
+  }
+  if (!parsed || typeof parsed !== 'object') return 'success'
+  const record = parsed as { ok?: unknown; results?: unknown }
+  if (record.ok === false) return 'failure'
+  if (Array.isArray(record.results) && record.results.length > 0) {
+    const allFailed = record.results.every((item) => (
+      !!item && typeof item === 'object' && (item as { ok?: unknown }).ok === false
+    ))
+    if (allFailed) return 'failure'
+  }
+  return 'success'
+}
+
+/**
  * Converts a completed tool result into a bounded, redacted fact. No result
  * body, command text or secret-bearing input is persisted.
  */
@@ -147,6 +177,20 @@ export function createToolFact(context: {
       },
       summary: `${input.toolName} ${category} ${outcome}${exitCode !== undefined && exitCode !== null ? ` exit=${exitCode}` : ''}`,
       fingerprint: input.toolUseId ?? digest(`${input.toolName}|${command}|${exitCode ?? 'unknown'}|${outputHash}`),
+    }
+  }
+
+  if (name.startsWith('review_')) {
+    // 审核域工具是产品内已知工具，不是外部/未知能力。它们的结构化结果自带
+    // ok/results 字段，可以给出真实 outcome；继续落到 external_or_unknown 会让
+    // Harness 把每一次真实材料读取都记成 unknown，可观测性失真。
+    return {
+      ...base,
+      kind: 'review_operation',
+      outcome: reviewToolOutcome(resultText, isError),
+      subject: { resultHash: digest(resultText) },
+      summary: `${input.toolName} ${reviewToolOutcome(resultText, isError)}`,
+      fingerprint: input.toolUseId ?? digest(`${input.toolName}|${resultText}`),
     }
   }
 

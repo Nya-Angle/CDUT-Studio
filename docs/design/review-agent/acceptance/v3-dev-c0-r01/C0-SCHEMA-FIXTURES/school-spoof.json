@@ -1,0 +1,10 @@
+{
+  "synthetic": true,
+  "expected": "ACTOR_UNTRUSTED",
+  "actor": {
+    "actorId": "spoof",
+    "actorSource": "school",
+    "role": "teacher"
+  },
+  "warning": "Never a positive credential fixture"
+}

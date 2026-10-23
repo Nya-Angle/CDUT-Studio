@@ -221,6 +221,15 @@ describe('computeCaseInputHash（M0/H06）', () => {
     expect(computeCaseInputHash(base)).toBe(computeCaseInputHash(buildTestCase()))
   })
 
+  test('Given 案件模板或手写规则变化 When 计算指纹 Then 审核输入标记为新版本', () => {
+    const base = buildTestCase()
+    expect(computeCaseInputHash(base)).not.toBe(computeCaseInputHash({
+      ...base,
+      reviewTemplate: { templateId: 'local-template', version: 2 },
+      manualRules: [{ id: 'rule-1', title: '时间范围', requirement: '活动必须处于申报周期内。' }],
+    }))
+  })
+
   test('Given 与审核无关的元数据变化（updatedAt/revision） When 计算指纹 Then 不变', () => {
     const base = buildTestCase()
     const touched: ReviewCase = { ...base, updatedAt: '2030-01-01T00:00:00.000Z', revision: 99 }

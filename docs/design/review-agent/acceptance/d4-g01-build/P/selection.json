@@ -1,0 +1,148 @@
+{
+  "templateId": "g01-political-procedure",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "g01-p-object-a",
+      "subjectId": "sub-g01-p-object-a",
+      "title": "G01-P 合成技术目标",
+      "businessType": "g01-procedure-subject",
+      "scenario": "issue",
+      "scenarioSource": {
+        "sourceId": "src-p-boundary",
+        "sourceVersionId": "g01-p-v0-3",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "previous-work",
+          "applicability": "applicable",
+          "sourceId": "src-p-boundary",
+          "sourceVersionId": "g01-p-v0-3",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "split-issuer",
+          "applicability": "not-applicable",
+          "sourceId": "src-p-boundary",
+          "sourceVersionId": "g01-p-v0-3",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "paper-required",
+          "applicability": "not-applicable",
+          "sourceId": "src-p-boundary",
+          "sourceVersionId": "g01-p-v0-3",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "electronic-required",
+          "applicability": "not-applicable",
+          "sourceId": "src-p-boundary",
+          "sourceVersionId": "g01-p-v0-3",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "signed",
+          "applicability": "not-applicable",
+          "sourceId": "src-p-boundary",
+          "sourceVersionId": "g01-p-v0-3",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "extension",
+          "applicability": "not-applicable",
+          "sourceId": "src-p-boundary",
+          "sourceVersionId": "g01-p-v0-3",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "sensitive",
+          "applicability": "not-applicable",
+          "sourceId": "src-p-boundary",
+          "sourceVersionId": "g01-p-v0-3",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "archive-access",
+          "applicability": "not-applicable",
+          "sourceId": "src-p-boundary",
+          "sourceVersionId": "g01-p-v0-3",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "g01-p-object-b",
+      "subjectId": "sub-g01-p-object-b",
+      "title": "G01-P 合成技术目标",
+      "businessType": "g01-procedure-subject",
+      "scenario": "receive",
+      "scenarioSource": {
+        "sourceId": "src-p-boundary",
+        "sourceVersionId": "g01-p-v0-3",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "previous-work",
+          "applicability": "unknown",
+          "sourceId": "src-p-boundary",
+          "sourceVersionId": "g01-p-v0-3",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "split-issuer",
+          "applicability": "not-applicable",
+          "sourceId": "src-p-boundary",
+          "sourceVersionId": "g01-p-v0-3",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "paper-required",
+          "applicability": "not-applicable",
+          "sourceId": "src-p-boundary",
+          "sourceVersionId": "g01-p-v0-3",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "electronic-required",
+          "applicability": "not-applicable",
+          "sourceId": "src-p-boundary",
+          "sourceVersionId": "g01-p-v0-3",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "signed",
+          "applicability": "not-applicable",
+          "sourceId": "src-p-boundary",
+          "sourceVersionId": "g01-p-v0-3",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "extension",
+          "applicability": "not-applicable",
+          "sourceId": "src-p-boundary",
+          "sourceVersionId": "g01-p-v0-3",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "sensitive",
+          "applicability": "not-applicable",
+          "sourceId": "src-p-boundary",
+          "sourceVersionId": "g01-p-v0-3",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "archive-access",
+          "applicability": "not-applicable",
+          "sourceId": "src-p-boundary",
+          "sourceVersionId": "g01-p-v0-3",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

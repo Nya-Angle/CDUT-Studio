@@ -23,7 +23,8 @@ import {
 import { browserPanelDismissedSessionIdsAtom } from '@/atoms/browser-atoms'
 import { planAutoGroupWorkTab, tabGroupsAtom } from '@/atoms/tab-group-atoms'
 import { appModeAtom } from '@/atoms/app-mode'
-import { currentAgentSessionIdAtom } from '@/atoms/agent-atoms'
+import { currentAgentSessionIdAtom, agentSessionsAtom } from '@/atoms/agent-atoms'
+import { canOpenOrdinaryWorkTab, ensureOrdinaryWorkTabOwner, revokedAgentSessionIdsAtom } from '@/lib/agent-tab-access'
 import type { BrowserViewState } from '@profer/shared'
 import { activateTabWithSideEffects } from '@/lib/tab-activation'
 
@@ -85,6 +86,8 @@ export function activeBrowserTopTabId(sessionId: string, state: BrowserViewState
  * @returns 激活页的顶栏 Tab id（不存在时 null）
  */
 export function reconcileBrowserTabs(store: JotaiStore, state: BrowserViewState): string | null {
+  if (store.get(revokedAgentSessionIdsAtom).has(state.sessionId)
+    || !canOpenOrdinaryWorkTab(store.get(agentSessionsAtom), state.sessionId)) return null
   const dismissed = store.get(browserPanelDismissedSessionIdsAtom).has(state.sessionId)
   const tabs = store.get(tabsAtom)
   const next = planBrowserTabReconcile(tabs, state.sessionId, state, dismissed)
@@ -108,7 +111,18 @@ export function openBrowserTabFromPush(state: BrowserViewState, options?: { auto
   // 避免非当前会话的推送动顶栏布局。
   if (store.get(appModeAtom) !== 'agent' || sessionId !== store.get(currentAgentSessionIdAtom)) return
   const topTabId = reconcileBrowserTabs(store, state)
-  if (!topTabId || options?.autoGroup === false) return
+  if (!topTabId) {
+    // A real ordinary browser event may arrive before its metadata list is hydrated.
+    // Only retry after Main confirms the session; a stale/hidden ID stays denied.
+    void ensureOrdinaryWorkTabOwner(store, sessionId,
+      window.electronAPI.getAgentSessionMeta,
+      () => store.get(appModeAtom) === 'agent' && sessionId === store.get(currentAgentSessionIdAtom),
+    ).then((authorized) => {
+      if (authorized) openBrowserTabFromPush(state, options)
+    })
+    return
+  }
+  if (options?.autoGroup === false) return
   const next = planAutoGroupWorkTab({
     groups: store.get(tabGroupsAtom),
     agentTabId: sessionId,
@@ -121,6 +135,12 @@ export function openBrowserTabFromPush(state: BrowserViewState, options?: { auto
 /** 手动打开/聚焦某页浏览器 Tab：清除 dismissed，reconcile 并激活指定页（默认激活页）。 */
 export function openBrowserTabManually(sessionId: string, state: BrowserViewState, browserTabId?: string): void {
   const store = getDefaultStore()
+  if (state.sessionId !== sessionId || store.get(revokedAgentSessionIdsAtom).has(sessionId)) return
+  if (!canOpenOrdinaryWorkTab(store.get(agentSessionsAtom), sessionId)) {
+    void ensureOrdinaryWorkTabOwner(store, sessionId, window.electronAPI.getAgentSessionMeta)
+      .then((authorized) => { if (authorized) openBrowserTabManually(sessionId, state, browserTabId) })
+    return
+  }
   store.set(browserPanelDismissedSessionIdsAtom, (prev) => {
     if (!prev.has(sessionId)) return prev
     const next = new Set(prev)
