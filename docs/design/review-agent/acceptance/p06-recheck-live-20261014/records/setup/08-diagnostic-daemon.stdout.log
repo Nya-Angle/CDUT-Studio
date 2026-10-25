@@ -1,0 +1,10 @@
+@profer/electron dev: [vite]   VITE v6.4.3  ready in 307 ms
+@profer/electron dev: [electron] [app] Debugger listening on ws://127.0.0.1:9230/SESSION_3003ea9d7437
+@profer/electron dev: [electron] [app] DevTools listening on ws://127.0.0.1:9222/devtools/browser/SESSION_9256f7516648
+@profer/electron dev: [electron] [app] bunx electron . exited with code 0
+@profer/electron dev: [electron] [preload] bun run watch:preload exited with code SIGTERM
+@profer/electron dev: [electron] [main] bun run watch:main exited with code SIGTERM
+@profer/electron dev: [electron] error: script "dev:electron" exited with code 1
+@profer/electron dev: [electron] bun run dev:electron exited with code 1
+@profer/electron dev: [vite] error: script "dev:vite" exited with code 143
+@profer/electron dev: [vite] bun run dev:vite exited with code SIGTERM

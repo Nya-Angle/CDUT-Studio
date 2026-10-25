@@ -40,6 +40,18 @@ describe('Pi request proxy', () => {
     expect(buildPiRetrySettings('ollama')).toEqual({ enabled: false })
   })
 
+  test('Given a review request When building retry settings Then preserve bounded Pi continuation retries', () => {
+    expect(buildPiRetrySettings('openai', { isReviewRequest: true })).toEqual({
+      enabled: true,
+      maxRetries: 5,
+      baseDelayMs: 1000,
+      maxAgentDelayMs: 15_000,
+      jitterRatio: 0.2,
+      maxTotalRetries: 5,
+      maxTotalDelayMs: 60_000,
+    })
+  })
+
   test.each(['openai', 'openai-codex', 'anthropic'] as const)('Given %s When building retry settings Then preserve Pi native retries', (provider) => {
     expect(buildPiRetrySettings(provider)).toEqual({
       enabled: true,

@@ -368,3 +368,17 @@ V1 迁移保留原文件/运行/导出；生成 migration manifest 与问题清�
 | R12 | 公开投影未知字段、历史决定/报告、原件缺失迁移、助手冲突 | 无内部泄漏/混版/假来源；草案只经确认应用；A05/A11/A13/A17 |
 
 涉及 shared/main/preload/renderer 修改时同步四层类型，执行仓库要求的 typecheck 与相关边界检查；测试聚焦这些真实风险及 A/C，不因“纯函数已通过”跳过 UI、独立副本和目标机。文档提交本身不证明以上任何新功能已完成。
+
+
+## T08/F16 R02 实现合同（2026-10-24）
+
+本节将第 8 节的 ReportSnapshot 要求落实到实际代码入口；具体验收记录见
+`acceptance/v3-m4-f16-report-formats/T08-F16-MAIN-REPORT-CONTRACT-R02.md`。
+
+- Main 通过受控 IPC 从指定案卷、Run、模板版本和关联决定构建 T08 受众投影；Renderer 不再用全量 CaseAggregateV2 自行生成可交付报告。
+- 预览指纹绑定案卷 revision、Run inputHash、模板内容摘要、关联决定摘要、受众和渲染版本；导出时重新计算，指纹不一致即拒绝。
+- 每次导出先建立不可变 ReportSnapshot，再生成格式文件。快照与 MD/JSON 基线保存在受控案卷目录；文件采用唯一报告 ID，不覆盖旧报告。
+- 归档报告只从保存的快照重新打开和再导出，不读取当前案卷来重建历史正文。快照哈希用于检测本地内容变更；它不是数字签名或外部身份认证。
+- Main 执行受众投影，未知模板字段默认不公开；本地导出主体固定为 local reviewer，不冒充校方/教师身份。受众是输出投影，不代表外部送达或审批授权。
+- PDF 使用无远端资源、内嵌样式的受控 HTML 通过 Electron printToPDF 生成；原生保存取消、失败和成功分别反馈，取消不标记为外部导出成功。
+- 旧 EXPORT_REPORT_V2 IPC、Preload API 和 report-export-v2-service 已撤除；V1 预审报告入口不属于此原生 V3/T08 合同。

@@ -1,0 +1,204 @@
+{
+  "templateId": "g07-t07",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "g07-t07-item-a",
+      "subjectId": "g07-t07-subject-a",
+      "title": "项目借款与事后冲账结清预审：合成对象 A",
+      "businessType": "g07-loan-operation",
+      "scenario": "core",
+      "scenarioSource": {
+        "sourceId": "g07-t07-synth-reviewer",
+        "sourceVersionId": "g07-t07-synthetic-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "branch01",
+          "applicability": "applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch02",
+          "applicability": "unknown",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "branch03",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch04",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch05",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch06",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch07",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch08",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch09",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch10",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch11",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch12",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "g07-t07-item-b",
+      "subjectId": "g07-t07-subject-b",
+      "title": "项目借款与事后冲账结清预审：合成对象 B",
+      "businessType": "g07-loan-operation",
+      "scenario": "core",
+      "scenarioSource": {
+        "sourceId": "g07-t07-synth-reviewer",
+        "sourceVersionId": "g07-t07-synthetic-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "branch01",
+          "applicability": "unknown",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "branch02",
+          "applicability": "applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch03",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch04",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch05",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch06",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch07",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch08",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch09",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch10",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch11",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "branch12",
+          "applicability": "not-applicable",
+          "sourceId": "g07-t07-synth-reviewer",
+          "sourceVersionId": "g07-t07-synthetic-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

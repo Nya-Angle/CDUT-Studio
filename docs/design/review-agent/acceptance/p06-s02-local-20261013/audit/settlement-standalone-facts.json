@@ -1,0 +1,7 @@
+{
+  "id": "AUDIT-P01-P06-SETTLE-01",
+  "unhandledRejection": true,
+  "grantRevoked": false,
+  "expected": "持久化错误被捕获且清理不因异常跳过",
+  "result": "FAIL"
+}

@@ -1,0 +1,32 @@
+{
+  "apps/electron/src/main/lib/review/review-remote-indirect-access.p05.test.ts": {
+    "pass": 5,
+    "fail": 0,
+    "skip": 0
+  },
+  "apps/electron/src/main/lib/review/review-remote-reconnect-search.p05.test.ts": {
+    "pass": 8,
+    "fail": 0,
+    "skip": 0
+  },
+  "apps/electron/src/main/lib/review/review-relay-multi-viewer-contract.p05.test.ts": {
+    "pass": 8,
+    "fail": 0,
+    "skip": 0
+  },
+  "apps/electron/src/main/lib/review/review-remote-path-access.p05.test.ts": {
+    "pass": 7,
+    "fail": 0,
+    "skip": 0
+  },
+  "apps/electron/src/main/lib/review/review-feishu-owner-boundary.p05.test.ts": {
+    "pass": 7,
+    "fail": 0,
+    "skip": 0
+  },
+  "apps/electron/src/main/lib/review/review-remote-websocket-relay.p05.test.ts": {
+    "pass": 8,
+    "fail": 0,
+    "skip": 0
+  }
+}

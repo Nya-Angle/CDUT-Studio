@@ -1,0 +1,1501 @@
+{
+  "commands": [
+    {
+      "record": "records/automation/batch-fallback-after-fix.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:22:01.090815+00:00",
+      "finishedAt": "2026-10-14T16:22:01.186191+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/automation/batch-fallback-before-fix.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:21:40.322179+00:00",
+      "finishedAt": "2026-10-14T16:21:40.407634+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/automation/batch-fix-typecheck.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:22:01.237133+00:00",
+      "finishedAt": "2026-10-14T16:22:38.147539+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/automation/concurrent-merge-typecheck.command.json",
+      "sourceSha": "af673991d4485bf87409b72746b5bf361069d71e",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:49:32.406831+00:00",
+      "finishedAt": "2026-10-14T16:50:06.652090+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/automation/final-delivery-typecheck.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:37:59.427469+00:00",
+      "finishedAt": "2026-10-14T16:38:33.574903+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/automation/final-qa-typecheck.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:15:34.633747+00:00",
+      "finishedAt": "2026-10-14T16:16:08.842727+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/automation/fix-focused.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:10:15.191496+00:00",
+      "finishedAt": "2026-10-14T15:10:16.056317+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/automation/fix-typecheck.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:10:14.012546+00:00",
+      "finishedAt": "2026-10-14T15:10:51.942568+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/automation/original-risk-final.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:33:42.962410+00:00",
+      "finishedAt": "2026-10-14T15:33:43.766418+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/automation/permission-fix-typecheck.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:31:23.580953+00:00",
+      "finishedAt": "2026-10-14T15:31:57.613218+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/automation/permission-wiring-after-fix.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:30:29.562104+00:00",
+      "finishedAt": "2026-10-14T15:30:30.918648+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/automation/permission-wiring-before-fix-initialized.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:29:54.772187+00:00",
+      "finishedAt": "2026-10-14T15:29:55.601163+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/automation/permission-wiring-before-fix.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:29:19.882747+00:00",
+      "finishedAt": "2026-10-14T15:29:20.151719+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/automation/startup-io-after-fix.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:09:16.229731+00:00",
+      "finishedAt": "2026-10-14T15:09:16.472389+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/automation/startup-io-before-fix.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:08:45.462147+00:00",
+      "finishedAt": "2026-10-14T15:08:45.714584+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/automation/synchronous-dual-after-fix.command.json",
+      "sourceSha": "36625a28194863f205bf607f0da4de0196870b5f",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:51:40.122328+00:00",
+      "finishedAt": "2026-10-14T15:51:40.582273+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/automation/synchronous-dual-before-fix.command.json",
+      "sourceSha": "36625a28194863f205bf607f0da4de0196870b5f",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:50:46.426862+00:00",
+      "finishedAt": "2026-10-14T15:50:46.840382+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/automation/synchronous-fix-typecheck.command.json",
+      "sourceSha": "36625a28194863f205bf607f0da4de0196870b5f",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:51:40.864324+00:00",
+      "finishedAt": "2026-10-14T15:52:17.718382+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/01-frozen-install.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:24:41.005489+00:00",
+      "finishedAt": "2026-10-14T16:24:41.036284+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/02-typecheck.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:24:41.080599+00:00",
+      "finishedAt": "2026-10-14T16:25:17.836010+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/03-boundaries.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:25:17.884675+00:00",
+      "finishedAt": "2026-10-14T16:25:18.024263+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/04-skin.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:25:18.069766+00:00",
+      "finishedAt": "2026-10-14T16:25:18.119845+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/05-main.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:25:18.164084+00:00",
+      "finishedAt": "2026-10-14T16:25:18.686389+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/06-preload.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:25:18.732324+00:00",
+      "finishedAt": "2026-10-14T16:25:18.755247+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/07-renderer.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:25:18.800848+00:00",
+      "finishedAt": "2026-10-14T16:26:14.190172+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/08-focused.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:26:14.234062+00:00",
+      "finishedAt": "2026-10-14T16:26:15.840253+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/09-full-regression.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:26:15.889816+00:00",
+      "finishedAt": "2026-10-14T16:26:43.282458+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/10-baseline-01.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:26:44.426023+00:00",
+      "finishedAt": "2026-10-14T16:26:44.678959+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/10-baseline-02.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:26:44.723239+00:00",
+      "finishedAt": "2026-10-14T16:26:44.805300+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/10-baseline-03.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:26:44.850401+00:00",
+      "finishedAt": "2026-10-14T16:26:44.922454+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/10-baseline-04.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:26:44.968072+00:00",
+      "finishedAt": "2026-10-14T16:26:45.039894+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/10-baseline-05.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:26:45.086168+00:00",
+      "finishedAt": "2026-10-14T16:26:45.150663+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/10-baseline-06.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:26:45.194308+00:00",
+      "finishedAt": "2026-10-14T16:26:45.272154+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/10-baseline-07.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:26:45.315484+00:00",
+      "finishedAt": "2026-10-14T16:26:45.438488+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/10-batch-01.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:26:45.487222+00:00",
+      "finishedAt": "2026-10-14T16:26:46.100870+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/10-d2-01.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:26:43.328858+00:00",
+      "finishedAt": "2026-10-14T16:26:43.612467+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/10-d2-02.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:26:43.660700+00:00",
+      "finishedAt": "2026-10-14T16:26:43.839050+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/10-d2-03.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:26:43.886480+00:00",
+      "finishedAt": "2026-10-14T16:26:44.039788+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/10-d2-04.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:26:44.086025+00:00",
+      "finishedAt": "2026-10-14T16:26:44.234174+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/10-d2-05.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:26:44.282851+00:00",
+      "finishedAt": "2026-10-14T16:26:44.378388+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-b95-final/23-focused-complete.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:39:33.226182+00:00",
+      "finishedAt": "2026-10-14T16:39:34.870381+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/01-frozen-install.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:24:07.978647+00:00",
+      "finishedAt": "2026-10-14T15:24:08.115919+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/02-typecheck.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:24:08.160452+00:00",
+      "finishedAt": "2026-10-14T15:24:42.733549+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/03-boundaries.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:24:42.777944+00:00",
+      "finishedAt": "2026-10-14T15:24:42.930346+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/04-skin.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:24:42.974432+00:00",
+      "finishedAt": "2026-10-14T15:24:43.022412+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/05-main.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:24:43.066741+00:00",
+      "finishedAt": "2026-10-14T15:24:43.506073+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/06-preload.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:24:43.550288+00:00",
+      "finishedAt": "2026-10-14T15:24:43.572147+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/07-renderer.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:24:43.615648+00:00",
+      "finishedAt": "2026-10-14T15:25:38.563205+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/08-focused.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:25:38.607015+00:00",
+      "finishedAt": "2026-10-14T15:25:39.537325+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/09-full-regression.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:25:39.581480+00:00",
+      "finishedAt": "2026-10-14T15:26:03.804348+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/10-baseline-01.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:26:04.884315+00:00",
+      "finishedAt": "2026-10-14T15:26:05.141280+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/10-baseline-02.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:26:05.183383+00:00",
+      "finishedAt": "2026-10-14T15:26:05.277910+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/10-baseline-03.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:26:05.322853+00:00",
+      "finishedAt": "2026-10-14T15:26:05.393872+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/10-baseline-04.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:26:05.438038+00:00",
+      "finishedAt": "2026-10-14T15:26:05.512442+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/10-baseline-05.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:26:05.555804+00:00",
+      "finishedAt": "2026-10-14T15:26:05.616554+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/10-baseline-06.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:26:05.661286+00:00",
+      "finishedAt": "2026-10-14T15:26:05.736844+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/10-baseline-07.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:26:05.780433+00:00",
+      "finishedAt": "2026-10-14T15:26:05.891960+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/10-batch-01.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:26:05.934716+00:00",
+      "finishedAt": "2026-10-14T15:26:06.507436+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/10-d2-01.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:26:03.850824+00:00",
+      "finishedAt": "2026-10-14T15:26:04.121246+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/10-d2-02.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:26:04.164983+00:00",
+      "finishedAt": "2026-10-14T15:26:04.335398+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/10-d2-03.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:26:04.378793+00:00",
+      "finishedAt": "2026-10-14T15:26:04.524843+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/10-d2-04.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:26:04.569897+00:00",
+      "finishedAt": "2026-10-14T15:26:04.704257+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-e7323fb4/10-d2-05.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:26:04.747842+00:00",
+      "finishedAt": "2026-10-14T15:26:04.840613+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/01-frozen-install.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:32:27.787431+00:00",
+      "finishedAt": "2026-10-14T15:32:27.816763+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/02-typecheck.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:32:27.860492+00:00",
+      "finishedAt": "2026-10-14T15:33:04.323533+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/03-boundaries.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:33:04.369245+00:00",
+      "finishedAt": "2026-10-14T15:33:04.506971+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/04-skin.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:33:04.549862+00:00",
+      "finishedAt": "2026-10-14T15:33:04.597372+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/05-main.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:33:04.641161+00:00",
+      "finishedAt": "2026-10-14T15:33:05.095811+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/06-preload.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:33:05.140411+00:00",
+      "finishedAt": "2026-10-14T15:33:05.164335+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/07-renderer.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:33:05.208422+00:00",
+      "finishedAt": "2026-10-14T15:34:02.624688+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/08-focused.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:34:02.668754+00:00",
+      "finishedAt": "2026-10-14T15:34:04.285821+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/09-full-regression.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:34:04.330275+00:00",
+      "finishedAt": "2026-10-14T15:34:29.113581+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/10-baseline-01.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:34:30.214635+00:00",
+      "finishedAt": "2026-10-14T15:34:30.472654+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/10-baseline-02.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:34:30.516759+00:00",
+      "finishedAt": "2026-10-14T15:34:30.590008+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/10-baseline-03.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:34:30.633214+00:00",
+      "finishedAt": "2026-10-14T15:34:30.707109+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/10-baseline-04.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:34:30.749820+00:00",
+      "finishedAt": "2026-10-14T15:34:30.833900+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/10-baseline-05.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:34:30.877497+00:00",
+      "finishedAt": "2026-10-14T15:34:30.934608+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/10-baseline-06.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:34:30.979070+00:00",
+      "finishedAt": "2026-10-14T15:34:31.050088+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/10-baseline-07.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:34:31.093829+00:00",
+      "finishedAt": "2026-10-14T15:34:31.216870+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/10-batch-01.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:34:31.259289+00:00",
+      "finishedAt": "2026-10-14T15:34:31.846755+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/10-d2-01.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:34:29.160364+00:00",
+      "finishedAt": "2026-10-14T15:34:29.433513+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/10-d2-02.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:34:29.477992+00:00",
+      "finishedAt": "2026-10-14T15:34:29.649050+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/10-d2-03.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:34:29.694057+00:00",
+      "finishedAt": "2026-10-14T15:34:29.850017+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/10-d2-04.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:34:29.895077+00:00",
+      "finishedAt": "2026-10-14T15:34:30.037833+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-final/10-d2-05.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:34:30.082548+00:00",
+      "finishedAt": "2026-10-14T15:34:30.170145+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/01-frozen-install.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:50:45.805165+00:00",
+      "finishedAt": "2026-10-14T16:50:45.854301+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/02-typecheck.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:50:45.899252+00:00",
+      "finishedAt": "2026-10-14T16:51:19.999353+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/03-boundaries.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:51:20.043936+00:00",
+      "finishedAt": "2026-10-14T16:51:20.193355+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/04-skin.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:51:20.235294+00:00",
+      "finishedAt": "2026-10-14T16:51:20.299685+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/05-main.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:51:20.342583+00:00",
+      "finishedAt": "2026-10-14T16:51:20.822069+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/06-preload.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:51:20.865310+00:00",
+      "finishedAt": "2026-10-14T16:51:20.902014+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/07-renderer.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:51:20.945663+00:00",
+      "finishedAt": "2026-10-14T16:52:19.453378+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/08-focused.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:52:19.497337+00:00",
+      "finishedAt": "2026-10-14T16:52:21.118107+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/09-full-regression.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:52:21.163230+00:00",
+      "finishedAt": "2026-10-14T16:52:45.827892+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/10-baseline-01.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:52:47.334705+00:00",
+      "finishedAt": "2026-10-14T16:52:47.631868+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/10-baseline-02.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:52:47.682830+00:00",
+      "finishedAt": "2026-10-14T16:52:47.785643+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/10-baseline-03.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:52:47.838477+00:00",
+      "finishedAt": "2026-10-14T16:52:47.937389+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/10-baseline-04.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:52:47.998322+00:00",
+      "finishedAt": "2026-10-14T16:52:48.091553+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/10-baseline-05.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:52:48.139994+00:00",
+      "finishedAt": "2026-10-14T16:52:48.221565+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/10-baseline-06.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:52:48.270394+00:00",
+      "finishedAt": "2026-10-14T16:52:48.373692+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/10-baseline-07.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:52:48.427446+00:00",
+      "finishedAt": "2026-10-14T16:52:48.571105+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/10-batch-01.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:52:48.627340+00:00",
+      "finishedAt": "2026-10-14T16:52:49.308123+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/10-d2-01.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:52:45.876888+00:00",
+      "finishedAt": "2026-10-14T16:52:46.243990+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/10-d2-02.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:52:46.303178+00:00",
+      "finishedAt": "2026-10-14T16:52:46.539775+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/10-d2-03.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:52:46.603680+00:00",
+      "finishedAt": "2026-10-14T16:52:46.831430+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/10-d2-04.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:52:46.887890+00:00",
+      "finishedAt": "2026-10-14T16:52:47.078739+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/gates-integrated-final/10-d2-05.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:52:47.138932+00:00",
+      "finishedAt": "2026-10-14T16:52:47.277300+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io/dual-io-held-proof.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:06:38.387746+00:00",
+      "finishedAt": "2026-10-14T15:06:38.465876+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io/dual-io-main.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:04:58.799207+00:00",
+      "finishedAt": "2026-10-14T15:04:59.138172+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io/enoscp-main-ready.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:03:14.387017+00:00",
+      "finishedAt": "2026-10-14T15:03:15.785965+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io/enoscp-main.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:01:48.632132+00:00",
+      "finishedAt": "2026-10-14T15:06:38.531240+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io/enospc-main-native.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:04:42.538816+00:00",
+      "finishedAt": "2026-10-14T15:04:43.406264+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io/reboot-fault-held-after-fix.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:11:37.050750+00:00",
+      "finishedAt": "2026-10-14T15:11:40.925797+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io/reboot-fault-held-before-fix.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:06:38.763347+00:00",
+      "finishedAt": "2026-10-14T15:06:42.884148+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io/reboot-fault-held-post-fix-ready.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:13:13.175711+00:00",
+      "finishedAt": "2026-10-14T15:13:13.296703+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io/reboot-recovered-native.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:13:59.853656+00:00",
+      "finishedAt": "2026-10-14T15:14:04.607460+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io-accepted/dual-published.command.json",
+      "sourceSha": "36625a28194863f205bf607f0da4de0196870b5f",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:48:21.134838+00:00",
+      "finishedAt": "2026-10-14T15:48:21.773887+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io-accepted/enospc-published.command.json",
+      "sourceSha": "36625a28194863f205bf607f0da4de0196870b5f",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:47:21.294840+00:00",
+      "finishedAt": "2026-10-14T15:47:35.698904+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io-b95-final/dual-fault.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:29:19.631980+00:00",
+      "finishedAt": "2026-10-14T16:29:20.930211+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io-b95-final/enospc.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:29:18.973327+00:00",
+      "finishedAt": "2026-10-14T16:29:19.587688+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io-b95-final/enter-workbench.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:29:18.825101+00:00",
+      "finishedAt": "2026-10-14T16:29:18.929367+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io-b95-final/enter.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:28:22.417203+00:00",
+      "finishedAt": "2026-10-14T16:29:07.560171+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io-b95-final/reboot-recovered.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:31:36.869520+00:00",
+      "finishedAt": "2026-10-14T16:31:36.981180+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io-b95-final/reboot-still-faulted.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:31:00.415046+00:00",
+      "finishedAt": "2026-10-14T16:31:00.544256+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io-final/dual-fault.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:15:47.408963+00:00",
+      "finishedAt": "2026-10-14T16:15:48.070041+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io-final/enospc.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:14:55.778636+00:00",
+      "finishedAt": "2026-10-14T16:14:56.311584+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io-final/retry/dual-fault-fresh.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:17:17.875080+00:00",
+      "finishedAt": "2026-10-14T16:17:19.038998+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io-final/retry/dual-fault.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:16:33.405440+00:00",
+      "finishedAt": "2026-10-14T16:16:33.613490+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io-final/retry/new-io-case.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:17:17.722916+00:00",
+      "finishedAt": "2026-10-14T16:17:17.828223+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io-final/retry/reboot-fault-held.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:18:15.063793+00:00",
+      "finishedAt": "2026-10-14T16:18:15.169334+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/io-final/retry/reboot-recovered.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:19:05.755012+00:00",
+      "finishedAt": "2026-10-14T16:19:05.859570+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-b95-final/01-enter.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:26:52.250446+00:00",
+      "finishedAt": "2026-10-14T16:26:52.857590+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-b95-final/02-e05.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:26:52.913314+00:00",
+      "finishedAt": "2026-10-14T16:26:58.266898+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-b95-final/03-races.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:26:58.314661+00:00",
+      "finishedAt": "2026-10-14T16:27:01.478570+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-b95-final/04-e06.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:27:01.521735+00:00",
+      "finishedAt": "2026-10-14T16:27:18.438302+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-b95-final/05-ordinary.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:27:18.481695+00:00",
+      "finishedAt": "2026-10-14T16:27:23.263354+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-b95-final/06-batch.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:27:23.307042+00:00",
+      "finishedAt": "2026-10-14T16:27:41.009407+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-b95-final/07-scan-pdf.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:34:45.149894+00:00",
+      "finishedAt": "2026-10-14T16:34:45.798013+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-b95-final/office/office-prepare.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:31:37.046864+00:00",
+      "finishedAt": "2026-10-14T16:31:41.842700+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-b95-final/office/office-restored.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:33:00.369937+00:00",
+      "finishedAt": "2026-10-14T16:33:01.239784+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-b95-final/pdf-oopif/scan-pdf.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:36:13.569113+00:00",
+      "finishedAt": "2026-10-14T16:36:13.937647+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-b95-final/pdf-verified/scan-pdf.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:35:53.189264+00:00",
+      "finishedAt": "2026-10-14T16:35:53.625655+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-final/02-e05.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:08:09.630420+00:00",
+      "finishedAt": "2026-10-14T16:08:18.071900+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-final/03-e03-e04.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:08:44.691283+00:00",
+      "finishedAt": "2026-10-14T16:08:47.102010+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-final/04-e06.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:10:37.747420+00:00",
+      "finishedAt": "2026-10-14T16:10:52.769921+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-final/05-ordinary-pi.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:11:16.900322+00:00",
+      "finishedAt": "2026-10-14T16:11:20.216811+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-final/06-preview-restore-prepare.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:13:22.526266+00:00",
+      "finishedAt": "2026-10-14T16:13:22.705003+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-final/batch-corrected/batch-real.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:11:15.756613+00:00",
+      "finishedAt": "2026-10-14T16:11:49.491824+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-final/batch-real-provider.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:59:22.162480+00:00",
+      "finishedAt": "2026-10-14T15:59:36.419396+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-final/batch-witness/batch-real.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:20:00.249375+00:00",
+      "finishedAt": "2026-10-14T16:20:25.074576+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-final/preview-corrected/preview-prepare.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:14:17.518214+00:00",
+      "finishedAt": "2026-10-14T16:15:18.059371+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-final/preview-second/preview-prepare.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:22:41.497421+00:00",
+      "finishedAt": "2026-10-14T16:22:42.247679+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/live-final/races-retry/races.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:10:16.540995+00:00",
+      "finishedAt": "2026-10-14T16:10:19.870753+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/original-risk-b95/original-risk.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:27:06.998387+00:00",
+      "finishedAt": "2026-10-14T16:27:07.761296+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/original-risk-integrated/original-risk.command.json",
+      "sourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:54:46.584025+00:00",
+      "finishedAt": "2026-10-14T16:54:47.391672+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/runtime/accepted/e03-e04-final.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:37:02.924797+00:00",
+      "finishedAt": "2026-10-14T15:37:06.173246+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/runtime/accepted/e05-final-workbench.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:35:59.093579+00:00",
+      "finishedAt": "2026-10-14T15:36:04.287732+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/runtime/accepted/e05-final.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:33:41.802402+00:00",
+      "finishedAt": "2026-10-14T15:34:27.449132+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/runtime/accepted/e06-final.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:32:26.599962+00:00",
+      "finishedAt": "2026-10-14T15:32:49.880729+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/runtime/e06-corrected/e06-corrected.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:24:06.775156+00:00",
+      "finishedAt": "2026-10-14T15:25:13.202774+00:00",
+      "classification": "test/build/driver command; inspect individual result, no deduplication"
+    },
+    {
+      "record": "records/setup/01-typecheck.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T10:50:36.869761+00:00",
+      "finishedAt": "2026-10-14T10:51:15.890750+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/02-electron-dev.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T10:52:26.005845+00:00",
+      "finishedAt": "2026-10-14T10:55:48.979254+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/03-live-bootstrap.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T10:52:26.162550+00:00",
+      "finishedAt": "2026-10-14T10:52:56.240345+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/04-electron-authorized-dev.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T10:55:49.107390+00:00",
+      "finishedAt": "2026-10-14T10:59:48.910212+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/05-authorized-bootstrap.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T10:55:50.283883+00:00",
+      "finishedAt": "2026-10-14T10:56:01.736862+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/07-diagnostic-build.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T14:59:19.320806+00:00",
+      "finishedAt": "2026-10-14T14:59:20.115426+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/08-diagnostic-daemon.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T14:59:20.203514+00:00",
+      "finishedAt": "2026-10-14T15:01:48.729728+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/09-io-diagnostic-build.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:01:47.749956+00:00",
+      "finishedAt": "2026-10-14T15:01:48.354983+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/10-io-daemon.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:01:48.475136+00:00",
+      "finishedAt": "2026-10-14T15:06:38.879617+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/11-reboot-fault-held.command.json",
+      "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:06:38.624562+00:00",
+      "finishedAt": "2026-10-14T15:11:37.139808+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/12-fixed-diagnostic-build.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:11:36.293512+00:00",
+      "finishedAt": "2026-10-14T15:11:36.803319+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/13-fixed-reboot-fault-held.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:11:36.924069+00:00",
+      "finishedAt": "2026-10-14T15:14:00.138714+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/14-reboot-recovered.command.json",
+      "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:13:59.734243+00:00",
+      "finishedAt": "2026-10-14T15:32:26.894471+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/15-final-diagnostic-build.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:32:25.782527+00:00",
+      "finishedAt": "2026-10-14T15:32:26.309756+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/16-final-production-runtime.command.json",
+      "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:32:26.493170+00:00",
+      "finishedAt": "2026-10-14T15:47:21.448325+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/17-published-diagnostic-build.command.json",
+      "sourceSha": "36625a28194863f205bf607f0da4de0196870b5f",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:47:20.457464+00:00",
+      "finishedAt": "2026-10-14T15:47:20.956155+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/18-published-runtime.command.json",
+      "sourceSha": "36625a28194863f205bf607f0da4de0196870b5f",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:47:21.183694+00:00",
+      "finishedAt": "2026-10-14T15:59:22.365052+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/19-synchronous-fixed-runtime-build.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T15:58:41.712604+00:00",
+      "finishedAt": "2026-10-14T15:58:42.222179+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/20-final-fixed-electron.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T15:59:22.042252+00:00",
+      "finishedAt": "2026-10-14T16:18:00.499498+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/21-final-qa-runtime-build.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:16:47.270550+00:00",
+      "finishedAt": "2026-10-14T16:16:47.786101+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/22-held-fault-final-reboot.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:18:00.282844+00:00",
+      "finishedAt": "2026-10-14T16:18:32.592168+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/23-recovered-final-reboot.command.json",
+      "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:18:32.381377+00:00",
+      "finishedAt": "2026-10-14T16:26:16.527855+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/24-b95-final-runtime-build.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 0,
+      "startedAt": "2026-10-14T16:26:15.566697+00:00",
+      "finishedAt": "2026-10-14T16:26:16.105808+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/25-b95-final-electron.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:26:16.277042+00:00",
+      "finishedAt": "2026-10-14T16:30:45.352878+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/26-b95-held-fault-reboot.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:30:45.102630+00:00",
+      "finishedAt": "2026-10-14T16:31:16.323636+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/27-b95-recovered-reboot.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:31:16.087127+00:00",
+      "finishedAt": "2026-10-14T16:32:43.907257+00:00",
+      "classification": "process-lifecycle/setup"
+    },
+    {
+      "record": "records/setup/28-b95-office-restore-reboot.command.json",
+      "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+      "exitCode": 1,
+      "startedAt": "2026-10-14T16:32:43.665649+00:00",
+      "finishedAt": "2026-10-14T16:37:59.717846+00:00",
+      "classification": "process-lifecycle/setup"
+    }
+  ],
+  "note": "重复回归、修前反例、驱动失败与进程终止不等于唯一测试数。"
+}

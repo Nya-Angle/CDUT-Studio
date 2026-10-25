@@ -1,0 +1,4 @@
+{"id":"E06-PI-READ-TOOL","status":"PASS","assertions":3}
+{"id":"E06-PI-PERMISSION-DENY-RECOVER","status":"FAIL","assertions":0,"error":"Error: 真实运行条件未达到：(async()=>{const p=await window.electronAPI.getPendingRequests();const r=p.permissions.find(r=>r.sessionId===\"SESSION_fdef22948df2\");return r?{requestId:r.requestId"}
+{"id":"E06-PI-STOP-IN-FLIGHT","status":"PASS","assertions":2}
+{"id":"E06-DESKTOP-TEXT-PREVIEW","status":"FAIL","assertions":2,"error":"Error: 可用真实按钮缺失：材料审核"}

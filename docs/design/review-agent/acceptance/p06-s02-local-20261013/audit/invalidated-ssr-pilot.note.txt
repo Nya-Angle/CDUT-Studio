@@ -1,0 +1,1 @@
+该 pilot 的 Hook 没进入 API，表面 PASS 作废。最终探针统一 ESM Provider 并断言 apiReads>0，实际反例 FAIL。不得使用本文件签收。

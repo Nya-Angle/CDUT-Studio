@@ -1,0 +1,9 @@
+
+apps/electron/src/main/lib/agent-orchestrator-permission-wiring.p06.test.ts:
+(pass) P06 普通 Pi 权限真实接线 > auto Write 确实进入现有权限 pending，人工拒绝传回 Adapter [832.43ms]
+(pass) P06 普通 Pi 权限真实接线 > 同一真实查询的回调支持 Read、plan 拒止和运行中恢复 bypass [114.58ms]
+
+ 2 pass
+ 0 fail
+ 9 expect() calls
+Ran 2 tests across 1 file. [1339.00ms]

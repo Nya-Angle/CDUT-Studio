@@ -1,0 +1,8 @@
+[
+  {
+    "name": "P06-S02-E01 same-case update reuses owner, late old stop denied",
+    "status": "FAIL",
+    "durationMs": 13675,
+    "error": "Error: Old stop affected new round: {\"active\":\"completed\",\"historic\":\"cancelled\"}"
+  }
+]

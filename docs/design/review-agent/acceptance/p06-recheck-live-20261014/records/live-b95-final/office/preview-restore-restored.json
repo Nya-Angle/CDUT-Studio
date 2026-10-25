@@ -1,0 +1,28 @@
+{
+  "id": "E06-PREVIEW-RESTORE-restored",
+  "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+  "status": "PASS",
+  "assertions": [
+    {
+      "name": "真实新进程 list/meta 保留普通会话",
+      "pass": true
+    },
+    {
+      "name": "新进程 SDK IPC 恢复持久合成回复",
+      "pass": true
+    },
+    {
+      "name": "重启后 Office 授权预览仍正常",
+      "pass": true
+    },
+    {
+      "name": "重启后真实 Office Renderer 恢复内容",
+      "pass": true
+    },
+    {
+      "name": "预览后真实页面切换正常",
+      "pass": true
+    }
+  ],
+  "finishedAt": "2026-10-14T16:33:01.223Z"
+}

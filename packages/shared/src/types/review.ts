@@ -90,6 +90,43 @@ export interface SourceDocument {
   origin: 'upload' | 'fixture' | 'school-system'
   /** 导入时间（ISO） */
   importedAt: string
+  /** 原件 SHA-256；用于同一案卷中复用已人工确认的分类，不参与跨案身份判定。 */
+  byteHash?: string
+  /** 人工改类确认；机器推荐不得静默覆盖。 */
+  classificationCorrection?: { role: SourceDocument['role']; materialSlotId?: string | null; at: string }
+}
+
+/** 由用户主动触发的模型材料分类候选；模型结果绝非案卷写入或可信审核事实。 */
+export interface MaterialAiSuggestion {
+  status: 'proposed' | 'unresolved'
+  role?: SourceDocument['role']
+  materialSlotId?: string
+  materialSlotName?: string
+  rationale: string
+  /** 实际发送到已配置模型渠道的文本长度，用于用户理解成本边界。 */
+  submittedChars: number
+}
+
+/** 多文件导入结果；失败项按文件返回，已成功的材料不会回滚。 */
+export interface ImportDocumentsResult {
+  documents: SourceDocument[]
+  failures: Array<{ fileName: string; message: string }>
+  canceled: boolean
+}
+
+/** 材料导入的逐文件进度；扫描 PDF 会额外报告页检查和图像渲染阶段。 */
+export interface ReviewImportProgressEvent {
+  requestId: string
+  caseId: string
+  role: SourceDocument['role']
+  phase: 'selecting' | 'file-start' | 'extracting-text' | 'scanning-pdf' | 'rendering-pdf' | 'file-complete' | 'file-failed' | 'batch-complete' | 'cancelled'
+  fileName?: string
+  fileIndex?: number
+  fileCount?: number
+  completedFiles?: number
+  page?: number
+  totalPages?: number
+  message?: string
 }
 
 // ===== 规则包与大纲 =====
@@ -156,6 +193,8 @@ export interface RuleConstraint {
   requiredEvidenceTypes?: string[]
   /** 等级关键词 → 标准等级（用于冲突比对） */
   levelKeywords?: Record<string, string>
+  /** 固定分值适用范围；没有明确适用条件时不得按固定分值自动判定。 */
+  appliesWhen?: { field: string; equals?: string | number; includes?: string }
 }
 
 /** 规则包：一份依据材料 + 其提取的大纲 */
@@ -334,6 +373,13 @@ export interface ReviewLatestRunResult {
 /** 审核类型 */
 export type ReviewCaseType = '综合测评' | '活动申请' | '自定义审核'
 
+/** 案卷级手写规则；与上传的审核依据并存，编辑只影响当前案卷。 */
+export interface ManualReviewRule {
+  id: string
+  title: string
+  requirement: string
+}
+
 /** 案卷（demo 核心聚合根） */
 export interface ReviewCase {
   id: string
@@ -345,6 +391,8 @@ export interface ReviewCase {
   updatedAt: string
   /** 来源文档（依据 + 申报 + 证明） */
   documents: SourceDocument[]
+  /** 已从当前审核材料中移除的文件；保留记录用于 V2 来源追溯。 */
+  archivedDocuments?: SourceDocument[]
   /** 规则包 */
   rulePacks: RulePack[]
   /** 申报事项 */
@@ -358,6 +406,10 @@ export interface ReviewCase {
    * 缺省视为 'comprehensive-assessment'（兼容既有案卷）。
    */
   domainPackId?: ReviewDomainPackId
+  /** 当前案卷固定使用的已发布模板版本；未设置时按领域包选择默认模板。 */
+  reviewTemplate?: { templateId: string; version: number }
+  /** 用户针对当前案卷补充的可编辑规则。 */
+  manualRules?: ManualReviewRule[]
   /**
    * 待审主体文档 ID 列表（P2/D16）：支持多份待审文件（多份合同/多份申报）。
    * 缺省时回落为「role === 'application' 的全部文档」。
@@ -438,7 +490,7 @@ export type ReviewContentPart = ReviewTextContentPart | ReviewImageContentPart
 // ===== 模型出口白名单（全局核心：双出口收敛） =====
 
 /** 审核专区允许的模型出口类型 */
-export const REVIEW_MODEL_PROVIDERS = ['openai', 'custom', 'ollama'] as const
+export const REVIEW_MODEL_PROVIDERS = ['openai', 'deepseek', 'custom', 'ollama'] as const
 
 /** 审核专区拒绝的出口类型时给出的解释文案 */
 export const REVIEW_MODEL_PROVIDER_REJECTED_NOTICE =
@@ -451,16 +503,66 @@ export const REVIEW_IPC_CHANNELS = {
   LOAD_DEMO_CASE: 'review:load-demo-case',
   /** 列出已存储案卷 */
   LIST_CASES: 'review:list-cases',
+  /** 列出某案卷的全部历史运行 */
+  LIST_RUNS: 'review:list-runs',
   /** 读取单个案卷 */
   GET_CASE: 'review:get-case',
   /** 创建空案卷 */
   CREATE_CASE: 'review:create-case',
-  /** 导入文件到案卷（返回解析后的 SourceDocument） */
+  /** 多选导入文件到案卷（逐文件返回解析结果与失败项） */
   IMPORT_DOCUMENT: 'review:import-document',
+  /** 多文件导入进度事件，按 requestId 关联到发起导入的界面。 */
+  IMPORT_DOCUMENT_PROGRESS: 'review:import-document-progress',
+  /** C Main 自动归类提交后的无权限只读更新通知。 */
+  MATERIAL_AUTO_CLASSIFIED: 'review:material-auto-classified',
+  /** 开发版自动化验收：使用受控路径直接导入，避开原生文件选择框。 */
+  IMPORT_DOCUMENT_FROM_PATH: 'review:import-document-from-path',
+  /** 从当前案卷审核输入中移除材料（原件保留在案卷目录） */
+  REMOVE_DOCUMENTS: 'review:remove-documents',
+  /** 更新同角色材料的审核顺序 */
+  REORDER_DOCUMENTS: 'review:reorder-documents',
   /** 删除案卷 */
   DELETE_CASE: 'review:delete-case',
+  /** Restore a native archived Case through a Main-trusted, CAS-backed command. */
+  RESTORE_CASE_V3: 'review-v3:restore-case',
+  /** C Main candidate author latest-revision READ ONLY. No implied publication. */
+  AUTHOR_READ_LATEST_V3: 'review-v3:author-read-latest',
+  /** Local-only B1 author workbench; never a school-published rule. */
+  AUTHOR_SAVE_LOCAL_V3: 'review-v3:author-save-local',
+  AUTHOR_PREVIEW_LOCAL_V3: 'review-v3:author-preview-local',
+  AUTHOR_FREEZE_LOCAL_V3: 'review-v3:author-freeze-local',
+  /** Real Main-scoped native Case physical B2/B30 materials + B3 candidate routing. */
+  LOCAL_PRODUCT_CURRENT_V3: 'review-v3:local-product-current',
+  LOCAL_PRODUCT_DEEP_MATCH_V3: 'review-v3:local-product-deep-match',
+  LOCAL_PRODUCT_INTERRUPT_V3: 'review-v3:local-product-interrupt',
+  LOCAL_PRODUCT_MANUAL_CHOICE_V3: 'review-v3:local-product-manual-choice',
+  LOCAL_PRODUCT_UNMATCHED_V3: 'review-v3:local-product-unmatched',
+  /** Existing D4 candidate workspaces -> one native Case's technical ReviewPlan. */
+  LOCAL_D4_LIST_V3: 'review-v3:local-d4-list',
+  LOCAL_D4_ATTACH_PLAN_V3: 'review-v3:local-d4-attach-plan',
+  LOCAL_B1_ATTACH_PLAN_V3: 'review-v3:local-b1-attach-plan',
+  /** C Main-only current B20 physical candidate preview; never a published Plan. */
+  B20_CANDIDATE_READ_V3: 'review-v3:b20-candidate-read',
+  /** User requests Main to show native ZIP picker for one CURRENT B20 selected archive. */
+  B20_NATIVE_REPICK_V3: 'review-v3:b20-native-repick',
+  /** C Main formal published-Plan upgrade through native Case CAS/Receipt. */
+  UPGRADE_CANONICAL_PLAN_V3: 'review-v3:upgrade-canonical-plan',
+  /** F05: durable human remediation proposal, followed by explicit controlled application. */
+  PROPOSE_NATIVE_REMEDIATION_V3: 'review-v3:propose-native-remediation',
+  APPLY_NATIVE_REMEDIATION_V3: 'review-v3:apply-native-remediation',
   /** 更新案卷设置（领域包 / 标题 / 类型 / 待审主体文档） */
   UPDATE_CASE_SETTINGS: 'review:update-case-settings',
+  /** 手动修改从依据文件生成的单条规则摘要。 */
+  UPDATE_RULE_OUTLINE: 'review:update-rule-outline',
+  /** 人工修正一条 AI 识别的申报事项。 */
+  UPDATE_REVIEW_ITEM: 'review:update-review-item',
+  /** Local reviewer declares an item against an already registered exact source version. */
+  CREATE_NATIVE_REVIEW_ITEM_V3: 'review-v3:create-native-review-item',
+  /** 安全解析案卷图像块的本地预览路径。 */
+  GET_IMAGE_PREVIEW_PATH: 'review:get-image-preview-path',
+  /** 获取 V2 案卷已登记原件的只读预览路径。 */
+  GET_WORKSPACE_DOCUMENT_PREVIEW_PATH: 'review-v2:get-document-preview-path',
+  CONFIRM_RULE_PACK: 'review:confirm-rule-pack',
   /** 生成规则大纲（左栏） */
   GENERATE_RULE_OUTLINE: 'review:generate-rule-outline',
   /** 识别可审核条目（中栏） */
@@ -472,9 +574,19 @@ export const REVIEW_IPC_CHANNELS = {
   LATEST_RUN: 'review:get-latest-run',
   // ===== V2（通用审核 Agent，M5 接线） =====
   LIST_TEMPLATES_V2: 'review-v2:list-templates',
+  LIST_TEMPLATE_VERSIONS_V2: 'review-v2:list-template-versions',
   GET_TEMPLATE_V2: 'review-v2:get-template',
   PUBLISH_TEMPLATE_V2: 'review-v2:publish-template',
   RUN_REVIEW_V2: 'review-v2:run-review',
+  /** 从真实 Pi 会话启动按案卷授权的直接审核运行。 */
+  PREPARE_PI_REVIEW_V2: 'review-v2:prepare-pi-review',
+  GET_PI_REVIEW_SESSION_V2: 'review-v2:get-pi-review-session',
+  /** Main V2 ledger plus actual Pi execution-ownership ACK; read-only business state. */
+  GET_BACKGROUND_PI_REVIEW_STATE_V2: 'review-v2:get-background-pi-review-state',
+  START_BACKGROUND_PI_REVIEW_V2: 'review-v2:start-background-pi-review',
+  STOP_BACKGROUND_PI_REVIEW_V2: 'review-v2:stop-background-pi-review',
+  /** 发送失败时结束直接审核运行并撤销本轮授权。 */
+  ABORT_PI_REVIEW_V2: 'review-v2:abort-pi-review',
   /** 续跑：沿用既有运行检查点（崩溃/等待输入后继续） */
   RESUME_RUN_V2: 'review-v2:resume-run',
   LIST_RUNS_V2: 'review-v2:list-runs',
@@ -486,37 +598,171 @@ export const REVIEW_IPC_CHANNELS = {
   SEED_FIXTURE_V2: 'review-v2:seed-fixture',
   CREATE_CASE_V2: 'review-v2:create-case',
   GET_AGGREGATE_V2: 'review-v2:get-aggregate',
+  /** T08/F16 Main-owned, audience-filtered report snapshot and immutable archive. */
+  GET_T08_REPORT_AUDIENCES_V3: 'review-v3:t08-report-audiences',
+  GET_T08_REPORT_PREVIEW_V3: 'review-v3:t08-report-preview',
+  LIST_T08_REPORT_ARCHIVES_V3: 'review-v3:t08-report-archives-list',
+  GET_T08_REPORT_ARCHIVE_V3: 'review-v3:t08-report-archive-get',
+  EXPORT_T08_REPORT_V3: 'review-v3:t08-report-export',
+  EXPORT_T08_REPORT_ARCHIVE_V3: 'review-v3:t08-report-archive-export',
   UPDATE_FIELDS_V2: 'review-v2:update-fields',
+  /** 导入草案补录/编辑申报事项（必需分项）；Main 用已发布模板校验并 CAS 落盘。 */
+  UPSERT_CASE_SUBJECT_V2: 'review-v2:upsert-case-subject',
   CORRECT_OBSERVATION_V2: 'review-v2:correct-observation',
+  GET_RUN_OBSERVATIONS_V2: 'review-v2:get-run-observations',
+  EXPORT_REPORT_V2: 'review-v2:export-report',
+  ASSIGNMENT_CREATE_V2: 'review-v2:assignment-create',
+  ASSIGNMENT_REVOKE_V2: 'review-v2:assignment-revoke',
+  ASSIGNMENT_LIST_V2: 'review-v2:assignment-list',
+  CASE_TIMELINE_V2: 'review-v2:case-timeline',
   SET_EVIDENCE_LINK_V2: 'review-v2:set-evidence-link',
   // ===== N3b：业务闭环命令 =====
   ENSURE_INITIAL_TASK_V2: 'review-v2:ensure-initial-task',
   RECORD_STAGE_DECISION_V2: 'review-v2:record-stage-decision',
   RESOLVE_SUPPLEMENT_V2: 'review-v2:resolve-supplement',
   RESPOND_SUPPLEMENT_V2: 'review-v2:respond-supplement',
+  RECORD_WORKSPACE_DISPOSITION_V2: 'review-v2:record-workspace-disposition',
+  OPEN_WORKSPACE_SUPPLEMENT_V2: 'review-v2:open-workspace-supplement',
+  ACKNOWLEDGE_WORKSPACE_MATERIAL_V2: 'review-v2:acknowledge-workspace-material',
+  DECIDE_WORKSPACE_CASE_V2: 'review-v2:decide-workspace-case',
+  RECORD_WORKSPACE_SUBJECT_ADJUDICATION_V2: 'review-v2:record-workspace-subject-adjudication',
+  GET_WORKSPACE_RUN_VALIDITY_V2: 'review-v2:get-workspace-run-validity',
   CAST_RATING_V2: 'review-v2:cast-rating',
+  /** T07 评分视图读取（actor 由 Main 派生，Renderer 只声明角色） */
+  T07_GET_VIEW: 'review-v3:t07-get-view',
+  /** T07 评分动作（分配/回避/评分/同分/冻结/重开），要求 expectedRevision */
+  T07_APPLY_ACTION: 'review-v3:t07-apply-action',
+  /** T07 建立评分轮次（仅组织者、仅首次） */
+  T07_INIT_STATE: 'review-v3:t07-init-state',
+  /** 未匹配业务候选 → 可编辑模板草稿（只做脚手架，不发布、不虚构政策） */
+  FALLBACK_TEMPLATE_DRAFT_V3: 'review-v3:fallback-template-draft',
+  /** 把 50 套 D4 冻结候选发布为演示模板（无校方政策引用，判据全语义） */
+  D4_DEMO_PUBLISH_V3: 'review-v3:d4-demo-publish',
+  /** 已发布模板规则运行（编译冻结计划 → T04 检查 → 真实 ReviewRunV2） */
+  TEMPLATE_RULE_RUN_V3: 'review-v3:template-rule-run',
+  /** T01 受控模型起草（渠道与凭据留在 Main，渲染层只给 prompt 文本） */
+  T01_MODEL_DRAFT: 'review-v3:t01-model-draft',
+  /** T01 固定无材料探针（只验证审核模型出口连通性，不处理案卷材料） */
+  T01_MODEL_PROBE: 'review-v3:t01-model-probe',
+  /** T06 物理来源选择（Main 弹真实 OS 选择器，返回不透明 entryId） */
+  T06_PICK_PHYSICAL_SOURCE: 'review-v3:t06-pick-physical-source',
+  /** T06 物理入库提交（建案 + 逐原件入库 + 批次回执，requestId 幂等） */
+  T06_COMMIT_PHYSICAL_IMPORT: 'review-v3:t06-commit-physical-import',
+  /** 只读案卷存储诊断（坏/可恢复案卷不静默消失，ASSET-12） */
+  LIST_CASE_STORAGE_ISSUES_V3: 'review-v3:list-case-storage-issues',
+  /** T05 可信阶段能力投影（只读；不构成授权） */
+  T05_STAGE_CAPABILITY: 'review-v3:t05-stage-capability',
+  /** T05 可信阶段决定（Main 重核身份/Run/准备度后原子写入） */
+  T05_RECORD_STAGE_DECISION: 'review-v3:t05-record-stage-decision',
+  /** T02 暂存来源只读预览（Main 派生 B2 ctx；不产生 DocumentVersion） */
+  T02_STAGED_INVENTORY_V3: 'review-v3:t02-staged-inventory',
+  /** T09 签发学生离线应答包 */
+  T09_ISSUE_STUDENT: 'review-v3:t09-issue-student',
+  /** T09 从真实 T07 轮次签发匿名评委任务（本地声明，非学校认证） */
+  T09_ISSUE_JUDGE: 'review-v3:t09-issue-judge',
+  /** T09 预览离线回件（只校验不写入） */
+  T09_PREVIEW_REPLY: 'review-v3:t09-preview-reply',
+  /** T09 导入离线回件（附件先登记原件，再原子答复补件） */
+  T09_IMPORT_REPLY: 'review-v3:t09-import-reply',
   RUN_BATCH_V2: 'review-v2:run-batch',
   SUBMIT_APPEAL_V2: 'review-v2:submit-appeal',
   RESOLVE_APPEAL_V2: 'review-v2:resolve-appeal',
+  /** F13 本机申诉提交/独立复核/撤回；真实 Actor 在 Main 派生。 */
+  F13_SUBMIT_LOCAL_APPEAL: 'review-v3:f13-submit-local-appeal',
+  F13_REVIEW_LOCAL_APPEAL: 'review-v3:f13-review-local-appeal',
+  F13_WITHDRAW_LOCAL_APPEAL: 'review-v3:f13-withdraw-local-appeal',
   // ===== N4b：模板向导 =====
   CREATE_POLICY_V2: 'review-v2:create-policy',
   SAVE_TEMPLATE_DRAFT_V2: 'review-v2:save-template-draft',
+  LIST_ARCHIVED_TEMPLATES_V2: 'review-v2:list-archived-templates',
+  REORDER_TEMPLATES_V2: 'review-v2:reorder-templates',
+  REMOVE_TEMPLATE_V2: 'review-v2:remove-template',
+  RESTORE_TEMPLATE_V2: 'review-v2:restore-template',
   // ===== N5b：批次管理 =====
   CREATE_BATCH_V2: 'review-v2:create-batch',
   GET_BATCH_V2: 'review-v2:get-batch',
+  LIST_BATCHES_V2: 'review-v2:list-batches',
   BATCH_ACTION_V2: 'review-v2:batch-action',
+  BATCH_GROUP_PREVIEW_V2: 'review-v2:batch-group-preview',
+  BATCH_GROUP_APPLY_V2: 'review-v2:batch-group-apply',
+  BATCH_AUTO_PROCESS_V2: 'review-v2:batch-auto-process',
   LIST_CASES_V2: 'review-v2:list-cases',
   SUBMIT_CASE_V2: 'review-v2:submit-case',
   PICK_REGISTER_MATERIAL_V2: 'review-v2:pick-register-material',
+  REGISTER_MATERIAL_PATH_V2: 'review-v2:register-material-path',
+  /** 兼容入口：Main 以已有版本的原子分类回执记录变更，不覆盖原件字节。 */
+  CLASSIFY_NATIVE_MATERIAL_V3: 'review-v3:classify-native-material',
+  /** 初审材料缺件转为持久补件请求，不改变正式业务阶段。 */
+  OPEN_INITIAL_REVIEW_SUPPLEMENT_V3: 'review-v3:open-initial-review-supplement',
+  /** 批量原子改类：保留物理原件版本并记录分类修改回执。 */
+  RECLASSIFY_NATIVE_MATERIAL_V3: 'review-v3:reclassify-native-material',
+  RECLASSIFY_NATIVE_MATERIALS_V3: 'review-v3:reclassify-native-materials',
+  /** 用户确认后才请求已配置模型，仅返回材料分类建议，不改案卷。 */
+  SUGGEST_MATERIAL_WITH_AI: 'review:suggest-material-with-ai',
+  /** Main 按真实案卷原件运行已有本地 OCR 端口，只返回候选且不写案卷。 */
+  CLASSIFY_MATERIAL_WITH_OCR: 'review:classify-material-with-ocr',
   /** 助手对话 */
   ASSISTANT_CHAT: 'review:assistant-chat',
   /** 导出预审报告 */
   EXPORT_REPORT: 'review:export-report',
   /** 查询当前可用模型出口（网关自检） */
   GET_MODEL_GATEWAY_STATUS: 'review:get-model-gateway-status',
+  /** 查询/保存审核模块独立使用的 Agent 渠道与模型。 */
+  GET_MODULE_SETTINGS_V2: 'review-v2:get-module-settings',
+  SAVE_MODULE_SETTINGS_V2: 'review-v2:save-module-settings',
 } as const
 
 export type ReviewIpcChannel = (typeof REVIEW_IPC_CHANNELS)[keyof typeof REVIEW_IPC_CHANNELS]
+
+/** Business state of the review run, not a school approval outcome. */
+export type ReviewBackgroundPiRunPhase =
+  | 'not-started' | 'preparing' | 'accepted' | 'needs-attention' | 'finished' | 'incomplete'
+
+/** Pi 审核运行内进度阶段：纯枚举投影，不含任何流内容。 */
+export type ReviewPiRunProgressPhase =
+  | 'preparing' | 'reading-material' | 'analyzing' | 'submitting-results' | 'outputting-results'
+
+/**
+ * Main 内存态安全进度投影（随 getBackgroundPiReviewState 附带）。
+ * 只含阶段枚举、Main 核准文件名与时间戳；不含 AgentStreamEvent、
+ * 自由文本、思考文本、原始工具参数或文档正文。
+ */
+export interface ReviewPiRunProgress {
+  /** 进度所属 Pi 审核 run；旧 run 的迟到事件不会覆盖新 run 的对象。 */
+  runId: string
+  phase: ReviewPiRunProgressPhase
+  /** 仅由 Main 从案卷聚合活跃 documentVersionId 映射核准的文件名。 */
+  fileName?: string
+  updatedAt: number
+}
+
+export interface ReviewBackgroundPiRunState {
+  caseId: string
+  phase: ReviewBackgroundPiRunPhase
+  runId?: string
+  /** Persisted V2 ledger status; 'running' alone never means accepted. */
+  runStatus?: import('./review-v2').RunV2Status
+  completedAt?: string
+  /**
+   * 终态失败/中断的可诊断原因（仅在 phase 为 incomplete/needs-attention 时给出）。
+   * 失败必须可追踪：只给 phase 而不给原因，界面无法区分「模型慢」与「链路挂死」。
+   */
+  error?: string
+  /** 当前 Run 的安全进度投影；仅当 progress.runId 一致且 run 仍在运行时附带。 */
+  progress?: ReviewPiRunProgress
+}
+
+/** Main 创建内部会话和指派；前台不传 session、目录或执行回调。 */
+export interface ReviewBackgroundPiStartRequest {
+  caseId: string
+  mode?: 'update' | 'restart'
+  /**
+   * 用户显式确认「继续上次检查点（新回合）」。
+   * 冷启动中断的回合没有耐久 effect journal；未显式确认时 Main 必须失败关闭，
+   * 不得自动按原 RunId 重放未知的模型/Provider 请求。
+   */
+  resumeInterrupted?: boolean
+}
 
 // ===== IPC 请求/响应载荷 =====
 
@@ -532,6 +778,16 @@ export interface ReviewModelGatewayStatus {
   modelId?: string
   /** 不可用原因 */
   reason?: string
+}
+
+/** 审核模块偏好。密钥仍保存在全局渠道配置里，这里只保存选择的渠道和模型 ID。 */
+export interface ReviewModuleSettingsV2 {
+  agentModelSelection: { channelId: string; modelId: string } | null
+  /**
+   * 模板匹配页是否显示高级配置（默认 false）。
+   * 只影响显示，不取消任何后端业务校验。
+   */
+  showAdvancedOptions?: boolean
 }
 
 /** 请求：生成规则大纲 */
@@ -559,6 +815,50 @@ export interface UpdateCaseSettingsRequest {
   type?: ReviewCaseType
   /** 待审主体文档 ID 列表（P2 多待审文件） */
   subjectDocumentIds?: string[]
+  /** 设置为 null 时回退到按审核类型匹配的默认模板。 */
+  reviewTemplate?: { templateId: string; version: number } | null
+  /** 全量替换本案手写规则；传空数组可清空。 */
+  manualRules?: ManualReviewRule[]
+}
+
+/** 请求：编辑依据文件生成的规则摘要（来源锚点由主进程保留）。 */
+export interface UpdateRuleOutlineRequest {
+  caseId: string
+  rulePackId: string
+  ruleId: string
+  title: string
+  summary: string
+}
+
+/** 请求：人工修正 AI 识别的申报事项字段。来源锚点和材料关联由主进程保留。 */
+export interface UpdateReviewItemRequest {
+  caseId: string
+  itemId: string
+  title: string
+  category: string
+  declaredScore: number
+  level?: string
+  activityDate?: string
+  organizer?: string
+}
+
+/**
+ * Source-anchored native HUMAN declaration, not an AI fact or school decision.
+ * requestId is an opaque idempotency key, never an identity credential.
+ */
+export interface CreateNativeReviewItemV3Request {
+  caseId: string
+  requestId: string
+  expectedRevision: number
+  documentVersionId: string
+  /** Existing parsed block identity; when absent, location is explicitly file-level. */
+  sourceBlockId?: string
+  title: string
+  category: string
+  declaredScore: number
+  level?: string
+  activityDate?: string
+  organizer?: string
 }
 
 /** 请求：助手对话 */

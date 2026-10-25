@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "group": "G01",
+  "displayName": "师生共有业务审核模板",
+  "archiveDate": "2026-10-11",
+  "intent": "完整 Markdown 业务模板来源存档；非已发布规则或可执行模板",
+  "templateCount": 5,
+  "templates": [
+    {
+      "id": "student-identity-correction",
+      "title": "学籍身份信息更正审核",
+      "sourceVersion": "v1.7",
+      "sourcePath": "originals/g01_student_identity_complete_template_v1.7.md",
+      "sizeBytes": 61389,
+      "sha256": "52ae0cdc27a16bb46659cd43d3e78632c44d8b5ccc86a18559b263512f51f329",
+      "gitBlobSha": "aec737f471d4e648ab98a9243dcf4bc9939ce8a5",
+      "sourceStatus": "business-design-draft",
+      "archiveRole": "immutable-source-baseline"
+    },
+    {
+      "id": "archive-utilization",
+      "title": "档案利用申请审核",
+      "sourceVersion": "v1.5",
+      "sourcePath": "originals/g01_archive_utilization_template_editor_spec_v1_5.md",
+      "sizeBytes": 70413,
+      "sha256": "65157e002dd4d1ccc08d32d341b4a1f7eacfc55d6a3c13a5da949aaf122f9785",
+      "gitBlobSha": "2f36f7de8eed196a1483e7410bf25575922117df",
+      "sourceStatus": "business-design-draft",
+      "archiveRole": "immutable-source-baseline"
+    },
+    {
+      "id": "special-campus-card",
+      "title": "特殊校园卡资格审核",
+      "sourceVersion": "v1.4",
+      "sourcePath": "originals/special_campus_card_template_v1.4.md",
+      "sizeBytes": 57844,
+      "sha256": "fa409cfa30ad0f0c624784f9beab4799cc1e31bbcf3d118c0e41a67deba8937f",
+      "gitBlobSha": "c76427d092e455a5a353ff25aade7ced4de189e5",
+      "sourceStatus": "business-design-draft",
+      "archiveRole": "immutable-source-baseline"
+    },
+    {
+      "id": "special-proof-and-seal",
+      "title": "专项证明与用印审核",
+      "sourceVersion": "v1.4",
+      "sourcePath": "originals/G01_special_proof_seal_review_template_v1.4.md",
+      "sizeBytes": 79026,
+      "sha256": "bb9b11b7963e0cd7661afe12bb3a23eec1655153de2d122ffb59b26f10190c15",
+      "gitBlobSha": "6b931fb5f7d00482cb551f58d4fbb9349bd33cd2",
+      "sourceStatus": "business-design-draft",
+      "archiveRole": "immutable-source-baseline"
+    },
+    {
+      "id": "political-material-procedure",
+      "title": "政审材料程序审核",
+      "sourceVersion": "v0.3",
+      "sourcePath": "originals/G01_political_review_template_v0.3.md",
+      "sizeBytes": 80810,
+      "sha256": "542e73ddc26e861e1bc1d454841dc6096299f1a991e944f59a487d84d97304ec",
+      "gitBlobSha": "5ebc919c6630a3b81aaf6a1e6c28b1d37de3671c",
+      "sourceStatus": "business-design-draft",
+      "archiveRole": "immutable-source-baseline"
+    }
+  ]
+}

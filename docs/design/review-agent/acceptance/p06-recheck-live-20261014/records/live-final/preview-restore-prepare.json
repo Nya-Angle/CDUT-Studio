@@ -1,0 +1,13 @@
+{
+  "id": "E06-PREVIEW-RESTORE-prepare",
+  "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+  "status": "FAIL",
+  "assertions": [
+    {
+      "name": "真实存在的工作区外合成文件被拒止",
+      "pass": false
+    }
+  ],
+  "error": "AssertionError [ERR_ASSERTION]: 真实存在的工作区外合成文件被拒止",
+  "finishedAt": "2026-10-14T16:13:22.698Z"
+}

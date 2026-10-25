@@ -8,7 +8,7 @@ const start = source.indexOf('  ipcMain.handle(AGENT_IPC_CHANNELS.START_GOAL,')
 const end = source.indexOf('  // ===== Agent 队列消息 =====', start)
 if (start < 0 || end < start) throw new Error('Goal IPC 注册边界不存在')
 const js = new Bun.Transpiler({ loader: 'ts' }).transformSync(source.slice(start, end))
-const register = new Function('deps', `const { ipcMain, AGENT_IPC_CHANNELS, assertSensitiveAgentIpcSender, goalSessionService, feishuBridgeManager, stopAgentAndWait, isGoalRunActive } = deps; ${js}`)
+const register = new Function('deps', `const { ipcMain, AGENT_IPC_CHANNELS, assertSensitiveAgentIpcSender, assertOrdinaryAgentSession, goalSessionService, feishuBridgeManager, stopAgentAndWait, isGoalRunActive } = deps; ${js}`)
 
 function harness(goalOwner = false) {
   const handlers = new Map<string, (...args: unknown[]) => Promise<unknown>>()
@@ -18,6 +18,7 @@ function harness(goalOwner = false) {
     ipcMain: { handle: (channel: string, handler: (...args: unknown[]) => Promise<unknown>) => handlers.set(channel, handler) },
     AGENT_IPC_CHANNELS,
     assertSensitiveAgentIpcSender: () => { calls.push('guard') },
+    assertOrdinaryAgentSession: () => { calls.push('ordinary-guard') },
     goalSessionService: {
       start: async () => { calls.push('start'); return state },
       get: () => state, list: () => [state],
@@ -50,12 +51,12 @@ describe('Goal IPC 控制路由', () => {
   test('普通 Stop 在 Goal owner 时只停止明确目标，不在 await 后误停新 owner', async () => {
     const h = harness(true)
     await h.invoke(AGENT_IPC_CHANNELS.STOP_AGENT, 's')
-    expect(h.calls).toEqual(['guard', 'mirror-stop', 'goal-stop'])
+    expect(h.calls).toEqual(['guard', 'ordinary-guard', 'mirror-stop', 'goal-stop'])
   })
   test('等待中的 Goal 和当前普通运行都接受用户 Stop', async () => {
     const h = harness(false)
     await h.invoke(AGENT_IPC_CHANNELS.STOP_AGENT, 's')
-    expect(h.calls).toEqual(['guard', 'mirror-stop', 'ordinary-stop', 'goal-stop'])
+    expect(h.calls).toEqual(['guard', 'ordinary-guard', 'mirror-stop', 'ordinary-stop', 'goal-stop'])
   })
   test('非法 start/update/history 不调用服务', async () => {
     const h = harness()

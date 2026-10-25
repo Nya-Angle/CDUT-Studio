@@ -1,0 +1,33 @@
+{
+  "kind": "apply",
+  "expectedRevision": 1,
+  "operations": [
+    {
+      "op": "revise-module",
+      "moduleId": "text-structure",
+      "fromVersion": 1,
+      "toVersion": 2,
+      "changes": {
+        "tasks": [
+          {
+            "id": "structure",
+            "title": "章节完整性与标题",
+            "requirement": "核对提交文本是否包含标题、摘要、正文及结论；不可读时保留待核状态",
+            "completion": "记录逐项状态、证据位置和待核原因",
+            "limits": "不作正式业务审批"
+          }
+        ]
+      }
+    },
+    {
+      "op": "replace-module-use",
+      "templateId": "text-review",
+      "version": 1,
+      "use": {
+        "id": "text",
+        "moduleId": "text-structure",
+        "version": 2
+      }
+    }
+  ]
+}

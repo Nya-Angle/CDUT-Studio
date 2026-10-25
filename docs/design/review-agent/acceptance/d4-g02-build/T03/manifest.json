@@ -1,0 +1,140 @@
+{
+  "schema": "g02-d4-build-manifest-v1",
+  "templateId": "g02-t03-review",
+  "businessOriginal": {
+    "filename": "G02-T03_正式业务模板_MD_v0.1.1.md",
+    "sha256": "e3d1d01555d49564931ac38892567ea23eab5ecd898afc3b67a8e4a26abe7380",
+    "version": "C-v0.1.1",
+    "lines": 718,
+    "obtainedFrom": "ChatGPT Library raw file; bytes independently SHA256-verified; original not committed",
+    "originalStage": "BUSINESS_MD_DRAFT_WITH_GAPS"
+  },
+  "fixedCommonParent": "a7a6a11d4840ad64cfc858c17b35f35180adf063",
+  "workspaceFile": "workspace.json",
+  "selectionFile": "selection.json",
+  "caseFile": "case.json",
+  "coverageFile": "coverage-ledger.json",
+  "moduleVersions": [
+    {
+      "moduleId": "g02-t03-rules-1",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t03-rules-2",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t03-rules-3",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t03-rules-4",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t03-rules-5",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t03-contract",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t03-axis-restricted",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t03-axis-ordinary-vpn",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t03-axis-public-exposure",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t03-axis-external-user",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t03-axis-student-proxy",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t03-axis-change-grant",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t03-axis-multi-resource",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t03-axis-no-ip",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t03-axis-bastion-required",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t03-axis-revoked",
+      "version": 1,
+      "scope": "workspace-local"
+    },
+    {
+      "moduleId": "g02-t03-axis-policy-confirmed",
+      "version": 1,
+      "scope": "workspace-local"
+    }
+  ],
+  "sharedModuleLocks": [],
+  "ruleSourceCount": 36,
+  "coverageEntries": 155,
+  "notes": [
+    "C原文不是学校现行校规",
+    "技术预审不自动批准",
+    "真实 Gold 未读",
+    "T03 v0.1.1 不继承旧 v0.1 E/D 签署",
+    "补登记母版§14政策版本与时点独立整案责任"
+  ],
+  "status": "PARTIAL",
+  "syntheticOnly": true,
+  "publicationAllowed": false,
+  "technicalVerification": {
+    "sourceSHA256Verified": true,
+    "authoringValidation": "PASS",
+    "d3TransferRoundTrip": "PASS",
+    "d2Plan": "PASS",
+    "d2Subjects": 2,
+    "d2Checks": 114,
+    "d2Fingerprint": "577a112f2df7ef93f76503e34e4e45e9f03e6dd676fb77b537a06bf6d9dfdf7b",
+    "d2PlanFile": "runtime-plan.json",
+    "d2Cli": "PASS",
+    "syntheticMaterialAndScopedEvidenceLink": "PASS",
+    "piPreparedSubmittedVerified": "PASS",
+    "piReceiptFile": "pi-receipt.json",
+    "testRunUrl": "https://github.com/Fuck-GH-Admin/cdut-studio-review-agent/actions/runs/39050708080",
+    "testCount": "13 total over G02 / 0 failures",
+    "evidenceArtifact": "https://github.com/Fuck-GH-Admin/cdut-studio-review-agent/actions/runs/39050708080/artifacts/12107312149"
+  },
+  "incompleteResponsibilities": [
+    "2026年校本政策适用版本与审批角色未由学校权威来源核实",
+    "正式部门审批与系统执行事件未接入可信学校端接口",
+    "复杂跨文书合法替代关系及校务阶段状态依赖人审/外部来源",
+    "尚未开展独立Gold及在线模型准确率验证"
+  ]
+}

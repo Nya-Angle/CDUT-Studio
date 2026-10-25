@@ -1,0 +1,9 @@
+{
+  "id": "E05",
+  "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+  "status": "FAIL",
+  "timeline": [],
+  "assertions": [],
+  "error": "Error: 真实运行条件未达到：document.body.innerText.includes('待我处理')",
+  "finishedAt": "2026-10-14T15:34:27.442Z"
+}

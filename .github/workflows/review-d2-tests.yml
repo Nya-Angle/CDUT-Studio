@@ -1,0 +1,38 @@
+name: D2 Scoped Pi Review Tests
+on:
+  pull_request:
+    paths:
+      - 'packages/shared/src/types/review-d2.ts'
+      - 'packages/shared/src/types/review-v2-contracts.ts'
+      - 'packages/shared/src/types/index.ts'
+      - 'apps/electron/src/main/lib/review/**'
+      - 'apps/electron/scripts/review-d2-plan.ts'
+      - 'docs/design/review-agent/fixtures/d2-**'
+      - '.github/workflows/review-d2-tests.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  scoped-pi:
+    runs-on: ubuntu-latest
+    env:
+      ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: bun install --frozen-lockfile
+      - name: Typecheck all workspaces
+        run: bun run typecheck
+      - name: D2 scoped Pi BDD
+        run: bun test --isolate --timeout 30000 apps/electron/src/main/lib/review/review-d2-runtime.test.ts
+      - name: Existing Pi run and authoring regressions
+        run: |
+          bun test --isolate --timeout 30000 apps/electron/src/main/lib/review/pi-case-review-service.test.ts
+          bun test --isolate --timeout 30000 apps/electron/src/main/lib/review/review-authoring-v1.test.ts
+          bun test --isolate --timeout 30000 apps/electron/src/main/lib/review/semantic-module-demo.test.ts
+          bun test --isolate --timeout 30000 apps/electron/src/main/lib/review/template-store.test.ts

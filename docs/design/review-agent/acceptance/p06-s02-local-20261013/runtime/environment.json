@@ -1,0 +1,15 @@
+{
+  "source_sha": "ef9074e367d2e7fda5955d8b0d6d9a4812836a6d",
+  "git_status": "",
+  "started_at": "2026-10-13T13:15:23.873771+00:00",
+  "worktree": "/home/miku/Bot/CDUTStudio/.workdir/review-p06-s02-acceptance-20261013",
+  "profile": "/home/miku/Bot/CDUTStudio/.workdir/review-p06-s02-acceptance-20261013-artifacts/accepted-profile",
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "bun": "1.4.0",
+  "node": "v22.23.2",
+  "os": "Linux 7.0.0-38-generic x86_64 GNU/Linux",
+  "electron_app_version": "0.15.157",
+  "shared_version": "0.1.66",
+  "review_scope": "P06-S02 E01/E02 real replay; P01-P06-S02 cumulative independent code/test audit; external blocks retained"
+}

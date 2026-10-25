@@ -1,0 +1,6 @@
+template_id	name	quality_status	policy_evidence_status	p0_count	p1_count	p2_count	p3_count	requires_patch	short_conclusion
+T03-T01	纵向科研项目申报、负责人资格和推荐审核	PASS_WITH_WARNINGS	PARTIAL	0	0	2	0	false	校内批次原件/附件和授权矩阵不完整；历史节点不跨批次自动使用。
+T03-T02	纵向科研项目立项任务书与责任承担审核	PASS_WITH_WARNINGS	PARTIAL	0	0	2	0	false	立项/任务书版本链较完整；2017旧规效力和2026 NSFC新规映射待补证。
+T03-T03	横向科研合同立项与研究合同内容审核	REVISE	PARTIAL	0	1	2	0	true	原件仍为ROUND3_DRAFT；横向管理办法、签约授权链和T03-T08边界未闭合。
+T03-T04	科研项目预算调整申请与变更权限审核	PASS_WITH_WARNINGS	PARTIAL	0	0	3	0	false	设备费调增来源冲突、结余资金政策及旧规效力待校方确认。
+T03-T05	科研项目研究内容、成员、负责人及期限变更审核	PASS_WITH_WARNINGS	PARTIAL	0	0	3	0	false	版本与权限门禁较好；多类资助规则需按项目和批次人工核实。

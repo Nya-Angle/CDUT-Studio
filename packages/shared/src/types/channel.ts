@@ -332,6 +332,10 @@ export interface ChannelModel {
    * - false：强制关闭（即使模型 / 渠道验证支持也不按 1M 处理）
    */
   context1m?: boolean
+  /** 用户为该模型声明的上下文窗口 token 数；设置后覆盖 provider/catalog 推断值。 */
+  contextWindow?: number
+  /** 用户为该模型声明的最大输出 token 数；设置后覆盖 provider/catalog 推断值。 */
+  maxTokens?: number
   /**
    * 模型是否支持图像输入（Vision）。缺省保守视为 false：
    * 选区翻译的视觉通道仅在显式声明 true 时启用，否则回退纯文本链路。

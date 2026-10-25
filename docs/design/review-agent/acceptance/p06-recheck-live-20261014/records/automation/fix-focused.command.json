@@ -1,0 +1,34 @@
+{
+  "name": "fix-focused",
+  "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014",
+  "argv": [
+    "bun",
+    "test",
+    "--isolate",
+    "--timeout",
+    "30000",
+    "apps/electron/src/main/lib/review/review-startup-io-recovery.p06.test.ts",
+    "apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts",
+    "apps/electron/src/main/lib/review/review-pi-run-bridge.main.test.ts",
+    "apps/electron/src/main/lib/review/pi-case-review-service.test.ts",
+    "apps/electron/src/main/lib/review/review-agent-assignment.test.ts",
+    "apps/electron/src/main/lib/review/boot-check.test.ts"
+  ],
+  "startedAt": "2026-10-14T15:10:15.191496+00:00",
+  "environment": {
+    "NO_COLOR": "1"
+  },
+  "finishedAt": "2026-10-14T15:10:16.056317+00:00",
+  "exitCode": 0,
+  "files": {
+    "fix-focused.stdout.log": {
+      "sha256": "d581eaa8f1fe36ce8f1b5d00b5c1d4a58cdfe88b77c22eda0fe334bce241c409",
+      "bytes": 8538
+    },
+    "fix-focused.stderr.log": {
+      "sha256": "060bc09b287addbffe6f32db3352e6cccf633314799c5aa51c5b869f68bfa59b",
+      "bytes": 19917
+    }
+  }
+}

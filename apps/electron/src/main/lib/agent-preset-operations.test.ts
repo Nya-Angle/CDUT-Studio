@@ -324,6 +324,6 @@ describe('Agent preset creation operations', () => {
       { presetId: 'minimal', presetScope: 'workspace' },
     )).toThrow('当前工作区不可用的源预设')
 
-    expect(listAgentPresets('ws-a')).toHaveLength(3)
+    expect(listAgentPresets('ws-a')).toHaveLength(4)
   })
 })

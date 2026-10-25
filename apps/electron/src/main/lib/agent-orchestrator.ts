@@ -184,6 +184,7 @@ import { getOrCreateShellSnapshot } from './shell-snapshot'
 import type { PiAgentQueryOptions } from './adapters/pi-agent-adapter'
 import type { PiRetryUpdate } from './adapters/pi-retry-control'
 import { buildPiBuiltinTools } from './adapters/pi-builtin-tools'
+import { isAuthorizedDirectReviewTool, selectDirectReviewStrictTools } from './review/review-strict-pi-tools'
 import { buildPiMcpTools, getMcpPolicyToolName } from './adapters/pi-mcp-tools'
 import { evaluatePptCapability } from './ppt-capability-gate'
 import { agentFilePreviewSessionManager } from './agent-file-preview-session'
@@ -1226,11 +1227,22 @@ export class AgentOrchestrator {
           backgroundTasksPending: true,
         })
     }
+      /**
+       * 终止本轮并标记失败。
+       *
+       * 必须把真实原因作为 resultErrors 传下去：owner（后台审核）据此写入
+       * run.error。只置 runEndedWithError 会让 owner 只拿到 endReasonLabel
+       * （「执行出错」），真实原因丢失，违反「失败可追踪」。
+       */
       const failRun = (error: string, messages?: AgentMessage[], opts?: CompleteOptions): void => {
-      callbacks.onError(error)
-      runEndedWithError = true
-      completeRun(messages, opts)
-    }
+        callbacks.onError(error)
+        runEndedWithError = true
+        completeRun(messages, {
+          ...opts,
+          resultSubtype: opts?.resultSubtype ?? 'error_during_execution',
+          resultErrors: opts?.resultErrors ?? [error],
+        })
+      }
 
     // 3. 构建本轮专属 SDK 环境。绝不修改主进程 process.env，避免并发 session 串扰凭证。
     const configuredModelId = modelId || DEFAULT_MODEL_ID
@@ -1249,7 +1261,9 @@ export class AgentOrchestrator {
     const sdk1MSelection = resolveAgentSdk1MSelection(configuredModelId, channel.provider, context1mPreference)
     const oneMillionContextEnabled = sdk1MSelection.oneMillionContextEnabled
     const effectiveSdkModelId = sdk1MSelection.modelId
-    const initialContextWindow = inferAgentSdkContextWindow(configuredModelId, channel.provider, context1mPreference)
+    const configuredContextWindow = configuredChannelModel?.contextWindow
+    const initialContextWindow = configuredContextWindow
+      ?? inferAgentSdkContextWindow(configuredModelId, channel.provider, context1mPreference)
     if (initialContextWindow != null) {
       // 兼容网关可能剥掉 [1m] 后缀或不返回 modelUsage；启动时先同步本轮最终窗口。
       this.eventBus.emit(sessionId, {
@@ -1450,6 +1464,21 @@ export class AgentOrchestrator {
         : []
       const currentPresetReference = presetSessionMeta?.presetReference
         ?? presetReferenceForId(workspaceSlug, presetSessionMeta?.presetId)
+      // 审核上下文策略必须同时满足工作台预设、用户发起和真实活动案卷运行绑定。
+      // 单独选用同一模型或预设不会改变普通 Pi 任务的压缩阈值与摘要策略。
+      const activePiReviewBinding = agentRuntime === 'pi'
+        && currentPresetReference?.presetId === 'review-operator'
+        && presetOperationSource === 'user'
+        ? (() => {
+            try {
+              const { getPiReviewBindingForSession } = require('./review/pi-case-review-service') as typeof import('./review/pi-case-review-service')
+              return getPiReviewBindingForSession(sessionId)
+            } catch (error) {
+              console.warn(`[Agent 编排] 无法确认 Pi 审核运行绑定，沿用普通上下文策略 (${sessionId}):`, error)
+              return undefined
+            }
+          })()
+        : undefined
       const presetPolicy = createEffectiveAgentPresetPolicy(
         sessionPreset,
         currentPresetReference,
@@ -1694,6 +1723,7 @@ export class AgentOrchestrator {
               // 执行期动态读取，供 CSLab 工具审计记录真实模式。
               getPermissionMode: () => this.sessionPermissionModes.get(sessionId) ?? initialPermissionMode,
               triggeredBy: input.triggeredBy,
+              reviewExecutionTurnId: runGeneration,
               goalIteration: input.goalIteration,
               reportGoalResult: input.reportGoalResult,
               allowedPresetOperations,
@@ -1712,6 +1742,9 @@ export class AgentOrchestrator {
               disabledTools,
               pptCapabilityActive,
             })
+            // 活动案卷审核采用 Pi 已有 review 档案，且必须在进入 adapter 前缩小 customTools。
+            // 普通 Pi 会话完全保留原有 MCP/工具构造路径。
+            if (activePiReviewBinding) return selectDirectReviewStrictTools(builtin.tools, activePiReviewBinding)
             const mcpTools = await buildPiMcpTools(mcpServers, presetPolicy)
             return [...builtin.tools, ...mcpTools]
           })()
@@ -1853,6 +1886,15 @@ export class AgentOrchestrator {
         if (validationFailure) {
           console.warn(`[Agent 工具验证] 参数缺失: tool=${toolName}, mode=${currentMode}`)
           return validationFailure
+        }
+
+        // 已绑定的单案 Pi 审核只允许五个受控工具。普通 auto 权限弹窗不可见时
+        // 若沿用通用审批会导致后台永久等待；这里在 Main 校验指派后放行。
+        // 不对普通 Agent 或无效/过期指派改变任何权限语义。
+        if (activePiReviewBinding) {
+          return isAuthorizedDirectReviewTool(activePiReviewBinding, toolName)
+            ? { behavior: 'allow' as const, updatedInput: input }
+            : { behavior: 'deny' as const, message: '当前案卷审核仅允许受控工具，或本轮指派已失效' }
         }
 
         // ── Write 大文件 token 截断防护 ──
@@ -2170,6 +2212,16 @@ export class AgentOrchestrator {
           channelName: channel.name,
           // Pi 不做 SDK 侧 beta 協商，只用 1M 偏好决定注册的上下文窗口（影响压缩阈值与用量环）。
           ...(context1mPreference !== null && { context1m: context1mPreference }),
+          ...(configuredChannelModel?.contextWindow !== undefined && { contextWindow: configuredChannelModel.contextWindow }),
+          ...(configuredChannelModel?.maxTokens !== undefined && { maxTokens: configuredChannelModel.maxTokens }),
+          ...(activePiReviewBinding && {
+            toolProfile: 'review' as const,
+            contextPolicy: {
+              kind: 'review' as const,
+              caseId: activePiReviewBinding.caseId,
+              runId: activePiReviewBinding.runId,
+            },
+          }),
           permissionMode: initialPermissionMode,
           // 统一权限拦截入口：AskUserQuestion 等交互式工具全靠它路由，遗漏会导致秒返空 answers。
           canUseTool,
@@ -3064,8 +3116,14 @@ export class AgentOrchestrator {
                   /* 忽略 */
                 }
                 runEndedWithError = true
+                // 终态失败必须把真实原因交给运行回调（P0-C：失败可追踪）。
+                // 只置 runEndedWithError 时，owner 侧只能拿到 endReasonLabel（「执行出错」），
+                // 真实原因只留在消息流里；后台审核这类 owner 会把「执行出错」写进运行记录，
+                // 等于失败不可诊断。与上方 empty_output 分支保持同一写法。
                 completeRun(getAgentSessionMessages(sessionId), {
                   startedAt: streamStartedAt,
+                  resultSubtype: 'error_during_execution',
+                  resultErrors: [typedError.message],
                 })
                 return
               }
@@ -3688,6 +3746,21 @@ export class AgentOrchestrator {
       stopDelegationsForParent(sessionId)
     } catch (err) {
       console.error(`[Agent 编排] 级联停止子会话失败: sessionId=${sessionId}`, err)
+    }
+    // C3 清理语义：会话停止即撤销其审核指派（新写入被拒；已完成动作保留时间线）
+    try {
+      const { listAssignments, revokeAssignment } = require('./review/review-agent-assignment') as typeof import('./review/review-agent-assignment')
+      const { cancelPiReviewRunForSession } = require('./review/pi-case-review-service') as typeof import('./review/pi-case-review-service')
+      let revoked = 0
+      for (const assignment of listAssignments(sessionId)) {
+        if (!assignment.revokedAt) {
+          cancelPiReviewRunForSession(sessionId, assignment)
+          if (revokeAssignment(assignment.id)) revoked += 1
+        }
+      }
+      if (revoked > 0) console.log(`[Agent 编排] 会话停止，已撤销 ${revoked} 个审核指派: sessionId=${sessionId}`)
+    } catch (err) {
+      console.error(`[Agent 编排] 撤销审核指派失败: sessionId=${sessionId}`, err)
     }
     console.log(`[Agent 编排] 已请求中止会话: ${sessionId}`)
   }

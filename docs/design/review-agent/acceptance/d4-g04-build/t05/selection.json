@@ -1,0 +1,64 @@
+{
+  "templateId": "d4-g04-t05",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "object-a",
+      "subjectId": "subject-a",
+      "title": "高风险实验活动专项作业许可 合成对象 A",
+      "businessType": "g04-risk-operation",
+      "scenario": "overnight",
+      "scenarioSource": {
+        "sourceId": "src-synthetic",
+        "sourceVersionId": "synthetic-t05-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "holiday",
+          "applicability": "applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t05-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "contractor",
+          "applicability": "not-applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t05-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "object-b",
+      "subjectId": "subject-b",
+      "title": "高风险实验活动专项作业许可 合成对象 B",
+      "businessType": "g04-risk-operation",
+      "scenario": "special",
+      "scenarioSource": {
+        "sourceId": "src-synthetic",
+        "sourceVersionId": "synthetic-t05-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "holiday",
+          "applicability": "unknown",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t05-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "contractor",
+          "applicability": "applicable",
+          "sourceId": "src-synthetic",
+          "sourceVersionId": "synthetic-t05-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

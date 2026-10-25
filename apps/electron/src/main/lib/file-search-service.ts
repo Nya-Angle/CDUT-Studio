@@ -12,6 +12,8 @@ export interface FileSearchRequest {
   /** 最多返回的未发现候选数；简单搜索为 1，深度搜索可一次收集多个。 */
   maxResults?: number
   signal?: AbortSignal
+  /** Extra Main-derived owner fence: applies before traversal and before returning paths. */
+  denyPath?: (path: string) => boolean
 }
 
 export interface FileSearchCandidate {
@@ -68,6 +70,7 @@ function yieldToEventLoop(): Promise<void> {
 export async function searchFileCandidate(request: FileSearchRequest): Promise<FileSearchResult> {
   const found = new Set((request.alreadyFound ?? []).map(normalizePath))
   const roots = Array.from(new Set(request.roots.filter(Boolean).map(normalizePath)))
+  const denied = (path: string): boolean => request.denyPath?.(path) === true
 
   if (request.targetPath !== undefined) {
     if (isCancelled(request.signal)) {
@@ -79,6 +82,7 @@ export async function searchFileCandidate(request: FileSearchRequest): Promise<F
     }
 
     const targetPath = resolve(request.targetPath)
+    if (denied(targetPath)) return { requestId: request.requestId, candidates: [], done: true, cancelled: false }
     const normalizedTargetPath = normalizePath(targetPath)
     if (found.has(normalizedTargetPath)) {
       return {
@@ -101,6 +105,7 @@ export async function searchFileCandidate(request: FileSearchRequest): Promise<F
       // 目标与授权根目录都使用真实路径校验，避免根目录内的符号链接指向目录外文件。
       // 已删除的附加目录不应让仍有效的授权根目录也失效。
       const realTargetPath = await realpath(targetPath)
+      if (denied(realTargetPath)) return { requestId: request.requestId, candidates: [], done: true, cancelled: false }
       const realRoots = (await Promise.all(roots.map(async (root) => {
         try {
           return await realpath(root)
@@ -151,7 +156,7 @@ export async function searchFileCandidate(request: FileSearchRequest): Promise<F
   let sinceYield = 0
 
   const walk = async (directory: string, depth: number): Promise<void> => {
-    if (isCancelled(request.signal) || depth > maxDepth || scannedEntries >= MAX_ENTRIES || matches.length >= maxResults) return
+    if (isCancelled(request.signal) || depth > maxDepth || scannedEntries >= MAX_ENTRIES || matches.length >= maxResults || denied(directory)) return
     let entries: Array<{ name: string; isFile(): boolean; isDirectory(): boolean }>
     try {
       entries = await readdir(directory, { withFileTypes: true })
@@ -171,10 +176,11 @@ export async function searchFileCandidate(request: FileSearchRequest): Promise<F
       const entryNameKey = process.platform === 'win32' ? entry.name.toLowerCase() : entry.name
       if (entryNameKey !== targetNameKey) continue
       const candidatePath = resolve(directory, entry.name)
+      if (denied(candidatePath)) continue
       const normalizedCandidate = normalizePath(candidatePath)
       if (!isPathInsideRoot(candidatePath, directory) || found.has(normalizedCandidate)) continue
       try {
-        if ((await stat(candidatePath)).isFile()) {
+        if ((await stat(candidatePath)).isFile() && !denied(await realpath(candidatePath))) {
           found.add(normalizedCandidate)
           matches.push(candidatePath)
         }
@@ -188,7 +194,8 @@ export async function searchFileCandidate(request: FileSearchRequest): Promise<F
       if (isCancelled(request.signal) || scannedEntries >= MAX_ENTRIES || matches.length >= maxResults) return
       if (!entry.isDirectory() || SKIP_DIRECTORIES.has(entry.name)) continue
       if (entry.name.startsWith('.') && !SEARCHABLE_HIDDEN_DIRECTORIES.has(entry.name)) continue
-      await walk(resolve(directory, entry.name), depth + 1)
+      const child = resolve(directory, entry.name)
+      if (!denied(child)) await walk(child, depth + 1)
     }
   }
 

@@ -1,0 +1,35 @@
+
+apps/electron/src/main/lib/review/review-startup-io-recovery.p06.test.ts:
+44 |     chmodSync(f.dir, 0o500); chmodSync(f.path, 0o400)
+45 |     try {
+46 |       expect(markStaleRunsInterrupted(f.caseId)).toBe(0)
+47 |       expect(readFileSync(f.path).equals(original)).toBeTrue()
+48 |       expect(getRunV2(f.caseId, f.prepared.runId)?.status).toBe('running')
+49 |       expect(f.permission()).toBeFalse()
+                                  ^
+error: expect(received).toBeFalse()
+
+Received: true
+
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-startup-io-recovery.p06.test.ts:49:30)
+(fail) P06 启动恢复 I/O 故障隔离 > 恢复原文件与目录同时不可写时，磁盘仍 running，旧工具与 binding 必须拒绝 [13.13ms]
+53 | 
+54 |   test('原文件只读但目录可写时，恢复通过原子替换持久 failed，旧授权拒绝', async () => {
+55 |     const f = await fixture()
+56 |     chmodSync(f.path, 0o400)
+57 |     try {
+58 |       expect(markStaleRunsInterrupted(f.caseId)).toBe(1)
+                                                      ^
+error: expect(received).toBe(expected)
+
+Expected: 1
+Received: 0
+
+      at <anonymous> (/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014/apps/electron/src/main/lib/review/review-startup-io-recovery.p06.test.ts:58:50)
+(fail) P06 启动恢复 I/O 故障隔离 > 原文件只读但目录可写时，恢复通过原子替换持久 failed，旧授权拒绝 [1.33ms]
+(pass) P06 启动恢复 I/O 故障隔离 > 修复目录写入后可再次持久化 interrupted；新轮次和普通指派仍可用 [1.82ms]
+
+ 1 pass
+ 2 fail
+ 13 expect() calls
+Ran 3 tests across 1 file. [236.00ms]

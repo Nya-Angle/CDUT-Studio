@@ -1,0 +1,58 @@
+{
+  "kind": "C0-OUTBOX-RECEIPT-FIXTURES",
+  "schemaVersion": "review-c0/1",
+  "cases": [
+    {
+      "expected": "valid",
+      "receipt": {
+        "schemaVersion": "review-c0/1",
+        "intentId": "i1",
+        "idempotencyKey": "k1",
+        "at": "2026-10-19T00:00:00Z",
+        "trustTier": "mock-accepted"
+      }
+    },
+    {
+      "expected": "valid",
+      "receipt": {
+        "schemaVersion": "review-c0/1",
+        "intentId": "i1",
+        "idempotencyKey": "k1",
+        "at": "2026-10-19T00:00:00Z",
+        "trustTier": "provider-accepted"
+      }
+    },
+    {
+      "expected": "valid",
+      "receipt": {
+        "schemaVersion": "review-c0/1",
+        "intentId": "i1",
+        "idempotencyKey": "k1",
+        "at": "2026-10-19T00:00:00Z",
+        "trustTier": "unknown"
+      }
+    },
+    {
+      "expected": "valid",
+      "receipt": {
+        "schemaVersion": "review-c0/1",
+        "intentId": "i1",
+        "idempotencyKey": "k1",
+        "at": "2026-10-19T00:00:00Z",
+        "trustTier": "externally-acknowledged",
+        "externalReference": "synthetic-external-ref"
+      }
+    },
+    {
+      "expected": "CONTRACT_INVALID",
+      "receipt": {
+        "schemaVersion": "review-c0/1",
+        "intentId": "i1",
+        "idempotencyKey": "k1",
+        "at": "2026-10-19T00:00:00Z",
+        "trustTier": "externally-acknowledged"
+      }
+    }
+  ],
+  "note": "This fixture only validates trust tiers. C4 external adapter is NOT implemented."
+}

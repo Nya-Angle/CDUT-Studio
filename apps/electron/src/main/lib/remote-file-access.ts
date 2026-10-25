@@ -1,5 +1,5 @@
 import { existsSync, realpathSync, statSync } from 'node:fs'
-import { isAbsolute, resolve, sep } from 'node:path'
+import { isAbsolute, relative, resolve, sep } from 'node:path'
 
 /**
  * Remote WS file preview is deliberately stricter than the desktop IPC policy.
@@ -8,6 +8,8 @@ import { isAbsolute, resolve, sep } from 'node:path'
 export interface RemoteFileAccessContext {
   directoryRoots: string[]
   exactFiles: string[]
+  /** Additional private-subtree fence, applied to raw candidates AND realpath targets. */
+  denyPath?: (path: string) => boolean
 }
 
 function realpathIfFile(path: string): string | null {
@@ -56,12 +58,44 @@ export function resolveAuthorizedRemoteFilePath(
     : directoryRoots.map((root) => resolve(root, filePath))
 
   for (const candidate of candidates) {
+    if (context.denyPath?.(resolve(candidate))) continue
     const resolved = realpathIfFile(candidate)
-    if (!resolved) continue
+    if (!resolved || context.denyPath?.(resolved)) continue
     if (exactFiles.has(resolved) || directoryRoots.some((root) => isInsideDirectory(resolved, root))) {
       return resolved
     }
   }
 
   return null
+}
+
+/**
+ * Known review-private Agent layouts under the config root. Caller supplies the
+ * Main owner/tombstone predicate; this helper does not grant access to any file.
+ * Check both candidate and canonical target to close direct and symlink aliases.
+ */
+export function isReviewPrivateConfigPath(
+  filePath: string,
+  configDir: string,
+  isReviewOwnerId: (sessionId: string) => boolean,
+): boolean {
+  const rel = relative(resolve(configDir), resolve(filePath))
+  if (!rel || rel === '..' || rel.startsWith('..' + sep) || isAbsolute(rel)) return false
+  const parts = rel.split(sep)
+  // The monotonic owner deny journal contains only UUIDs, but its identities
+  // must not be exposed or mutated through ordinary file/preview entry points.
+  if (parts.length === 1 && parts[0] === 'review-owner-ids.log') return true
+  if (parts[0] === 'agent-workspaces' && parts.length >= 3) {
+    // agent-workspaces/<workspaceSlug>/<sessionId>/...
+    return isReviewOwnerId(parts[2]!)
+  }
+  if (parts[0] === 'agent-checkpoints' && parts.length >= 2) {
+    return isReviewOwnerId(parts[1]!)
+  }
+  if (parts[0] === 'agent-sessions' && parts.length >= 2) {
+    const name = parts[1] === 'remote-uploads' ? parts[2] : parts[1]
+    const uuid = name?.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(?=\.|-|$)/i)?.[0]
+    return Boolean(uuid && isReviewOwnerId(uuid))
+  }
+  return false
 }

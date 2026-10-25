@@ -13,6 +13,18 @@ import { join } from 'node:path'
 import type { PolicyRecord, PolicyRef } from '@profer/shared'
 import { getConfigDir } from '../config-paths'
 
+const SAFE_POLICY_ID = /^[\p{L}\p{N}_-]{1,120}$/u
+
+/** 政策 ID 与模板 ID 同样不允许路径分隔符/点号，防止 `../` 规范化逃逸配置目录。 */
+export function isSafePolicyId(value: unknown): value is string {
+  return typeof value === 'string' && SAFE_POLICY_ID.test(value)
+}
+
+function assertPolicyIdentity(policyId: string, version?: number): void {
+  if (!isSafePolicyId(policyId)) throw new Error('政策 ID 不合法：只允许字母、数字、下划线和短横线')
+  if (version !== undefined && (!Number.isSafeInteger(version) || version < 1)) throw new Error('政策版本不合法')
+}
+
 function policiesRoot(): string {
   const dir = join(getConfigDir(), 'review-policies')
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true })
@@ -20,6 +32,7 @@ function policiesRoot(): string {
 }
 
 function policyPath(policyId: string, version: number): string {
+  assertPolicyIdentity(policyId, version)
   return join(policiesRoot(), policyId, 'versions', `${version}.json`)
 }
 
@@ -36,6 +49,7 @@ function writeAtomic(filePath: string, data: unknown): void {
 
 /** 保存政策草稿（status 强制 draft；不得覆盖已发布版本） */
 export function savePolicyDraft(record: PolicyRecord): PolicyRecord {
+  assertPolicyIdentity(record.policyId, record.version)
   if (record.status !== 'draft') throw new Error('savePolicyDraft 只接受草稿状态政策')
   const existing = getPolicy(record.policyId, record.version)
   if (existing && existing.status === 'published') throw new Error(`政策版本 ${record.version} 已发布不可覆盖；请提升版本号`)
@@ -51,6 +65,8 @@ export function savePolicyDraft(record: PolicyRecord): PolicyRecord {
 }
 
 export function getPolicy(policyId: string, version?: number): PolicyRecord | undefined {
+  if (!isSafePolicyId(policyId)) return undefined
+  if (version !== undefined && (!Number.isSafeInteger(version) || version < 1)) return undefined
   const dir = join(policiesRoot(), policyId, 'versions')
   if (!existsSync(dir)) return undefined
   const versions = readdirSync(dir)
@@ -81,6 +97,7 @@ export function listPolicies(): PolicyRecord[] {
 
 /** 发布：至少一条确认记录；published 不可变（07 §2.2） */
 export function publishPolicy(policyId: string, version: number): PolicyRecord {
+  assertPolicyIdentity(policyId, version)
   const record = getPolicy(policyId, version)
   if (!record) throw new Error(`政策不存在: ${policyId}@${version}`)
   if (record.status === 'published') return record
@@ -100,6 +117,8 @@ export interface PolicyRefCheck {
 
 /** 校验模板的政策引用：存在 + 已发布 + 内容 hash 一致（07 §2.2 发布检查项） */
 export function validatePolicyRef(ref: PolicyRef): PolicyRefCheck {
+  if (!isSafePolicyId(ref.policyId)) return { ok: false, reason: '政策引用 ID 不合法' }
+  if (!Number.isSafeInteger(ref.version) || ref.version < 1) return { ok: false, reason: '政策引用版本不合法' }
   const record = getPolicy(ref.policyId, ref.version)
   if (!record) return { ok: false, reason: `政策不存在: ${ref.policyId}@${ref.version}` }
   if (record.status !== 'published') return { ok: false, reason: `政策 ${ref.policyId}@${ref.version} 尚未发布` }

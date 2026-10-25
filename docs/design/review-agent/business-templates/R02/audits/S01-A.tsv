@@ -1,0 +1,9 @@
+issue_id	template_id	severity	category	location_or_section	finding	evidence_or_source	required_action	policy_or_quality	cross_template_related_ids	patch_status
+S01-A-001	S01-T01	P2	policy-evidence	§04/§12	校本制度现行性、特殊身份适用范围和休学最终签批授权未全部确认。	原件 SRC 索引及其中列出的教育部令第41号/校本制度条款；当期授权待确认	维持人工复核门禁；不得将事实预审转为正式批准。	policy	S01-T02;S01-T03	documented
+S01-A-002	S01-T02	P2	policy-evidence	§04/§12/§14	本科、研究生、来华留学生与中外合作办学的复学规则和权限不完全相同，2026专项制度及当期流程待核。	原件 SRC 索引及第14节证据缺口	保留身份分流；证据或授权不全时仅生成待办。	policy	S01-T01;S01-T03	documented
+S01-A-003	S01-T03	P2	policy-evidence	§02/§04/§12	新生保留入学资格、在籍学生保留学籍、入伍新生专项保护是不同对象；校内部分签批链待确认。	原件 SRC 索引及对象边界章节	先核录取/注册时点与身份；不得由入伍事实自动生成学校批准。	policy	S01-T01;S01-T02	documented
+S01-A-004	S01-T05	P2	policy-evidence	§04/§12/§14	校本转学专项办法全文及现行状态、研究生/留学生路径和签批授权未闭合。	原件 SRC 索引；四川省2022年转学通知为阶段框架而非校内授权	要求归口人员确认当期办法；分阶段人工核实两校决定、公示、备案和学籍异动。	policy	S01-T04;S01-T06;S08-T01	documented
+S01-A-005	S01-T01	P2	runtime-safety	runtime mapping	研究稿是事实预审设计，不是已部署的校方审批流程。	V3实现契约：auto-pass 关闭、研究 SRC 不可伪装案卷 SourceRef	runtime 禁止 auto-pass，policyVersionIds 为空，最终节点使用本地 reviewer/teacher 人工确认。	quality	S01-T02;S01-T03;S01-T05	required
+S01-A-006	S01-T02	P2	boundary	§02/§09	退役复学与新生退役后恢复入学、复学后转专业/资助/住宿等事项的决定对象不同。	原件边界及相邻模板路由章节	只引用相邻事项的权威结果，不重复裁定。	quality	S01-T03;S06-T01;S03-T01	documented
+S01-A-007	S01-T03	P2	boundary	§02/§08/§09	新生未取得学籍与在籍学生保留学籍不得合并处理。	原件对象、生命周期和规则章节	运行时分支必须独立；身份时点未知则人工核验。	quality	S01-T01;S01-T02	documented
+S01-A-008	S01-T05	P2	boundary	§02/§08/§09	跨校转学不等于校内转专业；S01-T04 是明确缺失项。	R02正式清单与未纳入16项清单；原件边界章节	不得创建 S01-T04 空壳或由本模板代替；记录为目录缺口。	quality	S01-T04;S01-T06	documented

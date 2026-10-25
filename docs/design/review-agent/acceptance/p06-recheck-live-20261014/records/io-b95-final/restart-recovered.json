@@ -1,0 +1,6 @@
+{
+  "at": "2026-10-14T16:31:16.006150+00:00",
+  "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+  "operation": "restore only isolated config/run-dir to0700 and journal0600, keep original run0400; SIGKILL isolated Main then restart",
+  "oldMainPid": 1146001
+}

@@ -1,0 +1,34 @@
+{
+  "code_sha": "14bc7d6c3625aaa6eec2675aa9ce4dc446475297",
+  "application_source_sha": "14bc7d6c3625aaa6eec2675aa9ce4dc446475297",
+  "qa_driver_sha": "14bc7d6c3625aaa6eec2675aa9ce4dc446475297",
+  "initial_git_status": "?? docs/design/review-agent/33-p05-local-automation-recheck-20261013.md\n?? docs/design/review-agent/acceptance/\n",
+  "profile": "/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-a0-v156-20261013",
+  "model": "deepseek-flash",
+  "provider": "deepseek",
+  "bun": "1.4.0",
+  "node": "v22.23.2",
+  "os": "Linux 7.0.0-38-generic x86_64 GNU/Linux",
+  "electron_runtime": "43.2.0",
+  "electron_app_version": "0.15.156",
+  "shared_version": "0.1.66",
+  "core_version": "0.2.14",
+  "started_at": "2026-10-12T20:35:34.884461+00:00",
+  "fresh_profile": true,
+  "guide_initialization": "real IPC by frozen QA driver; coach tour starts at 0",
+  "a0_completed_at": "2026-10-12T20:38:10.233Z",
+  "dev_environment": {
+    "PROFER_DEV": "1",
+    "PROFER_DEV_INSTANCE": "review-pre-p06-a0-156",
+    "PROFER_VITE_PORT": "5176",
+    "PROFER_CONFIG_DIR": "/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-a0-v156-20261013/config",
+    "PROFER_USER_DATA_DIR": "/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-a0-v156-20261013/user-data",
+    "ELECTRON_OVERRIDE_DIST_PATH": "/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-a0-v156-20261013/electron-dist"
+  },
+  "dev_wrapper_flags": [
+    "--no-sandbox",
+    "--disable-gpu",
+    "--remote-debugging-port=9222"
+  ],
+  "public_evidence_scope": "synthetic fixture, public UI screenshots, selected business ledger fields and automated test logs only"
+}

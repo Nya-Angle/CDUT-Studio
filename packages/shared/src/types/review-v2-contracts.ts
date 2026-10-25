@@ -6,7 +6,7 @@
  * 命令外壳扩展与错误码见文末；新设计哈希用 SHA-256，旧 SHA-1 记录带 algorithm 标识。
  */
 
-import type { Actor, Appeal, BusinessDecision, EvidenceLink, FieldSpec, Observation, ReviewAppErrorCode, ReviewCaseV2, RoleId, SourceLocation, SupplementRequest } from './review-v2'
+import type { Actor, Appeal, BusinessDecision, DocumentVersion, EvidenceLink, FieldSpec, Observation, ReviewAppErrorCode, ReviewCaseV2, RoleId, SourceLocation, SupplementRequest, SubjectAdjudication } from './review-v2'
 
 // ===== 政策仓库（07 §2.1 PolicyRef/PolicyVersion；05 §2.1 误判 8：模板必须有对应政策） =====
 
@@ -286,6 +286,12 @@ export interface CommandReceipt {
   revision: number
   at: string
   summary: string
+  /** 操作者（08 设计：时间线可辨人工/AI；旧记录缺省按"未记录"呈现） */
+  actor?: Actor
+  /** 命令的可信指派来源（C1：ReviewAgentAssignment.id；人工操作缺省） */
+  assignmentId?: string
+  /** 发起会话（Agent 操作可追溯完整身份；短码仅显示用） */
+  sessionId?: string
 }
 
 /** 单案业务聚合（state.v2.json 形态；07 §3.3） */
@@ -299,34 +305,214 @@ export interface RatingEntryV2 {
   round: number
 }
 
+/** C1 source-current-validity audit entry. Original values/refs/receipts remain durable. */
+export interface SourceValidityRevocation {
+  documentVersionId: string
+  reason: 'archive' | 'replace' | 'reclassify'
+  at: string
+  observationIds: string[]
+  previouslyConfirmedObservationIds: string[]
+  evidenceLinkIds: string[]
+  previouslyConfirmedEvidenceLinkIds: string[]
+}
+
+/** C-owned reversible Case archive, separate from destroying historical data. */
+export interface CaseArchiveRecordV3 {
+  previousStage: import('./review-v2').CaseStage
+  archivedAt: string
+  archivedBy: string
+  reason: string
+  /** Restoring never silently reactivates old Run/Decision status. */
+  restoredAt?: string
+  restoredBy?: string
+  restoreReason?: string
+}
+
 export interface CaseAggregateV2 {
   caseV2: ReviewCaseV2
+  /** Latest reversible archive checkpoint. Every transition retains a Receipt. */
+  caseArchive?: CaseArchiveRecordV3
+  /** Prior fully restored archive cycles; never replace historical provenance. */
+  caseArchiveHistory?: CaseArchiveRecordV3[]
   observations: Observation[]
+  /** Current-applicability revocation ledger; absent in legacy aggregates. */
+  sourceValidityRevocations?: SourceValidityRevocation[]
   evidenceLinks: EvidenceLink[]
-  dispositions: Array<{ findingKey: string; disposition: string; actor: string; reason: string; at: string }>
+  dispositions: Array<{
+    findingKey: string
+    disposition: string
+    actor: string
+    reason: string
+    at: string
+    /** 阶段 3：处置绑定到不可变运行输入；不同输入下旧处置自然变为历史记录。 */
+    runId?: string
+    inputHash?: string
+    actorSource?: import('./review-v2').ActorSource
+    role?: import('./review-v2').RoleId
+  }>
   tasks: WorkflowTask[]
   decisions: BusinessDecision[]
   supplements: SupplementRequest[]
   appeals: Appeal[]
   receiptLog: CommandReceipt[]
+  /**
+   * C2's Main-only technical proposal journal. These records are NOT
+   * ReviewRunV2, formal CheckResult, ReadReceipt, or BusinessDecision.
+   * Authoritative execution remains gated on physical Host/source admission.
+   */
+  v3TechnicalExecution?: {
+    run: import('./review-v3-c0').RunEvidenceIdentity
+    /** Frozen non-journal aggregate input; business mutation invalidates it. */
+    frozenInputDigest: string
+    admittedAtRevision: number
+    events: Array<{
+      sequence: number
+      eventId: string
+      proposal: import('./review-v3-execution').V3ExecutionProposal
+      committedAt: string
+    }>
+    terminalStatus?: import('./review-v3-execution').V3TechnicalTerminal
+  }
+  /**
+   * C-owned irreversible Run-wide PHYSICAL Host admission fences.
+   * Stored in this same Case CAS transaction+Receipt, never in A SDK journal.
+   * Every historical runId remains prohibited across PID/attempt/generation.
+   */
+  v3HostRunFences?: Array<{
+    schemaVersion: 'review-v3-host-run-fence/1'
+    run: import('./review-v3-c0').RunEvidenceIdentity
+    requestId: string
+    operatorPrincipalId: string
+    reason: string
+    fencedAt: string
+  }>
+  /** C2 Main-only, sealed immutable Run evidence (not ReviewRunV2 shadow). */
+  v3ReviewRun?: import('./review-v3-run').ReviewRunRecordV3
+  /** 事项最终认定（可选，兼容既有 state.v2.json）。 */
+  adjudications?: SubjectAdjudication[]
+  /** Bound immutable Dev-B CanonicalPlan; upgrades preserve earlier plans. */
+  canonicalPlan?: import('./review-v3-c0').CanonicalPlan
+  canonicalPlanHistory?: import('./review-v3-c0').CanonicalPlan[]
+  /**
+   * Main 核实后的本地业务发布确认，与 Case/Plan 同一事务持久化。
+   * 只表示本机试办，不构成学校授权；升版后旧指纹不得复用。
+   */
+  localBusinessConfirmation?: {
+    caseId: string
+    planFingerprint: string
+    templateId: string
+    templateVersion: number
+    confirmedBy: 'local-organizer'
+    confirmedAt: string
+    reason: string
+  }
+  /** D2 技术预审任务固定快照；不授予正式学校发布/审批权限。 */
+  d2RuntimePlan?: import('./review-d2').D2RuntimePlan
+  /** 旧 D2 任务包只读历史；撤回后必须重新从可信作者来源安装，不能恢复旧结论。 */
+  d2RuntimePlanHistory?: import('./review-d2').D2RuntimePlan[]
+  /** F05 修复意图和结果与案卷 CAS/Receipt 一起保存，不是另一套 Plan/Run 真值。 */
+  remediationRecords?: Array<{
+    id: string
+    documentVersionId: string
+    beforeRole: DocumentVersion['role']
+    beforeMaterialSlotId?: string
+    nextRole: DocumentVersion['role']
+    nextMaterialSlotId?: string
+    reason: string
+    proposedAt: string
+    proposedRevision: number
+    planFingerprint?: string
+    planKind: 'canonical' | 'd2' | 'none'
+    status: 'proposed' | 'applied'
+    appliedAt?: string
+    invalidatedPlanFingerprint?: string
+  }>
   /** 独立评分（G06：唯一票，事务内查重） */
   ratings?: RatingEntryV2[]
 }
 
+/** 普通审核工作台到业务聚合的内部映射；当前迁移期统一使用同一 caseId。 */
+export interface ReviewWorkspaceCaseRef {
+  workspaceCaseId: string
+  aggregateV2Id: string
+}
+
 export type CommandErrorCode =
-  | 'VERSION_CONFLICT' | 'NOT_FOUND' | 'VALIDATION_FAILED' | 'REQUEST_ID_COLLISION' | 'INVALID_TRANSITION' | 'DEPENDENCY_UNRESOLVED'
+  | 'VERSION_CONFLICT' | 'NOT_FOUND' | 'VALIDATION_FAILED' | 'REQUEST_ID_COLLISION' | 'INVALID_TRANSITION' | 'DEPENDENCY_UNRESOLVED' | 'STALE_INPUT'
+  | 'AGENT_DECISION_DISABLED'
 
 export type ReviewCommandResult<TEntity = unknown> =
   | { ok: true; receipt: CommandReceipt; aggregate: CaseAggregateV2; entity?: TEntity }
   | { ok: false; code: CommandErrorCode; message: string; currentRevision?: number }
 
+export type BatchAutomationMode = 'assist' | 'auto-return' | 'auto-approve'
+
+/** Per-batch explicit local authorization. Not a school-side approval credential. */
+export interface BatchAutomationPolicy {
+  mode: BatchAutomationMode
+  grantedBy: string
+  grantedAt: string
+  /** Incremented whenever an authorized user changes policy, including revocation. */
+  revision: number
+  templateId: string
+  templateVersion: number
+}
+
+/** Outcome of a real V2 transaction, never a raw AI opinion. */
+export interface BatchAutomationReceipt {
+  caseId: string
+  runId: string
+  action: 'pass' | 'return'
+  status: 'applied' | 'blocked' | 'failed' | 'conflict'
+  message: string
+  at: string
+  requestId: string
+  policyRevision: number
+}
+
+export interface BatchAutomationReport {
+  batchId: string
+  policyRevision: number
+  results: BatchAutomationReceipt[]
+  applied: number
+  blocked: number
+  failed: number
+  conflicts: number
+}
+
+/**
+ * 批次成员对某一次审核运行的持久绑定（BATCH-01/04/11）。
+ * 后续分流、归组、自动处理与定稿只认 entryRunId，禁止再“取最新 Run”。
+ */
+export interface BatchCaseEntryBinding {
+  /** 本批次尝试 ID（重开/重试生成新 attempt） */
+  batchAttemptId?: string
+  /** 本批次该案卷唯一权威运行 ID */
+  entryRunId?: string
+  /** 该运行的输入清单哈希（与 Run.inputManifest.hash 对齐） */
+  inputHash?: string
+  /** 该运行的 Plan 指纹（有则记录） */
+  planFingerprint?: string
+  /** 尝试次数（失败重试递增） */
+  attemptCount?: number
+  startedAt?: string
+  completedAt?: string
+  /**
+   * unbound：尚未运行；bound：已绑定本批次运行；
+   * superseded：案卷已被其他轮次取代，需重审；recovery-required：崩溃后结果未知
+   */
+  bindingState?: 'unbound' | 'bound' | 'superseded' | 'recovery-required'
+}
+
 /** 批次运行状态（N5：batch-store 持久化形态，renderer 可读） */
 export interface BatchStateV2 {
   batch: import('./review-v2').ReviewBatch
   status: 'draft' | 'queued' | 'running' | 'finalized' | 'reopened'
-  cases: Array<{ caseId: string; status: 'queued' | 'running' | 'done' | 'failed' | 'paused'; error?: string }>
+  cases: Array<BatchCaseEntryBinding & { caseId: string; status: 'queued' | 'running' | 'done' | 'failed' | 'paused'; error?: string }>
   finalizedSnapshotHash?: string
   finalizedAt?: string
   round: number
   reopenedFromBatchId?: string
+  automation?: BatchAutomationPolicy
+  automationReceipts?: BatchAutomationReceipt[]
 }

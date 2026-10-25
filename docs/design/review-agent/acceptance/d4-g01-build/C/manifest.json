@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "status": "AUTHOR_CANDIDATE_NOT_YET_EXECUTED",
+  "domain": "G01",
+  "key": "C",
+  "templateId": "g01-special-campus-card",
+  "templateVersion": 1,
+  "businessSource": {
+    "file": "special_campus_card_template_v1.4.md",
+    "version": "v1.4",
+    "sha256": "fa409cfa30ad0f0c624784f9beab4799cc1e31bbcf3d118c0e41a67deba8937f",
+    "gitBlobSha": "c76427d092e455a5a353ff25aade7ced4de189e5",
+    "archivePath": "docs/design/review-agent/business-templates/G01/originals/special_campus_card_template_v1.4.md"
+  },
+  "technicalSha": "a7a6a11d4840ad64cfc858c17b35f35180adf063",
+  "parent": "COMMON PR #88",
+  "moduleCount": 14,
+  "checkDefinitionCount": 86,
+  "sourceBindings": 86,
+  "sourceCatalogueEntries": 85,
+  "ruleRowCount": 27,
+  "fieldRowCount": 0,
+  "branchRowCount": 0,
+  "genericObjects": 2,
+  "gold": "NOT_GENERATED",
+  "onlinePiModel": "NOT_RUN",
+  "formalApproval": false,
+  "engineLimitations": [
+    "授权校规、院系签章与来源均未认证",
+    "复杂 claim/evidence 图不能自动转换",
+    "选择条件经 reviewer 合成声明，不是模型自动判真"
+  ],
+  "readme": "README.md"
+}

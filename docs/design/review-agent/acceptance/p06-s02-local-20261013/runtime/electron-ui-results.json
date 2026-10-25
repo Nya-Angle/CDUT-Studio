@@ -1,0 +1,80 @@
+[
+  {
+    "name": "P06-S02-E01 same-case update reuses owner, late old stop denied",
+    "status": "PASS",
+    "durationMs": 10822,
+    "details": {
+      "caseId": "case-1791897333695-hoeek7",
+      "mode": "update",
+      "rounds": [
+        {
+          "runId": "run-pi-mv6perlt-1p59y",
+          "terminal": "cancelled",
+          "providerWitness": {
+            "assistantReplies": 1,
+            "toolCalls": [
+              "review_read_documents"
+            ]
+          }
+        },
+        {
+          "runId": "run-pi-mv6pew39-cymbi",
+          "terminal": "cancelled",
+          "providerWitness": {
+            "assistantReplies": 1,
+            "toolCalls": [
+              "review_read_documents"
+            ]
+          }
+        }
+      ],
+      "ownerPolicyVerified": true,
+      "bindingsVerified": true,
+      "grantsRevoked": true,
+      "materialSnapshotChanged": true,
+      "oldStopDenied": "Error: Error invoking remote method 'review-v2:stop-background-pi-review': Error: 本次审核已结束或运行已变化，请刷新案卷后再试",
+      "oldLedgerUnchanged": true,
+      "latestAckReal": true,
+      "guiButtonsClicked": true
+    }
+  },
+  {
+    "name": "P06-S02-E02 same-case restart creates new owner after stop release",
+    "status": "PASS",
+    "durationMs": 8545,
+    "details": {
+      "caseId": "case-1791897333731-hkxf57",
+      "mode": "restart",
+      "rounds": [
+        {
+          "runId": "run-pi-mv6pf055-8vukc",
+          "terminal": "cancelled",
+          "providerWitness": {
+            "assistantReplies": 1,
+            "toolCalls": [
+              "review_read_documents"
+            ]
+          }
+        },
+        {
+          "runId": "run-pi-mv6pf3aa-r8ddv",
+          "terminal": "cancelled",
+          "providerWitness": {
+            "assistantReplies": 1,
+            "toolCalls": [
+              "review_read_documents"
+            ]
+          }
+        }
+      ],
+      "ownerPolicyVerified": true,
+      "bindingsVerified": true,
+      "grantsRevoked": true,
+      "materialSnapshotChanged": false,
+      "oldStopDenied": "Error: Error invoking remote method 'review-v2:stop-background-pi-review': Error: 本次审核已结束或运行已变化，请刷新案卷后再试",
+      "oldLedgerUnchanged": true,
+      "latestAckReal": true,
+      "guiButtonsClicked": true
+    }
+  }
+]

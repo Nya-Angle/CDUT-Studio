@@ -1,0 +1,22 @@
+[
+  {
+    "file": "apps/electron/src/main/lib/shell-env.test.ts",
+    "test": "shell environment loading > loads environment from macOS zsh without interactive zle initialization"
+  },
+  {
+    "file": "apps/electron/src/main/lib/adapters/pi-powershell-tool.test.ts",
+    "test": "Pi Windows PowerShell tool > Given a native Windows PowerShell command When executing Then returns its stdout without requiring PATH lookup"
+  },
+  {
+    "file": "apps/electron/src/main/lib/adapters/pi-powershell-tool.test.ts",
+    "test": "Pi Windows PowerShell tool > Given stderr and a non-zero exit code When executing Then preserves both for the tool result"
+  },
+  {
+    "file": "apps/electron/src/main/lib/adapters/pi-powershell-tool.test.ts",
+    "test": "Pi Windows PowerShell tool > Given a command exceeding its timeout When executing Then terminates it and reports the timeout"
+  },
+  {
+    "file": "apps/electron/src/main/lib/adapters/pi-powershell-tool.test.ts",
+    "test": "Pi Windows PowerShell tool > Given an aborted signal When executing Then terminates the command and reports cancellation"
+  }
+]

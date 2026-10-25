@@ -1,0 +1,29 @@
+{
+  "name": "preview-prepare",
+  "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014",
+  "argv": [
+    "node",
+    "scripts/qa/review-live-preview-restore.mjs",
+    "prepare"
+  ],
+  "startedAt": "2026-10-14T16:14:17.518214+00:00",
+  "environment": {
+    "NO_COLOR": "1",
+    "QA_APPLICATION_SHA": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+    "QA_PROFILE_ROOT": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile",
+    "QA_REPORT_DIR": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/live-final/preview-corrected"
+  },
+  "finishedAt": "2026-10-14T16:15:18.059371+00:00",
+  "exitCode": 1,
+  "files": {
+    "preview-prepare.stdout.log": {
+      "sha256": "d4461d922c413cafd855c1f07f1cce9ba60ed67655d8f382c85ba1f46171e7cc",
+      "bytes": 170
+    },
+    "preview-prepare.stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  }
+}

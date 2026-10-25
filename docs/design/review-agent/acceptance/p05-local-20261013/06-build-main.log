@@ -1,0 +1,17 @@
+SHA: df0c0d5740d4522c2ea4663c8e8b93a497a70b7f
+CWD: /home/miku/Bot/CDUTStudio/.workdir/p05-local-acceptance-20261013/apps/electron
+COMMAND: bun run build:main
+START UTC: 2026-10-12T17:51:12.680613+00:00
+
+$ esbuild src/main/index.ts --bundle --platform=node --format=cjs --outfile=dist/main.cjs --external:electron --external:@earendil-works/pi-coding-agent --external:@earendil-works/pi-agent-core --external:@earendil-works/pi-ai --define:__PROFER_BUILD_TARGET__='"oss"' --minify-whitespace --minify-identifiers
+▲ [WARNING] "pdfjs-dist/legacy/build/pdf.worker.mjs" should be marked as external for use with "require.resolve" [require-resolve-not-external]
+
+    src/main/lib/review/case-import.ts:49:70:
+      49 │ ...RL(require.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs')).href
+         ╵                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1 warning
+
+  dist/main.cjs  9.3mb ⚠️
+
+⚡ Done in 562ms

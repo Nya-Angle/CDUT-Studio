@@ -1,0 +1,92 @@
+{
+  "templateId": "g01-archive-utilization",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "g01-a-object-a",
+      "subjectId": "sub-g01-a-object-a",
+      "title": "合成 档案利用申请审核 g01-a-object-a",
+      "businessType": "g01-archive-target",
+      "scenario": "read",
+      "scenarioSource": {
+        "sourceId": "src-a-boundary",
+        "sourceVersionId": "g01-a-v1-5",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "proxy",
+          "applicability": "applicable",
+          "sourceId": "src-a-boundary",
+          "sourceVersionId": "g01-a-v1-5",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "unit",
+          "applicability": "not-applicable",
+          "sourceId": "src-a-boundary",
+          "sourceVersionId": "g01-a-v1-5",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "restricted",
+          "applicability": "not-applicable",
+          "sourceId": "src-a-boundary",
+          "sourceVersionId": "g01-a-v1-5",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "post-decision",
+          "applicability": "not-applicable",
+          "sourceId": "src-a-boundary",
+          "sourceVersionId": "g01-a-v1-5",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "g01-a-object-b",
+      "subjectId": "sub-g01-a-object-b",
+      "title": "合成 档案利用申请审核 g01-a-object-b",
+      "businessType": "g01-archive-target",
+      "scenario": "copy",
+      "scenarioSource": {
+        "sourceId": "src-a-boundary",
+        "sourceVersionId": "g01-a-v1-5",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "proxy",
+          "applicability": "unknown",
+          "sourceId": "src-a-boundary",
+          "sourceVersionId": "g01-a-v1-5",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "unit",
+          "applicability": "not-applicable",
+          "sourceId": "src-a-boundary",
+          "sourceVersionId": "g01-a-v1-5",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "restricted",
+          "applicability": "not-applicable",
+          "sourceId": "src-a-boundary",
+          "sourceVersionId": "g01-a-v1-5",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "post-decision",
+          "applicability": "not-applicable",
+          "sourceId": "src-a-boundary",
+          "sourceVersionId": "g01-a-v1-5",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

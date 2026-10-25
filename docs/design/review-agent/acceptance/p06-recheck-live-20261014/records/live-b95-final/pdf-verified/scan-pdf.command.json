@@ -1,0 +1,28 @@
+{
+  "name": "scan-pdf",
+  "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014",
+  "argv": [
+    "node",
+    "scripts/qa/review-live-pdf.mjs"
+  ],
+  "startedAt": "2026-10-14T16:35:53.189264+00:00",
+  "environment": {
+    "NO_COLOR": "1",
+    "QA_APPLICATION_SHA": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+    "QA_PROFILE_ROOT": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile",
+    "QA_REPORT_DIR": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/live-b95-final/pdf-verified"
+  },
+  "finishedAt": "2026-10-14T16:35:53.625655+00:00",
+  "exitCode": 1,
+  "files": {
+    "scan-pdf.stdout.log": {
+      "sha256": "acd5dda1c341fe2915e9e028434e68baa8f3263b2da6040c240717b8ac257b16",
+      "bytes": 129
+    },
+    "scan-pdf.stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  }
+}

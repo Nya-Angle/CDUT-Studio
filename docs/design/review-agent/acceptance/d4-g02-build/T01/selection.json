@@ -1,0 +1,162 @@
+{
+  "templateId": "g02-t01-review",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "g02-t01-object-a",
+      "subjectId": "g02-t01-subject-a",
+      "title": "G02-T01合成审核对象 a",
+      "businessType": "g02-data-item",
+      "scenario": "act-new",
+      "scenarioSource": {
+        "sourceId": "synthetic-case-facts",
+        "sourceVersionId": "synthetic-case-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "multi-source",
+          "applicability": "applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "delegated",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "third-party",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "personal-data",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "sensitive-data",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "api-delivery",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "policy-confirmed",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "source-approved",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "delivered",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "g02-t01-object-b",
+      "subjectId": "g02-t01-subject-b",
+      "title": "G02-T01合成审核对象 b",
+      "businessType": "g02-data-item",
+      "scenario": "act-change",
+      "scenarioSource": {
+        "sourceId": "synthetic-case-facts",
+        "sourceVersionId": "synthetic-case-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "multi-source",
+          "applicability": "applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "delegated",
+          "applicability": "unknown",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "third-party",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "personal-data",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "sensitive-data",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "api-delivery",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "policy-confirmed",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "source-approved",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "delivered",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

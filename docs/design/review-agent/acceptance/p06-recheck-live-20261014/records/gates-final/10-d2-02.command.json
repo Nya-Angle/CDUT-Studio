@@ -1,0 +1,32 @@
+{
+  "name": "10-d2-02",
+  "sourceSha": "b40e00d2462d5cedafa9ca78ac8b78bdc4bddc04",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014",
+  "argv": [
+    "bun",
+    "test",
+    "--isolate",
+    "--timeout",
+    "30000",
+    "apps/electron/src/main/lib/review/pi-case-review-service.test.ts"
+  ],
+  "startedAt": "2026-10-14T15:34:29.477992+00:00",
+  "environment": {
+    "NO_COLOR": "1",
+    "PROFER_CONFIG_DIR": "/tmp/p06-live-gates-7vm08xeg/config",
+    "PROFER_USER_DATA_DIR": "/tmp/p06-live-gates-7vm08xeg/user-data",
+    "CI": "true"
+  },
+  "finishedAt": "2026-10-14T15:34:29.649050+00:00",
+  "exitCode": 0,
+  "files": {
+    "10-d2-02.stdout.log": {
+      "sha256": "e453a34f3b979ae0124b23e9ba0c5c019a75187a405b8172680c87fa3b9dd59c",
+      "bytes": 258
+    },
+    "10-d2-02.stderr.log": {
+      "sha256": "bfa0276522965143522dabbec54bd3bc4066d48c97ca4f19ac00321464d749d4",
+      "bytes": 715
+    }
+  }
+}

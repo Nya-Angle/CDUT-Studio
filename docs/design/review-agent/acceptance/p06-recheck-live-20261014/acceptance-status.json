@@ -1,0 +1,189 @@
+{
+  "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+  "selectedFinal": {
+    "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+    "cases": 16,
+    "pass": 16,
+    "fail": 0,
+    "assertions": 77,
+    "failedAssertions": 0,
+    "ordinaryBooleanChecks": 5,
+    "rows": [
+      {
+        "id": "E05",
+        "status": "PASS",
+        "assertions": 9,
+        "failedAssertions": 0,
+        "factPath": "live-b95-final/e05-result.json"
+      },
+      {
+        "id": "E03",
+        "status": "PASS",
+        "assertions": 8,
+        "failedAssertions": 0,
+        "factPath": "live-b95-final/races-results.json"
+      },
+      {
+        "id": "E04",
+        "status": "PASS",
+        "assertions": 7,
+        "failedAssertions": 0,
+        "factPath": "live-b95-final/races-results.json"
+      },
+      {
+        "id": "E06-PI-READ-TOOL",
+        "status": "PASS",
+        "assertions": 3,
+        "failedAssertions": 0,
+        "factPath": "live-b95-final/e06-matrix.json"
+      },
+      {
+        "id": "E06-PI-PERMISSION-DENY-RECOVER",
+        "status": "PASS",
+        "assertions": 4,
+        "failedAssertions": 0,
+        "factPath": "live-b95-final/e06-matrix.json"
+      },
+      {
+        "id": "E06-PI-STOP-IN-FLIGHT",
+        "status": "PASS",
+        "assertions": 2,
+        "failedAssertions": 0,
+        "factPath": "live-b95-final/e06-matrix.json"
+      },
+      {
+        "id": "E06-DESKTOP-TEXT-PREVIEW",
+        "status": "PASS",
+        "assertions": 3,
+        "failedAssertions": 0,
+        "factPath": "live-b95-final/e06-matrix.json"
+      },
+      {
+        "id": "E06-BATCH-REAL-QUEUE-AND-GATES",
+        "status": "PASS",
+        "assertions": 9,
+        "failedAssertions": 0,
+        "factPath": "live-b95-final/batch-real-result.json"
+      },
+      {
+        "id": "enospc",
+        "status": "PASS",
+        "assertions": 8,
+        "failedAssertions": 0,
+        "factPath": "io-b95-final/enospc-result.json"
+      },
+      {
+        "id": "dual-fault",
+        "status": "PASS",
+        "assertions": 5,
+        "failedAssertions": 0,
+        "factPath": "io-b95-final/dual-fault-result.json"
+      },
+      {
+        "id": "reboot-still-faulted",
+        "status": "PASS",
+        "assertions": 2,
+        "failedAssertions": 0,
+        "factPath": "io-b95-final/reboot-still-faulted-result.json"
+      },
+      {
+        "id": "reboot-recovered",
+        "status": "PASS",
+        "assertions": 3,
+        "failedAssertions": 0,
+        "factPath": "io-b95-final/reboot-recovered-result.json"
+      },
+      {
+        "id": "E06-PREVIEW-RESTORE-prepare-office",
+        "status": "PASS",
+        "assertions": 5,
+        "failedAssertions": 0,
+        "factPath": "live-b95-final/office/preview-restore-prepare-office.json"
+      },
+      {
+        "id": "E06-PREVIEW-RESTORE-restored",
+        "status": "PASS",
+        "assertions": 5,
+        "failedAssertions": 0,
+        "factPath": "live-b95-final/office/preview-restore-restored.json"
+      },
+      {
+        "id": "E06-SCAN-PDF",
+        "status": "PASS",
+        "assertions": 4,
+        "failedAssertions": 0,
+        "factPath": "live-b95-final/pdf-oopif/pdf-result.json"
+      },
+      {
+        "id": "E06-ORDINARY-PI-POSITIVE",
+        "status": "PASS",
+        "assertions": 0,
+        "booleanVerdictChecks": 5,
+        "factPath": "live-b95-final/ordinary-pi-positive.json"
+      }
+    ],
+    "scope": "最终选定可执行场景；不含提供商库存行/NOT-RUN/BLOCKED/早期失败尝试，不把完整 E06 或 LIVE-07 标 PASS"
+  },
+  "E05": "PASS",
+  "E03": "PASS (explicit real Promise gate)",
+  "E04": "PASS (captured real callback replay)",
+  "E06": "PARTIAL",
+  "ENOSPC": "PASS",
+  "dualPersistence": "PASS",
+  "faultHeldRestart": "PASS",
+  "writableRecovery": "PASS",
+  "P06-S02": "NOT ACCEPTED",
+  "P06": "PARTIAL",
+  "LIVE-07": "PARTIAL",
+  "PR": "Draft/Open/MERGE NO-GO",
+  "nextWork": "P06-RECHECK-LIVE-02",
+  "missing": [
+    {
+      "id": "E06-CLAUDE",
+      "status": "NOT-RUN",
+      "reason": "无隔离授权 Claude runtime/provider 配置"
+    },
+    {
+      "id": "E06-BATCH-FULL-ABC",
+      "status": "PARTIAL",
+      "reason": "已验证真实队列与 B/C 拒止子集；完整人工处置/补件回流/正向自动审批/幂等未验；本次三案 C 正常 fail-closed execution-failed，并非业务预算检查通过"
+    },
+    {
+      "id": "E06-MULTIWINDOW-FORK-PLATFORM",
+      "status": "NOT-RUN",
+      "reason": "单 Linux Renderer/普通会话恢复子集不覆盖双窗口、fork、Windows/macOS"
+    },
+    {
+      "id": "P02-SCAN-PDF-REVIEW",
+      "status": "NOT-RUN",
+      "reason": "普通 PDF 预览绘制通过；严格审核工具的模型视觉结果及原件回执未验"
+    },
+    {
+      "id": "P05-RELAY-ROUTE-01",
+      "status": "BLOCKED",
+      "reason": "真实中心多 viewer/ticket 前置条件未提供"
+    },
+    {
+      "id": "P05-POCKET-FIFO-01",
+      "status": "PATCH READY / TARGET NOT-RUN",
+      "reason": "独立目标仓库未获本任务修改/验收授权，不应用补丁"
+    },
+    {
+      "id": "P04-TECHDEBT-01",
+      "status": "OPEN",
+      "reason": "永久 tombstone/UUID journal 禁止无安全证明 TTL/GC"
+    }
+  ],
+  "integratedRegression": {
+    "localSourceSha": "9cc92bb0e6cec8d2698f5d712a71ecc8b77256e4",
+    "preservedRemoteSha": "7132ca658ffc64c1f3bc44146ef9bddedae950e5",
+    "productionDeltaFromLiveSha": false,
+    "pass": 3894,
+    "skip": 5,
+    "fail": 0,
+    "tests": 3899,
+    "expect": 16161,
+    "focusedTests": 89,
+    "focusedExpect": 345
+  }
+}

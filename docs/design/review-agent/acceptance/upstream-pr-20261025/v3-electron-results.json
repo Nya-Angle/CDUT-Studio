@@ -1,0 +1,58 @@
+[
+  {
+    "label": "E1 actual Electron window and local workspace",
+    "status": "PASS",
+    "data": {
+      "entry": true
+    }
+  },
+  {
+    "label": "E2 real native Case create and reopen",
+    "status": "PASS",
+    "data": {
+      "id": "case-a20b2c963e5b4b1ea12ece22d8be414a",
+      "stage": "draft"
+    }
+  },
+  {
+    "label": "E3 OS native picker, physical original and SHA",
+    "status": "PASS",
+    "data": {
+      "hash": "d6e661bb4e583183e4e9b7d8c2c9730a9bb1ac1ff6d22d8a13f15ec806c9fab4",
+      "version": "doc-1-mvnjcdoh-v1"
+    }
+  },
+  {
+    "label": "E4 true Main materials and bundled template routing",
+    "status": "PASS",
+    "data": {
+      "caseId": "case-a20b2c963e5b4b1ea12ece22d8be414a",
+      "route": "unmatched",
+      "hashes": [
+        "d6e661bb4e583183e4e9b7d8c2c9730a9bb1ac1ff6d22d8a13f15ec806c9fab4"
+      ],
+      "published": false,
+      "school": false
+    }
+  },
+  {
+    "label": "E5 local manual Check anchored in real original",
+    "status": "PASS",
+    "data": {
+      "subjects": 1
+    }
+  },
+  {
+    "label": "E6 local Case history and no fabricated pre-run report",
+    "status": "PASS",
+    "data": {
+      "noPrematureReport": true,
+      "inHistory": true,
+      "caseId": "case-a20b2c963e5b4b1ea12ece22d8be414a",
+      "hashes": [
+        "d6e661bb4e583183e4e9b7d8c2c9730a9bb1ac1ff6d22d8a13f15ec806c9fab4"
+      ],
+      "subjects": 1
+    }
+  }
+]

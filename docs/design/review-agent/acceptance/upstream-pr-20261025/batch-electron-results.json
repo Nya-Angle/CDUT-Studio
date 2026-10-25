@@ -1,0 +1,60 @@
+[
+  {
+    "name": "Actual Electron UI: fixture entry",
+    "status": "PASS",
+    "durationMs": 11674,
+    "details": {
+      "entry": "CDUT 专区 → 材料审核 → 批次管理",
+      "renderer": "Electron CDP"
+    }
+  },
+  {
+    "name": "Actual Electron IPC: original traversal exploit rejected without files",
+    "status": "PASS",
+    "durationMs": 2,
+    "details": {
+      "rejected": true,
+      "reason": "非法 caseId",
+      "filesystemCheck": "workflow side-effect assertion"
+    }
+  },
+  {
+    "name": "Actual Electron UI: historical return remains history after requeue",
+    "status": "PASS",
+    "durationMs": 130,
+    "details": {
+      "displayed": [
+        "待本轮重新审核",
+        "上次动作：自动退回补件（历史记录）"
+      ]
+    }
+  },
+  {
+    "name": "Actual Electron UI: authorization denial strips IPC transport prefix",
+    "status": "PASS",
+    "durationMs": 415,
+    "details": {
+      "visibleReason": "全局 AI 代批授权未开启，不得自动通过"
+    }
+  },
+  {
+    "name": "Actual Electron UI: finalization denial strips IPC transport prefix",
+    "status": "PASS",
+    "durationMs": 117,
+    "details": {
+      "denied": true,
+      "reasonIsUserFacing": true
+    }
+  },
+  {
+    "name": "Actual Electron UI: failed queue never produces generic success toast",
+    "status": "PASS",
+    "durationMs": 101,
+    "details": {
+      "caseStatus": "failed",
+      "failureReason": "未配置可用模型渠道，无法执行真实审核（请在设置中配置渠道）",
+      "hasFailureFeedback": true,
+      "needsHuman": 0
+    }
+  }
+]

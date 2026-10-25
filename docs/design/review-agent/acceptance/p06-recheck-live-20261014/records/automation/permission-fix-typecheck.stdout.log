@@ -1,0 +1,9 @@
+@profer/agent-fabric typecheck: Exited with code 0
+@profer/benchmark-multihop typecheck: Exited with code 0
+@profer/shared typecheck: Exited with code 0
+@profer/project-core typecheck: Exited with code 0
+@profer/session-core typecheck: Exited with code 0
+@profer/core typecheck: Exited with code 0
+@profer/cli typecheck: Exited with code 0
+@profer/ui typecheck: Exited with code 0
+@profer/electron typecheck: Exited with code 0

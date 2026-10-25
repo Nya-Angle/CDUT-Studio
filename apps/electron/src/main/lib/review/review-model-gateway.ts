@@ -16,6 +16,11 @@ import { decryptApiKey, listChannels } from '../channel-manager'
 import { getFetchFn } from '../proxy-fetch'
 import { getEffectiveProxyUrl } from '../proxy-settings-service'
 import { resolveOpenAIChatCompletionsUrl } from '@profer/core'
+import { pickChannelModelId, waitForRetry } from './review-model-identity'
+import { getEffectiveReviewModelSelection } from './module-settings-store'
+import { extractJson } from './review-json'
+import { assertReviewPreuploadAllowed } from './review-preupload-gate'
+export { extractJson } from './review-json'
 
 /**
  * 单次请求默认超时（60 秒）。
@@ -47,6 +52,13 @@ export interface ReviewChatMessage {
   content: string | ReviewContentPart[]
 }
 
+/** 把 V2 检查用的图像 data URL 转为审核网关的多模态消息内容。 */
+export function reviewPromptWithImages(prompt: string, images: string[] = []): string | ReviewContentPart[] {
+  return images.length === 0
+    ? prompt
+    : [{ type: 'text', text: prompt }, ...images.map((url) => ({ type: 'image_url' as const, image_url: { url } }))]
+}
+
 /** chatCompletion 可选参数 */
 export interface ReviewChatOptions {
   /** 采样温度 */
@@ -55,6 +67,10 @@ export interface ReviewChatOptions {
   maxTokens?: number
   /** 单次请求超时（缺省 60 秒；长上下文审核运行传 REVIEW_RUN_TIMEOUT_MS） */
   timeoutMs?: number
+  /** 外部取消信号（08 设计：run 级取消穿透到网络请求；超时仍走内部 timer） */
+  signal?: AbortSignal
+  /** false 时视觉请求失败直接返回错误，不额外发起一轮丢图文本请求。 */
+  retryWithoutImages?: boolean
 }
 
 /** 调用结果（含降级标记，供调用方在结论/报告里如实标注） */
@@ -63,6 +79,13 @@ export interface ReviewChatResult {
   text: string
   /** 是否因模型不支持多模态而剔除图片后重试成功 */
   imagesDropped: boolean
+  /** 服务端返回的 token 用量；用于记录按需视觉能力的真实成本。 */
+  usage?: { inputTokens?: number; outputTokens?: number; cacheReadInputTokens?: number }
+}
+
+interface ReviewChatCompletionResponse {
+  text: string
+  usage?: ReviewChatResult['usage']
 }
 
 /** 是否有图片部件 */
@@ -146,19 +169,35 @@ function trimTrailingSlash(baseUrl: string): string {
  * 可用 = provider 在白名单内，且（models 数组非空 或 ollama——本地模型允许未登记模型清单）。
  */
 function findFirstAllowedChannel(): Channel | undefined {
-  return listChannels().find((channel) => {
+  const channels = listChannels()
+  const configuredSelection = getEffectiveReviewModelSelection().selection
+  if (configuredSelection) {
+    const selectedChannel = channels.find((channel) => channel.id === configuredSelection.channelId)
+    if (!selectedChannel || !isUsableReviewChannel(selectedChannel)
+      || !selectedChannel.models?.some((model) => model.id === configuredSelection.modelId && model.enabled !== false)) {
+      return undefined
+    }
+    return selectedChannel
+  }
+  return channels.find(isUsableReviewChannel)
+}
+
+function isUsableReviewChannel(channel: Channel): boolean {
     if (!isAllowedProvider(channel.provider)) return false
     // 与 chat-service 一致：用户停用的渠道对审核专区同样停用（不外发任何案卷数据）
     if (channel.enabled !== true) return false
     if (channel.provider === 'ollama') return true
     return Array.isArray(channel.models) && channel.models.length > 0
-  })
 }
 
 /** 取渠道要提交给模型的 ID：优先取已启用模型；demo 不做模型选择 UI */
 function firstModelId(channel: Channel): string | undefined {
-  const enabled = channel.models?.find((model) => model.enabled !== false)
-  return enabled?.id ?? channel.models?.[0]?.id
+  return pickChannelModelId(channel, getEffectiveReviewModelSelection().selection)
+}
+
+/** 回执用：返回本次请求实际提交的 modelId（与 `performChatCompletion` 同口径）。 */
+export function resolveReviewGatewayModelId(channel: Pick<Channel, 'id' | 'models'>): string {
+  return pickChannelModelId(channel, getEffectiveReviewModelSelection().selection) ?? ''
 }
 
 /**
@@ -169,10 +208,13 @@ function firstModelId(channel: Channel): string | undefined {
 export function getReviewModelGatewayStatus(): ReviewModelGatewayStatus {
   const channel = findFirstAllowedChannel()
   if (!channel) {
+    const hasExplicitSelection = getEffectiveReviewModelSelection().explicit
     return {
       available: false,
       protocol: 'none',
-      reason: '未配置 OpenAI 兼容渠道或本地模型渠道（内容审核专区仅支持这两种出口）',
+      reason: hasExplicitSelection
+        ? '审核专属渠道或模型已不可用，请打开审核设置重新选择'
+        : '未配置 OpenAI 兼容渠道或本地模型渠道（内容审核专区仅支持这些出口）',
     }
   }
 
@@ -246,15 +288,15 @@ export async function chatCompletionWithMeta(
 ): Promise<ReviewChatResult> {
   const withImages = hasImageParts(messages)
   try {
-    const text = await performChatCompletion(channel, messages, options)
-    return { text, imagesDropped: false }
+    const response = await performChatCompletion(channel, messages, options)
+    return { ...response, imagesDropped: false }
   } catch (error) {
-    if (!withImages || !isMultimodalLikelyFailure(error)) throw error
+    if (!withImages || options?.retryWithoutImages === false || !isMultimodalLikelyFailure(error)) throw error
     console.warn(
       `[审核专区] 多模态请求失败，剔除图片后重试: ${error instanceof Error ? error.message : String(error)}`,
     )
-    const text = await performChatCompletion(channel, stripImageParts(messages), options)
-    return { text, imagesDropped: true }
+    const response = await performChatCompletion(channel, stripImageParts(messages), options)
+    return { ...response, imagesDropped: true }
   }
 }
 
@@ -263,7 +305,16 @@ async function performChatCompletion(
   channel: Channel,
   messages: ReviewChatMessage[],
   options?: ReviewChatOptions,
-): Promise<string> {
+  preflight: 'model' | 'synthetic-probe' = 'model',
+): Promise<ReviewChatCompletionResponse> {
+  // Trust boundary before constructing a provider payload or opening a socket.
+  // The destination is derived from Main's configured channel, not the prompt.
+  // A synthetic probe contains only a fixed protocol marker and no user/material
+  // bytes, so it verifies connectivity without claiming authorization to process
+  // review materials. All real review/model paths retain the preupload gate.
+  if (preflight === 'model') {
+    assertReviewPreuploadAllowed('model', { modelDestination: `${channel.provider}:${channel.baseUrl ?? ''}` })
+  }
   // 白名单强制：任何调用路径都先过这道闸
   if (!isAllowedProvider(channel.provider)) {
     console.warn(`[审核专区] 已拒绝非白名单出口: ${channel.provider}（渠道 ${channel.name}）`)
@@ -279,8 +330,11 @@ async function performChatCompletion(
   const url = isOllama
     ? // 本地私有线：归一化根地址（渠道可能存了带 /v1 的地址）
       `${trimTrailingSlash(channel.baseUrl).replace(/\/v1$/, '')}/api/chat`
-    : // OpenAI 兼容线：复用 core 的 URL 解析（custom 完整端点原样、其余拼后缀）
-      resolveOpenAIChatCompletionsUrl(channel.baseUrl, channel.provider)
+    : // OpenAI 兼容线：复用 core 的 URL 解析；custom 端点原样返回的语义与设置页预览（自动拼 /chat/completions）不一致，这里兜底补齐
+      (() => {
+        const resolved = resolveOpenAIChatCompletionsUrl(channel.baseUrl, channel.provider)
+        return resolved.endsWith('/chat/completions') ? resolved : `${resolved.replace(/\/$/, '')}/chat/completions`
+      })()
 
   let apiKey = ''
   if (!isOllama) {
@@ -323,25 +377,53 @@ async function performChatCompletion(
   const timeoutMs = options?.timeoutMs ?? REQUEST_TIMEOUT_MS
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), timeoutMs)
+  // 外部取消信号（run 级取消）穿透：触发即中止请求与退避等待
+  const externalSignal = options?.signal
+  if (externalSignal) {
+    if (externalSignal.aborted) controller.abort()
+    else externalSignal.addEventListener('abort', () => controller.abort(), { once: true })
+  }
 
   try {
-    const response = await fetchFn(url, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(body),
-      signal: controller.signal,
-    })
+    // 429 限流重试：免费渠道并发池紧张（服务端提示 retry later），最多 3 次指数退避
+    const MAX_RETRIES = 3
+    for (let attempt = 0; ; attempt += 1) {
+      if (externalSignal?.aborted) throw new Error('模型请求已取消')
+      const response = await fetchFn(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body),
+        signal: controller.signal,
+      })
 
-    if (!response.ok) {
-      const text = await response.text().catch(() => '')
-      const truncated = text.length > ERROR_BODY_MAX ? `${text.slice(0, ERROR_BODY_MAX)}…` : text
-      throw new Error(`模型请求失败: HTTP ${response.status} ${truncated}`)
+      if (response.status === 429 && attempt < MAX_RETRIES) {
+        const backoffMs = 8000 * (attempt + 1)
+        console.warn(`[审核专区] 模型限流（429），${backoffMs / 1000}s 后第 ${attempt + 1} 次重试`)
+        try {
+          // 退避等待必须同时响应外部取消与本次请求的内部超时（同一 AbortController）。
+          await waitForRetry(backoffMs, controller.signal)
+        } catch {
+          if (externalSignal?.aborted) throw new Error('模型请求已取消')
+          throw new Error(`模型请求超时（超过 ${timeoutMs / 1000} 秒未响应）`)
+        }
+        continue
+      }
+
+      if (!response.ok) {
+        const text = await response.text().catch(() => '')
+        const truncated = text.length > ERROR_BODY_MAX ? `${text.slice(0, ERROR_BODY_MAX)}…` : text
+        throw new Error(`模型请求失败: HTTP ${response.status} ${truncated}`)
+      }
+
+      const data = (await response.json()) as unknown
+      const usage = usageFromResponse(data)
+      return { text: extractChatContent(data, isOllama), ...(usage ? { usage } : {}) }
     }
-
-    const data = (await response.json()) as unknown
-    return extractChatContent(data, isOllama)
   } catch (error) {
+    if (error instanceof Error && error.message === '模型请求已取消') throw error
     if (error instanceof Error && error.name === 'AbortError') {
+      // 外部取消与内部超时共用 AbortController：按信号来源区分语义
+      if (externalSignal?.aborted) throw new Error('模型请求已取消')
       throw new Error(`模型请求超时（超过 ${timeoutMs / 1000} 秒未响应）`)
     }
     if (error instanceof Error && error.message.startsWith('模型请求失败')) throw error
@@ -351,6 +433,48 @@ async function performChatCompletion(
   } finally {
     clearTimeout(timer)
   }
+}
+
+/**
+ * Fixed, material-free connectivity probe used by the first-use readiness UI.
+ * Keeping the payload in Main prevents Renderer input from turning this into a
+ * second model egress path that bypasses the material authorization gate.
+ */
+export async function chatCompletionSyntheticProbe(
+  channel: Channel,
+  options?: Pick<ReviewChatOptions, 'timeoutMs' | 'signal'>,
+): Promise<string> {
+  const response = await performChatCompletion(
+    channel,
+    [
+      { role: 'system', content: '这是审核模型连通性自检。只输出严格 JSON：{"ready":"CDUT_REVIEW_PROBE"}。禁止 Markdown 和额外文字。' },
+      { role: 'user', content: '请严格返回系统指示的 JSON 自检对象，不引用真实政策或材料。' },
+    ],
+    options,
+    'synthetic-probe',
+  )
+  return response.text
+}
+
+function usageFromResponse(value: unknown): ReviewChatResult['usage'] | undefined {
+  if (!value || typeof value !== 'object' || !('usage' in value)) return undefined
+  const usage = (value as { usage?: unknown }).usage
+  if (!usage || typeof usage !== 'object') return undefined
+  const record = usage as Record<string, unknown>
+  const promptDetails = record.prompt_tokens_details && typeof record.prompt_tokens_details === 'object'
+    ? record.prompt_tokens_details as Record<string, unknown>
+    : record.input_tokens_details && typeof record.input_tokens_details === 'object'
+      ? record.input_tokens_details as Record<string, unknown>
+      : undefined
+  const inputTokens = Number(record.prompt_tokens ?? record.input_tokens)
+  const outputTokens = Number(record.completion_tokens ?? record.output_tokens)
+  const cacheReadInputTokens = Number(record.prompt_cache_hit_tokens ?? promptDetails?.cached_tokens)
+  const result = {
+    ...(Number.isFinite(inputTokens) ? { inputTokens } : {}),
+    ...(Number.isFinite(outputTokens) ? { outputTokens } : {}),
+    ...(Number.isFinite(cacheReadInputTokens) ? { cacheReadInputTokens } : {}),
+  }
+  return Object.keys(result).length ? result : undefined
 }
 
 /** 从响应 JSON 中提取文本内容（两条协议形状不同） */
@@ -386,38 +510,3 @@ function extractChatContent(data: unknown, isOllama: boolean): string {
  * 顺序：整体 JSON.parse → 剥 ```json 围栏 → 第一个 `{` 到最后一个 `}`。
  * 任何一步失败返回 undefined（调用方据此降级或重试，不伪造结果）。
  */
-export function extractJson(text: string): unknown | undefined {
-  if (typeof text !== 'string' || text.trim().length === 0) return undefined
-
-  const trimmed = text.trim()
-
-  // 1. 整体就是合法 JSON
-  try {
-    return JSON.parse(trimmed)
-  } catch {
-    /* 继续尝试剥离围栏 */
-  }
-
-  // 2. 剥 ```json ... ``` 或 ``` ... ``` 围栏
-  const fenceMatch = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/i)
-  if (fenceMatch?.[1]) {
-    try {
-      return JSON.parse(fenceMatch[1].trim())
-    } catch {
-      /* 继续尝试花括号截取 */
-    }
-  }
-
-  // 3. 第一个 { 到最后一个 }（模型常在 JSON 前后加解说文字）
-  const start = trimmed.indexOf('{')
-  const end = trimmed.lastIndexOf('}')
-  if (start >= 0 && end > start) {
-    try {
-      return JSON.parse(trimmed.slice(start, end + 1))
-    } catch {
-      /* 落到 undefined */
-    }
-  }
-
-  return undefined
-}

@@ -1,0 +1,216 @@
+(node:1631055) [UNDICI-EHPA] Warning: EnvHttpProxyAgent is experimental, expect them to change at any time.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1631063) [UNDICI-EHPA] Warning: EnvHttpProxyAgent is experimental, expect them to change at any time.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[E2E] 配置就绪：AMD Radeon / GLM-5.3-Flash（custom）
+[main] [协作工具] EventBus 阻塞事件监听已注册
+[main:err] [1631071:1021/015041.200964:WARNING:ui/ozone/platform/wayland/common/wayland_object.cc:119] Binding to wl_shm version 1 but version 2 is available.
+[main:err] [1631071:1021/015041.201050:WARNING:ui/ozone/platform/wayland/common/wayland_object.cc:119] Binding to zwp_pointer_gestures_v1 version 1 but version 3 is available.
+[1631071:1021/015041.201082:WARNING:ui/ozone/platform/wayland/common/wayland_object.cc:119] Binding to zwp_linux_dmabuf_v1 version 4 but version 5 is available.
+[1631071:1021/015041.201115:WARNING:ui/ozone/platform/wayland/common/wayland_object.cc:119] Binding to wp_color_manager_v1 version 1 but version 2 is available.
+[1631071:1021/015041.201124:WARNING:ui/ozone/platform/wayland/common/wayland_object.cc:119] Binding to wp_cursor_shape_manager_v1 version 1 but version 2 is available.
+[main:err] 
+DevTools listening on ws://127.0.0.1:9333/devtools/browser/08c03315-27e3-46be-b740-3b3dcac46fdb
+[main] [运行时初始化] 已从磁盘缓存恢复运行时状态
+[main] [运行时初始化] 从缓存恢复完成 (耗时 0ms)
+[main] [IPC] 正在注册 IPC 处理器...
+[main] [IPC] IPC 处理器注册完成
+[main] [审核专区] IPC 处理器注册完成
+[main] [Remote] 未启用（设置页未开启移动模式，且 PROFER_REMOTE 未设置）
+[main] [配置] 默认配置目录名: ~/.cdutai-dev/（开发模式）；实际路径可由 PROFER_CONFIG_DIR 覆盖
+[main] [AgentFabric] 未启用（设置 PROFER_AGENT_FABRIC=1 或 agent-fabric.json enabled=true）
+[main:err] [1631071:1021/015041.340043:WARNING:ui/ozone/platform/wayland/host/wayland_surface.cc:170] Server doesn't support zcr_alpha_compositing_v1.
+[1631071:1021/015041.340053:WARNING:ui/ozone/platform/wayland/host/wayland_surface.cc:185] Server doesn't support overlay_prioritizer.
+[1631071:1021/015041.340056:WARNING:ui/ozone/platform/wayland/host/wayland_surface.cc:200] Server doesn't support wp_content_type_v1
+[main:err] [1631206:1021/015041.345980:WARNING:sandbox/policy/linux/sandbox_linux.cc:405] InitializeSandbox() called with multiple threads in process gpu-process.
+[main] System tray created
+[main] [启动] 开机自启动: 已关闭
+[main] [工作区监听] 已启动文件监听: /home/miku/Bot/CDUTStudio/cdut-studio-review-agent/work/e2e/config/agent-workspaces
+[main] [全局快捷键] 注册成功: show-main-window → CommandOrControl+Shift+P
+[main] [速课堂评测] 隐蔽评测服务已在 127.0.0.1:38829 静默启动
+[main] [存储清理] 临时文件: 释放 0.0 MB, 删除 1 个文件
+[main] [存储清理] 启动时清理了 0.0 MB 临时文件
+[main] [Bridge Registry] 自愈守护已启动
+[main] [定时任务] 调度器已启动，tick 周期 30s
+[main] [设置] 系统主题变化: 深色
+[main] [CdutAuthManager] 启动已清空特区账户分区存储，登录态复位为未登录
+[main] [设置] 系统主题变化: 深色
+[main] [设置] 系统主题变化: 深色
+[main:err] [1631071:1021/015041.637460:WARNING:dbus/exported_object.cc:302] Unknown method: message_type: MESSAGE_METHOD_CALL
+destination: :1.2506
+path: /StatusNotifierItem
+interface: org.freedesktop.DBus.Introspectable
+member: Introspect
+sender: :1.25
+serial: 300433
+
+
+[main:err] (electron) 'console-message' arguments are deprecated and will be removed. Please use Event<WebContentsConsoleMessageEventParams> object instead.
+[main] [renderer:verbose] http://localhost:5174/@vite/client:789 [vite] connecting...
+[main:err] [1631071:1021/015041.828787:INFO:CONSOLE:789] "[vite] connecting...", source: http://localhost:5174/@vite/client (789)
+[main] [renderer:verbose] http://localhost:5174/@vite/client:912 [vite] connected.
+[main:err] [1631071:1021/015042.144787:INFO:CONSOLE:912] "[vite] connected.", source: http://localhost:5174/@vite/client (912)
+[main] Warning: Cannot access the `require` function: "TypeError [ERR_INVALID_ARG_VALUE]: The argument 'filename' must be a file URL object, file URL string, or absolute path string. Received undefined".
+[main] Warning: Cannot polyfill `DOMMatrix`, rendering may be broken.
+Warning: Cannot polyfill `ImageData`, rendering may be broken.
+Warning: Cannot polyfill `Path2D`, rendering may be broken.
+[main] Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+[main] Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+[main] [文档解析] PDF 高精解析完成: 6 页, 6 块, 拦截幽灵字符 0
+[main] [renderer:info] http://localhost:5174/@fs/home/miku/Bot/CDUTStudio/cdut-studio-review-agent/apps/electron/node_modules/.vite/deps/chunk-EKGHCEOM.js?v=407f9e38:21609 %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[main] [renderer:warning] http://localhost:5174/@fs/home/miku/Bot/CDUTStudio/cdut-studio-review-agent/apps/electron/node_modules/.vite/deps/jotai_utils.js?v=407f9e38:36 [DEPRECATED] atomFamily is deprecated and will be removed in v3. Please use the `jotai-family` package instead: https://github.com/jotaijs/jotai-family
+[main:err] [1631071:1021/015043.181622:INFO:CONSOLE:21609] "%cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold", source: http://localhost:5174/@fs/home/miku/Bot/CDUTStudio/cdut-studio-review-agent/apps/electron/node_modules/.vite/deps/chunk-EKGHCEOM.js?v=407f9e38 (21609)
+[1631071:1021/015043.181749:INFO:CONSOLE:36] "[DEPRECATED] atomFamily is deprecated and will be removed in v3. Please use the `jotai-family` package instead: https://github.com/jotaijs/jotai-family", source: http://localhost:5174/@fs/home/miku/Bot/CDUTStudio/cdut-studio-review-agent/apps/electron/node_modules/.vite/deps/jotai_utils.js?v=407f9e38 (36)
+[main] [皮肤] 注册表: forest-dark(dark,内置), forest-light(light,内置), mist-paper-dark(dark,内置), ocean-dark(dark,内置), ocean-light(light,内置), slate-dark(dark,内置), slate-light(light,内置), terminal-dark(dark,内置)
+[main] [配置] 已创建 Agent 会话工作目录: /home/miku/Bot/CDUTStudio/cdut-studio-review-agent/work/e2e/config/agent-workspaces/default/ac154a62-0e80-4ffa-8e7a-61e721f21737
+[main] [Agent 会话] 已创建会话: 审核：E2E 全流程案卷 (ac154a62-0e80-4ffa-8e7a-61e721f21737)
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (ac154a62-0e80-4ffa-8e7a-61e721f21737)
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (ac154a62-0e80-4ffa-8e7a-61e721f21737)
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (ac154a62-0e80-4ffa-8e7a-61e721f21737)
+[main] [Agent 编排] 请求路由: {
+  sessionId: 'ac154a62-0e80-4ffa-8e7a-61e721f21737',
+  requestSource: 'agent-message',
+  channelId: '086b47b2-1435-499b-a886-a76d59ec67af',
+  modelId: 'GLM-5.3-Flash',
+  provider: 'custom'
+}
+[main] [身份] 设备身份: Linux (Bot) (06956d6c-ac7f-49e5-9f5e-fe15a735e790)
+[main] [Agent 编排] Resume 状态: sdkSessionId=无, proma sessionId=ac154a62-0e80-4ffa-8e7a-61e721f21737
+[Agent 编排] 启动 Pi runtime，模型: GLM-5.3-Flash, resume: 无
+[main] [Agent 编排] 使用 session 级别 cwd: /home/miku/Bot/CDUTStudio/cdut-studio-review-agent/work/e2e/config/agent-workspaces/default/ac154a62-0e80-4ffa-8e7a-61e721f21737 (默认工作区/ac154a62-0e80-4ffa-8e7a-61e721f21737)
+[Agent 编排] 无 sdkSessionId，将作为新会话启动（回填历史上下文）
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (ac154a62-0e80-4ffa-8e7a-61e721f21737)
+[main] [Pi 桥接] 已挂载 28 个工具（激活组: cdut-tools, collaboration, preview）
+[main] [Agent 编排] 权限模式: bypassPermissions
+[main] [renderer:info] http://localhost:5174/main.tsx?t=1792500240706:724 [TabRestore] 已恢复 1 个标签页
+[main] [renderer:info] http://localhost:5174/main.tsx?t=1792500240706:815 [ScratchPad] 初始化完成，已加载内容: false
+[main:err] [1631071:1021/015044.060728:INFO:CONSOLE:724] "[TabRestore] 已恢复 1 个标签页", source: http://localhost:5174/main.tsx?t=1792500240706 (724)
+[1631071:1021/015044.060973:INFO:CONSOLE:815] "[ScratchPad] 初始化完成，已加载内容: false", source: http://localhost:5174/main.tsx?t=1792500240706 (815)
+[main] [renderer:info] http://localhost:5174/main.tsx?t=1792500240706:724 [TabRestore] 已恢复 1 个标签页
+[main:err] [1631071:1021/015044.061268:INFO:CONSOLE:724] "[TabRestore] 已恢复 1 个标签页", source: http://localhost:5174/main.tsx?t=1792500240706 (724)
+[main] [renderer:info] http://localhost:5174/main.tsx?t=1792500240706:815 [ScratchPad] 初始化完成，已加载内容: false
+[main:err] [1631071:1021/015044.061353:INFO:CONSOLE:815] "[ScratchPad] 初始化完成，已加载内容: false", source: http://localhost:5174/main.tsx?t=1792500240706 (815)
+[main] [设置] 已更新 keys: tabState
+[main] [Skill 路由] {"sessionId":"ac154a62-0e80-4ffa-8e7a-61e721f21737","allowed":["brainstorming","docx","executing-plans","find-skills","lark-delivery","pdf","profer-coach","session-cleaner","skill-creator","tool-builder","user-sense","writing-plans","xlsx"],"blocked":[{"slug":"automation","code":"tool-group-disabled"},{"slug":"guizang-ppt-skill","code":"tool-group-disabled"},{"slug":"in-app-browser","code":"tool-group-disabled"},{"slug":"pptx","code":"tool-group-disabled"}],"selected":[{"slug":"docx","reason":"word-artifact"},{"slug":"pdf","reason":"pdf-artifact"}],"diagnostics":[{"slug":"pdf","code":"budget-deferred"}]}
+[main] [代理配置] 配置文件不存在，使用默认配置
+[main] [Agent 编排] 开始通过 Adapter 遍历事件流...
+[main] [Agent 编排] SDK 路由输入: {
+  sessionId: 'ac154a62-0e80-4ffa-8e7a-61e721f21737',
+  channelId: '086b47b2-1435-499b-a886-a76d59ec67af',
+  provider: 'custom',
+  configuredModelId: 'GLM-5.3-Flash',
+  effectiveSdkModelId: 'GLM-5.3-Flash',
+  oneMillionContextEnabled: false,
+  betaCount: 0,
+  authMode: 'api-key',
+  agentUrlOrigin: 'https://developer.amd.com.cn',
+  agentUrlPathname: '/radeon/api/v1',
+  appProxyEnabled: true
+}
+[main] [Pi 审核看门狗] 已启用 session=ac154a62-0e80-4ffa-8e7a-61e721f21737 首字节阈值=90s 整轮无进展阈值=20min
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (ac154a62-0e80-4ffa-8e7a-61e721f21737)
+[Agent 编排] 已保存 SDK session_id: 01a15a6f-e318-706c-beb9-93f4591d6b22
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (ac154a62-0e80-4ffa-8e7a-61e721f21737)
+[main] [Agent 编排] SDK 确认模型: GLM-5.3-Flash
+[main] [Agent 编排] 缓存 contextWindow: 1048576
+[main] [设置] 已更新 keys: mainWindowState
+[main:err] [Pi 审核看门狗] 模型请求 95 秒无任何数据返回（渠道：AMD Radeon，模型：GLM-5.3-Flash），本轮审核已中止。请检查该渠道连通性，或更换响应更快的模型后重新发起审核。 session=ac154a62-0e80-4ffa-8e7a-61e721f21737
+[main:err] [pi-adapter] 忽略非终态 errorMessage（stopReason=aborted）: Request aborted
+[main:err] [Agent 编排] ═══ SDK assistant 错误 原始数据 ═══
+[Agent 编排] error.errorType: review_watchdog_timeout
+[main:err] [Agent 编排] error.message: 模型请求 95 秒无任何数据返回（渠道：AMD Radeon，模型：GLM-5.3-Flash），本轮审核已中止。请检查该渠道连通性，或更换响应更快的模型后重新发起审核。
+[Agent 编排] message.content 文本块: []
+[main:err] [Agent 编排] 完整 assistantMsg (JSON keys): [
+  'type',
+  'message',
+  'parent_tool_use_id',
+  'session_id',
+  'uuid',
+  '_channelModelId',
+  'error'
+]
+[main:err] [Agent 编排] assistantMsg JSON (截断): {"type":"assistant","message":{"content":[],"usage":{"input_tokens":0,"output_tokens":0,"cache_read_input_tokens":0,"cache_creation_input_tokens":0},"model":"GLM-5.3-Flash","stop_reason":"aborted"},"parent_tool_use_id":null,"session_id":"01a15a6f-e318-706c-beb9-93f4591d6b22","uuid":"cb8f4d83-b907-4b69-b35f-1c4d08aafebe","_channelModelId":"GLM-5.3-Flash","error":{"message":"模型请求 95 秒无任何数据返回（渠道：AMD Radeon，模型：GLM-5.3-Flash），本轮审核已中止。请检查该渠道连通性，或更换响应更快的模型后重新发起审核。","errorType":"review_watchdog_timeout"}}
+[Agent 编排] ═══ SDK assistant 错误 原始数据 结束 ═══
+[main:err] [Agent 编排] rawError 类型=object, errorCode=review_watchdog_timeout
+[main:err] [Agent 编排] mapSDKErrorToTypedError 结果:
+  code: unknown_error
+[main:err]   title: Agent 执行失败
+  message: 模型请求 95 秒无任何数据返回（渠道：AMD Radeon，模型：GLM-5.3-Flash），本轮审核已中止。请检查该渠道连通性，或更换响应更快的模型后重新发起审核。
+  canRetry: false
+  originalError: 模型请求 95 秒无任何数据返回（渠道：AMD Radeon，模型：GLM-5.3-Flash），本轮审核已中止。请检查该渠道连通性，或更换响应更快的模型后重新发起审核。
+[main] [Agent 编排] 已保存 TypedError 消息: unknown_error - Agent 执行失败
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (ac154a62-0e80-4ffa-8e7a-61e721f21737)
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (ac154a62-0e80-4ffa-8e7a-61e721f21737)
+[main] [Agent 会话] 已更新会话: 审核：E2E 全流程案卷 (ac154a62-0e80-4ffa-8e7a-61e721f21737)
+{
+  "scenario": "flow-full",
+  "ok": true,
+  "result": {
+    "steps": [
+      {
+        "name": "createCase",
+        "ok": true
+      },
+      {
+        "name": "import:evidence.pdf",
+        "ok": true,
+        "parseStatus": "parsed"
+      },
+      {
+        "name": "import:evidence.docx",
+        "ok": true,
+        "parseStatus": "partial"
+      },
+      {
+        "name": "attachD4Plan",
+        "checks": 60,
+        "fingerprint": "71bfc0d6b9faadabc27392f8b0e558a099fd725c10d5e1a631e2cbfaef6ccf3b"
+      },
+      {
+        "name": "startPiReview",
+        "phase": "accepted",
+        "runId": "run-pi-mvgzbh47-bf47n"
+      },
+      {
+        "name": "piReviewOutcome",
+        "phase": "incomplete",
+        "runId": "run-pi-mvgzbh47-bf47n",
+        "elapsedMs": 96868,
+        "error": null
+      },
+      {
+        "name": "listRuns",
+        "count": 1,
+        "runs": [
+          {
+            "id": "run-pi-mvgzbh47-bf47n",
+            "status": "failed",
+            "checks": 60
+          }
+        ]
+      },
+      {
+        "name": "getRun",
+        "status": "failed",
+        "checkCount": 60,
+        "observations": 0
+      },
+      {
+        "name": "observations",
+        "count": 0
+      },
+      {
+        "name": "formalDecision",
+        "ok": false,
+        "code": "AGENT_DECISION_DISABLED"
+      },
+      {
+        "name": "exportReport",
+        "file": "/home/miku/Bot/CDUTStudio/cdut-studio-review-agent/work/e2e/config/review-cases/case-317534113ad94ce3ac0350e4d65283bf/reports/report-mvgzdjv5.md",
+        "decision": null
+      }
+    ],
+    "runId": "run-pi-mvgzbh47-bf47n",
+    "caseId": "case-317534113ad94ce3ac0350e4d65283bf"
+  }
+}

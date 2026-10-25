@@ -1,0 +1,172 @@
+{
+  "sha": "14bc7d6c3625aaa6eec2675aa9ce4dc446475297",
+  "profile": "/tmp/review-pre-p06-local-gates-re9ydcw7",
+  "environment": {
+    "PROFER_CONFIG_DIR": "/tmp/review-pre-p06-local-gates-re9ydcw7/config",
+    "PROFER_USER_DATA_DIR": "/tmp/review-pre-p06-local-gates-re9ydcw7/user-data",
+    "CI": "true",
+    "NO_COLOR": "1"
+  },
+  "results": [
+    {
+      "name": "01-typecheck",
+      "sha": "14bc7d6c3625aaa6eec2675aa9ce4dc446475297",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013",
+      "argv": [
+        "bun",
+        "run",
+        "typecheck"
+      ],
+      "started_at": "2026-10-12T20:35:36.024147+00:00",
+      "finished_at": "2026-10-12T20:36:15.412758+00:00",
+      "seconds": 39.389,
+      "exit_code": 0,
+      "log": "01-typecheck.log",
+      "log_sha256": "08b3dde79ce03450048d76f9ddb593472031d7976c59f8901305d8ee53af499c"
+    },
+    {
+      "name": "02-main-renderer-focused",
+      "sha": "14bc7d6c3625aaa6eec2675aa9ce4dc446475297",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013",
+      "argv": [
+        "bun",
+        "test",
+        "--isolate",
+        "--timeout",
+        "30000",
+        "apps/electron/src/main/lib/review/review-pi-run-bridge.main.test.ts",
+        "apps/electron/src/main/lib/review/review-background-state.p03-main.test.ts",
+        "apps/electron/src/main/lib/review/review-background-reuse.probe.test.ts",
+        "apps/electron/src/renderer/components/content-review/review-actions-controller.test.ts"
+      ],
+      "started_at": "2026-10-12T20:36:15.417637+00:00",
+      "finished_at": "2026-10-12T20:36:15.909567+00:00",
+      "seconds": 0.492,
+      "exit_code": 0,
+      "log": "02-main-renderer-focused.log",
+      "log_sha256": "2ea445ad4fa1262d639229ec16e5c5a184d4b864ff600dde9b313d5e4556f4b8"
+    },
+    {
+      "name": "03-full-tests",
+      "sha": "14bc7d6c3625aaa6eec2675aa9ce4dc446475297",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013",
+      "argv": [
+        "bun",
+        "test",
+        "--isolate",
+        "--timeout",
+        "30000"
+      ],
+      "started_at": "2026-10-12T20:36:15.909907+00:00",
+      "finished_at": "2026-10-12T20:36:41.226798+00:00",
+      "seconds": 25.317,
+      "exit_code": 0,
+      "log": "03-full-tests.log",
+      "log_sha256": "cb6228dbfd961cda4f4db6d4b7f1116947ea78b8d7a7ef72686099049160a7f9"
+    },
+    {
+      "name": "04-p05-focused",
+      "sha": "14bc7d6c3625aaa6eec2675aa9ce4dc446475297",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013",
+      "argv": [
+        "bun",
+        "test",
+        "--isolate",
+        "--timeout",
+        "30000",
+        "apps/electron/src/main/lib/review/review-feishu-owner-boundary.p05.test.ts",
+        "apps/electron/src/main/lib/review/review-relay-multi-viewer-contract.p05.test.ts",
+        "apps/electron/src/main/lib/review/review-remote-indirect-access.p05.test.ts",
+        "apps/electron/src/main/lib/review/review-remote-path-access.p05.test.ts",
+        "apps/electron/src/main/lib/review/review-remote-reconnect-search.p05.test.ts",
+        "apps/electron/src/main/lib/review/review-remote-websocket-relay.p05.test.ts"
+      ],
+      "started_at": "2026-10-12T20:36:41.227861+00:00",
+      "finished_at": "2026-10-12T20:36:44.754031+00:00",
+      "seconds": 3.526,
+      "exit_code": 0,
+      "log": "04-p05-focused.log",
+      "log_sha256": "87a0125998f9c076d9642476efd2d1dab089c9a64a9ca219f6939603b9e3f7ef"
+    },
+    {
+      "name": "05-boundaries",
+      "sha": "14bc7d6c3625aaa6eec2675aa9ce4dc446475297",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013",
+      "argv": [
+        "bun",
+        "run",
+        "check:boundaries"
+      ],
+      "started_at": "2026-10-12T20:36:44.754363+00:00",
+      "finished_at": "2026-10-12T20:36:44.908254+00:00",
+      "seconds": 0.154,
+      "exit_code": 0,
+      "log": "05-boundaries.log",
+      "log_sha256": "b35d72b8a64d0646b3540a7f4d894f8b82ffded0c84b28f8b153b87edda0825d"
+    },
+    {
+      "name": "06-skin-contract",
+      "sha": "14bc7d6c3625aaa6eec2675aa9ce4dc446475297",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013/apps/electron",
+      "argv": [
+        "bun",
+        "run",
+        "check:skin-contract"
+      ],
+      "started_at": "2026-10-12T20:36:44.908553+00:00",
+      "finished_at": "2026-10-12T20:36:44.962438+00:00",
+      "seconds": 0.054,
+      "exit_code": 0,
+      "log": "06-skin-contract.log",
+      "log_sha256": "31c78fee02004b67eceb5eab5edceb08b05cbe34b09fd65d2f588ec46d6a2a13"
+    },
+    {
+      "name": "07-build-main",
+      "sha": "14bc7d6c3625aaa6eec2675aa9ce4dc446475297",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013/apps/electron",
+      "argv": [
+        "bun",
+        "run",
+        "build:main"
+      ],
+      "started_at": "2026-10-12T20:36:44.962758+00:00",
+      "finished_at": "2026-10-12T20:36:45.479864+00:00",
+      "seconds": 0.517,
+      "exit_code": 0,
+      "log": "07-build-main.log",
+      "log_sha256": "7a0954e0223004467dc24af9448bdb47961672785c181642e9dbfd2bc386f84d"
+    },
+    {
+      "name": "08-build-preload",
+      "sha": "14bc7d6c3625aaa6eec2675aa9ce4dc446475297",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013/apps/electron",
+      "argv": [
+        "bun",
+        "run",
+        "build:preload"
+      ],
+      "started_at": "2026-10-12T20:36:45.480190+00:00",
+      "finished_at": "2026-10-12T20:36:45.507784+00:00",
+      "seconds": 0.028,
+      "exit_code": 0,
+      "log": "08-build-preload.log",
+      "log_sha256": "b8a9665f9874bcaa76ca49bf17683e0a2fb69088d31d73f4569b585370c8ac30"
+    },
+    {
+      "name": "09-build-renderer",
+      "sha": "14bc7d6c3625aaa6eec2675aa9ce4dc446475297",
+      "cwd": "/home/miku/Bot/CDUTStudio/.workdir/review-pre-p06-20261013/apps/electron",
+      "argv": [
+        "bun",
+        "run",
+        "build:renderer"
+      ],
+      "started_at": "2026-10-12T20:36:45.508073+00:00",
+      "finished_at": "2026-10-12T20:37:44.467019+00:00",
+      "seconds": 58.959,
+      "exit_code": 0,
+      "log": "09-build-renderer.log",
+      "log_sha256": "04947c878e52cf87e3b869a1d060aa566d4269f43bc1caad4c41d21ce0c01859"
+    }
+  ]
+}

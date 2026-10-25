@@ -1,0 +1,32 @@
+{
+  "success": {
+    "id": "case-1791975357051-t8kypw",
+    "title": "P06 同案更新测试"
+  },
+  "preflight": {
+    "id": "case-1791975357071-nm4od9",
+    "title": "P06 辅助隔离案卷"
+  },
+  "stop": {
+    "id": "case-1791975357078-yre4o9",
+    "title": "P06 从头重审测试"
+  },
+  "failure": {
+    "id": "case-1791994637788-3qhd0g",
+    "title": "P06 双持久化最终合成案卷",
+    "type": "自定义审核",
+    "applicant": "合成测试甲",
+    "academicYear": "2026",
+    "createdAt": "2026-10-14T16:17:17.788Z",
+    "updatedAt": "2026-10-14T16:17:17.788Z",
+    "documents": [],
+    "rulePacks": [],
+    "items": [],
+    "evidences": [],
+    "isDemo": false,
+    "reviewTemplate": {
+      "templateId": "p06-double-round-synthetic-20261013",
+      "version": 1
+    }
+  }
+}

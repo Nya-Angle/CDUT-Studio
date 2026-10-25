@@ -1,0 +1,7 @@
+[配置] 已创建 SDK 配置目录: /tmp/review-settle-risk-2GkZ8p/sdk-config
+[审核模板] 已发布: case-audit-write-failure@1
+[配置] 已创建 Agent 会话目录: /tmp/review-settle-risk-2GkZ8p/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/review-settle-risk-2GkZ8p/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/review-settle-risk-2GkZ8p/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/review-settle-risk-2GkZ8p/agent-workspaces/default/<synthetic-id-1>
+[Agent 会话] 已创建会话: 合成收尾异常 (<synthetic-id-1>)

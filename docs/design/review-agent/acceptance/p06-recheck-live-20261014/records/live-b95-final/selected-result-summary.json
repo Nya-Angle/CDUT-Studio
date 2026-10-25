@@ -1,0 +1,124 @@
+{
+  "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+  "cases": 16,
+  "pass": 16,
+  "fail": 0,
+  "assertions": 77,
+  "failedAssertions": 0,
+  "ordinaryBooleanChecks": 5,
+  "rows": [
+    {
+      "id": "E05",
+      "status": "PASS",
+      "assertions": 9,
+      "failedAssertions": 0,
+      "factPath": "live-b95-final/e05-result.json"
+    },
+    {
+      "id": "E03",
+      "status": "PASS",
+      "assertions": 8,
+      "failedAssertions": 0,
+      "factPath": "live-b95-final/races-results.json"
+    },
+    {
+      "id": "E04",
+      "status": "PASS",
+      "assertions": 7,
+      "failedAssertions": 0,
+      "factPath": "live-b95-final/races-results.json"
+    },
+    {
+      "id": "E06-PI-READ-TOOL",
+      "status": "PASS",
+      "assertions": 3,
+      "failedAssertions": 0,
+      "factPath": "live-b95-final/e06-matrix.json"
+    },
+    {
+      "id": "E06-PI-PERMISSION-DENY-RECOVER",
+      "status": "PASS",
+      "assertions": 4,
+      "failedAssertions": 0,
+      "factPath": "live-b95-final/e06-matrix.json"
+    },
+    {
+      "id": "E06-PI-STOP-IN-FLIGHT",
+      "status": "PASS",
+      "assertions": 2,
+      "failedAssertions": 0,
+      "factPath": "live-b95-final/e06-matrix.json"
+    },
+    {
+      "id": "E06-DESKTOP-TEXT-PREVIEW",
+      "status": "PASS",
+      "assertions": 3,
+      "failedAssertions": 0,
+      "factPath": "live-b95-final/e06-matrix.json"
+    },
+    {
+      "id": "E06-BATCH-REAL-QUEUE-AND-GATES",
+      "status": "PASS",
+      "assertions": 9,
+      "failedAssertions": 0,
+      "factPath": "live-b95-final/batch-real-result.json"
+    },
+    {
+      "id": "enospc",
+      "status": "PASS",
+      "assertions": 8,
+      "failedAssertions": 0,
+      "factPath": "io-b95-final/enospc-result.json"
+    },
+    {
+      "id": "dual-fault",
+      "status": "PASS",
+      "assertions": 5,
+      "failedAssertions": 0,
+      "factPath": "io-b95-final/dual-fault-result.json"
+    },
+    {
+      "id": "reboot-still-faulted",
+      "status": "PASS",
+      "assertions": 2,
+      "failedAssertions": 0,
+      "factPath": "io-b95-final/reboot-still-faulted-result.json"
+    },
+    {
+      "id": "reboot-recovered",
+      "status": "PASS",
+      "assertions": 3,
+      "failedAssertions": 0,
+      "factPath": "io-b95-final/reboot-recovered-result.json"
+    },
+    {
+      "id": "E06-PREVIEW-RESTORE-prepare-office",
+      "status": "PASS",
+      "assertions": 5,
+      "failedAssertions": 0,
+      "factPath": "live-b95-final/office/preview-restore-prepare-office.json"
+    },
+    {
+      "id": "E06-PREVIEW-RESTORE-restored",
+      "status": "PASS",
+      "assertions": 5,
+      "failedAssertions": 0,
+      "factPath": "live-b95-final/office/preview-restore-restored.json"
+    },
+    {
+      "id": "E06-SCAN-PDF",
+      "status": "PASS",
+      "assertions": 4,
+      "failedAssertions": 0,
+      "factPath": "live-b95-final/pdf-oopif/pdf-result.json"
+    },
+    {
+      "id": "E06-ORDINARY-PI-POSITIVE",
+      "status": "PASS",
+      "assertions": 0,
+      "booleanVerdictChecks": 5,
+      "factPath": "live-b95-final/ordinary-pi-positive.json"
+    }
+  ],
+  "scope": "最终选定可执行场景；不含提供商库存行/NOT-RUN/BLOCKED/早期失败尝试，不把完整 E06 或 LIVE-07 标 PASS"
+}

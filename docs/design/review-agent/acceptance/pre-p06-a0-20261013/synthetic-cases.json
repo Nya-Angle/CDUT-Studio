@@ -1,0 +1,18 @@
+{
+  "success": {
+    "id": "case-1791837343752-ytuzj1",
+    "title": "A0 后台真实模型"
+  },
+  "preflight": {
+    "id": "case-1791837343772-d15dq0",
+    "title": "A0 模型预检拒绝"
+  },
+  "stop": {
+    "id": "case-1791837343781-lqcytg",
+    "title": "A0 停止审核"
+  },
+  "failure": {
+    "id": "case-1791837343788-1pj6nh",
+    "title": "A0 受理后模型失败"
+  }
+}

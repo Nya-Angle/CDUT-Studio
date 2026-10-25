@@ -57,6 +57,7 @@
         "pdfjs-dist": "^4.10.38",
         "pptxgenjs": "4.0.1",
         "ssh2": "^1.17.0",
+        "xlsx": "npm:@stackline/xlsx@^1.0.6",
         "three": "^0.184.0",
       },
       "devDependencies": {
@@ -139,6 +140,7 @@
         "katex": "^0.16",
         "lowlight": "^3.3.0",
         "lucide-react": "^0.460.0",
+        "mammoth": "^1.12.0",
         "markdown-it": "^14.1.0",
         "molstar": "^5.13.1",
         "pngjs": "^7.0.0",

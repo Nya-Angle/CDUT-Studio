@@ -214,6 +214,68 @@ describe('mergeFetchedAgentSessions', () => {
   })
 })
 
+describe('P04-S01 renderer snapshot and late upsert owner filtering', () => {
+  const owned = makeSession('internal-review', 100, { owner: { kind: 'review-case', caseId: 'case-p04' } })
+  const normal = makeSession('ordinary', 10)
+
+  test('an owned session from a stale or mixed list cannot survive a fetched snapshot merge', () => {
+    const result = mergeFetchedAgentSessions([owned, normal], [normal, owned])
+    expect(result.map(s => s.id)).toEqual(['ordinary'])
+  })
+
+  test('single-message optimistic upsert cannot inject owned review session into sidebar', () => {
+    expect(upsertAgentSession([normal], owned).map(s => s.id)).toEqual(['ordinary'])
+    expect(upsertAgentSession([owned, normal], makeSession('ordinary', 11)).map(s => s.id)).toEqual(['ordinary'])
+  })
+
+  test('replacement of ordinary item with owned metadata removes it, never promotes hidden entry', () => {
+    const upgradedOwner = { ...owned, id: 'ordinary' }
+    expect(replaceAgentSessionInFreshnessOrder([normal], upgradedOwner)).toEqual([])
+  })
+
+  test('a late projection cannot overwrite an owner already marked in renderer memory', () => {
+    const latest: import('@profer/shared').AgentSessionUiProjection = {
+      schemaVersion: 1,
+      id: owned.id,
+      revision: 999,
+      title: 'should never appear',
+      createdAt: 1,
+      updatedAt: 999,
+      channelId: null,
+      modelId: null,
+      agentRuntime: 'pi',
+      permissionMode: 'auto',
+      presetId: null,
+      presetReference: null,
+      openAIThinkingLevel: null,
+      studyTeachingMode: null,
+      codexFastMode: false,
+      autoQueueSendEnabled: true,
+      workspaceId: null,
+      pinned: false,
+      archived: false,
+      draft: false,
+      parentSessionId: null,
+      rootSessionId: null,
+      sourceDelegationId: null,
+      explorationParentSessionId: null,
+      explorationSourceMessageId: null,
+      explorationSourceLabel: null,
+      delegationRole: null,
+      delegationStatus: null,
+      delegationDepth: null,
+      sourceAutomationId: null,
+      automationGraduated: false,
+      completedButUnconfirmed: false,
+      stoppedByUser: false,
+      lastInterruptReason: null,
+      lastInterruptLabel: null,
+      lastInterruptAt: null,
+    }
+    expect(upsertAgentSessionProjection([owned, normal], latest).map(s => s.id)).toEqual(['ordinary'])
+  })
+})
+
 describe('syncDraftSessionId — 草稿标记与持久化状态保持一致', () => {
   test('Given 会话仍是持久化草稿 When 同步 Then 标记进内存草稿集', () => {
     const result = syncDraftSessionId(new Set(), { id: 'draft-1', draft: true })
@@ -252,4 +314,14 @@ describe('syncDraftSessionId — 草稿标记与持久化状态保持一致', ()
 
     expect(ids.has('a')).toBe(true)
   })
+})
+
+test('P04-S04: a delayed list snapshot cannot restore an ID revoked after delete event', () => {
+  const normal = makeSession('normal-after-delete', 90)
+  const remaining = makeSession('remaining', 100)
+  const delayedFetched = [remaining, normal]
+  const result = mergeFetchedAgentSessions([remaining], delayedFetched, new Set(['normal-after-delete']))
+  expect(result.map(s => s.id)).toEqual(['remaining'])
+  const kept = mergeFetchedAgentSessions([remaining], delayedFetched)
+  expect(kept.map(s => s.id)).toEqual(['remaining', 'normal-after-delete'])
 })

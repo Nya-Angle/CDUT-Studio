@@ -1,0 +1,120 @@
+{
+  "templateId": "g03-t06",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "item-a",
+      "subjectId": "g03-t06-subject-a",
+      "title": "SYNTHETIC 共享仪器平台课题组加入与账号授权对象A",
+      "businessType": "g03-group-member",
+      "scenario": "p-self-join",
+      "scenarioSource": {
+        "sourceId": "synthetic-choice",
+        "sourceVersionId": "synthetic-g03-t06-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "c-cross-group",
+          "applicability": "applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t06-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-finance-request",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t06-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-cross-pi",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t06-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-batch",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t06-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-reactivate",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t06-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-personal-balance",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t06-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "item-b",
+      "subjectId": "g03-t06-subject-b",
+      "title": "SYNTHETIC 共享仪器平台课题组加入与账号授权对象B",
+      "businessType": "g03-group-member",
+      "scenario": "p-pi-add",
+      "scenarioSource": {
+        "sourceId": "synthetic-choice",
+        "sourceVersionId": "synthetic-g03-t06-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "c-cross-group",
+          "applicability": "unknown",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t06-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "c-finance-request",
+          "applicability": "applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t06-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-cross-pi",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t06-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-batch",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t06-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-reactivate",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t06-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-personal-balance",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t06-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

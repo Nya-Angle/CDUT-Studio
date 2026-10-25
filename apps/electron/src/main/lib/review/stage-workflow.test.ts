@@ -2,12 +2,13 @@
  * N3/R07 单测：阶段推进（初审≠decided）/最终驳回/多补件门控/申诉更正/最终投影
  */
 import { afterAll, describe, expect, test } from 'bun:test'
-import { rmSync } from 'node:fs'
+import { mkdirSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import type { ReviewCaseV2, TemplateVersion } from '@profer/shared'
-import { createAggregate, readAggregate } from './case-store-v2'
-import { ensureInitialTask, recordStageDecision, resolveAppealV2, resolveFinalDecisionProjection, resolveSupplementV2, respondSupplementV2, type StageDecisionPayload } from './stage-workflow'
+import type { ReviewCaseV2, ReviewRunV2, TemplateVersion } from '@profer/shared'
+import { createAggregate, readAggregate, writeAggregate } from './case-store-v2'
+import { buildInitialReviewSupplementSpecs, ensureInitialTask, recordStageDecision, resolveAppealV2, resolveFinalDecisionProjection, resolveSupplementV2, respondSupplementV2, type StageDecisionPayload } from './stage-workflow'
 import { submitAppeal } from './business-workflow'
+import { registerMaterial } from './material-service'
 
 const CONFIG_DIR = join(import.meta.dir, '../../../../../../work/tmp', `profer-test-stage-${Date.now()}`)
 process.env.PROFER_CONFIG_DIR = CONFIG_DIR
@@ -23,18 +24,73 @@ const template: TemplateVersion = {
 
 const caseV2: ReviewCaseV2 = { id: 'case-stage-1', templateId: 't', templateVersion: 1, title: '阶段测试', objectType: 'person', caseFields: {}, subjects: [], documents: [], stage: 'submitted', revision: 0, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
 const actor = { actorId: 'u1', actorSource: 'local' as const, role: 'reviewer' as const }
+const teacherActor = { actorId: 'teacher-1', actorSource: 'local' as const, role: 'teacher' as const }
 let requestIdCounter = 0
 const nextReq = (): string => `req-${(requestIdCounter += 1)}`
 
 let caseCounter = 0
-async function seed(): Promise<{ caseId: string; firstTaskId: string }> {
+async function seed(flowTemplate: TemplateVersion = template): Promise<{ caseId: string; firstTaskId: string }> {
   const caseId = `case-stage-${(caseCounter += 1)}`
   await createAggregate(caseId, { ...caseV2, id: caseId })
-  const taskResult = await ensureInitialTask(caseId, template, actor)
+  const taskResult = await ensureInitialTask(caseId, flowTemplate, actor)
   return { caseId, firstTaskId: taskResult.ok ? taskResult.entity!.id : '' }
 }
 
 describe('阶段推进（R07，修正误判 6）', () => {
+  test('Given 迁移案卷已绑定 CanonicalPlan When 旧 V2 决定 Then 拒绝虚拟 run@rev 且不改写', async () => {
+    const { caseId, firstTaskId } = await seed()
+    const current = readAggregate(caseId)!
+    writeAggregate({ ...current, canonicalPlan: {
+      schemaVersion: 'review-c0/1', planId: 'persisted-plan', fingerprint: 'f'.repeat(64),
+      templateId: current.caseV2.templateId, templateVersion: String(current.caseV2.templateVersion),
+      moduleDigests: [], bindings: [],
+    } })
+    const before = JSON.stringify(readAggregate(caseId))
+    const blocked = await recordStageDecision(caseId, {
+      requestId: nextReq(), actor, expectedRevision: current.caseV2.revision,
+      payload: { action: 'stage-pass', taskId: firstTaskId, reason: '试图使用旧入口通过' },
+    }, template)
+    expect(blocked.ok).toBe(false)
+    if (!blocked.ok) expect(blocked.code).toBe('INVALID_TRANSITION')
+    expect(JSON.stringify(readAggregate(caseId))).toBe(before)
+  })
+
+  test('Given 三阶段审核且时钟不前进 When 连续通过 Then 每个阶段任务仍有唯一 ID 并可终审', async () => {
+    const threeStageTemplate = {
+      ...template,
+      stages: [
+        { id: 'first', name: '初审', kind: 'manual-review', executorRole: 'reviewer', nextStageId: 'middle' },
+        { id: 'middle', name: '复核', kind: 'manual-review', executorRole: 'reviewer', nextStageId: 'final' },
+        { id: 'final', name: '终审', kind: 'manual-review', executorRole: 'teacher' },
+      ],
+    } as TemplateVersion
+    const originalNow = Date.now
+    Date.now = () => 1
+    try {
+      const { caseId, firstTaskId } = await seed(threeStageTemplate)
+      let agg = readAggregate(caseId)!
+      const first = await recordStageDecision(caseId, { requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision, payload: { action: 'stage-pass', taskId: firstTaskId, reason: '初审通过' } }, threeStageTemplate)
+      expect(first.ok).toBeTrue()
+      if (!first.ok) return
+      agg = first.aggregate
+      const middleTask = agg.tasks.find((task) => task.stageId === 'middle' && task.status === 'open')!
+      const middle = await recordStageDecision(caseId, { requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision, payload: { action: 'stage-pass', taskId: middleTask.id, reason: '复核通过' } }, threeStageTemplate)
+      expect(middle.ok).toBeTrue()
+      if (!middle.ok) return
+      agg = middle.aggregate
+      const finalTask = agg.tasks.find((task) => task.stageId === 'final' && task.status === 'open')!
+      const final = await recordStageDecision(caseId, { requestId: nextReq(), actor: teacherActor, expectedRevision: agg.caseV2.revision, payload: { action: 'stage-pass', taskId: finalTask.id, reason: '终审通过' } }, threeStageTemplate)
+      expect(final.ok).toBeTrue()
+      if (final.ok) {
+        expect(final.aggregate.caseV2.stage).toBe('decided')
+        expect(new Set(final.aggregate.tasks.map((task) => task.id)).size).toBe(3)
+        expect(final.aggregate.decisions.map((decision) => decision.stageId)).toEqual(['first', 'middle', 'final'])
+      }
+    } finally {
+      Date.now = originalNow
+    }
+  })
+
   test('Given 初审通过 When 决定 Then 创建终审任务且案卷不 decided', async () => {
     const { caseId, firstTaskId } = await seed()
     const aggregate = readAggregate(caseId)!
@@ -53,12 +109,42 @@ describe('阶段推进（R07，修正误判 6）', () => {
     const first = await recordStageDecision(caseId, { requestId: nextReq(), actor, expectedRevision: 1, payload: { action: 'stage-pass', taskId: firstTaskId, reason: '初审通过' } }, template)
     agg = first.ok ? first.aggregate : agg
     const finalTask = agg.tasks.find((task) => task.stageId === 'final' && task.status === 'open')!
-    const second = await recordStageDecision(caseId, { requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision, payload: { action: 'stage-pass', taskId: finalTask.id, reason: '终审通过' } }, template)
+    const second = await recordStageDecision(caseId, { requestId: nextReq(), actor: teacherActor, expectedRevision: agg.caseV2.revision, payload: { action: 'stage-pass', taskId: finalTask.id, reason: '终审通过' } }, template)
     expect(second.ok).toBeTrue()
     if (second.ok) {
       expect(second.aggregate.caseV2.stage).toBe('decided')
       expect(second.aggregate.decisions.at(-1)!.finality).toBe('final')
     }
+  })
+
+  test('Given reviewer 尝试代签教师终审 When 提交 Then 拒绝且不写决定', async () => {
+    const { caseId, firstTaskId } = await seed()
+    const first = await recordStageDecision(caseId, {
+      requestId: nextReq(), actor, expectedRevision: 1,
+      payload: { action: 'stage-pass', taskId: firstTaskId, reason: '初审通过' },
+    }, template)
+    expect(first.ok).toBeTrue()
+    const agg = readAggregate(caseId)!
+    const finalTask = agg.tasks.find((task) => task.stageId === 'final' && task.status === 'open')!
+    const invalid = await recordStageDecision(caseId, {
+      requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision,
+      payload: { action: 'stage-pass', taskId: finalTask.id, reason: '冒签终审' },
+    }, template)
+    expect(invalid.ok).toBeFalse()
+    if (!invalid.ok) expect(invalid.code).toBe('INVALID_TRANSITION')
+    expect(readAggregate(caseId)!.decisions).toHaveLength(1)
+  })
+
+  test('Given 传入别的模板定义 When 阶段决定 Then 拒绝跨模板与版本伪装', async () => {
+    const { caseId, firstTaskId } = await seed()
+    const fakeTemplate = { ...template, version: 99 }
+    const invalid = await recordStageDecision(caseId, {
+      requestId: nextReq(), actor, expectedRevision: 1,
+      payload: { action: 'stage-pass', taskId: firstTaskId, reason: '假模板' },
+    }, fakeTemplate)
+    expect(invalid.ok).toBeFalse()
+    if (!invalid.ok) expect(invalid.code).toBe('INVALID_TRANSITION')
+    expect(readAggregate(caseId)!.decisions).toHaveLength(0)
   })
 
   test('Given 最终驳回 When 决定 Then decided（不自动待补件）', async () => {
@@ -109,12 +195,111 @@ describe('补件多请求门控（06 §5.3）', () => {
     agg = second.ok ? second.aggregate : agg
     const openRequests = agg.supplements.filter((request) => request.status === 'open')
     expect(openRequests).toHaveLength(2)
-    const satisfied = await resolveSupplementV2(caseId, { requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision, payload: { supplementId: openRequests[0]!.id, outcome: 'satisfied', reason: '要素齐' } })
+    // 非法判定值必须 fail-closed：否则 status 会被写成 undefined，
+    // 补件既不关闭也不参与门控（真机 A09 曾复现）。
+    const bogus = await resolveSupplementV2(caseId, {
+      requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision,
+      payload: { supplementId: openRequests[0]!.id, outcome: 'satisfied-x' as never, reason: '非法值' },
+    })
+    expect(bogus.ok).toBeFalse()
+    if (!bogus.ok) expect(bogus.code).toBe('VALIDATION_FAILED')
+    const afterBogus = readAggregate(caseId)!
+    expect(afterBogus.supplements.find((request) => request.id === openRequests[0]!.id)?.status).toBe('open')
+
+    const replied = await respondSupplementV2(caseId, {
+      requestId: nextReq(), actor: { actorId: 'stu-multi', actorSource: 'local', role: 'student' },
+      expectedRevision: agg.caseV2.revision,
+      payload: { supplementId: openRequests[0]!.id, note: '已补A' },
+    })
+    expect(replied.ok).toBeTrue()
+    if (!replied.ok) return
+    const satisfied = await resolveSupplementV2(caseId, { requestId: nextReq(), actor, expectedRevision: replied.aggregate.caseV2.revision, payload: { supplementId: openRequests[0]!.id, outcome: 'satisfied', reason: '要素齐' } })
     expect(satisfied.ok).toBeTrue()
     if (satisfied.ok) {
       // 还有未结束请求 → 不恢复（06 §5.3）
+
       expect(satisfied.aggregate.caseV2.stage).toBe('awaiting-supplement')
     }
+  })
+
+  test('RUN-18: 最后一笔是 cancelled When 已无未结补件 Then 恢复 reviewing 并回流任务', async () => {
+    const { caseId, firstTaskId } = await seed()
+    let agg = readAggregate(caseId)!
+    const open = await recordStageDecision(caseId, { requestId: nextReq(), actor, expectedRevision: 1, payload: { action: 'return-for-supplement', taskId: firstTaskId, reason: 'r1', supplementRequiredElements: ['a'], supplementReason: '缺A' } }, template)
+    agg = open.ok ? open.aggregate : agg
+    const { submitCommand } = await import('./case-store-v2')
+    const second = await submitCommand(caseId, { requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision, type: 'OpenSecondSupplement', payload: {} }, (a) => ({
+      summary: '测试注入第二个补件',
+      mutate: (draft) => {
+        draft.supplements = [...draft.supplements, { id: 'sup-test-2', caseId, originFindingKeys: [], requiredElements: ['b'], reason: '缺B', responsibleRole: 'student', status: 'open', responses: [], createdAt: new Date().toISOString(), originTaskId: firstTaskId, originStageId: 'first' }]
+      },
+    }))
+    agg = second.ok ? second.aggregate : agg
+    const [a, b] = agg.supplements
+    const repliedA = await respondSupplementV2(caseId, {
+      requestId: nextReq(), actor: { actorId: 'stu-run18', actorSource: 'local', role: 'student' },
+      expectedRevision: agg.caseV2.revision,
+      payload: { supplementId: a!.id, note: 'A 已补' },
+    })
+    expect(repliedA.ok).toBeTrue()
+    if (!repliedA.ok) return
+    const satisfiedA = await resolveSupplementV2(caseId, { requestId: nextReq(), actor, expectedRevision: repliedA.aggregate.caseV2.revision, payload: { supplementId: a!.id, outcome: 'satisfied', reason: 'A 齐' } })
+    expect(satisfiedA.ok).toBeTrue()
+    if (!satisfiedA.ok) return
+    expect(satisfiedA.aggregate.caseV2.stage).toBe('awaiting-supplement')
+    const cancelledB = await resolveSupplementV2(caseId, { requestId: nextReq(), actor, expectedRevision: satisfiedA.aggregate.caseV2.revision, payload: { supplementId: b!.id, outcome: 'cancelled', reason: 'B 不再需要' } })
+    expect(cancelledB.ok).toBeTrue()
+    if (!cancelledB.ok) return
+    // 无未结补件：即使最后一笔不是 satisfied 也必须恢复，否则案卷卡死。
+    expect(cancelledB.aggregate.caseV2.stage).toBe('reviewing')
+    expect(cancelledB.aggregate.tasks.some((task) => task.stageId === 'first' && task.status === 'open')).toBeTrue()
+  })
+})
+
+describe('可信 T05 补件回复前置门控', () => {
+  test('冻结材料版本的 T05 请求不能未经回复直接标记满足', async () => {
+    const { caseId, firstTaskId } = await seed()
+    const { submitCommand } = await import('./case-store-v2')
+    const snapshot = readAggregate(caseId)!
+    const added = await submitCommand(caseId, {
+      requestId: nextReq(), actor, expectedRevision: snapshot.caseV2.revision,
+      type: 'SeedT05SupplementGate', payload: {},
+    }, () => ({
+      summary: '模拟可信阶段退回补件',
+      mutate: (draft) => {
+        draft.caseV2.stage = 'awaiting-supplement'
+        draft.tasks = draft.tasks.map(task => task.id === firstTaskId ? { ...task, status: 'completed' } : task)
+        draft.supplements.push({
+          id: `t05-sup-${caseId}`, caseId,
+          originFindingKeys: [], requiredElements: ['证明日期'], reason: '缺少日期',
+          responsibleRole: 'student', status: 'open', responses: [], createdAt: new Date().toISOString(),
+          originTaskId: firstTaskId, originStageId: 'first',
+          documentVersionIdsAtRequest: [],
+        })
+      },
+    }))
+    expect(added.ok).toBeTrue()
+    const current = readAggregate(caseId)!
+    const denied = await resolveSupplementV2(caseId, {
+      requestId: nextReq(), actor, expectedRevision: current.caseV2.revision,
+      payload: { supplementId: `t05-sup-${caseId}`, outcome: 'satisfied', reason: '直接关闭' },
+    })
+    expect(denied.ok).toBeFalse()
+    if (!denied.ok) expect(denied.code).toBe('INVALID_TRANSITION')
+    const responded = await respondSupplementV2(caseId, {
+      requestId: nextReq(), actor: { actorId: 'student', actorSource: 'local', role: 'student' },
+      expectedRevision: current.caseV2.revision,
+      payload: { supplementId: `t05-sup-${caseId}`, note: '已解释日期事项' },
+    })
+    expect(responded.ok).toBeTrue()
+    if (!responded.ok) return
+    const accepted = await resolveSupplementV2(caseId, {
+      requestId: nextReq(), actor, expectedRevision: responded.aggregate.caseV2.revision,
+      payload: { supplementId: `t05-sup-${caseId}`, outcome: 'satisfied', reason: '审核员已核实说明' },
+    })
+    expect(accepted.ok).toBeTrue()
+    if (accepted.ok) expect(accepted.aggregate.tasks.some(task =>
+      task.stageId === 'first' && task.status === 'open')).toBeTrue()
   })
 })
 
@@ -145,7 +330,14 @@ describe('补件回复与任务回流（G04/G05）', () => {
     const { caseId, firstTaskId } = await seed()
     const open = await recordStageDecision(caseId, { requestId: nextReq(), actor, expectedRevision: 1, payload: { action: 'return-for-supplement', taskId: firstTaskId, reason: '缺', supplementRequiredElements: ['a'], supplementReason: '补A' } }, template)
     const aggregate = open.ok ? open.aggregate : readAggregate(caseId)!
-    const resolved = await resolveSupplementV2(caseId, { requestId: nextReq(), actor, expectedRevision: aggregate.caseV2.revision, payload: { supplementId: aggregate.supplements[0]!.id, outcome: 'insufficient', reason: '仍缺' } })
+    const replied = await respondSupplementV2(caseId, {
+      requestId: nextReq(), actor: { actorId: 'stu-insufficient', actorSource: 'local', role: 'student' },
+      expectedRevision: aggregate.caseV2.revision,
+      payload: { supplementId: aggregate.supplements[0]!.id, note: '已回复但仍缺' },
+    })
+    expect(replied.ok).toBeTrue()
+    if (!replied.ok) return
+    const resolved = await resolveSupplementV2(caseId, { requestId: nextReq(), actor, expectedRevision: replied.aggregate.caseV2.revision, payload: { supplementId: aggregate.supplements[0]!.id, outcome: 'insufficient', reason: '仍缺' } })
     expect(resolved.ok).toBeTrue()
     if (resolved.ok) {
       expect(resolved.aggregate.caseV2.stage).toBe('awaiting-supplement')
@@ -160,6 +352,161 @@ describe('补件回复与任务回流（G04/G05）', () => {
     const denied = await respondSupplementV2(caseId, { requestId: nextReq(), actor: { actorId: 't-1', actorSource: 'local', role: 'teacher' }, expectedRevision: aggregate.caseV2.revision, payload: { supplementId: aggregate.supplements[0]!.id, note: '代回复' } })
     expect(denied.ok).toBeFalse()
     if (!denied.ok) expect(denied.code).toBe('INVALID_TRANSITION')
+  })
+})
+
+describe('RUN-19 补件材料归属与时效', () => {
+  test('Given recordStageDecision 新建 legacy 补件 When 未回复/旧版本/新版本 Then 冻结版本并强制回复', async () => {
+    const { caseId, firstTaskId } = await seed()
+    mkdirSync(CONFIG_DIR, { recursive: true })
+    const oldPath = join(CONFIG_DIR, 'supp-old.txt')
+    writeFileSync(oldPath, '补件请求前已存在的材料')
+    let agg = readAggregate(caseId)!
+    const first = await registerMaterial(caseId, {
+      requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision,
+      payload: { sourcePath: oldPath, role: 'evidence' },
+    })
+    expect(first.ok).toBeTrue()
+    agg = readAggregate(caseId)!
+    const oldVersionId = agg.caseV2.documents[0]!.versionId
+
+    // 必须经真实 recordStageDecision 写入口创建 legacy 补件请求，证明生产路径会冻结
+    // 请求时已有的文档版本；不能用手工 seed 的可信 T05 快照绕过该写入口。
+    const opened = await recordStageDecision(caseId, {
+      requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision,
+      payload: { action: 'return-for-supplement', taskId: firstTaskId, reason: '缺少新材料', supplementRequiredElements: ['新材料'], supplementReason: '请补新材料' },
+    }, template)
+    expect(opened.ok).toBeTrue()
+    if (!opened.ok) return
+    agg = opened.aggregate
+    const supplement = agg.supplements[0]!
+    const supplementId = supplement.id
+    expect(supplement.documentVersionIdsAtRequest).toContain(oldVersionId)
+
+    // 未回复不得直接 satisfied（reply-first）。
+    const noReply = await resolveSupplementV2(caseId, {
+      requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision,
+      payload: { supplementId, outcome: 'satisfied', reason: '未回复直接满足' },
+    })
+    expect(noReply.ok).toBeFalse()
+    if (!noReply.ok) {
+      expect(noReply.code).toBe('INVALID_TRANSITION')
+      expect(noReply.message).toContain('必须先由提交方回复')
+    }
+    expect(readAggregate(caseId)!.supplements.find((item) => item.id === supplementId)?.status).toBe('open')
+
+    // 请求前旧版本不能冒充本次补件新增材料。
+    const reused = await respondSupplementV2(caseId, {
+      requestId: nextReq(), actor: { actorId: 'stu-run19', actorSource: 'local', role: 'student' },
+      expectedRevision: agg.caseV2.revision,
+      payload: { supplementId, note: '旧版本', documentVersionIds: [oldVersionId] },
+    })
+    expect(reused.ok).toBeFalse()
+    if (!reused.ok) { expect(reused.code).toBe('STALE_INPUT'); expect(reused.message).toContain('请求创建后新增') }
+
+    // 他案版本同样拒绝。
+    const foreign = await respondSupplementV2(caseId, {
+      requestId: nextReq(), actor: { actorId: 'stu-run19', actorSource: 'local', role: 'student' },
+      expectedRevision: agg.caseV2.revision,
+      payload: { supplementId, note: '他案版本', documentVersionIds: ['doc-foreign-v1'] },
+    })
+    expect(foreign.ok).toBeFalse()
+    if (!foreign.ok) { expect(foreign.code).toBe('STALE_INPUT'); expect(foreign.message).toContain('不属于当前案卷') }
+
+    // 请求后新登记版本 + 真实回复成功。
+    const newPath = join(CONFIG_DIR, 'supp-new.txt')
+    writeFileSync(newPath, '补件请求后新登记的材料')
+    const registered = await registerMaterial(caseId, {
+      requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision,
+      payload: { sourcePath: newPath, role: 'evidence' },
+    })
+    expect(registered.ok).toBeTrue()
+    agg = readAggregate(caseId)!
+    const newVersionId = agg.caseV2.documents.find((document) => document.fileName === 'supp-new.txt')!.versionId
+
+    const requestId = nextReq()
+    const replied = await respondSupplementV2(caseId, {
+      requestId, actor: { actorId: 'stu-run19', actorSource: 'local', role: 'student' },
+      expectedRevision: agg.caseV2.revision,
+      payload: { supplementId, note: '补交新原件', documentVersionIds: [newVersionId] },
+    })
+    expect(replied.ok).toBeTrue()
+    if (!replied.ok) return
+    expect(replied.aggregate.supplements.find((item) => item.id === supplementId)?.status).toBe('responded')
+    expect(replied.aggregate.supplements.find((item) => item.id === supplementId)?.responses).toHaveLength(1)
+
+    // 同一 requestId 的重试不追加第二份回复（既有语义）。
+    const retry = await respondSupplementV2(caseId, {
+      requestId, actor: { actorId: 'stu-run19', actorSource: 'local', role: 'student' },
+      expectedRevision: replied.aggregate.caseV2.revision,
+      payload: { supplementId, note: '补交新原件', documentVersionIds: [newVersionId] },
+    })
+    expect(retry.ok).toBeTrue()
+    expect(readAggregate(caseId)!.supplements.find((item) => item.id === supplementId)?.responses).toHaveLength(1)
+
+    const resolved = await resolveSupplementV2(caseId, {
+      requestId: nextReq(), actor, expectedRevision: replied.aggregate.caseV2.revision,
+      payload: { supplementId, outcome: 'satisfied', reason: '新版本已真实回复并核验' },
+    })
+    expect(resolved.ok).toBeTrue()
+    if (resolved.ok) {
+      expect(resolved.aggregate.caseV2.stage).toBe('reviewing')
+      expect(resolved.aggregate.tasks.some((task) => task.stageId === 'first' && task.status === 'open')).toBeTrue()
+    }
+  })
+})
+
+describe('角色安全收口（P0）', () => {
+  test('学生或非来源阶段审核员不能代替来源审核人判定补件', async () => {
+    const { caseId, firstTaskId } = await seed()
+    const opened = await recordStageDecision(caseId, {
+      requestId: nextReq(), actor, expectedRevision: 1,
+      payload: { action: 'return-for-supplement', taskId: firstTaskId,
+        reason: '缺材料', supplementRequiredElements: ['原件'], supplementReason: '请补充材料' },
+    }, template)
+    expect(opened.ok).toBeTrue()
+    const agg = readAggregate(caseId)!
+    const forbidden = await resolveSupplementV2(caseId, {
+      requestId: nextReq(), actor: teacherActor, expectedRevision: agg.caseV2.revision,
+      payload: { supplementId: agg.supplements[0]!.id, outcome: 'satisfied', reason: '尝试越权' },
+    })
+    expect(forbidden.ok).toBeFalse()
+    if (!forbidden.ok) expect(forbidden.code).toBe('INVALID_TRANSITION')
+    expect(readAggregate(caseId)?.supplements[0]?.status).toBe('open')
+  })
+
+  test('未获得复核教师角色的本地 reviewer 不得自行维持或更改申诉结论', async () => {
+    const { caseId, firstTaskId } = await seed()
+    const denied = await recordStageDecision(caseId, {
+      requestId: nextReq(), actor, expectedRevision: 1,
+      payload: { action: 'final-reject', taskId: firstTaskId, reason: '初审不符' },
+    }, template)
+    expect(denied.ok).toBeTrue()
+    const { submitCommand } = await import('./case-store-v2')
+    const base = readAggregate(caseId)!
+    const created = await submitCommand(caseId, {
+      requestId: nextReq(), actor, expectedRevision: base.caseV2.revision,
+      type: 'SeedAppealForPermissionTest', payload: {},
+    }, () => ({
+      summary: '测试创建待处理申诉',
+      mutate: (draft) => {
+        draft.appeals.push({
+          id: `role-appeal-${caseId}`, caseId, againstDecisionId: draft.decisions[0]!.id,
+          appellant: { actorId: 'student', actorSource: 'local' },
+          statement: '请求复核', newEvidenceDocumentVersionIds: [], status: 'in-review',
+          createdAt: '2026-10-10T00:00:00Z',
+        })
+      },
+    }))
+    expect(created.ok).toBeTrue()
+    const agg = readAggregate(caseId)!
+    const invalid = await resolveAppealV2(caseId, {
+      requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision,
+      payload: { appealId: `role-appeal-${caseId}`, resolution: 'maintain-original', reason: '冒签教师' },
+    })
+    expect(invalid.ok).toBeFalse()
+    if (!invalid.ok) expect(invalid.code).toBe('INVALID_TRANSITION')
+    expect(readAggregate(caseId)?.appeals[0]?.status).toBe('in-review')
   })
 })
 
@@ -195,8 +542,12 @@ describe('补件不足后再回复（复查 §5.3）', () => {
     const open = await recordStageDecision(caseId, { requestId: nextReq(), actor, expectedRevision: 1, payload: { action: 'return-for-supplement', taskId: firstTaskId, reason: '缺', supplementRequiredElements: ['a'], supplementReason: '补A' } }, template)
     const aggregate = open.ok ? open.aggregate : readAggregate(caseId)!
     const sup = aggregate.supplements[0]!
+    // 先由提交方真实回复，审核员才能判不足（reply-first）。
+    const firstReply = await respondSupplementV2(caseId, { requestId: nextReq(), actor: { actorId: 'stu', actorSource: 'local', role: 'student' }, expectedRevision: aggregate.caseV2.revision, payload: { supplementId: sup.id, note: '第一次回复但仍缺' } })
+    expect(firstReply.ok).toBeTrue()
+    if (!firstReply.ok) return
     // 判不足
-    const ins = await resolveSupplementV2(caseId, { requestId: nextReq(), actor, expectedRevision: aggregate.caseV2.revision, payload: { supplementId: sup.id, outcome: 'insufficient', reason: '仍缺' } })
+    const ins = await resolveSupplementV2(caseId, { requestId: nextReq(), actor, expectedRevision: firstReply.aggregate.caseV2.revision, payload: { supplementId: sup.id, outcome: 'insufficient', reason: '仍缺' } })
     expect(ins.ok).toBeTrue()
     // 再次回复（修复前 INVALID_TRANSITION）
     const reply = await respondSupplementV2(caseId, { requestId: nextReq(), actor: { actorId: 'stu', actorSource: 'local', role: 'student' }, expectedRevision: (ins.ok ? ins.aggregate : aggregate).caseV2.revision, payload: { supplementId: sup.id, note: '第二次已补齐' } })
@@ -217,7 +568,14 @@ describe('补件不足后再回复（复查 §5.3）', () => {
     const { submitCommand } = await import('./case-store-v2')
     await submitCommand(caseId, { requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision, type: 'Seed', payload: {} }, () => ({ summary: '注入第二请求', mutate: (draft) => { draft.supplements = [...draft.supplements, { id: 'sup-2', caseId, originFindingKeys: [], requiredElements: ['b'], reason: '缺B', responsibleRole: 'student', status: 'insufficient', responses: [], createdAt: new Date().toISOString() }] } }))
     agg = readAggregate(caseId)!
-    const done = await resolveSupplementV2(caseId, { requestId: nextReq(), actor, expectedRevision: agg.caseV2.revision, payload: { supplementId: agg.supplements[0]!.id, outcome: 'satisfied', reason: '齐' } })
+    const replied = await respondSupplementV2(caseId, {
+      requestId: nextReq(), actor: { actorId: 'stu-gate', actorSource: 'local', role: 'student' },
+      expectedRevision: agg.caseV2.revision,
+      payload: { supplementId: agg.supplements[0]!.id, note: '第一请求已回复' },
+    })
+    expect(replied.ok).toBeTrue()
+    if (!replied.ok) return
+    const done = await resolveSupplementV2(caseId, { requestId: nextReq(), actor, expectedRevision: replied.aggregate.caseV2.revision, payload: { supplementId: agg.supplements[0]!.id, outcome: 'satisfied', reason: '齐' } })
     expect(done.ok).toBeTrue()
     if (done.ok) expect(done.aggregate.caseV2.stage).toBe('awaiting-supplement') // insufficient 阻断
   })
@@ -254,6 +612,76 @@ describe('申诉闭环（复查 §5.3-5）', () => {
       const amend = outcome.aggregate.decisions.find((decision) => decision.amendsDecisionId)
       expect(amend!.actor.actorId).toBe('teacher-1') // 不继承原决定 actor
       expect(amend!.finality).toBe('final')
+    }
+  })
+})
+
+describe('初审补件任务（V3）', () => {
+  test('按模板槽位合并同一 Run 的待补件检查，并保留全部来源 checkId', () => {
+    const slotTemplate = {
+      ...template,
+      materialSlots: [{ id: 'proof', name: '有效证明材料', minCount: 2, maxCount: 3 }],
+    } as unknown as TemplateVersion
+    const run = {
+      id: 'run-pi-initial-spec',
+      checks: [
+        { checkId: 'check-proof-a', ruleId: 'required-material-proof', status: 'awaiting-supplement', reason: '缺少第一份材料' },
+        { checkId: 'check-proof-b', ruleId: 'required-material-proof', status: 'awaiting-supplement', reason: '缺少第二份材料' },
+        { checkId: 'check-other', ruleId: 'unrelated-rule', status: 'awaiting-supplement', reason: '其他待处理项' },
+      ],
+    } as unknown as ReviewRunV2
+    const specs = buildInitialReviewSupplementSpecs(run, slotTemplate)
+    expect(specs).toHaveLength(1)
+    expect(specs[0]!.slotId).toBe('proof')
+    expect(specs[0]!.checkIds).toEqual(['check-proof-a', 'check-proof-b'])
+    expect(specs[0]!.requiredElements).toEqual(['有效证明材料：至少补齐 2 份有效材料'])
+    expect(specs[0]!.reason).toContain('run-pi-initial-spec')
+    expect(specs[0]!.reason).toContain('缺少第一份材料')
+    expect(specs[0]!.reason).toContain('缺少第二份材料')
+  })
+
+  test('初审来源补件核结只关闭补件请求，不改变正式阶段或重建阶段任务', async () => {
+    const { caseId } = await seed()
+    let aggregate = readAggregate(caseId)!
+    const { submitCommand } = await import('./case-store-v2')
+    const seeded = await submitCommand(caseId, {
+      requestId: nextReq(), actor, expectedRevision: aggregate.caseV2.revision,
+      type: 'SeedInitialReviewSupplement', payload: {},
+    }, () => ({
+      summary: '创建初审补件测试请求',
+      mutate: (draft) => {
+        draft.supplements = [...draft.supplements, {
+          id: 'sup-initial-review-test', caseId,
+          originFindingKeys: ['check-proof-a'],
+          requiredElements: ['有效证明材料'], reason: '初审 Run 发现缺件',
+          responsibleRole: 'student', status: 'open', responses: [],
+          createdAt: new Date().toISOString(), documentVersionIdsAtRequest: [],
+          originRunId: 'run-pi-initial-review-test',
+        }]
+      },
+    }))
+    expect(seeded.ok).toBeTrue()
+    if (!seeded.ok) return
+    aggregate = seeded.aggregate
+    const stageBefore = aggregate.caseV2.stage
+    const tasksBefore = aggregate.tasks.length
+    const replied = await respondSupplementV2(caseId, {
+      requestId: nextReq(),
+      actor: { actorId: 'stu-initial', actorSource: 'local', role: 'student' },
+      expectedRevision: aggregate.caseV2.revision,
+      payload: { supplementId: 'sup-initial-review-test', note: '已按要求补充说明' },
+    })
+    expect(replied.ok).toBeTrue()
+    if (!replied.ok) return
+    const resolved = await resolveSupplementV2(caseId, {
+      requestId: nextReq(), actor, expectedRevision: replied.aggregate.caseV2.revision,
+      payload: { supplementId: 'sup-initial-review-test', outcome: 'satisfied', reason: '回复已核验' },
+    })
+    expect(resolved.ok).toBeTrue()
+    if (resolved.ok) {
+      expect(resolved.aggregate.supplements.find(item => item.id === 'sup-initial-review-test')?.status).toBe('satisfied')
+      expect(resolved.aggregate.caseV2.stage).toBe(stageBefore)
+      expect(resolved.aggregate.tasks).toHaveLength(tasksBefore)
     }
   })
 })

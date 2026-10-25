@@ -1,0 +1,148 @@
+{
+  "templateId": "g02-t03-review",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "g02-t03-object-a",
+      "subjectId": "g02-t03-subject-a",
+      "title": "G02-T03合成审核对象 a",
+      "businessType": "g02-network-access",
+      "scenario": "restricted",
+      "scenarioSource": {
+        "sourceId": "synthetic-case-facts",
+        "sourceVersionId": "synthetic-case-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "external-user",
+          "applicability": "applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "student-proxy",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "change-grant",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "multi-resource",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "no-ip",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "bastion-required",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "revoked",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "policy-confirmed",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "g02-t03-object-b",
+      "subjectId": "g02-t03-subject-b",
+      "title": "G02-T03合成审核对象 b",
+      "businessType": "g02-network-access",
+      "scenario": "ordinary-vpn",
+      "scenarioSource": {
+        "sourceId": "synthetic-case-facts",
+        "sourceVersionId": "synthetic-case-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "external-user",
+          "applicability": "applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "student-proxy",
+          "applicability": "unknown",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "change-grant",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "multi-resource",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "no-ip",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "bastion-required",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "revoked",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "policy-confirmed",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-case-facts",
+          "sourceVersionId": "synthetic-case-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

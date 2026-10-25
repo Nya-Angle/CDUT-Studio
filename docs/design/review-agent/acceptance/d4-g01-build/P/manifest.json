@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "status": "AUTHOR_CANDIDATE_NOT_YET_EXECUTED",
+  "domain": "G01",
+  "key": "P",
+  "templateId": "g01-political-procedure",
+  "templateVersion": 1,
+  "businessSource": {
+    "file": "G01_political_review_template_v0.3.md",
+    "version": "v0.3",
+    "sha256": "542e73ddc26e861e1bc1d454841dc6096299f1a991e944f59a487d84d97304ec",
+    "gitBlobSha": "5ebc919c6630a3b81aaf6a1e6c28b1d37de3671c"
+  },
+  "technicalSha": "a7a6a11d4840ad64cfc858c17b35f35180adf063",
+  "moduleCount": 15,
+  "checkDefinitionCount": 150,
+  "sourceBindings": 150,
+  "sourceCatalogueEntries": 150,
+  "genericObjects": 2,
+  "independentGold": "UNCHANGED_NOT_ACCESSED",
+  "runtimeStatus": "NOT_RUN",
+  "publicationAllowed": false,
+  "limitations": [
+    "真实制度权限缺失",
+    "高级 Claim 无损映射不支持",
+    "仅独立真实技术运行才能升级完成状态"
+  ],
+  "ruleRowCount": 36,
+  "fieldRowCount": 59,
+  "branchRowCount": 22
+}

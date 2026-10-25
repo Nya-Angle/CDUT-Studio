@@ -1,0 +1,37 @@
+name: D0.5 Semantic Module Tests
+
+# 独立于 Electron 渲染构建，聚焦模板语义试验与现有模板服务兼容性。
+on:
+  pull_request:
+    paths:
+      - 'apps/electron/src/main/lib/review/semantic-module-demo*.ts'
+      - 'apps/electron/src/main/lib/review/template-store.ts'
+      - 'apps/electron/scripts/review-semantic-demo.ts'
+      - 'docs/design/review-agent/fixtures/d05-*.json'
+      - '.github/workflows/review-d05-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  d05-test:
+    name: D0.5 typecheck and BDD
+    runs-on: ubuntu-latest
+    env:
+      ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: bun install --frozen-lockfile
+      - name: TypeScript typecheck
+        run: bun run typecheck
+      - name: D0.5 BDD and template integration tests
+        run: |
+          bun test --isolate --timeout 30000 apps/electron/src/main/lib/review/semantic-module-demo.test.ts
+          bun test --isolate --timeout 30000 apps/electron/src/main/lib/review/template-store.test.ts

@@ -21,6 +21,8 @@ describe('政策仓库（N1b）', () => {
     publishComprehensiveFixture(store)
     const policy = getPolicy('policy-comprehensive-assessment-demo', 1)!
     expect(policy.status).toBe('published')
+    expect(policy.compiledRules?.map((rule) => rule.id)).toEqual(['P1', 'P2', 'P3', 'P4'])
+    expect(policy.compiledRules?.every((rule) => rule.policyVersionId === `${policy.policyId}@${policy.version}`)).toBeTrue()
     const { template } = buildComprehensiveFixture()
     const check = validatePolicyRef(template.policyRefs![0]!)
     expect(check.ok).toBeTrue()

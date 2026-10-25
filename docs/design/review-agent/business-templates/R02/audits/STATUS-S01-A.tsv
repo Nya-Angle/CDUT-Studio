@@ -1,0 +1,5 @@
+template_id	name	quality_status	policy_evidence_status	p0_count	p1_count	p2_count	p3_count	requires_patch	short_conclusion
+S01-T01	学生休学资格与材料审核	PASS_WITH_WARNINGS	PARTIAL	0	0	2	0	NO	身份分流与材料/决定分离清晰；现行校规和签批链需人工确认。
+S01-T02	学生复学及退役复学资格审核	PASS_WITH_WARNINGS	PARTIAL	0	0	2	0	NO	区分普通复学、退役复学和邻接事项；特殊身份制度仍待确认。
+S01-T03	保留入学资格、保留学籍与应征入伍保留资格审核	PASS_WITH_WARNINGS	PARTIAL	0	0	2	0	NO	分离保留入学资格、保留学籍与入伍新生；正式决定不得自动生成。
+S01-T05	跨校转入、转出和转学申请审核	PASS_WITH_WARNINGS	PARTIAL	0	0	2	0	NO	转入/转出与分阶段决定边界清楚；校本专项办法现行性待核。

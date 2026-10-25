@@ -1,0 +1,24 @@
+
+apps/electron/src/main/lib/review/review-authoring-v1.test.ts:
+(pass) D1 作者态真实映射与来源治理（BDD） > Given 作者态 JSON When Agent 通过 CLI 验证和编译 Then 返回生效规则映射而不发布 [36.33ms]
+(pass) D1 作者态真实映射与来源治理（BDD） > Given D1 编译候选 When Agent 经 candidate-save CLI 首次保存 Then 服务端资格强制封存 [37.92ms]
+(pass) D1 作者态真实映射与来源治理（BDD） > Given 自然语言责任 When 编译候选 Then 每条标准都与原 RuleSpec 同一真值且有来源映射 [3.52ms]
+(pass) D1 作者态真实映射与来源治理（BDD） > Given 运行候选被改写 When 重新核验 Then 不得再复用旧有效规则映射 [0.67ms]
+(pass) D1 作者态真实映射与来源治理（BDD） > Given manifest 来源映射被修改 When 对照不可变作者态 Then 不能把未知来源伪装成原始来源 [0.70ms]
+(pass) D1 作者态真实映射与来源治理（BDD） > Given 未映射的结构化条件或被修改的预览指纹 When 核验 Then 必须拒绝静默降级 [0.74ms]
+(pass) D1 作者态真实映射与来源治理（BDD） > Given 缺来源绑定或引用错误 When 静态验证 Then 不以隐式来源生成规则 [0.34ms]
+(pass) D1 作者态真实映射与来源治理（BDD） > Given 跨校制度与本校未核政策 When 申请编译 Then 未授权规则不能被提升为可执行审查标准 [0.53ms]
+(pass) D1 作者态真实映射与来源治理（BDD） > Given 高级证据或条件结构 When 旧 RuleSpec 没有无损映射 Then 明确拒绝，允许只有基础语义的模板 [0.30ms]
+(pass) D1 作者态真实映射与来源治理（BDD） > Given 校园卡双分支和档案逐操作 When 映射作者态 Then 可以验证来源覆盖，但不能错误投影成无条件审核 [0.48ms]
+(pass) D1 作者态修订存储与候选发布隔离 > Given 草稿连续两次修改 When 记录版本 Then 草稿修订号与发布模板版本不同、历史可读 [1.93ms]
+(pass) D1 作者态修订存储与候选发布隔离 > Given 已登记的 D1 候选 When 草稿删除/替换说明字段并再次保存 Then 发布服务仍拒绝 [1.88ms]
+(pass) D1 作者态修订存储与候选发布隔离 > Given D1 专用服务登记 When 候选首次保存前连所有可识别的展示标记都被删掉 Then 仍不能获得发布权 [0.81ms]
+(pass) D1 作者态修订存储与候选发布隔离 > Given 模板资格侧记录不存在 When 首次发布 Then 缺失资格不能默认放行 [0.54ms]
+(pass) D1 作者态修订存储与候选发布隔离 > Given 父摘要链被篡改 When 读历史或继续编辑 Then 明确拒绝而不产生新修订 [2.12ms]
+(pass) D1 作者态修订存储与候选发布隔离 > Given 历史缺失或首版本伪造父摘要 When 读取最新草稿 Then 不默默忽略损坏 [0.78ms]
+(pass) D1 作者态修订存储与候选发布隔离 > Given D1 已编译候选 When 经老模板服务试图发布 Then 必须拒绝 [0.41ms]
+
+ 17 pass
+ 0 fail
+ 65 expect() calls
+Ran 17 tests across 1 file. [143.00ms]

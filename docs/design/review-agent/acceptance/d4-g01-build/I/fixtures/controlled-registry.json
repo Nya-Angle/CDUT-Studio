@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "sourceKind": "controlled-synthetic",
+  "studentId": "synthetic-1",
+  "sourceId": "synthetic-standalone-fixture",
+  "snapshotVersionId": "r1-aprime-1",
+  "status": "current",
+  "enrollmentStatus": "enrolled",
+  "fields": {
+    "full-name": "OLD_SYNTHETIC",
+    "enrollment-status": "enrolled"
+  }
+}

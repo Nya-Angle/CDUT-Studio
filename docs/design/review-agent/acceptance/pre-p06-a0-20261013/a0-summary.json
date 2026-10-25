@@ -1,0 +1,92 @@
+{
+  "status": "PASS",
+  "results": [
+    {
+      "name": "A0-01 model preflight rejection leaves no running ledger or hidden session",
+      "status": "PASS",
+      "durationMs": 1291,
+      "details": {
+        "caseId": "case-1791837343772-d15dq0",
+        "runs": 0,
+        "newOwners": 0
+      }
+    },
+    {
+      "name": "A0-02 real Pi ACK, hidden owner, leave page and persist complete result",
+      "status": "PASS",
+      "durationMs": 97056,
+      "details": {
+        "caseId": "case-1791837343752-ytuzj1",
+        "ack": {
+          "caseId": "case-1791837343752-ytuzj1",
+          "runId": "run-pi-mv5pp0lj-xcf8h",
+          "runStatus": "running",
+          "phase": "accepted"
+        },
+        "terminal": {
+          "caseId": "case-1791837343752-ytuzj1",
+          "runId": "run-pi-mv5pp0lj-xcf8h",
+          "runStatus": "completed",
+          "completedAt": "2026-10-12T20:37:25.350Z",
+          "phase": "finished"
+        },
+        "runStatus": "completed",
+        "checks": 1,
+        "sourceRefs": 1,
+        "hiddenFromOrdinaryList": true,
+        "ordinaryMeta": null,
+        "ordinaryTabOpened": false,
+        "provider": "deepseek",
+        "model": "deepseek-flash"
+      }
+    },
+    {
+      "name": "A0-04 real Pi admission then controlled HTTP provider failure persists failed",
+      "status": "PASS",
+      "durationMs": 41811,
+      "details": {
+        "caseId": "case-1791837343788-1pj6nh",
+        "ack": {
+          "caseId": "case-1791837343788-1pj6nh",
+          "runId": "run-pi-mv5pr3hm-no53o",
+          "runStatus": "running",
+          "phase": "accepted"
+        },
+        "terminal": {
+          "caseId": "case-1791837343788-1pj6nh",
+          "runId": "run-pi-mv5pr3hm-no53o",
+          "runStatus": "failed",
+          "completedAt": "2026-10-12T20:38:07.807Z",
+          "phase": "incomplete"
+        },
+        "fixtureRequests": 6,
+        "provider": "controlled-loopback-http-500",
+        "realPiRuntime": true
+      }
+    },
+    {
+      "name": "A0-03 stop real Pi through case/run endpoint and persist cancelled",
+      "status": "PASS",
+      "durationMs": 1642,
+      "details": {
+        "caseId": "case-1791837343781-lqcytg",
+        "ack": {
+          "caseId": "case-1791837343781-lqcytg",
+          "runId": "run-pi-mv5przqf-7trbp",
+          "runStatus": "running",
+          "phase": "accepted"
+        },
+        "terminal": {
+          "caseId": "case-1791837343781-lqcytg",
+          "runId": "run-pi-mv5przqf-7trbp",
+          "runStatus": "cancelled",
+          "completedAt": "2026-10-12T20:38:10.233Z",
+          "phase": "incomplete"
+        }
+      }
+    }
+  ],
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "scope": "real Electron/Main IPC/Pi/provider with synthetic cases; production Relay/Pocket/Feishu excluded"
+}

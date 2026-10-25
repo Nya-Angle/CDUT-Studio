@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "workspaceId": "d1-text-preview",
+  "revision": 1,
+  "definitions": {
+    "modules": [
+      {
+        "moduleId": "text-structure",
+        "version": 1,
+        "name": "文本结构责任",
+        "purpose": "独立核对文本必需部分",
+        "scope": "本次提交的文档",
+        "limits": "不做资格或行政批准",
+        "source": {
+          "kind": "synthetic",
+          "note": "合成演示，不构成学校政策"
+        },
+        "tasks": [
+          {
+            "id": "check",
+            "title": "核对文本结构",
+            "requirement": "检查摘要、正文及结论三部分，并指出缺失位置",
+            "completion": "给出逐项局部状态，引用真实文本位置，无法读取则待核",
+            "limits": "不得基于文件名假定完整"
+          }
+        ]
+      }
+    ],
+    "templates": [
+      {
+        "templateId": "text-review",
+        "version": 1,
+        "name": "文本审核",
+        "purpose": "确认当前文档的章节结构",
+        "limits": "仅提供审阅意见",
+        "source": {
+          "kind": "synthetic",
+          "note": "合成演示"
+        },
+        "modules": [
+          {
+            "id": "text",
+            "moduleId": "text-structure",
+            "version": 1
+          }
+        ],
+        "localTasks": []
+      }
+    ]
+  },
+  "sources": [
+    {
+      "sourceId": "author-request",
+      "kind": "user-request",
+      "label": "本次示例用户指示",
+      "verification": "unverified",
+      "applicability": "request-scope",
+      "note": "合成演示中的委托要求，并非真实校规"
+    }
+  ],
+  "sourceBindings": [
+    {
+      "checkId": "text-review@1:module/text/check",
+      "sourceIds": [
+        "author-request"
+      ]
+    }
+  ]
+}

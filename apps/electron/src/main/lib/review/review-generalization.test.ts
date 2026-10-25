@@ -69,8 +69,12 @@ mock.module('./review-model-gateway', () => {
       },
       apiKey: '',
     }),
-    chatCompletion: async (): Promise<string> => {
+    chatCompletion: async (
+      _channel: unknown,
+      messages: Array<{ role: string; content: unknown }>,
+    ): Promise<string> => {
       callCount += 1
+      lastMessages = messages
       if (nextError) throw nextError
       return nextReply
     },
@@ -88,7 +92,7 @@ mock.module('./review-model-gateway', () => {
 
 // 动态 import：确保 mock 先生效（bun 的 mock.module 对后续 import 生效）
 const { saveCase } = await import('./case-store')
-const { runAiReview, extractItems } = await import('./ai-review-service')
+const { runAiReview, extractItems, generateRuleOutline } = await import('./ai-review-service')
 
 // ===== 测试数据构造 =====
 
@@ -287,6 +291,34 @@ describe('领域包（review-domain-packs）', () => {
     const pack = resolveDomainPack(BUILTIN_DOMAIN_PACK_IDS.contractReview)
     expect(findingKindSeverity(pack, 'missing-clause')).toBe('red')
     expect(findingKindSeverity(pack, 'unbalanced-obligation')).toBe('yellow')
+  })
+})
+
+describe('规则大纲结构化约束真实协议', () => {
+  test('prompt 请求 constraint，并严格丢弃不可安全执行的 score-value 与非法日期', async () => {
+    const reviewCase = buildCase({ suffix: 'rule-constraints' })
+    reviewCase.documents[0]!.blocks = [{ id: 'blk-rule-001', kind: 'paragraph', text: '国家级一等奖 8 分，省级二等奖 4 分；所有竞赛类加分累计不超过 10 分；须提供获奖证书；原则上具有较高影响力。', page: 1 }]
+    saveCase(reviewCase)
+    nextReply = JSON.stringify([
+      { category: '等级分值', title: '竞赛等级映射', summary: '国家级一等奖 8 分，省级二等奖 4 分', constraint: { kind: 'level-mapping', levels: { '国家级一等奖': 8, '省级二等奖': 4 } }, anchors: [] },
+      { category: '分值上限', title: '累计上限', summary: '竞赛类加分累计不超过 10 分', constraint: { kind: 'max-score', value: 10 }, anchors: [] },
+      { category: '材料要求', title: '获奖证书', summary: '须提供获奖证书', constraint: { kind: 'required-evidence', requiredEvidenceTypes: ['获奖证书'] }, anchors: [] },
+      { category: '语义规则', title: '影响力', summary: '原则上具有较高影响力', constraint: null, anchors: [] },
+      { category: '分值', title: '缺少适用范围的固定分值', summary: '不得全局应用', constraint: { kind: 'score-value', value: 4 }, anchors: [] },
+      { category: '时间', title: '非法日期', summary: '日期需校验', constraint: { kind: 'date-range', dateFrom: '2026-99-99' }, anchors: [] },
+    ])
+
+    const outline = await generateRuleOutline({ caseId: reviewCase.id, rulePackId: 'pack-1' })
+    expect(outline[0]?.constraint).toEqual({ kind: 'level-mapping', levels: { '国家级一等奖': 8, '省级二等奖': 4 } })
+    expect(outline[1]?.constraint).toEqual({ kind: 'max-score', value: 10 })
+    expect(outline[2]?.constraint).toEqual({ kind: 'required-evidence', requiredEvidenceTypes: ['获奖证书'] })
+    expect(outline[3]?.constraint).toBeUndefined()
+    expect(outline[4]?.constraint).toBeUndefined()
+    expect(outline[5]?.constraint).toBeUndefined()
+    const system = String(lastMessages.find((message) => message.role === 'system')?.content ?? '')
+    expect(system).toContain('constraint')
+    expect(system).toContain('level-mapping')
+    expect(system).toContain('不得猜测')
   })
 })
 

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "review-c0/1",
+  "planId": "p1",
+  "fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "templateId": "t1",
+  "templateVersion": "1",
+  "moduleDigests": [
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  ],
+  "bindings": [
+    {
+      "checkKey": "c1",
+      "targetKey": "target-a",
+      "objectKey": "o1",
+      "subjectId": "s1",
+      "applicability": "unknown",
+      "sourceVersionIds": [
+        "dv1"
+      ],
+      "conditionFingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "checkKey": "c1",
+      "targetKey": "target-b",
+      "objectKey": "o1",
+      "subjectId": "s1",
+      "applicability": "unknown",
+      "sourceVersionIds": [
+        "dv1"
+      ],
+      "conditionFingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ]
+}

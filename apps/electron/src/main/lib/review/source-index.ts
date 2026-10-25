@@ -11,6 +11,7 @@ import { existsSync, mkdirSync, renameSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import type { SourceLocation } from '@profer/shared'
 import { getConfigDir } from '../config-paths'
+import { assertReviewPreuploadAllowed } from './review-preupload-gate'
 
 // ===== 来源索引 =====
 
@@ -46,6 +47,7 @@ function hashExcerpt(text: string): string {
 
 /** 文本类来源索引：按段落（空行分隔）与行位置（不虚构页码） */
 export function buildTextSourceIndex(documentVersionId: string, content: string, parseRevision = 1): SourceIndex {
+  assertReviewPreuploadAllowed('index')
   const paragraphs = content.split(/\n\s*\n/).filter((paragraph) => paragraph.trim().length > 0)
   return {
     documentVersionId,
@@ -95,6 +97,7 @@ export function parseCsvRows(content: string): string[][] {
 
 /** CSV/表格来源索引：sheet-cell 精度，原值按文本保留（前导零不丢失） */
 export function buildSheetSourceIndex(documentVersionId: string, csv: string, parseRevision = 1, sheetName = 'sheet1'): SourceIndex {
+  assertReviewPreuploadAllowed('index')
   const rows = parseCsvRows(csv)
   const header = rows[0] ?? []
   const entries: SourceIndexEntry[] = []
@@ -117,6 +120,8 @@ export function buildSheetSourceIndex(documentVersionId: string, csv: string, pa
 
 /** 索引落盘（source-index/{versionId}.json） */
 export function saveSourceIndex(caseId: string, index: SourceIndex): void {
+  assertReviewPreuploadAllowed('index', { caseId })
+  assertReviewPreuploadAllowed('persist', { caseId })
   const dir = join(getConfigDir(), 'review-cases', caseId, 'source-index')
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true })
   const filePath = join(dir, `${index.documentVersionId}.json`)

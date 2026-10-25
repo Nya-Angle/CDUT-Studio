@@ -1,0 +1,41 @@
+{
+  "id": "reboot-still-faulted",
+  "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+  "status": "FAIL",
+  "assertions": [
+    {
+      "name": "重启后旧工具授权仍拒绝",
+      "pass": false
+    }
+  ],
+  "timeline": [
+    {
+      "at": "2026-10-14T15:06:42.876Z",
+      "event": "fresh-electron-main-authorization",
+      "pid": 688586,
+      "runStatus": "running",
+      "toolAllowed": true,
+      "bindingReturned": true,
+      "main": {
+        "caseId": "case-1791975357085-tbbbrx",
+        "runId": "run-pi-mv88r81m-vnhyb",
+        "runStatus": "running",
+        "phase": "preparing"
+      }
+    }
+  ],
+  "snapshot": {
+    "pid": 688586,
+    "runStatus": "running",
+    "toolAllowed": true,
+    "bindingReturned": true,
+    "main": {
+      "caseId": "case-1791975357085-tbbbrx",
+      "runId": "run-pi-mv88r81m-vnhyb",
+      "runStatus": "running",
+      "phase": "preparing"
+    }
+  },
+  "error": "AssertionError [ERR_ASSERTION]: 重启后旧工具授权仍拒绝",
+  "finishedAt": "2026-10-14T15:06:42.877Z"
+}

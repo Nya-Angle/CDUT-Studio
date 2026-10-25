@@ -1,13 +1,9 @@
-import { describe, expect, mock, test } from 'bun:test'
+import { describe, expect, test } from 'bun:test'
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
-// skin-manager-service 经 skin-service → config-paths 间接依赖 Electron；单测提供最小主进程 mock。
-mock.module('electron', () => ({
-  app: { getPath: () => tmpdir(), isPackaged: false },
-  net: {},
-}))
+// 复用 bunfig preload 的完整 Electron mock；局部覆盖会丢失 dialog 等命名导出。
 
 // 隔离配置根目录：安装目标必须落在临时目录，绝不能写真实 ~/.cdutai-dev/skins。
 const configRoot = mkdtempSync(join(tmpdir(), 'cdut-skin-manager-config-'))

@@ -108,6 +108,8 @@ import {
   executeOpenFilePreviewTool,
 } from '../agent-preview-tools'
 import { generateAgentGptImage } from '../agent-gpt-image-service'
+import { buildReviewOpsTools } from './pi-review-ops-tools'
+import { getPiReviewBindingForSession, recordPiReviewPreviewByPath } from '../review/pi-case-review-service'
 import {
   AGENT_GPT_IMAGE_DESCRIPTION,
   AGENT_GPT_IMAGE_TOOL_NAME,
@@ -151,6 +153,8 @@ export interface PiBuiltinToolsContext {
   /** 执行期动态读取当前会话权限模式（用于 CSLab 工具审计记账）。 */
   getPermissionMode?: () => ProferPermissionMode
   triggeredBy?: 'user' | 'automation' | 'delegation' | 'goal'
+  /** Main 为当前 Agent sendMessage 生成的唯一审核工具执行轮次。 */
+  reviewExecutionTurnId?: string
   /** 当前 Agent 工作目录；用于解析生图产物、参考图和本地网页预览的相对路径。 */
   agentCwd?: string
   /** 图片外发前必须校验在这些已授权目录内。 */
@@ -823,13 +827,26 @@ function buildPiAgentPreviewTools(sdk: PiSdk, ctx: PiBuiltinToolsContext): ToolD
       }),
       async execute(_toolCallId, params) {
         const args = params as Record<string, unknown>
-        return executeAgentPreviewTool({
-          filePath: typeof args.filePath === 'string' ? args.filePath : '',
+        const filePath = typeof args.filePath === 'string' ? args.filePath : ''
+        const scope = args.scope === 'overview' || args.scope === 'page' || args.scope === 'all' ? args.scope : undefined
+        const inspected = await executeAgentPreviewTool({
+          filePath,
           mode: args.mode === 'content' || args.mode === 'visual' || args.mode === 'both' ? args.mode : undefined,
-          scope: args.scope === 'overview' || args.scope === 'page' || args.scope === 'all' ? args.scope : undefined,
+          scope,
           page: typeof args.page === 'number' ? args.page : undefined,
           previousRevision: typeof args.previousRevision === 'string' ? args.previousRevision : undefined,
-        }, { agentCwd: ctx.workspaceSlug ? ctx.agentCwd! : '', allowedRoots: ctx.allowedRoots ?? [] }) as Promise<AgentToolResult<unknown>>
+        }, { agentCwd: ctx.workspaceSlug ? ctx.agentCwd! : '', allowedRoots: ctx.allowedRoots ?? [] }) as AgentToolResult<unknown>
+        const details = inspected.details as { error?: unknown; visual?: { images?: unknown[] } }
+        const binding = getPiReviewBindingForSession(ctx.sessionId)
+        if (binding && details && !details.error) {
+          const effectiveScope = scope ?? 'overview'
+          const pageLabel = effectiveScope === 'page' ? `第 ${typeof args.page === 'number' ? args.page : '?'} 页` : effectiveScope === 'all' ? '全文预览范围' : '首页/总览'
+          recordPiReviewPreviewByPath(binding, filePath, `inspect_preview 查看 ${filePath.split(/[\\/]/).pop() ?? '材料'}（${pageLabel}）`, {
+            scope: effectiveScope,
+            visualImageCount: details.visual?.images?.length ?? 0,
+          })
+        }
+        return inspected
       },
     }),
   ] as unknown as ToolDefinition[]
@@ -2089,6 +2106,29 @@ export async function buildPiBuiltinTools(
       tools.push(...buildPiAgentSkinTools(sdk, ctx))
     } catch (error) {
       console.error('[Pi 桥接] 注入图片/皮肤工具失败:', error)
+    }
+  }
+
+  // 审核工具仍受场景分组与预设禁用控制；有效案卷指派允许其在当前轮次即时挂载。
+  const isReviewOperator = ctx.currentPresetReference?.presetId === 'review-operator'
+  const directReviewBinding = isReviewOperator && ctx.triggeredBy === 'user'
+    ? getPiReviewBindingForSession(ctx.sessionId)
+    : undefined
+  const reviewOpsEnabled = !disabled.has('review-ops') && !isAgentPresetToolGroupDisabled(ctx.disabledToolGroups, 'review-ops')
+  if (reviewOpsEnabled && (isGroupActive('review-ops') || directReviewBinding)) {
+    try {
+      if (!isReviewOperator || directReviewBinding) {
+        tools.push(...buildReviewOpsTools(sdk, {
+          sessionId: ctx.sessionId,
+          triggeredBy: ctx.triggeredBy,
+          executionTurnId: ctx.reviewExecutionTurnId,
+          allowedRoots: ctx.allowedRoots ?? [],
+          disabledTools: ctx.disabledTools,
+          ...(directReviewBinding ? { directReviewBinding } : {}),
+        }))
+      }
+    } catch (error) {
+      console.error('[Pi 桥接] 注入审核操作工具失败:', error)
     }
   }
 

@@ -1,0 +1,176 @@
+{
+  "templateId": "g03-t08",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "item-a",
+      "subjectId": "g03-t08-subject-a",
+      "title": "SYNTHETIC 仪器自主上机机时预约对象A",
+      "businessType": "g03-instrument-slot",
+      "scenario": "p-self-operation",
+      "scenarioSource": {
+        "sourceId": "synthetic-choice",
+        "sourceVersionId": "synthetic-g03-t08-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "c-after-hours",
+          "applicability": "applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-whitelist",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-fee",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-pi-approval",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-hazard",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-professional-safety",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-training",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-change",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-multiple-slots",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-closed",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "item-b",
+      "subjectId": "g03-t08-subject-b",
+      "title": "SYNTHETIC 仪器自主上机机时预约对象B",
+      "businessType": "g03-instrument-slot",
+      "scenario": "p-sample-redirect",
+      "scenarioSource": {
+        "sourceId": "synthetic-choice",
+        "sourceVersionId": "synthetic-g03-t08-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "c-after-hours",
+          "applicability": "unknown",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "c-whitelist",
+          "applicability": "applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-fee",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-pi-approval",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-hazard",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-professional-safety",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-training",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-change",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-multiple-slots",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "c-closed",
+          "applicability": "not-applicable",
+          "sourceId": "synthetic-choice",
+          "sourceVersionId": "synthetic-g03-t08-v1",
+          "decidedBy": "reviewer"
+        }
+      ]
+    }
+  ]
+}

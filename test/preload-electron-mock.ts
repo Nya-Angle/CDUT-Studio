@@ -21,6 +21,25 @@
  * 不要再在测试文件里替换整个 electron mock。
  */
 import { mock } from 'bun:test'
+import { installReviewPreuploadMainAuthority } from '../apps/electron/src/main/lib/review/review-preupload-gate'
+
+/**
+ * 测试专用的虚构、非敏感本地许可，用于保留原有功能回归的正向样例。
+ * 它不是学校授权，也不会进入生产构建。P0 负向测试通过下面的测试私有开关
+ * 强制未知授权；生产 Main 不安装任何默认许可，必须 fail-closed。
+ */
+installReviewPreuploadMainAuthority({
+  evaluate(operation, scope) {
+    if (process.env.PROFER_REVIEW_TEST_PREUPLOAD_BLOCK === 'throw') throw new Error('TEST_AUTHORITY_UNAVAILABLE')
+    if (process.env.PROFER_REVIEW_TEST_PREUPLOAD_BLOCK === '1') return undefined
+    return {
+      classification: 'public', environment: 'local-controlled', authorization: 'confirmed',
+      externalModelAuthorized: operation === 'model',
+      ...(scope.modelDestination ? { modelDestination: scope.modelDestination } : {}),
+      expiresAt: Date.now() + 30_000,
+    }
+  },
+})
 
 /**
  * 测试钩子：供窗口生命周期 / 全局快捷键类测试断言使用。
@@ -37,6 +56,8 @@ declare global {
     exposedApi: Record<string, unknown>
     /** ipcRenderer.invoke 委托：测试自己赋值，reset 时清空 */
     ipcRendererInvoke: ((channel: string, ...args: unknown[]) => Promise<unknown>) | null
+    /** Registered main IPC callbacks for permission/path tests only. */
+    ipcMainHandlers: Map<string, (...args: unknown[]) => unknown>
     reset: () => void
   }
 }
@@ -46,11 +67,13 @@ globalThis.__proferElectronTestHooks = {
   registeredAccelerators: [],
   exposedApi: {},
   ipcRendererInvoke: null,
+  ipcMainHandlers: new Map(),
   reset() {
     this.createdWindows.length = 0
     this.registeredAccelerators.length = 0
     this.exposedApi = {}
     this.ipcRendererInvoke = null
+    this.ipcMainHandlers.clear()
   },
 }
 
@@ -142,9 +165,13 @@ mock.module('electron', () => ({
   },
   dialog: { showMessageBox: async () => ({ response: 0 }), showOpenDialog: async () => ({ canceled: true, filePaths: [] }) },
   ipcMain: {
-    handle: () => undefined,
+    handle: (channel: string, handler: (...args: unknown[]) => unknown) => {
+      globalThis.__proferElectronTestHooks.ipcMainHandlers.set(channel, handler)
+    },
     on: () => undefined,
-    removeHandler: () => undefined,
+    removeHandler: (channel: string) => {
+      globalThis.__proferElectronTestHooks.ipcMainHandlers.delete(channel)
+    },
   },
   Menu: {
     buildFromTemplate: () => ({ popup: () => undefined }),

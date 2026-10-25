@@ -1,0 +1,18 @@
+{
+  "success": {
+    "id": "case-1791896601149-wpxh9j",
+    "title": "P06 同案更新测试"
+  },
+  "preflight": {
+    "id": "case-1791896601174-ys7ok5",
+    "title": "P06 辅助隔离案卷"
+  },
+  "stop": {
+    "id": "case-1791896601183-xn3ddl",
+    "title": "P06 从头重审测试"
+  },
+  "failure": {
+    "id": "case-1791896601191-4pcpaf",
+    "title": "P06 辅助失败案卷"
+  }
+}

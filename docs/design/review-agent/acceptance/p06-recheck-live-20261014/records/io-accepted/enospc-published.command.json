@@ -1,0 +1,29 @@
+{
+  "name": "enospc-published",
+  "sourceSha": "36625a28194863f205bf607f0da4de0196870b5f",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014",
+  "argv": [
+    "node",
+    "scripts/qa/review-live-io.mjs",
+    "enospc"
+  ],
+  "startedAt": "2026-10-14T15:47:21.294840+00:00",
+  "environment": {
+    "NO_COLOR": "1",
+    "QA_REPORT_DIR": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/io-accepted",
+    "QA_PROFILE_ROOT": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile",
+    "QA_APPLICATION_SHA": "36625a28194863f205bf607f0da4de0196870b5f"
+  },
+  "finishedAt": "2026-10-14T15:47:35.698904+00:00",
+  "exitCode": 0,
+  "files": {
+    "enospc-published.stdout.log": {
+      "sha256": "c388b931e38cae11788cd7942344e255a2b913362eb47d638c4779b7babf15a5",
+      "bytes": 58
+    },
+    "enospc-published.stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  }
+}

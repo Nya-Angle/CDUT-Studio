@@ -15,6 +15,8 @@ import { join } from 'node:path'
 import type { ReviewCase, ReviewCaseSummary, ReviewRun } from '@profer/shared'
 import { getConfigDir } from '../config-paths'
 import { buildDemoCase } from './demo-fixtures/demo-case-fixture'
+import { readAggregate } from './case-store-v2'
+import { nativeWorkspaceProjectionV3 } from './native-workspace-case-v3'
 
 /** 演示案卷固定 ID（载入/重审/报告锚定同一个 ID） */
 export const DEMO_CASE_ID = 'demo-zhangsan-2026'
@@ -134,14 +136,27 @@ export function listCases(): ReviewCaseSummary[] {
   for (const name of entries) {
     // 跳过非目录与临时文件
     if (name.endsWith('.tmp')) continue
-    const caseFile = join(root, name, 'case.json')
-    if (!existsSync(caseFile)) continue
+    // Old three-column selector remains a READ-ONLY projection for genuine
+    // native-first Cases, never a stale V1 shadow nor a second business writer.
+    let reviewCase: ReviewCase | undefined
+    let nativeAggregate: ReturnType<typeof readAggregate>
+    try {
+      if (isLegacyProjectionAllowed(name)) {
+        const caseFile = join(root, name, 'case.json')
+        if (!existsSync(caseFile)) continue
+        reviewCase = readJsonFile<ReviewCase>(caseFile)
+      } else {
+        nativeAggregate = readAggregate(name)
+        reviewCase = nativeWorkspaceProjectionV3(nativeAggregate)
+      }
+    } catch { continue }
+    if (!reviewCase || reviewCase.id !== name) continue
 
-    const reviewCase = readJsonFile<ReviewCase>(caseFile)
-    if (!reviewCase || typeof reviewCase.id !== 'string') {
-      console.warn(`[审核专区] 案卷不可读，已跳过: ${caseFile}`)
-      continue
-    }
+    // ASSET-06：三栏兼容投影会刻意隐藏 attachment 等角色；管理列表不能拿
+    // “当前可显示数”冒充案卷真实有效材料数。原生案卷直接数聚合。
+    const activeDocumentCount = nativeAggregate
+      ? nativeAggregate.caseV2.documents.filter((document) => document.active !== false).length
+      : (reviewCase.documents?.length ?? 0)
 
     summaries.push({
       id: reviewCase.id,
@@ -151,7 +166,7 @@ export function listCases(): ReviewCaseSummary[] {
       academicYear: reviewCase.academicYear,
       updatedAt: reviewCase.updatedAt,
       isDemo: reviewCase.isDemo,
-      documentCount: reviewCase.documents?.length ?? 0,
+      documentCount: activeDocumentCount,
       lastRunStatus: readLastRunStatus(reviewCase.id),
       // 列表展示领域标签（未标注的历史案卷由 UI 回落缺省包名）
       domainPackId: reviewCase.domainPackId,
@@ -166,6 +181,12 @@ export function listCases(): ReviewCaseSummary[] {
 /** 读取单个案卷；不存在或不可读返回 undefined */
 export function getCase(caseId: string): ReviewCase | undefined {
   assertSafeId(caseId)
+  // No legacy shadow is ever returned for native-first Case; the returned
+  // object is a read-only in-memory compatibility shape from state.v2.json.
+  if (!isLegacyProjectionAllowed(caseId)) {
+    const projected = nativeWorkspaceProjectionV3(readAggregate(caseId))
+    return projected?.id === caseId ? projected : undefined
+  }
   const filePath = getCaseFilePath(caseId)
   if (!existsSync(filePath)) return undefined
 
@@ -177,8 +198,39 @@ export function getCase(caseId: string): ReviewCase | undefined {
   return reviewCase
 }
 
+/**
+ * A native-first V2 aggregate is never writable through legacy case.json.
+ * Historical migrated legacy cases retain their compatibility updates.
+ * A corrupt or unreadable V2 state always fails closed.
+ */
+function isLegacyProjectionAllowed(caseId: string): boolean {
+  const statePath = join(getCaseDir(caseId), 'state.v2.json')
+  if (!existsSync(statePath)) return true
+  const state = readAggregate(caseId)
+  // Malformed-but-valid JSON also fails closed. Never trust a cast-only store.
+  if (!state || !state.caseV2 || !Array.isArray(state.receiptLog)) return false
+  // Even a migrated Case is read-only while its native aggregate is archived.
+  return state.caseV2.stage !== 'archived' &&
+    state.receiptLog.some(receipt => receipt?.type === 'EnsureReviewWorkspaceAggregate')
+}
+
+function assertWritableLegacyProjection(caseId: string): void {
+  if (!isLegacyProjectionAllowed(caseId)) {
+    throw new Error('原生审核案卷禁止通过旧版案卷写入口修改；请使用可信 V2 业务命令')
+  }
+  // 迁移来的 V1 案卷仍可只读展示历史原件；一旦进入冻结 Plan/Run
+  // 及业务决定阶段，旧 V1 写入口便不再有修改当前业务事实的资格。
+  const aggregate = readAggregate(caseId)
+  if (aggregate && (aggregate.canonicalPlan || aggregate.d2RuntimePlan ||
+    aggregate.v3ReviewRun || aggregate.v3TechnicalExecution ||
+    aggregate.localBusinessConfirmation || aggregate.decisions?.length)) {
+    throw new Error('审核案卷已有权威 Plan/Run/决定，旧版写入口仅允许历史读取')
+  }
+}
+
 /** 保存案卷（原子写；目录不存在则创建） */
 export function saveCase(reviewCase: ReviewCase): void {
+  assertWritableLegacyProjection(reviewCase.id)
   const filePath = getCaseFilePath(reviewCase.id)
   mkdirSync(getCaseDir(reviewCase.id), { recursive: true })
   try {
@@ -238,6 +290,8 @@ export function updateCase(
 ): Promise<ReviewCase> {
   assertSafeId(caseId)
   return enqueueCaseWrite(caseId, () => {
+    // Queued updates and direct saves obey the same native write barrier.
+    assertWritableLegacyProjection(caseId)
     const latest = getCase(caseId)
     if (!latest) throw new Error(`案卷不存在: ${caseId}`)
     const currentRevision = latest.revision ?? 0
@@ -267,13 +321,15 @@ export function updateCase(
 export function computeCaseInputHash(reviewCase: ReviewCase): string {
   const fingerprint = {
     domainPackId: reviewCase.domainPackId ?? 'comprehensive-assessment',
+    reviewTemplate: reviewCase.reviewTemplate ?? null,
+    manualRules: (reviewCase.manualRules ?? []).map((rule) => ({ id: rule.id, title: rule.title, requirement: rule.requirement })),
     subjectDocumentIds: reviewCase.subjectDocumentIds ?? null,
     rulePacks: reviewCase.rulePacks.map((pack) => ({
       id: pack.id,
       version: pack.version,
       academicYear: pack.academicYear,
       confirmed: pack.confirmed,
-      outline: pack.outline.map((item) => ({ id: item.id, title: item.title, anchors: item.anchors })),
+      outline: pack.outline.map((item) => ({ id: item.id, category: item.category, title: item.title, summary: item.summary, anchors: item.anchors })),
     })),
     documents: reviewCase.documents.map((doc) => ({
       id: doc.id,
@@ -309,6 +365,13 @@ export function computeCaseInputHash(reviewCase: ReviewCase): string {
 export function deleteCase(caseId: string): void {
   const dir = getCaseDir(caseId)
   if (!existsSync(dir)) return
+  // The original V1 delete removed the entire shared directory, including
+  // the authoritative V2 aggregate, Receipts and retained evidence. Until a
+  // C-owned archive/tombstone transaction exists, deleting such a Case from
+  // legacy IPC is forbidden, even for a migrated V1 Case or corrupt V2 state.
+  if (existsSync(join(dir, 'state.v2.json'))) {
+    throw new Error('已有 V2 业务案卷禁止通过旧版删除入口清除；请使用正式案卷归档流程')
+  }
   try {
     rmSync(dir, { recursive: true, force: true })
     console.log(`[审核专区] 已删除案卷: ${caseId}`)
@@ -320,6 +383,9 @@ export function deleteCase(caseId: string): void {
 
 /** 保存一次审核运行（原子写 runs/{runId}.json） */
 export function saveRun(caseId: string, run: ReviewRun): void {
+  // 旧 V1 运行文件不得覆盖/竞争原生 V3 的权威 Run 解释。
+  // 在建 runs/ 目录之前检查，拒绝时不留下任何影子记录。
+  assertWritableLegacyProjection(caseId)
   assertSafeId(run.id)
   const filePath = join(ensureRunsDir(caseId), `${run.id}.json`)
   try {

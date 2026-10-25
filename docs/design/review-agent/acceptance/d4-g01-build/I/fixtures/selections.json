@@ -1,0 +1,49 @@
+{
+  "name": {
+    "templateId": "g01-student-identity-correction",
+    "version": 2,
+    "scenarios": [
+      "s01"
+    ],
+    "targets": [
+      {
+        "kind": "student-field",
+        "studentId": "synthetic-1",
+        "fieldKey": "full-name",
+        "intent": "correction",
+        "objectKey": "synthetic-1/full-name",
+        "subjectId": "student-name",
+        "title": "姓名更正"
+      }
+    ]
+  },
+  "two": {
+    "templateId": "g01-student-identity-correction",
+    "version": 2,
+    "scenarios": [
+      "s01",
+      "s02",
+      "s07"
+    ],
+    "targets": [
+      {
+        "kind": "student-field",
+        "studentId": "synthetic-1",
+        "fieldKey": "full-name",
+        "intent": "correction",
+        "objectKey": "synthetic-1/full-name",
+        "subjectId": "student-name",
+        "title": "姓名更正"
+      },
+      {
+        "kind": "student-field",
+        "studentId": "synthetic-1",
+        "fieldKey": "credential-id",
+        "intent": "correction",
+        "objectKey": "synthetic-1/credential-id",
+        "subjectId": "student-id",
+        "title": "证号更正"
+      }
+    ]
+  }
+}

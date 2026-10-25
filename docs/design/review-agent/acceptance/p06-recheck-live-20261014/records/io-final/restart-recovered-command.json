@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-14T16:18:32.299773+00:00",
+  "sourceSha": "d24d1c2d69ae25ff47a080155041cc62620a6bf9",
+  "operation": "restore only isolated permissions then SIGKILL isolated Main and start fresh process",
+  "oldMainPid": 1075318,
+  "configAndRunDirMode": "0700",
+  "ownerJournalMode": "0600",
+  "originalRunFileRemains": "0400"
+}

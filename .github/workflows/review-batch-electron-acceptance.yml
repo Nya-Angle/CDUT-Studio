@@ -1,0 +1,88 @@
+name: Review batch Electron acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/qa/batch-premerge-*'
+      - '.github/workflows/review-batch-electron-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  electron-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PROFER_DEV: '1'
+      PROFER_DEV_INSTANCE: 'review-batch-e2e'
+      PROFER_VITE_PORT: '5176'
+      CI: 'true'
+      GTK_USE_PORTAL: '0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Set isolated QA paths
+        shell: bash
+        run: |
+          echo "QA_PROFILE_ROOT=$RUNNER_TEMP/batch-premerge-qa-$GITHUB_RUN_ID" >> "$GITHUB_ENV"
+          echo "PROFER_CONFIG_DIR=$RUNNER_TEMP/batch-premerge-qa-$GITHUB_RUN_ID/config" >> "$GITHUB_ENV"
+          echo "PROFER_USER_DATA_DIR=$RUNNER_TEMP/batch-premerge-qa-$GITHUB_RUN_ID/user-data" >> "$GITHUB_ENV"
+          echo "QA_REPORT_DIR=$RUNNER_TEMP/batch-premerge-qa-$GITHUB_RUN_ID/artifacts" >> "$GITHUB_ENV"
+      - name: Install desktop dependencies and Bun workspace
+        shell: bash
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgtk-3-0 libnss3 libgbm1 libasound2t64 fonts-noto-cjk
+          bun install --frozen-lockfile
+      - name: Generate synthetic fixtures and build Electron
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$QA_REPORT_DIR" "$PROFER_USER_DATA_DIR"
+          git rev-parse HEAD | tee "$QA_REPORT_DIR/commit-sha.txt"
+          node scripts/qa/batch-premerge-seed.mjs | tee "$QA_REPORT_DIR/seed.json"
+          (cd apps/electron && bun run build:main && bun run build:preload && bun run build:resources)
+      - name: Replay renderer UI and real IPC
+        shell: bash
+        timeout-minutes: 12
+        run: |
+          set -euo pipefail
+          ELECTRON_PID=""
+          VITE_PID=""
+          cleanup() {
+            if [[ -n "$ELECTRON_PID" ]]; then kill "$ELECTRON_PID" || true; fi
+            if [[ -n "$VITE_PID" ]]; then kill "$VITE_PID" || true; fi
+          }
+          trap cleanup EXIT
+          (cd apps/electron && bun run dev:vite) > "$QA_REPORT_DIR/vite.log" 2>&1 &
+          VITE_PID=$!
+          for attempt in $(seq 1 100); do
+            if curl --silent --fail http://localhost:5176/ > /dev/null; then break; fi
+            sleep 1
+          done
+          curl --silent --fail http://localhost:5176/ > /dev/null
+          (cd apps/electron && xvfb-run -a bunx electron . --no-sandbox --disable-gpu --password-store=basic --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222) > "$QA_REPORT_DIR/electron.log" 2>&1 &
+          ELECTRON_PID=$!
+          node scripts/qa/batch-premerge-electron.mjs
+          test ! -e "$QA_PROFILE_ROOT/path-poc"
+          echo "No unexpected filesystem path observed" > "$QA_REPORT_DIR/path-side-effects.txt"
+      - name: Independent service regressions
+        if: always()
+        shell: bash
+        run: |
+          bun test --isolate --timeout 30000 apps/electron/src/main/lib/review/review-ipc-path.test.ts apps/electron/src/main/lib/review/review-storage-id.test.ts apps/electron/src/renderer/components/content-review/batch-ui-feedback.test.ts > "$QA_REPORT_DIR/focused-service-tests.log" 2>&1
+      - name: Upload actual logs and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: batch-electron-qa-${{ github.run_id }}
+          path: ${{ env.QA_REPORT_DIR }}
+          retention-days: 14
+          if-no-files-found: warn

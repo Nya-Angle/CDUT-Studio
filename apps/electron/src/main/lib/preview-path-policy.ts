@@ -18,6 +18,7 @@ import { existsSync, realpathSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join, resolve, sep } from 'node:path'
 import { getConfigDir } from './config-paths'
+import { isReviewPrivateDesktopPath } from './review-private-file-access'
 
 /** 系统敏感目录——这些位置下的文件不参与只读预览 */
 export const SYSTEM_SENSITIVE_ROOTS: string[] = (() => {
@@ -107,7 +108,7 @@ export interface PreviewPathPolicy {
  * 注意：这里刻意不要求路径落在会话授权根内，见文件头说明。
  */
 export function isReadOnlyPreviewPathAllowed(filePath: string, policy?: PreviewPathPolicy): boolean {
-  if (!filePath) return false
+  if (!filePath || isReviewPrivateDesktopPath(filePath)) return false
   // 路径必须真实存在（预览本来也读不到内容）；realpath 同时消解符号链接，
   // 指向 ~/.ssh 的软链会被下面的边界拦下。
   if (!existsSync(filePath)) return false

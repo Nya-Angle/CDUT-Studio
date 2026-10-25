@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "status": "AUTHOR_CANDIDATE_NOT_YET_EXECUTED",
+  "domain": "G01",
+  "key": "A",
+  "templateId": "g01-archive-utilization",
+  "templateVersion": 1,
+  "businessSource": {
+    "file": "g01_archive_utilization_template_editor_spec_v1_5.md",
+    "version": "v1.5",
+    "sha256": "65157e002dd4d1ccc08d32d341b4a1f7eacfc55d6a3c13a5da949aaf122f9785",
+    "gitBlobSha": "2f36f7de8eed196a1483e7410bf25575922117df",
+    "archivePath": "docs/design/review-agent/business-templates/G01/originals/g01_archive_utilization_template_editor_spec_v1_5.md"
+  },
+  "technicalSha": "a7a6a11d4840ad64cfc858c17b35f35180adf063",
+  "parent": "COMMON PR #88",
+  "moduleCount": 15,
+  "checkDefinitionCount": 146,
+  "sourceBindings": 146,
+  "sourceCatalogueEntries": 145,
+  "ruleRowCount": 42,
+  "fieldRowCount": 50,
+  "branchRowCount": 0,
+  "genericObjects": 2,
+  "gold": "NOT_GENERATED",
+  "onlinePiModel": "NOT_RUN",
+  "formalApproval": false,
+  "engineLimitations": [
+    "授权校规、院系签章与来源均未认证",
+    "复杂 claim/evidence 图不能自动转换",
+    "选择条件经 reviewer 合成声明，不是模型自动判真"
+  ],
+  "readme": "README.md"
+}

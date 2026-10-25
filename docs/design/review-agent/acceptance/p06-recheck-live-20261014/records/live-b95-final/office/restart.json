@@ -1,0 +1,6 @@
+{
+  "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+  "oldMainPid": 1148921,
+  "operation": "SIGKILL isolated Main after persisted ordinary provider reply, then real fresh process for restoration",
+  "at": "2026-10-14T16:32:43.585606+00:00"
+}

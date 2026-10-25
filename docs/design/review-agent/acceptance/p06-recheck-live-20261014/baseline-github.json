@@ -1,0 +1,52 @@
+{
+  "sourceSha": "4ba61fad77b18f8fa9a25babeb25e9c08d5304fe",
+  "observedAt": "2026-10-14T10:50:34.927Z",
+  "pr": {
+    "url": "https://github.com/Fuck-GH-Admin/cdut-studio-review-agent/pull/21",
+    "state": "open",
+    "draft": true,
+    "merged": false
+  },
+  "workflowRuns": [
+    {
+      "id": 38539155921,
+      "name": "PR CI",
+      "status": "completed",
+      "conclusion": "success",
+      "run_number": 594,
+      "jobs_url": "https://api.github.com/repos/Fuck-GH-Admin/cdut-studio-review-agent/actions/runs/38539155921/jobs",
+      "logs_url": "https://api.github.com/repos/Fuck-GH-Admin/cdut-studio-review-agent/actions/runs/38539155921/logs",
+      "workflow_id": 376891930
+    },
+    {
+      "id": 38539155729,
+      "name": "Review Baseline CI",
+      "status": "completed",
+      "conclusion": "success",
+      "run_number": 365,
+      "jobs_url": "https://api.github.com/repos/Fuck-GH-Admin/cdut-studio-review-agent/actions/runs/38539155729/jobs",
+      "logs_url": "https://api.github.com/repos/Fuck-GH-Admin/cdut-studio-review-agent/actions/runs/38539155729/logs",
+      "workflow_id": 380705673
+    },
+    {
+      "id": 38539155645,
+      "name": "Review batch focused tests",
+      "status": "completed",
+      "conclusion": "success",
+      "run_number": 177,
+      "jobs_url": "https://api.github.com/repos/Fuck-GH-Admin/cdut-studio-review-agent/actions/runs/38539155645/jobs",
+      "logs_url": "https://api.github.com/repos/Fuck-GH-Admin/cdut-studio-review-agent/actions/runs/38539155645/logs",
+      "workflow_id": 379912618
+    },
+    {
+      "id": 38539155737,
+      "name": "D2 Scoped Pi Review Tests",
+      "status": "completed",
+      "conclusion": "success",
+      "run_number": 317,
+      "jobs_url": "https://api.github.com/repos/Fuck-GH-Admin/cdut-studio-review-agent/actions/runs/38539155737/jobs",
+      "logs_url": "https://api.github.com/repos/Fuck-GH-Admin/cdut-studio-review-agent/actions/runs/38539155737/logs",
+      "workflow_id": 380737909
+    }
+  ]
+}

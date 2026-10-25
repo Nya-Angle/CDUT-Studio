@@ -1,0 +1,4 @@
+{"id":"E06-PI-READ-TOOL","status":"PASS","assertions":3}
+{"id":"E06-PI-PERMISSION-DENY-RECOVER","status":"PASS","assertions":4}
+{"id":"E06-PI-STOP-IN-FLIGHT","status":"PASS","assertions":2}
+{"id":"E06-DESKTOP-TEXT-PREVIEW","status":"PASS","assertions":3}

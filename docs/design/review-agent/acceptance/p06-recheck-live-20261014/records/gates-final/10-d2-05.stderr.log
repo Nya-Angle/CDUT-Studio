@@ -1,0 +1,23 @@
+
+apps/electron/src/main/lib/review/template-store.test.ts:
+(pass) 审核模板目录（M1） > 模板 ID 支持中文名称并拒绝路径穿越字符 [0.24ms]
+(pass) 审核模板目录（M1） > 旧版本地综测模板读取时补齐申报表/证明材料生命周期默认值 [1.31ms]
+(pass) 审核模板目录（M1） > 内置模板与开源参考范本都能通过结构校验 [1.24ms]
+(pass) 审核模板目录（M1） > 新版综测模板即使尚未预登记事项也会生成整案分项检查 [5.53ms]
+(pass) 审核模板目录（M1） > 必需审核分项没有标准时不能发布模板 [0.72ms]
+(pass) 审核模板目录（M1） > 新草稿版本存在时仍可读取并使用之前的已发布版本 [4.31ms]
+(pass) 审核模板目录（M1） > Given 内置草稿 When ensureBuiltinTemplateDrafts Then 幂等落盘且可发布 [6.29ms]
+(pass) 审核模板目录（M1） > 模板库支持排序、移出与恢复；历史版本仍可读取 [6.19ms]
+(pass) 审核模板目录（M1） > Given 已发布版本 When 停用 Then 状态 deprecated 且历史可读 [0.46ms]
+(pass) 发布检查（02 §5.6） > Given 悬空条件引用 When validate Then error 指出缺失字段 [0.12ms]
+(pass) 发布检查（02 §5.6） > Given 流程重复阶段 When validate Then 报循环/重复 [0.06ms]
+(pass) 发布检查（02 §5.6） > Given 阶段链遗漏终审 When validate Then 阻止发布且内置基金模板链路闭合 [0.16ms]
+(pass) 发布检查（02 §5.6） > Given 下一阶段连成循环 When validate Then 阻止无法终止的流程发布 [0.09ms]
+(pass) 发布检查（02 §5.6） > Given 旧版内置基金草稿 When 启动初始化 Then 保留旧版本并新增闭环草稿 [1.75ms]
+(pass) 发布检查（02 §5.6） > Given 非法量表 When validate Then 报权重/范围错误 [0.07ms]
+(pass) 第七种业务只靠配置创建（D12/K14） > Given 实验室使用申请配置 When validate+publish Then 通过且无学年/申报分字段 [0.63ms]
+
+ 16 pass
+ 0 fail
+ 59 expect() calls
+Ran 16 tests across 1 file. [84.00ms]

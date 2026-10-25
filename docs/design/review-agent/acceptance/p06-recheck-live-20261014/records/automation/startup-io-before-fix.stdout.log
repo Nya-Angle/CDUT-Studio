@@ -1,0 +1,14 @@
+bun test v1.4.0 (34cbb9a40)
+[配置] 已创建 SDK 配置目录: /tmp/review-startup-io-8yxkXq/sdk-config
+[审核模板] 已发布: startup-SESSION_2113e15b6935@1
+[配置] 已创建 Agent 会话目录: /tmp/review-startup-io-8yxkXq/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/review-startup-io-8yxkXq/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/review-startup-io-8yxkXq/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/review-startup-io-8yxkXq/agent-workspaces/default/SESSION_871f1857615f
+[Agent 会话] 已创建会话: 合成 owner (SESSION_871f1857615f)
+[审核模板] 已发布: startup-SESSION_1ea7ac039a98@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-startup-io-8yxkXq/agent-workspaces/default/SESSION_c10e9a7706dd
+[Agent 会话] 已创建会话: 合成 owner (SESSION_c10e9a7706dd)
+[审核模板] 已发布: startup-SESSION_130daf8dfbd5@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-startup-io-8yxkXq/agent-workspaces/default/SESSION_8839781c480c
+[Agent 会话] 已创建会话: 合成 owner (SESSION_8839781c480c)

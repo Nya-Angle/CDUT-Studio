@@ -30,7 +30,7 @@ import type {
 import { FEISHU_IPC_CHANNELS, AGENT_IPC_CHANNELS, isVisibleAgentSession, resolveAgentAttachmentPrompt } from '@profer/shared'
 import { getDecryptedBotAppSecret } from './feishu-config'
 import { agentEventBus, runAgentHeadless, stopAgent } from './agent-service'
-import { createAgentSession, listAgentSessions, getAgentSessionMeta } from './agent-session-manager'
+import { createAgentSession, listAgentSessions, getAgentSessionMeta, isReviewOwnedOrDeletedAgentSessionId } from './agent-session-manager'
 import {
   listAgentWorkspacesByUpdatedAt,
   getAgentWorkspace,
@@ -365,7 +365,7 @@ class FeishuBridge {
       for (const b of bindings) {
         // 验证对应会话仍然存在
         const session = getAgentSessionMeta(b.sessionId)
-        if (session) {
+        if (session && !isReviewOwnedOrDeletedAgentSessionId(b.sessionId)) {
           // 同步最新的渠道和模型设置（用户可能已更改）
           if (appSettings.agentChannelId) {
             b.channelId = appSettings.agentChannelId
@@ -442,13 +442,17 @@ class FeishuBridge {
   }
 
   listBindings(): FeishuChatBinding[] {
-    return Array.from(this.chatBindings.values())
+    const visible = Array.from(this.chatBindings.values()).filter((binding) =>
+      !isReviewOwnedOrDeletedAgentSessionId(binding.sessionId))
+    if (this.status.activeBindings !== visible.length) this.updateStatus({ activeBindings: visible.length })
+    return visible
   }
 
   /** 更新绑定的工作区/会话（从设置页调用） */
   updateBinding(input: FeishuUpdateBindingInput): FeishuChatBinding | null {
     const binding = this.chatBindings.get(input.chatId)
-    if (!binding) return null
+    if (!binding || isReviewOwnedOrDeletedAgentSessionId(binding.sessionId)
+      || (input.sessionId !== undefined && isReviewOwnedOrDeletedAgentSessionId(input.sessionId))) return null
 
     if (input.workspaceId !== undefined) {
       binding.workspaceId = input.workspaceId
@@ -484,6 +488,7 @@ class FeishuBridge {
    * source=session-mirror 的绑定回到同一个 Profer session。
    */
   async ensureSessionMirror(session: AgentSessionMeta): Promise<void> {
+    if (isReviewOwnedOrDeletedAgentSessionId(session.id)) return
     if (!this.client) return
 
     const existing = this.findBindingBySessionId(session.id)
@@ -534,6 +539,7 @@ class FeishuBridge {
 
   /** Agent 运行前为桌面 Session 镜像打开流式卡片。 */
   async startSessionMirrorRun(session: AgentSessionMeta): Promise<void> {
+    if (isReviewOwnedOrDeletedAgentSessionId(session.id)) return
     if (!this.client) return
     await this.ensureSessionMirror(session)
 
@@ -563,6 +569,7 @@ class FeishuBridge {
   }
 
   stopSessionMirrorRun(sessionId: string): void {
+    if (isReviewOwnedOrDeletedAgentSessionId(sessionId)) return
     this.markStreamingInterrupted(sessionId)
   }
 
@@ -1225,6 +1232,10 @@ class FeishuBridge {
       await this.sendMessage(chatId, '当前没有绑定的会话。')
       return
     }
+    if (isReviewOwnedOrDeletedAgentSessionId(binding.sessionId)) {
+      await this.sendMessage(chatId, '当前会话不可用。')
+      return
+    }
 
     stopAgent(binding.sessionId)
     this.markStreamingInterrupted(binding.sessionId)
@@ -1344,7 +1355,12 @@ class FeishuBridge {
 
   private async handleNowCommand(msgCtx: FeishuMessageContext): Promise<void> {
     const { chatId } = msgCtx
-    const binding = this.chatBindings.get(chatId)
+    const storedBinding = this.chatBindings.get(chatId)
+    if (storedBinding && isReviewOwnedOrDeletedAgentSessionId(storedBinding.sessionId)) {
+      await this.sendMessage(chatId, '当前会话不可用。')
+      return
+    }
+    const binding = storedBinding
 
     const lines: string[] = []
 
@@ -1453,6 +1469,11 @@ class FeishuBridge {
    */
   private async handleModelCommand(msgCtx: FeishuMessageContext, arg: string): Promise<void> {
     const { chatId } = msgCtx
+    const currentBinding = this.chatBindings.get(chatId)
+    if (currentBinding && isReviewOwnedOrDeletedAgentSessionId(currentBinding.sessionId)) {
+      await this.sendMessage(chatId, '当前会话不可用。')
+      return
+    }
     const channels = listSwitchableChannels()
     if (channels.length === 0) {
       await this.sendMessage(
@@ -1538,6 +1559,11 @@ class FeishuBridge {
   ): Promise<void> {
     const { chatId } = msgCtx
     let binding = this.chatBindings.get(chatId)
+
+    if (binding && isReviewOwnedOrDeletedAgentSessionId(binding.sessionId)) {
+      await this.sendMessage(chatId, '当前会话不可用。请联系管理员重新绑定普通会话。')
+      return
+    }
 
     // 自动创建会话
     if (!binding) {
@@ -1730,6 +1756,7 @@ class FeishuBridge {
   // ===== EventBus 事件处理 =====
 
   private handleAgentPayload(sessionId: string, payload: AgentStreamPayload): void {
+    if (isReviewOwnedOrDeletedAgentSessionId(sessionId)) return
     // 对于飞书发起的会话，缓冲由 handleUserMessage 初始化
     // 对于桌面发起的会话，complete 事件时检查是否需要通知
     const buffer = this.sessionBuffers.get(sessionId)

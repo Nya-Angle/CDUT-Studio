@@ -1,0 +1,1 @@
+{"id":"E06-PREVIEW-RESTORE-prepare","status":"FAIL","assertions":2,"error":"Error: 真实运行条件未达到：!!document.querySelector(\".react-pdf__Page__canvas\")"}

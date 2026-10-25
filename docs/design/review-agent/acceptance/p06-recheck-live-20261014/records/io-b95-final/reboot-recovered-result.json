@@ -1,0 +1,57 @@
+{
+  "id": "reboot-recovered",
+  "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+  "status": "PASS",
+  "assertions": [
+    {
+      "name": "重启后旧工具授权仍拒绝",
+      "pass": true
+    },
+    {
+      "name": "重启后旧 Pi binding 不复活",
+      "pass": true
+    },
+    {
+      "name": "可写恢复后 V2 interrupted 终态已落盘",
+      "pass": true
+    }
+  ],
+  "timeline": [
+    {
+      "at": "2026-10-14T16:31:36.948Z",
+      "event": "fresh-electron-main-authorization",
+      "pid": 1148921,
+      "runStatus": "failed",
+      "toolAllowed": false,
+      "bindingReturned": false,
+      "main": {
+        "caseId": "case-1791975357085-tbbbrx",
+        "runId": "run-pi-mv8brpb6-m0tdz",
+        "runStatus": "failed",
+        "completedAt": "2026-10-14T16:31:20.287Z",
+        "phase": "incomplete"
+      }
+    }
+  ],
+  "realIpcState": {
+    "caseId": "case-1791975357085-tbbbrx",
+    "runId": "run-pi-mv8brpb6-m0tdz",
+    "runStatus": "failed",
+    "completedAt": "2026-10-14T16:31:20.287Z",
+    "phase": "incomplete"
+  },
+  "snapshot": {
+    "pid": 1148921,
+    "runStatus": "failed",
+    "toolAllowed": false,
+    "bindingReturned": false,
+    "main": {
+      "caseId": "case-1791975357085-tbbbrx",
+      "runId": "run-pi-mv8brpb6-m0tdz",
+      "runStatus": "failed",
+      "completedAt": "2026-10-14T16:31:20.287Z",
+      "phase": "incomplete"
+    }
+  },
+  "finishedAt": "2026-10-14T16:31:36.957Z"
+}

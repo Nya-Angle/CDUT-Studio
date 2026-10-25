@@ -1,0 +1,148 @@
+{
+  "templateId": "g08-t03",
+  "version": 1,
+  "targets": [
+    {
+      "kind": "generic-object",
+      "objectKey": "complaint-issue-a",
+      "subjectId": "issue-a",
+      "title": "合成初次建议",
+      "businessType": "g08-complaint-issue",
+      "scenario": "initial",
+      "scenarioSource": {
+        "sourceId": "controlled-selection",
+        "sourceVersionId": "g08-t03-selection-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "sensitive",
+          "applicability": "not-applicable",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t03-selection-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "urgent",
+          "applicability": "unknown",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t03-selection-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "multi",
+          "applicability": "applicable",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t03-selection-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "school",
+          "applicability": "applicable",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t03-selection-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "college",
+          "applicability": "not-applicable",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t03-selection-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "shandong",
+          "applicability": "not-applicable",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t03-selection-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "evidence",
+          "applicability": "not-applicable",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t03-selection-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "event",
+          "applicability": "unknown",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t03-selection-v1",
+          "decidedBy": "undetermined"
+        }
+      ]
+    },
+    {
+      "kind": "generic-object",
+      "objectKey": "complaint-issue-b",
+      "subjectId": "issue-b",
+      "title": "合成原工单评价待查",
+      "businessType": "g08-complaint-issue",
+      "scenario": "feedback",
+      "scenarioSource": {
+        "sourceId": "controlled-selection",
+        "sourceVersionId": "g08-t03-selection-v1",
+        "decidedBy": "reviewer"
+      },
+      "conditions": [
+        {
+          "id": "sensitive",
+          "applicability": "unknown",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t03-selection-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "urgent",
+          "applicability": "not-applicable",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t03-selection-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "multi",
+          "applicability": "applicable",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t03-selection-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "school",
+          "applicability": "not-applicable",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t03-selection-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "college",
+          "applicability": "not-applicable",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t03-selection-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "shandong",
+          "applicability": "unknown",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t03-selection-v1",
+          "decidedBy": "undetermined"
+        },
+        {
+          "id": "evidence",
+          "applicability": "applicable",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t03-selection-v1",
+          "decidedBy": "reviewer"
+        },
+        {
+          "id": "event",
+          "applicability": "unknown",
+          "sourceId": "controlled-selection",
+          "sourceVersionId": "g08-t03-selection-v1",
+          "decidedBy": "undetermined"
+        }
+      ]
+    }
+  ]
+}

@@ -42,6 +42,8 @@ export interface FieldSpec {
   visibility: 'public' | 'internal'
   /** N1a（07 §2.1）：作用域 case/subject（缺省 subject 兼容旧模板） */
   scope?: 'case' | 'subject'
+  /** subject 字段仅属于此审核分项；未填写时可用于所有分项。 */
+  sectionId?: string
   /** 枚举可选项（kind='enum' 时应提供） */
   options?: Array<{ value: string; label: string }>
   defaultValue?: unknown
@@ -77,6 +79,8 @@ export interface SourceRef {
   documentVersionId: string
   parseRevision: number
   location: SourceLocation
+  /** 原文摘录（若解析器只提供 file 级位置，仍保留模型引用的短文本）。 */
+  quote?: string
 }
 
 /** 文档版本（同名文件不同版本；原始文件不改写；解析状态与审核使用状态分开） */
@@ -95,14 +99,38 @@ export interface DocumentVersion {
   parseStatus: 'pending' | 'parsed' | 'partial' | 'failed'
   parseError?: string
   /** 解析产物：文本块（带位置）与表格/图片资产索引（M2 扩展） */
-  blocks: Array<{ blockId: string; text: string; location?: SourceLocation; kind: 'text' | 'image' | 'table' }>
+  blocks: Array<{
+    blockId: string
+    text: string
+    location?: SourceLocation
+    kind: 'text' | 'image' | 'table'
+    /** Office 文档的块级结构信息，保留标题、列表与表格单元格语义。 */
+    format?: 'heading' | 'paragraph' | 'list-item' | 'table-cell' | 'ocr-text' | 'vision-text'
+    ocr?: { imageBlockId: string; engine: string; confidence: number; rect: { x: number; y: number; w: number; h: number } }
+    vision?: { imageBlockId: string; engine: string }
+    table?: { row: number; column: number }
+    imageAlt?: string
+    imageAssetPath?: string
+  }>
   /** 审核使用状态：登记≠已读（03 §6 材料账本） */
   usage: 'registered' | 'read' | 'partially-read' | 'unread'
   unusedReason?: string
+  /** 审核员已明确确认打开并核对原件；可弥补解析失败材料没有机器可读文本的情况。 */
+  manualReadReceipt?: { actorId: string; reason: string; at: string }
   /** N2c/G01：版本链（同名替换旧版不参与新审核）与原件字节身份 */
   active?: boolean
   supersedesVersionId?: string
   byteHash?: string
+  /** 人工改类确认；只表示材料归类，不表示规则、政策或事实已经核验。 */
+  classificationCorrection?: { role: DocumentVersion['role']; materialSlotId?: string | null; at: string }
+  /** C Main 的自动分类回执；仅代表分拣结果，不是人工确认/审核结论。 */
+  automaticClassification?: {
+    role: 'rule' | 'application' | 'evidence'
+    materialSlotId?: string
+    source: 'local-rules' | 'same-byte-confirmation' | 'local-ocr' | 'ai'
+    reason: string
+    at: string
+  }
 }
 
 // ===== 模板与规则 =====
@@ -114,11 +142,66 @@ export interface MaterialSlotSpec {
   purpose: string
   requiredWhen?: ConditionAST
   acceptedKinds: Array<'pdf' | 'image' | 'office' | 'sheet' | 'text' | 'zip'>
+  /** 可选的语义角色约束；文件扩展名正确不代表材料类别正确。未声明时保持旧模板兼容。 */
+  acceptedRoles?: Array<DocumentVersion['role']>
   minCount: number
+  /** 缺少材料在哪个生命周期阶段阻断；旧模板默认 submission。 */
+  requiredAt?: 'submission' | 'decision'
+  /**
+   * Initial-review gate for this specific slot:
+   * - block: the declared material is critical before starting Pi;
+   * - defer (default): Pi can start with a pending supplement, but the
+   *   final decision must still verify this slot.
+   * This is template-specific, not a global "number of missing files" limit.
+   */
+  initialReviewPolicy?: 'block' | 'defer'
   maxCount: number
   /** 关键要素：Agent 提取与人工检查的要点 */
   requiredElements: string[]
   allowReuseAcrossSubjects: boolean
+  /** 该材料槽仅服务某个审核分项；未填写时为整份案卷共用。 */
+  sectionId?: string
+  /** 可选的确定性分类提示；仅用于候选排序，不能作为政策或审批授权。 */
+  classificationHints?: {
+    aliases?: string[]
+    positiveKeywords?: string[]
+    negativeKeywords?: string[]
+    headerKeywords?: string[]
+  }
+}
+
+/** 有限的工作簿检查定义；模板只能选择固定操作，不接受脚本或任意公式。 */
+export interface TemplateSheetCheckSpec {
+  kind: 'sheet-sum-match' | 'sheet-unique-values'
+  materialSlotId: string
+  sheetName?: string
+  firstDataRow: number
+  valueColumn: string
+  labelColumn?: string
+  stopLabels?: string[]
+  applicantFieldKey?: string
+  quantityColumn?: string
+  unitPriceColumn?: string
+}
+
+/** 模板中的一项审核标准；语义规则交给 Agent，人工规则进入同案待办。 */
+export interface TemplateCriterionSpec {
+  id: string
+  title: string
+  requirement: string
+  execution: 'deterministic' | 'semantic' | 'manual'
+  targetScope: 'subject' | 'group' | 'case'
+  dataCheck?: TemplateSheetCheckSpec
+}
+
+/** 一个案卷内的审核分项。所有分项共享同一个 ReviewCase 与同一次运行。 */
+export interface TemplateSectionSpec {
+  id: string
+  name: string
+  description?: string
+  order: number
+  required: boolean
+  criteria: TemplateCriterionSpec[]
 }
 
 /** 规则执行类型（03 §4：确定/语义/人工三路） */
@@ -129,6 +212,8 @@ export interface RuleSpec {
   id: string
   policyVersionId: string
   title: string
+  /** 规则限定到同案中的审核分项；未填写时作用于整案。 */
+  sectionId?: string
   /** 适用对象/条件 */
   when: ConditionAST
   /** 检查要求（确定性规则为条件树/计算定义；语义规则为标准描述） */
@@ -160,6 +245,10 @@ export interface RuleSpec {
   effectiveFrom?: string
   effectiveUntil?: string
   exceptions?: Array<{ when: ConditionAST; note: string }>
+  /** 由审核依据大纲编译的约束；旧版政策规则缺失时保持兼容。 */
+  workspaceConstraint?: import('./review').RuleConstraint
+  /** 模板提供的有限数据操作；不会执行模板中的代码。 */
+  dataCheck?: TemplateSheetCheckSpec
 }
 
 /** 政策版本：一组规则 + 原始文档来源（不可变） */
@@ -212,12 +301,24 @@ export interface TemplateVersion {
   version: number
   schemaVersion: 2
   name: string
+  /** 模板库展示说明；用于说明适用场景与初始化边界。 */
+  description?: string
+  /** 供统一路由与目录搜索使用的业务关键词；不得被当作政策或审批规则。 */
+  keywords?: string[]
+  /** 业务别名/常见简称，参与精确匹配与搜索排序。 */
+  aliases?: string[]
+  /** 模板来源类别：项目内置、开源项目启发或用户自建。 */
+  catalogKind?: 'builtin' | 'reference' | 'custom'
+  /** 开源参考来源与使用边界，不代表采纳了其学校规则或分值。 */
+  sourceNote?: string
   /** 审核对象类型（02 §5.1：个人/组织/项目/文件/交易/自定义） */
   objectType: 'person' | 'organization' | 'project' | 'document' | 'transaction' | 'custom'
   /** 主体展示名来源（学年不是全局必填） */
   displayName: { template: string }
   fields: FieldSpec[]
   materialSlots: MaterialSlotSpec[]
+  /** 多分项审核配置；旧模板缺省表示整案审核。 */
+  sections?: TemplateSectionSpec[]
   policyVersionIds: string[]
   /** N1b：精确政策引用（ID+版本+内容 hash；与 policyVersionIds 并存，发布校验以此为准） */
   policyRefs?: import('./review-v2-contracts').PolicyRef[]
@@ -227,6 +328,13 @@ export interface TemplateVersion {
   /** 默认能力开关：辅助审核 / 限定条件自动通过 */
   autoPassPolicy?: { enabled: boolean; conditions?: ConditionAST }
   status: 'draft' | 'published' | 'deprecated'
+  /**
+   * Main 发布时派生的执行范围（不接受作者自填）：
+   * - rules：至少一条 authored 审核标准，可据此生成规则/检查；
+   * - material-manual-only：没有任何审核标准，只能核对材料与人工办理。
+   * 发布门禁据此区分“业务规则模板”和“仅材料完整性模板”。
+   */
+  executionScope?: 'rules' | 'material-manual-only'
   /** 兼容 V1 领域包词汇（展示标签/提示沿用） */
   domainPackId?: ReviewDomainPackId
   createdAt: string
@@ -247,6 +355,8 @@ export interface ReviewSubject {
   id: string
   type: 'item' | 'clause' | 'project' | 'budget-line' | 'custom'
   title: string
+  /** 事项所属审核分项；同一案卷可包含多个分项。 */
+  sectionId?: string
   fields: Record<string, FieldValue>
   sourceRefs: SourceRef[]
   /** 修正层：ai-extracted → user-confirmed（保留原值可回溯） */
@@ -266,15 +376,27 @@ export interface ReviewCaseV2 {
   objectType: TemplateVersion['objectType']
   /** 案卷级字段（申请人/周期等，按模板） */
   caseFields: Record<string, FieldValue>
+  /**
+   * C1 native three-column compatibility DRAFT state (never a published
+   * PolicyVersion, CanonicalPlan, or signed BusinessDecision).
+   * Current source scope is version-pinned so replaced documents are not
+   * silently re-admitted through an old stable documentId.
+   */
+  nativeWorkspaceDraft?: {
+    manualRules: Array<{ id: string; title: string; requirement: string }>
+    subjectDocumentVersionIds?: string[]
+  }
   subjects: ReviewSubject[]
   documents: DocumentVersion[]
+  /** 从当前工作台审核依据生成的可追溯规则快照（迁移期与模板政策并行）。 */
+  reviewRules?: RuleSpec[]
   stage: CaseStage
   /** 乐观并发：每次业务写入 +1（03 §7 expectedRevision） */
   revision: number
   createdAt: string
   updatedAt: string
   /** 提交者主体（本地模式为 local 身份） */
-  submitter?: { actorId: string; actorSource: 'local' | 'mock' | 'school' }
+  submitter?: { actorId: string; actorSource: ActorSource }
 }
 
 // ===== 事实与证据 =====
@@ -324,6 +446,8 @@ export interface CheckResult {
   /** 状态理由（not-applicable 带条件理由；not-executed 带原因） */
   reason: string
   sourceRefs: SourceRef[]
+  /** 本次结论实际使用的事实、证明关联和出处，可供审核员追溯。 */
+  basis?: { observationIds: string[]; evidenceLinkIds: string[]; sourceRefs: SourceRef[] }
   /** 确定计算明细（数值规则） */
   calculation?: {
     inputs: Array<{ key: string; value: number; from: string }>
@@ -351,14 +475,28 @@ export interface AiOpinion {
 }
 
 /** 人工处理状态（02 §7：忽略是有理由的处理，不自动成为符合） */
-export type FindingDisposition = 'pending' | 'confirmed-issue' | 'false-positive' | 'supplement-requested' | 'waived' | 'escalated'
+export type FindingDisposition = 'pending' | 'confirmed-issue' | 'human-confirmed-compliant' | 'false-positive' | 'supplement-requested' | 'waived' | 'escalated'
 
 export interface FindingDispositionRecord {
   findingKey: string
   disposition: FindingDisposition
-  actor: { actorId: string; actorSource: 'local' | 'mock' | 'school'; role: RoleId }
+  actor: Actor
   reason: string
   at: string
+}
+
+/** 审核员对单个申报事项的最终认定；更正通过 supersedes 链追加，保留历史。 */
+export interface SubjectAdjudication {
+  id: string
+  subjectId: string
+  outcome: 'accepted' | 'rejected' | 'modified'
+  finalFields?: Record<string, FieldValue>
+  reason: string
+  basedOnRunId: string
+  inputHash: string
+  actor: Actor
+  at: string
+  supersedesAdjudicationId?: string
 }
 
 // ===== 运行 =====
@@ -391,6 +529,21 @@ export interface ReviewRunV2 {
     documentVersions: Array<{ documentId: string; versionId: string; contentHash: string }>
     observationIds: string[]
     evidenceLinkIds: string[]
+    effectiveRuleIds?: string[]
+    effectiveRuleSetHash?: string
+    /** 每条有效规则依赖的事实字段；语义规则使用 * 表示依赖材料中的事实。 */
+    effectiveRuleDependencies?: Array<{ ruleId: string; fieldKeys: string[] }>
+    /**
+     * 本次运行冻结的已发布模板计划指纹（ARCH-CLOSURE-R01 D1）。
+     * 旧运行没有该字段表示「未绑定计划」，不得据此推断计划已通过。
+     */
+    planFingerprint?: string
+    /** F03：真实冻结计划身份。D2 只有技术任务包，不得冒充 C0 PlanId。 */
+    frozenPlan?:
+      | { kind: 'published-template'; planId: string; fingerprint: string; bindings: import('./review-v3-c0').PlanBinding[] }
+      | { kind: 'd2-technical'; fingerprint: string; mapping: import('./review-d2').D2RuleBinding[] }
+    /** 每个 Pi Check 的不可变规则与目标快照；状态/引文后续可填，目标不能偷换。 */
+    plannedCheckBindings?: Array<{ checkId: string; ruleId: string; target: CheckResult['target'] }>
   }
   status: RunV2Status
   checkpoints: CheckpointRecord[]
@@ -405,12 +558,16 @@ export interface ReviewRunV2 {
     pendingChecks: number
   }
   /** 实际模型/解析版本与诊断用量（H16） */
-  modelUsage?: Array<{ purpose: string; channel: string; model: string; protocol: string; tokens?: number; ms?: number }>
+  modelUsage?: Array<{ purpose: string; channel: string; model: string; protocol: string; tokens?: number; inputTokens?: number; outputTokens?: number; cacheReadInputTokens?: number; ms?: number }>
   parseVersions?: Array<{ documentId: string; parseRevision: number }>
+  /** Pi 审核 Agent 本次按需调用的案卷能力摘要，用于界面复查其材料读取路径。 */
+  agentActivity?: string[]
   diagnostics: string[]
   startedAt: string
   completedAt?: string
   error?: string
+  /** 运行发起者（08 设计：时间线可辨人工/AI）；旧运行无此字段按"未记录"呈现 */
+  initiatedBy?: Actor
 }
 
 // ===== 业务决定与任务 =====
@@ -418,7 +575,7 @@ export interface ReviewRunV2 {
 /** 业务决定：AI 建议不是决定（02 §7） */
 export interface BusinessDecision {
   id: string
-  actor: { actorId: string; actorSource: 'local' | 'mock' | 'school'; role: RoleId }
+  actor: Actor
   scope: { kind: 'subject' | 'case'; ids: string[] }
   stageId: string
   result: 'pass' | 'partial-pass' | 'return' | 'reject' | 'withdraw'
@@ -448,6 +605,10 @@ export interface SupplementRequest {
   status: 'open' | 'responded' | 'satisfied' | 'insufficient' | 'cancelled'
   responses: Array<{ id: string; documentVersionIds: string[]; note: string; at: string; actor: string }>
   createdAt: string
+  /** 本地审核员模拟补件时，用于只接收请求创建后新增的材料版本。 */
+  documentVersionIdsAtRequest?: string[]
+  /** 初审缺件请求的来源 Run；与正式阶段退回补件（originStageId）区分。 */
+  originRunId?: string
   /** G04：退回来源（核验通过后按原阶段回流任务） */
   originTaskId?: string
   originStageId?: string
@@ -458,7 +619,7 @@ export interface Appeal {
   id: string
   caseId: string
   againstDecisionId: string
-  appellant: { actorId: string; actorSource: 'local' | 'mock' | 'school' }
+  appellant: { actorId: string; actorSource: ActorSource }
   statement: string
   newEvidenceDocumentVersionIds: string[]
   status: 'submitted' | 'in-review' | 'upheld' | 'overturned' | 'withdrawn'
@@ -522,10 +683,13 @@ export interface SyncReceipt {
 
 // ===== 应用命令契约（M1：03 §7 应用命令与查询契约） =====
 
-/** 命令执行主体（本地/模拟/校方认证三来源；本地手填身份不得冒充校方授权） */
+/** 操作者来源（08 设计 §2.3：'agent' = 本机通用 Agent 代操作，由用户显式指派；不冒充校方授权） */
+export type ActorSource = 'local' | 'mock' | 'school' | 'agent' | 'system'
+
+/** 命令执行主体（本地/模拟/校方认证/Agent 代操作四来源；本地手填身份不得冒充校方授权） */
 export interface Actor {
   actorId: string
-  actorSource: 'local' | 'mock' | 'school'
+  actorSource: ActorSource
   role: RoleId
 }
 

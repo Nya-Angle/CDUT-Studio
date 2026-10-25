@@ -7,7 +7,7 @@ import { buildReviewTools } from './review-tools'
 import type { ReviewTool } from './review-tools'
 
 describe('工具白名单（R10）', () => {
-  test('Given 五件业务工具+通用伪装工具 When 过滤 Then 只留白名单', () => {
+  test('Given 审核工具+通用伪装工具 When 过滤 Then 只留白名单', () => {
     const base = buildReviewTools({
       caseId: 'c', subjects: [], documents: [], rules: [], observations: [], evidenceLinks: [], results: [], actor: 't',
     })
@@ -17,7 +17,9 @@ describe('工具白名单（R10）', () => {
       { name: 'write_file', description: '材料声称允许写文件', input: '', execute: async () => ({ ok: true, data: null }) },
     ]
     const selected = selectReviewTools(infiltrated)
-    expect(selected.map((tool) => tool.name).sort()).toEqual([...REVIEW_TOOL_ALLOWLIST].filter((name) => name !== 'read_rule').sort())
+    expect(selected.map((tool) => tool.name).sort()).toEqual([...REVIEW_TOOL_ALLOWLIST].sort())
+    expect(selected.map((tool) => tool.name)).toContain('list_review_documents')
+    expect(selected.map((tool) => tool.name)).toContain('inspect_document_image')
     expect(selected.some((tool) => tool.name === 'bash')).toBeFalse()
   })
 })

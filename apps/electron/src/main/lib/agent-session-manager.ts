@@ -8,7 +8,7 @@
  * 照搬 conversation-manager.ts 的模式。
  */
 
-import { readFileSync, writeFileSync, appendFileSync, existsSync, mkdirSync, unlinkSync, rmSync, renameSync, readdirSync, cpSync, copyFileSync, createReadStream, createWriteStream, statSync, type WriteStream, type Dirent } from 'node:fs'
+import { readFileSync, writeFileSync, appendFileSync, existsSync, mkdirSync, unlinkSync, rmSync, renameSync, readdirSync, cpSync, copyFileSync, createReadStream, createWriteStream, statSync, openSync, closeSync, fsyncSync, type WriteStream, type Dirent } from 'node:fs'
 import { createInterface } from 'node:readline'
 import { writeJsonFileAtomic, readJsonFileSafe } from './safe-file'
 import { randomUUID } from 'node:crypto'
@@ -58,6 +58,9 @@ import { adoptPiFileCheckpoints, loadPiFileCheckpoint, restorePiFileCheckpoint, 
 import {
   normalizeAgentRuntime,
   type AgentSessionMeta,
+  type AgentSessionOwner,
+  isReviewOwnedAgentSession,
+  isVisibleAgentSession,
   type AgentMessage,
   type SDKMessage,
   type SDKUserMessage,
@@ -124,6 +127,8 @@ interface AgentSessionsIndex {
   version: number
   /** 会话元数据列表 */
   sessions: AgentSessionMeta[]
+  /** Deleted internal-review IDs; never exposed as ordinary sessions after owner metadata is removed. */
+  reviewOwnerDeletionTombstones?: string[]
 }
 
 /** 当前索引版本 */
@@ -135,12 +140,90 @@ const INDEX_VERSION = 1
  * Agent 运行期间会多次读取和更新会话元数据。索引随历史会话增长后，反复同步
  * readFile + JSON.parse 会直接阻塞主进程；用 mtime 和 size 校验可保留外部修改感知。
  */
-let indexCache: { data: AgentSessionsIndex; mtimeMs: number; size: number } | null = null
+type AgentIndexCache = {
+  data: AgentSessionsIndex
+  mtimeMs: number
+  size: number
+  /** Read-only derived membership; rebuilt from the SAME verified index snapshot. */
+  reviewOwnerIds: ReadonlySet<string>
+  deletedReviewOwnerIds: ReadonlySet<string>
+}
+let indexCache: AgentIndexCache | null = null
+
+/**
+ * P06-FIX-01: irreversible ID-only deny journal, independent of the rolling
+ * agent-sessions.json / .tmp / .bak snapshots. Owner creation writes this
+ * fence BEFORE committing the owner metadata; a stale .bak can then lose
+ * metadata but never silently reclassify a review owner as ordinary.
+ *
+ * No case IDs, transcripts, tasks, runtime fields or SDK content are stored.
+ * Entries must never be garbage-collected without a separately proven policy.
+ */
+const REVIEW_OWNER_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+type ReviewOwnerFenceCache = { path: string; mtimeMs: number; size: number; ids: ReadonlySet<string> }
+let reviewOwnerFenceCache: ReviewOwnerFenceCache | null = null
+
+function ownerFencePath(): string {
+  return join(dirname(getAgentSessionsIndexPath()), 'review-owner-ids.log')
+}
+
+function readOwnerFences(): ReadonlySet<string> {
+  const path = ownerFencePath()
+  let stat: ReturnType<typeof statSync>
+  try {
+    stat = statSync(path)
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      reviewOwnerFenceCache = null
+      return new Set()
+    }
+    throw new Error('审核会话身份安全记录不可读取', { cause: error })
+  }
+  if (!stat.isFile()) throw new Error('审核会话身份安全记录不是普通文件')
+  if (reviewOwnerFenceCache?.path === path && reviewOwnerFenceCache.mtimeMs === stat.mtimeMs && reviewOwnerFenceCache.size === stat.size) {
+    return reviewOwnerFenceCache.ids
+  }
+  const contents = readFileSync(path, 'utf8')
+  // A torn append or unrecognized schema cannot be interpreted as "no owners".
+  if (contents && !contents.endsWith('\n')) throw new Error('审核会话身份安全记录存在不完整条目')
+  const ids = new Set<string>()
+  for (const line of contents.split('\n')) {
+    if (!line) continue
+    if (!REVIEW_OWNER_UUID.test(line)) throw new Error('审核会话身份安全记录存在非法条目')
+    ids.add(line.toLowerCase())
+  }
+  reviewOwnerFenceCache = { path, mtimeMs: stat.mtimeMs, size: stat.size, ids }
+  return ids
+}
+
+function persistReviewOwnerFences(ids: readonly string[]): void {
+  if (!ids.length) return
+  const known = readOwnerFences()
+  const missing = [...new Set(ids.map(id => id.toLowerCase()))].filter(id => !known.has(id))
+  if (!missing.length) return
+  if (missing.some(id => !REVIEW_OWNER_UUID.test(id))) throw new Error('审核会话身份 ID 格式非法')
+  const path = ownerFencePath()
+  const fd = openSync(path, 'a', 0o600)
+  try {
+    writeFileSync(fd, missing.map(id => id + '\n').join(''), 'utf8')
+    fsyncSync(fd)
+  } finally {
+    closeSync(fd)
+    reviewOwnerFenceCache = null
+  }
+  const persisted = readOwnerFences()
+  if (missing.some(id => !persisted.has(id))) throw new Error('审核会话身份安全记录未持久化')
+}
+
 
 function cacheIndex(data: AgentSessionsIndex): void {
   try {
     const stat = statSync(getAgentSessionsIndexPath())
-    indexCache = { data, mtimeMs: stat.mtimeMs, size: stat.size }
+    indexCache = {
+      data, mtimeMs: stat.mtimeMs, size: stat.size,
+      reviewOwnerIds: new Set(data.sessions.filter(isReviewOwnedAgentSession).map((session) => session.id)),
+      deletedReviewOwnerIds: new Set(data.reviewOwnerDeletionTombstones ?? []),
+    }
   } catch {
     // 无法确认磁盘版本时绝不复用内存数据，交给下次读取走恢复路径。
     indexCache = null
@@ -237,6 +320,10 @@ function readIndex(): AgentSessionsIndex {
 
   const data = readJsonFileSafe<AgentSessionsIndex>(indexPath)
   if (data) {
+    if (typeof data.version !== 'number' || !Array.isArray(data.sessions)
+      || (data.reviewOwnerDeletionTombstones !== undefined && !Array.isArray(data.reviewOwnerDeletionTombstones))) {
+      throw new Error('Agent 会话索引结构无效，不能按空普通会话恢复')
+    }
     let removedLegacyKnowledgeReferences = false
     const sessions = Array.isArray(data.sessions)
       ? data.sessions.map((session) => {
@@ -247,6 +334,13 @@ function readIndex(): AgentSessionsIndex {
         })
       : []
     const normalized: AgentSessionsIndex = { ...data, sessions }
+    // Upgrade existing live owners and ID-only deletion tombstones before
+    // granting ANY ordinary access derived from a recovered index snapshot.
+    // If the fence is not durable, fail closed instead of trusting the .bak.
+    persistReviewOwnerFences([
+      ...sessions.filter(isReviewOwnedAgentSession).map(s => s.id),
+      ...(normalized.reviewOwnerDeletionTombstones ?? []),
+    ])
     let cacheNormalized = true
     if (removedLegacyKnowledgeReferences) {
       try {
@@ -259,6 +353,11 @@ function readIndex(): AgentSessionsIndex {
     }
     if (cacheNormalized) cacheIndex(normalized)
     return normalized
+  }
+  // A fresh profile has no index files. Broken existing files, however, are
+  // never equivalent to a fresh empty ordinary index.
+  if ([indexPath, indexPath + '.tmp', indexPath + '.bak'].some(existsSync)) {
+    throw new Error('Agent 会话索引损坏且无法恢复，已拒绝普通会话访问')
   }
   return { version: INDEX_VERSION, sessions: [] }
 }
@@ -302,6 +401,9 @@ export function createDelegatedChildSessionMeta(params: {
   const now = Date.now()
 
   // 检查是否已存在（幂等）
+  if (index.reviewOwnerDeletionTombstones?.includes(params.childSessionId)) {
+    throw new Error('已删除的内部审核会话 ID 不可重新用作普通会话')
+  }
   const existing = index.sessions.find((s) => s.id === params.childSessionId)
   if (existing) {
     return updateAgentSessionMeta(params.childSessionId, {
@@ -356,7 +458,7 @@ export function countArchivedAgentSessions(): number {
   const index = readIndex()
   let count = 0
   for (const s of index.sessions) {
-    if (s.archived && !s.draft) count += 1
+    if (s.archived && isVisibleAgentSession(s)) count += 1
   }
   return count
 }
@@ -367,6 +469,29 @@ export function countArchivedAgentSessions(): number {
 export function getAgentSessionMeta(id: string): AgentSessionMeta | undefined {
   const index = readIndex()
   return index.sessions.find((s) => s.id === id)
+}
+
+/** Persistent ID-only ownership fence: protects late IPC/events after internal meta deletion. */
+export function isReviewOwnedOrDeletedAgentSessionId(sessionId: string): boolean {
+  if (!sessionId) return false
+  try {
+    // The monotonic ID-only journal survives a stale .bak or lost metadata.
+    if (readOwnerFences().has(sessionId.toLowerCase())) return true
+    const index = readIndex()
+    // readIndex verifies the cache's on-disk mtime and size. Never keep a
+  // separately-lived Set: every successful index write and external reload
+  // rebuilds these IDs from the corresponding authoritative snapshot.
+  const lookup = indexCache?.data === index ? indexCache : null
+  if (lookup) return lookup.reviewOwnerIds.has(sessionId) || lookup.deletedReviewOwnerIds.has(sessionId)
+  // When the index cannot be safely cached, retain the original security check.
+    return isReviewOwnedAgentSession(index.sessions.find((session) => session.id === sessionId))
+      || (index.reviewOwnerDeletionTombstones?.includes(sessionId) ?? false)
+  } catch (error) {
+    // If the index or deny journal is damaged/inaccessible, an unknown ID
+    // cannot be safely *proved* ordinary. Deny its ordinary entry points.
+    console.warn('[Agent 会话] 身份索引不可确认，拒绝普通访问:', error)
+    return true
+  }
 }
 
 /**
@@ -432,6 +557,7 @@ export function createAgentSession(
   agentRuntime: AgentRuntime = 'pi',
   draft = false,
   presetId?: string,
+  owner?: AgentSessionOwner,
 ): AgentSessionMeta {
   const index = readIndex()
   const now = Date.now()
@@ -457,6 +583,7 @@ export function createAgentSession(
     modelId,
     workspaceId: effectiveWorkspaceId,
     agentRuntime: normalizeAgentRuntime(agentRuntime),
+    ...(owner ? { owner: structuredClone(owner) } : {}),
     // 新会话默认关闭：避免无关提问挂载沉重的教务工具；用户在输入栏显式点亮后持久化为 true。
     enableCdutTools: false,
     ...(effectivePresetId ? { presetId: effectivePresetId, presetReference: presetReferenceForId(presetWorkspaceSlug, effectivePresetId) } : {}),
@@ -465,6 +592,11 @@ export function createAgentSession(
     updatedAt: now,
   }
 
+  if (owner?.kind === 'review-case') {
+    // Must be durable before the index write; otherwise .bak fallback could
+    // expose an already-created internal owner through ordinary IPC.
+    persistReviewOwnerFences([meta.id])
+  }
   index.sessions.push(meta)
   writeIndex(index)
 
@@ -502,6 +634,35 @@ export function createAgentSession(
 
   console.log(`[Agent 会话] 已创建会话: ${meta.title} (${meta.id})`)
   return meta
+}
+
+/**
+ * Trusted Main-only factory. Ownership is embedded in the same atomic index
+ * write as creation, so no observable temporary ordinary session exists.
+ * No ordinary desktop/Pocket create handler accepts the owner argument.
+ */
+export function createReviewOwnedAgentSession(input: {
+  caseId: string
+  title: string
+  channelId: string
+  modelId?: string
+  workspaceId?: string
+  presetId?: string
+}): AgentSessionMeta {
+  if (!input.caseId || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(input.caseId)
+    || input.caseId.includes('..')) {
+    throw new Error('审核会话必须绑定有效案卷 ID')
+  }
+  if (!input.channelId?.trim()) throw new Error('审核会话必须明确指定渠道')
+  return createAgentSession(input.title, input.channelId, input.workspaceId, input.modelId, 'pi', false,
+    input.presetId ?? 'review-operator', { kind: 'review-case', caseId: input.caseId })
+}
+
+/** Fail closed for ordinary external/session UI entry points. */
+export function assertOrdinaryAgentSession(sessionId: string): void {
+  if (isReviewOwnedOrDeletedAgentSessionId(sessionId)) {
+    throw new Error('内部审核会话不可通过普通 Agent 入口访问')
+  }
 }
 
 /** 同一项目只保留一个未归档的隐藏草稿会话。函数没有异步间隙，可防止快速重复点击。 */
@@ -1258,6 +1419,9 @@ export function updateAgentSessionMeta(
   }
 
   const existing = index.sessions[idx]!
+  if (Object.prototype.hasOwnProperty.call(updates, 'owner')) {
+    throw new Error('业务会话 owner 不可通过普通元数据更新修改')
+  }
   // 新引用是唯一跨作用域解析依据；旧调用传裸 presetId 时按会话工作区补齐兼容引用。
   if (updates.presetId !== undefined && updates.presetReference === undefined) {
     const workspaceSlug = existing.workspaceId ? getAgentWorkspace(existing.workspaceId)?.slug : undefined
@@ -1384,6 +1548,13 @@ export function deleteAgentSession(id: string, options?: { backgroundDiskCleanup
         updatedAt: Date.now(),
       }
     }
+  }
+  // Commit the tombstone atomically with index deletion. A removed owner must never
+  // look like an unknown ordinary ID to queued/replayed desktop or remote events.
+  if (isReviewOwnedAgentSession(removed)) {
+    index.reviewOwnerDeletionTombstones = [
+      ...new Set([...(index.reviewOwnerDeletionTombstones ?? []), id]),
+    ]
   }
   writeIndex(index)
 
@@ -1552,6 +1723,8 @@ export function findOrphanSessions(): SessionHealth[] {
   const results: SessionHealth[] = []
 
   for (const session of index.sessions) {
+    // Desktop health dialog is an ordinary Agent surface, not an internal case inventory.
+    if (isReviewOwnedAgentSession(session)) continue
     const health: SessionHealth = {
       sessionId: session.id,
       title: session.title,
@@ -2956,7 +3129,7 @@ export function autoArchiveAgentSessions(daysThreshold: number): number {
   let count = 0
 
   for (const session of index.sessions) {
-    if (!session.pinned && !session.archived && session.updatedAt < threshold) {
+    if (!isReviewOwnedAgentSession(session) && !session.pinned && !session.archived && session.updatedAt < threshold) {
       session.archived = true
       count++
     }
@@ -3024,7 +3197,7 @@ export async function searchAgentSessionMessages(query: string): Promise<AgentMe
 
   for (const session of index.sessions) {
     if (results.length >= maxResults) break
-    if (session.draft) continue
+    if (!isVisibleAgentSession(session)) continue
 
     const filePath = getAgentSessionMessagesPath(session.id)
     if (!existsSync(filePath)) continue
@@ -3188,7 +3361,7 @@ export function searchAgentSessionReferences(input: AgentSessionReferenceSearchI
   const candidates = listAgentSessions()
     .filter((session) => session.workspaceId === workspaceId)
     .filter((session) => !session.archived)
-    .filter((session) => !session.draft)
+    .filter((session) => isVisibleAgentSession(session))
     .filter((session) => session.id !== input?.excludeSessionId)
 
   const results: AgentSessionReferenceSearchResult[] = []

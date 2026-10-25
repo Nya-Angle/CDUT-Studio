@@ -1,0 +1,22 @@
+
+apps/electron/src/main/lib/review/semantic-module-demo.test.ts:
+(pass) D0.5 Agent-first 轻量语义模块（BDD） > Given 简单文本责任 When Agent 批量建模 Then 可投影到现有 TemplateVersion/RuleSpec 而无节点图 [2.31ms]
+(pass) D0.5 Agent-first 轻量语义模块（BDD） > Given 固定引用 When 新建模块版本与局部切换 Then 原模块、旧引用和历史预览不变 [0.46ms]
+(pass) D0.5 Agent-first 轻量语义模块（BDD） > Given 错误引用、环和越权参数 When 事务写入 Then 原子拒绝、不提升 revision [0.33ms]
+(pass) D0.5 Agent-first 轻量语义模块（BDD） > Given 特殊校园卡双分支 When 未知/家属/服务人员切换 Then 不互相引入资格规则 [0.63ms]
+(pass) D0.5 Agent-first 轻量语义模块（BDD） > Given 同档案件查阅和复制 When 两个实例引用同一授权模块 Then 每项的覆盖和权限相互隔离 [0.42ms]
+(pass) D0.5 Agent-first 轻量语义模块（BDD） > Given 审核覆盖账本 When 缺少某个责任或无引证就宣称符合 Then 拒绝完成 [0.17ms]
+(pass) D0.5 Agent-first 轻量语义模块（BDD） > Given D0.5 合成草稿 When 经现有模板服务发布 Then 必须拒绝，不会变成学校规则 [1.36ms]
+(pass) D0.5 Agent-first 轻量语义模块（BDD） > Given 同一审核责任 When 调整无关检查顺序 Then 投影后的规则 ID 不漂移 [0.30ms]
+(pass) D0.5 Agent-first 轻量语义模块（BDD） > Given 复合语义模块 When 引用子模块并局部补充责任 Then 预览展开稳定子责任而不规定执行顺序 [0.22ms]
+(pass) D0.5 Agent-first 轻量语义模块（BDD） > Given 合成 fixture When Agent 从命令行预览并提交批量编辑 Then 状态版本真实落盘且可以投影旧模板 [70.57ms]
+(pass) D0.5 Agent-first 轻量语义模块（BDD） > 回归 1：无条件顶层引用含 family 子模块时，必须检测隐藏分支并阻止投影 [0.77ms]
+(pass) D0.5 Agent-first 轻量语义模块（BDD） > 回归 1：无条件复合模块隐藏逐对象作用范围或未知条件字段，投影必须拒绝 [0.44ms]
+(pass) D0.5 Agent-first 轻量语义模块（BDD） > 回归 1：父子条件互相排斥时要显式报错，而非悄悄遗漏责任 [0.11ms]
+(pass) D0.5 Agent-first 轻量语义模块（BDD） > 回归 2：相同 checkId 修改审核要求后，旧 fingerprint 的合格回执必须过期 [0.26ms]
+(pass) D0.5 Agent-first 轻量语义模块（BDD） > 嵌套参数优先级：子引用显式值 > 父模块继承值 > 子模块默认值 [0.51ms]
+
+ 15 pass
+ 0 fail
+ 82 expect() calls
+Ran 15 tests across 1 file. [129.00ms]

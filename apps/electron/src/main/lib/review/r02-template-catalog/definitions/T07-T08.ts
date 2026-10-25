@@ -1,0 +1,248 @@
+import type { TemplateVersion } from '@profer/shared'
+
+export type R02EvidenceStatus = 'VERIFIED' | 'PARTIAL' | 'UNCONFIRMED'
+
+export interface R02CriterionSourceMetadata {
+  sectionId: string
+  criterionId: string
+  sourceIds: string[]
+  evidenceStatus: R02EvidenceStatus
+}
+
+export interface R02SourceMetadata {
+  sourceId: string
+  sourceClass: string
+  evidenceStatus: R02EvidenceStatus
+  urls: string[]
+}
+
+export interface R02TemplateMetadata {
+  templateId: string
+  name: string
+  sourceDocumentPath: string
+  sourceDocumentSha256: string
+  officialSchoolTemplate: false
+  researchStatus: 'RESEARCH_HANDOFF_READY'
+  policyEvidenceStatus: 'PARTIAL'
+  policyEvidenceNotes: string
+  sources: R02SourceMetadata[]
+  criteria: R02CriterionSourceMetadata[]
+}
+
+export const r02Metadata: R02TemplateMetadata = {
+  templateId: "T07-T08",
+  name: "教职工代表大会代表提案征集、立案及办理反馈审核",
+  sourceDocumentPath: "docs/design/review-agent/business-templates/R02/T07-T08.md",
+  sourceDocumentSha256: "6ba774da0f9841909fd4172aaffe3d42d9af0c7c064fd6c7e9ce9042fedefefc",
+  officialSchoolTemplate: false,
+  researchStatus: 'RESEARCH_HANDOFF_READY',
+  policyEvidenceStatus: 'PARTIAL',
+  policyEvidenceNotes: "教育部令第32号和校章程公开正文可核；当期征集通知、提案办法版本关系、立案/撤回/复核权限仍未核。",
+  sources: [
+    { sourceId: "SRC-001", sourceClass: "CDUT-VERIFIED", evidenceStatus: "VERIFIED", urls: ["https://gh.cdut.edu.cn/ghgk/ghjj.htm"] },
+    { sourceId: "SRC-002", sourceClass: "CDUT-VERIFIED", evidenceStatus: "VERIFIED", urls: ["https://www.cdut.edu.cn/info/1061/10365.htm"] },
+    { sourceId: "SRC-003", sourceClass: "CURRENTITY-UNKNOWN", evidenceStatus: "PARTIAL", urls: ["https://gh.cdut.edu.cn/xwsd/23.htm"] },
+    { sourceId: "SRC-004", sourceClass: "CDUT-VERIFIED", evidenceStatus: "VERIFIED", urls: ["https://dbxb.cdut.edu.cn/xxgkwz/info/1008/4001.htm"] },
+    { sourceId: "SRC-005", sourceClass: "CDUT-VERIFIED", evidenceStatus: "VERIFIED", urls: ["https://dbxb.cdut.edu.cn/xxgkwz/info/1008/4011.htm"] },
+    { sourceId: "SRC-006", sourceClass: "CDUT-VERIFIED", evidenceStatus: "VERIFIED", urls: ["https://dbxb.cdut.edu.cn/__local/3/0F/C9/DE6D4DEBE4BD717199AB748102D_ECD2AB77_2A933.pdf"] },
+    { sourceId: "SRC-007", sourceClass: "CDUT-VERIFIED", evidenceStatus: "VERIFIED", urls: ["https://www.cdut.edu.cn/info/1061/22815.htm"] },
+    { sourceId: "SRC-008", sourceClass: "GENERAL-RESEARCH", evidenceStatus: "VERIFIED", urls: ["https://www.moe.gov.cn/srcsite/A02/s5911/moe_621/201112/t20111208_170439.html", "https://hudong.moe.gov.cn/jyb_xxgk/xxgk/zhengce/guizhang/202112/P020211208603196322691.pdf"] },
+    { sourceId: "SRC-009", sourceClass: "CROSS-SCHOOL-REFERENCE", evidenceStatus: "UNCONFIRMED", urls: ["https://www.svchr.edu.cn/gh/info/1024/1019.htm；另检索到文号“川工教科文卫〔2013〕43号”"] },
+    { sourceId: "SRC-010", sourceClass: "CROSS-SCHOOL-REFERENCE", evidenceStatus: "UNCONFIRMED", urls: ["https://fzc.hzau.edu.cn/info/1041/3076.htm"] },
+    { sourceId: "SRC-011", sourceClass: "CDUT-VERIFIED", evidenceStatus: "VERIFIED", urls: ["https://www.cdut.edu.cn/info/1366/7658.htm"] },
+    { sourceId: "SRC-012", sourceClass: "CURRENTITY-UNKNOWN", evidenceStatus: "PARTIAL", urls: [] },
+    { sourceId: "SRC-013", sourceClass: "GENERAL-RESEARCH", evidenceStatus: "VERIFIED", urls: [] },
+    { sourceId: "SRC-014", sourceClass: "CDUT-VERIFIED", evidenceStatus: "VERIFIED", urls: ["https://dbxb.cdut.edu.cn/xxgkwz/info/1008/1011.htm"] },
+    { sourceId: "SRC-015", sourceClass: "CDUT-VERIFIED", evidenceStatus: "VERIFIED", urls: ["https://dbxb.cdut.edu.cn/xxgkwz/info/1008/1009.htm"] },
+    { sourceId: "SRC-016", sourceClass: "CURRENTITY-UNKNOWN", evidenceStatus: "PARTIAL", urls: ["https://dbxb.cdut.edu.cn/xxgkwz/gkbf/xsglzd/2.htm"] },
+    { sourceId: "SRC-017", sourceClass: "CROSS-SCHOOL-REFERENCE", evidenceStatus: "UNCONFIRMED", urls: ["https://info.shisu.edu.cn/_upload/article/files/99/0d/630f5c1846a4828f4bda9b31c3de/273e3235-f925-476b-ab95-ffa59f29f2aa.pdf"] },
+    { sourceId: "SRC-018", sourceClass: "GENERAL-RESEARCH", evidenceStatus: "VERIFIED", urls: ["https://hudong.moe.gov.cn/srcsite/A02/s5913/s5933/201201/t20120117_130918.html"] },
+    { sourceId: "SRC-019", sourceClass: "GENERAL-RESEARCH", evidenceStatus: "VERIFIED", urls: ["https://gzca.miit.gov.cn/zwgk/zcwj/zcfg/art/2021/art_98dffb76ef944db68c10194618c72559.html"] },
+  ],
+  criteria: [
+    { sectionId: 'rule-checks', criterionId: "R001", sourceIds: ["SRC-001", "SRC-002", "SRC-008", "SRC-011", "SRC-012"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R002", sourceIds: ["SRC-001", "SRC-007", "SRC-008", "SRC-012", "SRC-014", "SRC-015"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R003", sourceIds: ["SRC-002", "SRC-008", "SRC-012"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R004", sourceIds: ["SRC-008", "SRC-012"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R005", sourceIds: ["SRC-008", "SRC-012", "SRC-014", "SRC-015"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R006", sourceIds: ["SRC-008", "SRC-012"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R007", sourceIds: ["SRC-008", "SRC-012"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R008", sourceIds: ["SRC-008", "SRC-010"], evidenceStatus: "UNCONFIRMED" },
+    { sectionId: 'rule-checks', criterionId: "R009", sourceIds: ["SRC-008", "SRC-012", "SRC-019"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R010", sourceIds: ["SRC-001", "SRC-008", "SRC-014"], evidenceStatus: "VERIFIED" },
+    { sectionId: 'rule-checks', criterionId: "R011", sourceIds: ["SRC-008", "SRC-010"], evidenceStatus: "UNCONFIRMED" },
+    { sectionId: 'rule-checks', criterionId: "R012", sourceIds: ["SRC-008", "SRC-012"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R013", sourceIds: ["SRC-012", "SRC-014", "SRC-015"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R014", sourceIds: ["SRC-008", "SRC-012"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R015", sourceIds: ["SRC-001", "SRC-003", "SRC-004", "SRC-008", "SRC-011", "SRC-014", "SRC-015"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R016", sourceIds: ["SRC-001", "SRC-003", "SRC-004", "SRC-006", "SRC-008", "SRC-012", "SRC-014", "SRC-015"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R017", sourceIds: ["SRC-008", "SRC-012", "SRC-014"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R018", sourceIds: ["SRC-003", "SRC-008", "SRC-010", "SRC-012", "SRC-017"], evidenceStatus: "UNCONFIRMED" },
+    { sectionId: 'rule-checks', criterionId: "R019", sourceIds: ["SRC-003", "SRC-006", "SRC-008", "SRC-012"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R020", sourceIds: ["SRC-003", "SRC-006", "SRC-008"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R021", sourceIds: ["SRC-003", "SRC-006", "SRC-008", "SRC-012"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R022", sourceIds: ["SRC-006", "SRC-008", "SRC-013"], evidenceStatus: "VERIFIED" },
+    { sectionId: 'rule-checks', criterionId: "R023", sourceIds: ["SRC-006", "SRC-008", "SRC-012"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R024", sourceIds: ["SRC-008", "SRC-012"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R025", sourceIds: ["SRC-008", "SRC-012"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R026", sourceIds: ["SRC-008", "SRC-012", "SRC-014"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R027", sourceIds: ["SRC-008", "SRC-012", "SRC-014", "SRC-015"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R028", sourceIds: ["SRC-008", "SRC-012"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R029", sourceIds: ["SRC-008", "SRC-012", "SRC-014", "SRC-015"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R030", sourceIds: ["SRC-002", "SRC-008", "SRC-012"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R031", sourceIds: ["SRC-004", "SRC-005", "SRC-008", "SRC-011", "SRC-014", "SRC-015"], evidenceStatus: "VERIFIED" },
+    { sectionId: 'rule-checks', criterionId: "R032", sourceIds: ["SRC-005", "SRC-008", "SRC-009", "SRC-010"], evidenceStatus: "UNCONFIRMED" },
+    { sectionId: 'rule-checks', criterionId: "R033", sourceIds: ["SRC-008", "SRC-012"], evidenceStatus: "PARTIAL" },
+    { sectionId: 'rule-checks', criterionId: "R034", sourceIds: ["SRC-001", "SRC-008", "SRC-012", "SRC-019"], evidenceStatus: "PARTIAL" },
+  ],
+}
+
+export const templateVersion: TemplateVersion = {
+  templateId: "T07-T08",
+  version: 1,
+  schemaVersion: 2,
+  name: "教职工代表大会代表提案征集、立案及办理反馈审核",
+  description: "本地研究模板 · 非校方正式模板。依据 R02 研究原稿组织事实核验、材料覆盖和人工待办；不代表成都理工大学已批准采用。当前政策证据状态为 PARTIAL，未确认规则不得自动形成正式通过或拒绝。",
+  catalogKind: 'builtin',
+  sourceNote: "R02_RESEARCH_TEMPLATE_NONOFFICIAL: 本地研究模板，非成都理工大学校方正式模板；SRC 仅用于研究来源追踪，不是案卷材料 SourceRef；校本授权与部分现行制度未确认，最终决定由有权人员人工作出。",
+  objectType: "document",
+  displayName: { template: '{{title}}' },
+  fields: [
+    { key: "F001", label: "大会层级（校级/二级/学生等）", kind: "text", required: false, visibility: "public", scope: "case", extractionHint: "原稿字段定义与约束：enum；MeetingBatch.大会层级（校级/二级/学生等）；C01、C18、全局路由；工会会议通知 M001 标题/发文主体；政策 M003；P0；U/A；非校级先路由。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F001；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F002", label: "届次", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：string；CongressTerm.届次；C01、C02、C16、C17；校工会 M001 届次/M002 名册表头；P1；A/H；旧届次不自动改写。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F002；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F003", label: "会议与征集批次 ID", kind: "text", required: false, visibility: "internal", scope: "case", extractionHint: "原稿字段定义与约束：string；MeetingBatch.会议与征集批次 ID；C01、提交、报告；M001 批次/会议标题或工会批次台账；P1；A/U；不得自造批次。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F003；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F004", label: "现行通知/校本政策版本", kind: "text", required: false, visibility: "internal", scope: "case", extractionHint: "原稿字段定义与约束：ref；MeetingBatch.现行通知/校本政策版本；C01、时限争议；M001 通知号、M003 原文文件号/效力记录；P1；A/U；不援外校门槛。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F004；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F005", label: "dateTime/unknown", kind: "date", required: false, visibility: "internal", scope: "case", extractionHint: "原稿字段定义与约束：dateTime/unknown；MeetingBatch.征集截止；C01、C06；M001 日期条款及校方校时解释；P1；U；未知不判超时。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F005；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F006", label: "string/ref", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：string/ref；ProposalCase.唯一案卷/提案标识；C02 后至结案；M008 收件台账提案号；系统内部稳定 ID；P1；A；未分配正式号可暂用内部 ID，不伪称校方立案号。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F006；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F007", label: "首提/联名/代交/转建议等方式", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：enum；SubmissionRevision.首提/联名/代交/转建议等方式；C02—C05、C18；M004 提交方式/经办登记；M007 代交；P1；U/H；形式是否被认可待校本。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F007；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F008", label: "权利主体唯一标识（非展示姓名）", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：ref；ActorLink.权利主体唯一标识（非展示姓名）；C02—C05、C14、C16；可信身份体系/校工会 M002 代表索引；P2；A/H；不得信 Renderer actor。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F008；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F009", label: "提交文书上申报姓名", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：string；ActorLink.提交文书上申报姓名；C02、身份匹配；M004 提案人栏/签名原文；P2；K；仅主张，非可信身份。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F009；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F010", label: "enum/unknown", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：enum/unknown；ActorLink.当时代表资格（有效/无效/待核）；C02—C05、C16；M002 名册与 M026 资格变动记录；P2；A/H；不可从姓名猜测。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F010；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F011", label: "string/ref", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：string/ref；ActorLink.代表团/选举单位；C02、C16；M002 名册代表团栏；M006 联名附议记录；P1；A/U；是否必须填写未知。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F011；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F012", label: "实际代交者身份", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：ref；ActorLink.实际代交者身份；C04；可信提交会话；M008 收件/操作记录；P2；H；不等于代表权。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F012；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F013", label: "ref/unknown", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：ref/unknown；ActorLink.代交授权证据；C04；M007 授权原件/授权人/范围；P2；U/H；授权形式待校本。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F013；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F014", label: "联名、附议或团体签署关系", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：ref[]；ActorLink.联名、附议或团体签署关系；C03；M006 签名名单及 M002 对照；P2；U/H；不设最低人数。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F014；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F015", label: "题目", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：string；ProposalCase.题目；C02、审查及答复定位；M004 标题栏/首页；P1；K；标题真实性非价值判断。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F015；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F016", label: "案由与事实描述", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：text；ProposalCase.案由与事实描述；C02、承办；M004 事由正文、M005 证据位置；P3；K/UNREADABLE；不代查实体真伪。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F016；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F017", label: "建议办法/诉求", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：text；ProposalCase.建议办法/诉求；C02、答复比对；M004 建议段落；P3；K；建议科学性由人审。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F017；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F018", label: "enum/string", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：enum/string；ProposalCase.议题分类；C02、C11；M004 主张、M015 正式承办分类（如有）；P1/P3；U；只能建议路由，不能决定。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F018；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F019", label: "enum/unknown", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：enum/unknown；ProposalCase.保密与敏感标记；初提、交接、公开；M004/M005 内容与有权保密意见；P3；H；默认最小可见，不作自主解密。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F019；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F020", label: "dateTime/unknown", kind: "date", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：dateTime/unknown；SubmissionRevision.提交主张时间；C02、C06；M004 签署时间/授权平台提交日志；P2；K；不替代正式收件时间。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F020；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F021", label: "dateTime/unknown", kind: "date", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：dateTime/unknown；ProcedureEvent.可信接收时间；C02、C06；M008 工会签收台账/时间戳；P1；A；无记录不能判正式受理。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F021；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F022", label: "ref/hash", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：ref/hash；SubmissionRevision.当前材料版本及来源指纹；C02、C07、全程；M004/M009 归档版本、文件摘要；P1；K；改变后旧结论失效需重审。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F022；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F023", label: "附件与证据锚点", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：ref[]；SubmissionRevision.附件与证据锚点；C02、C07；M005 附件页/条及归属提案号；P2/P3；条件 K/UNREADABLE；不可与他案串用。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F023；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F024", label: "text/ref", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：text/ref；ProcedureEvent.补正问题和对象；C07；M010 正式补正通知事项条；P1；U/A；未下通知不得强称逾期。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F024；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F025", label: "dateTime/unknown", kind: "date", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：dateTime/unknown；ProcedureEvent.补正节点/期限；C07；M010 通知期限及送达记录；P1；U；无时限不算超期。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F025；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F026", label: "替换/更正前序版本", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：ref；SubmissionRevision.替换/更正前序版本；C07、C16；M009 修订记录及 M004 旧、新版本；P1；K；保留不可删除旧证据。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F026；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F027", label: "审查议题/会议记录", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：ref；ProcedureEvent.审查议题/会议记录；C08、C09；M012 委员会/有权机构会议号与页；P1/P3；A/U；不能推定委员会独任。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F027；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F028", label: "enum/unknown", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：enum/unknown；ProcedureEvent.立案审定结果；C08—C10；M012 正式结论、M013 告知（如有）；P1；A/H；不由模型判断应否立案。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F028；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F029", label: "决定人/组织及授权范围", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：ref；ProcedureEvent.决定人/组织及授权范围；C08、C15；M003 权限文件、M012/M025 可信签发；P2；A/H；前端 role 无效。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F029；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F030", label: "dateTime/ref", kind: "date", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：dateTime/ref；ProcedureEvent.决定形成时间及效力版本；C08、C09；M012 决定落款/会议号/版本；P1；A/U；不得冒称生效。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F030；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F031", label: "并案/转建议/不立案关联", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：ref[]；ProposalCase.并案/转建议/不立案关联；C09；M014 关联表、M012 结论依据；P1/P3；U/H；本校结果类型待核。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F031；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F032", label: "主承办及协办单位", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：ref[]；ProcedureEvent.主承办及协办单位；C10—C12；M015 分办正文/组织签发；P1；A/H；一主多协不自动均为签发者。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F032；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F033", label: "ref/dateTime", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：ref/dateTime；ProcedureEvent.分办文号及日期；C10；M015 分办通知号及落款；P1；A；没有不得推定“已分办”。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F033；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F034", label: "dateTime/ref", kind: "date", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：dateTime/ref；ProcedureEvent.承办签收与反馈路径；C10、C12；M016 收件登记/授权系统日志；P1；A；未回执不推定拒办。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F034；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F035", label: "text/ref[]", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：text/ref[]；ProcedureEvent.办理进展及承办依据；C11、C12；M017 承办记录、事实附件页；P1/P3；条件 K/H；方案≠已执行。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F035；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F036", label: "实体业务权威决定 ID+版本", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：ref[]；ExternalDecisionRef.实体业务权威决定 ID+版本；C11、承办采纳证明；M018 外部原业务 Case/Decision 或核签文件；P3；A/H；跨业务无结果则不能补造。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F036；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F037", label: "text/enum", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：text/enum；ProcedureEvent.正式答复与采纳说明；C12；M019 签发的答复书具体段落；P1/P3；A/K；已签发≠执行完毕。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F037；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F038", label: "ref/dateTime", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：ref/dateTime；ProcedureEvent.答复签发机构、身份及时间；C12；M019 落款与可信授权记录 M003；P2；A/H；扫描公章待验真。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F038；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F039", label: "送达、接收、代表反馈与时间", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：object；ProcedureEvent.送达、接收、代表反馈与时间；C12、C13；M020 送达回执；M021 原代表反馈；P2/P3；条件 K/H；未反馈不等于满意。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F039；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F040", label: "撤回/复核请求及处置关联", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：ref[]；ProcedureEvent.撤回/复核请求及处置关联；C14、C15；M022—M025 各文书对应提案号；P2/P3；U/H；请求不等于准许或推翻。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F040；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F041", label: "下次报告/审议覆盖位置", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：ref；ProcedureEvent.下次报告/审议覆盖位置；C17；M027 大会报告页、会议决定位置；P1；A；汇总不替代单件决定。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F041；原稿政策必填性不自动转成校方强制条件。" },
+    { key: "F042", label: "按时间排序的事件与版本索引", kind: "text", required: false, visibility: "internal", scope: "subject", extractionHint: "原稿字段定义与约束：ref[]；ProposalCase.按时间排序的事件与版本索引；所有阶段、撤回、重审；M008、M009、M012—M027 的不可变事件来源；P1/P3；K/H；断链即显示待核，不生成伪事件。按原稿所列对象、阶段、可信来源、隐私级别和缺失语义抽取；未证实字段保持未知，不推断校方强制必填。", displayHint: "研究字段 F042；原稿政策必填性不自动转成校方强制条件。" },
+  ],
+  // Number.MAX_SAFE_INTEGER is a technical unbounded sentinel, not a school policy limit.
+  materialSlots: [
+    { id: "M001", name: "征集范围、批次及截止", purpose: "征集范围、批次及截止；校工会持有的当期通知/发文或真实征集台账；C01 现必（做批次判定时）；C02/C06 条必", requiredElements: ["征集范围、批次及截止；校工会持有的当期通知/发文或真实征集台账；C01 现必（做批次判定时）；C02/C06 条必", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M002", name: "当时代表权及代表团", purpose: "当时代表权及代表团；校工会当届有效代表名册/补选台账；C02—C05、C16 现必（身份核验）；来源侧", requiredElements: ["当时代表权及代表团；校工会当届有效代表名册/补选台账；C02—C05、C16 现必（身份核验）；来源侧", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M003", name: "规则效力及签发权限", purpose: "规则效力及签发权限；校工会/有权机关正式制度、授权清单；C01 条必（判断校本门槛）；C08/C12 条必（判决定权）", requiredElements: ["规则效力及签发权限；校工会/有权机关正式制度、授权清单；C01 条必（判断校本门槛）；C08/C12 条必（判决定权）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M004", name: "提案主张原文", purpose: "提案主张原文；代表本人或经校方认可渠道提交的提案正文/表单；C02、C03、C04 现必；C07 新修订版现必", requiredElements: ["提案主张原文；代表本人或经校方认可渠道提交的提案正文/表单；C02、C03、C04 现必；C07 新修订版现必", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M005", name: "案由附件佐证", purpose: "案由附件佐证；代表持有的事实附页、照片、方案等；C02/C11 条必，仅对提案自身引用的事实", requiredElements: ["案由附件佐证；代表持有的事实附页、照片、方案等；C02/C11 条必，仅对提案自身引用的事实", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M006", name: "联名/附议/团体参与事实", purpose: "联名/附议/团体参与事实；相关代表及工会保管的签名/登记；C03 条必（校本形式与必要性未知）", requiredElements: ["联名/附议/团体参与事实；相关代表及工会保管的签名/登记；C03 条必（校本形式与必要性未知）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M007", name: "代交授权与范围", purpose: "代交授权与范围；权利主体与工会经办记录；C04 条必（若实际允许代理）", requiredElements: ["代交授权与范围；权利主体与工会经办记录；C04 条必（若实际允许代理）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M008", name: "真实提交/接收", purpose: "真实提交/接收；校工会收件登记、签收或可信日志；C02/C06 条必（声称正式接收时）；C08 条必", requiredElements: ["真实提交/接收；校工会收件登记、签收或可信日志；C02/C06 条必（声称正式接收时）；C08 条必", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M009", name: "版本替换链", purpose: "版本替换链；代表、校工会或系统事件账簿；C07 现必（发生替换后）", requiredElements: ["版本替换链；代表、校工会或系统事件账簿；C07 现必（发生替换后）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M010", name: "校方补正要求及期限", purpose: "校方补正要求及期限；有权工会/审查经办的通知；C07 条必（校方确有补正时）", requiredElements: ["校方补正要求及期限；有权工会/审查经办的通知；C07 条必（校方确有补正时）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M011", name: "补正提交事实", purpose: "补正提交事实；代表提交的增补内容及时间；C07 条必（收到补正时）", requiredElements: ["补正提交事实；代表提交的增补内容及时间；C07 条必（收到补正时）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M012", name: "立案/不立案等审定事实", purpose: "立案/不立案等审定事实；提案工作机构/其他有权机关的会议记录或正式结论；C08/C09 现必（声称已审定时）；C10 上游源必", requiredElements: ["立案/不立案等审定事实；提案工作机构/其他有权机关的会议记录或正式结论；C08/C09 现必（声称已审定时）；C10 上游源必", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M013", name: "审定结果告知", purpose: "审定结果告知；有权工会/审定机构通知；C09 条必（校本若规定通知）", requiredElements: ["审定结果告知；有权工会/审定机构通知；C09 条必（校本若规定通知）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M014", name: "并案/转意见路径", purpose: "并案/转意见路径；提案工作机构关联清单；C09 条必（实际发生时）", requiredElements: ["并案/转意见路径；提案工作机构关联清单；C09 条必（实际发生时）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M015", name: "正式分办/交办", purpose: "正式分办/交办；校方有权分办机构持有的通知；C10 现必（声称分办时）；C11、C12 上游源", requiredElements: ["正式分办/交办；校方有权分办机构持有的通知；C10 现必（声称分办时）；C11、C12 上游源", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M016", name: "承办单位收到交办", purpose: "承办单位收到交办；主办/协办单位收文登记；C10 条必（声称已接收时）", requiredElements: ["承办单位收到交办；主办/协办单位收文登记；C10 条必（声称已接收时）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M017", name: "承办过程与进展", purpose: "承办过程与进展；主承办单位记录/会议纪要/现场证据；C11、C12 条必（主张已落实时）", requiredElements: ["承办过程与进展；主承办单位记录/会议纪要/现场证据；C11、C12 条必（主张已落实时）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M018", name: "外部实体审批权威结论", purpose: "外部实体审批权威结论；G50/S/T 或其他校内实体业务 Owner 的 Decision/正式文书；C11 条必（答复引用实体批准/不批准时）", requiredElements: ["外部实体审批权威结论；G50/S/T 或其他校内实体业务 Owner 的 Decision/正式文书；C11 条必（答复引用实体批准/不批准时）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M019", name: "正式办理答复", purpose: "正式办理答复；承办单位签发并交工会的答复书；C12 现必（声称已答复时）", requiredElements: ["正式办理答复；承办单位签发并交工会的答复书；C12 现必（声称已答复时）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M020", name: "答复送达与接收", purpose: "答复送达与接收；工会/承办/代表持有的回执；C12/C13 条必（声称送达时）", requiredElements: ["答复送达与接收；工会/承办/代表持有的回执；C12/C13 条必（声称送达时）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M021", name: "代表反馈/询问/监督意见", purpose: "代表反馈/询问/监督意见；代表本人形成的记录；C13 现必（声称已有反馈时）", requiredElements: ["代表反馈/询问/监督意见；代表本人形成的记录；C13 现必（声称已有反馈时）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M022", name: "撤回请求", purpose: "撤回请求；原提案人或获认可的代理；C14 现必（声称申请撤回时）", requiredElements: ["撤回请求；原提案人或获认可的代理；C14 现必（声称申请撤回时）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M023", name: "撤回是否准许/后续处理", purpose: "撤回是否准许/后续处理；有权机构书面处置；C14 条必（声称撤回生效时）", requiredElements: ["撤回是否准许/后续处理；有权机构书面处置；C14 条必（声称撤回生效时）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M024", name: "复核/异议请求", purpose: "复核/异议请求；有权异议主体提交的申请与新证据；C15 现必（确有申诉时）", requiredElements: ["复核/异议请求；有权异议主体提交的申请与新证据；C15 现必（确有申诉时）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M025", name: "正式复核/重办决定", purpose: "正式复核/重办决定；校本授权机构核签记录；C15 条必（声称复核有结果时）", requiredElements: ["正式复核/重办决定；校本授权机构核签记录；C15 条必（声称复核有结果时）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M026", name: "代表资格增补/撤换/退休/调离", purpose: "代表资格增补/撤换/退休/调离；校工会选举与代表名册变更台账；C16 条必（发生资格变化时）", requiredElements: ["代表资格增补/撤换/退休/调离；校工会选举与代表名册变更台账；C16 条必（发生资格变化时）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+    { id: "M027", name: "督办汇总/向下次教代会报告及审议", purpose: "督办汇总/向下次教代会报告及审议；校工会/执委会/大会真实报告、会议记录；C17 现必（声称已汇报审议时）", requiredElements: ["督办汇总/向下次教代会报告及审议；校工会/执委会/大会真实报告、会议记录；C17 现必（声称已汇报审议时）", "核对原件来源、版本、适用阶段和可读性；SRC 仅为研究来源索引，不是案卷材料 SourceRef"], acceptedKinds: ['pdf', 'image', 'office', 'sheet', 'text', 'zip'], minCount: 0, maxCount: Number.MAX_SAFE_INTEGER, allowReuseAcrossSubjects: false },
+  ],
+  sections: [
+    {
+      id: 'rule-checks',
+      name: '原稿业务规则逐项事实预审',
+      description: '规则从本模板研究原稿的 R 编号转译；不是学校正式政策规则。政策/权限未知时输出审阅建议并转人工复核。',
+      order: 0,
+      required: true,
+      criteria: [
+    { id: "R001", title: "校级教代会路由", requirement: "原稿规则 R001：R001 校级教代会路由；C01/C05/C18 入口；T=来件声称校级教代会代表提案；F=可信证实学代会、二级教代会或普通建议；U=层级未明；SRC-001/002/008/011/012；F001/F002/F007；M001/M002/M004；比对正式会名、主办单位与届次，不凭“提案”二字匹配；学校章程第42、58、61条辅助区分校院层级；A 高于 B；按来件批次；T 一致→PASS_FACT 仅路由；F→NOT_APPLICABLE 并转有权渠道；U→POLICY_UNCONFIRMED，校工会经办核层级。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "semantic", targetScope: 'case' },
+    { id: "R002", title: "批次与征集通知身份", requirement: "原稿规则 R002：R002 批次与征集通知身份；C01/C02/C06；T=主张参加某批次；F=尚在纯起草且无当期批次声明；U=找不到该批次权威索引；SRC-001/007/008/012/014/015；F002—F005；M001/M003；核通知发出主体、届次、通知号、适用人群、起止区间；校工会原件 A，不拿去年日程替代；T 与正式通知匹配→PASS_FACT；U→SOURCE_UNAVAILABLE；通知效力不明→POLICY_UNCONFIRMED；下一校工会。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "semantic", targetScope: 'case' },
+    { id: "R003", title: "提案权主体及当时资格", requirement: "原稿规则 R003：R003 提案权主体及当时资格；C02—C05/C16；T=声称正式代表提案；F=已核明仅列席/普通教工/学生；U=当时代表资格来源未知；SRC-002/008/012；F002/F008—F011；M002/M026；用可信唯一标识＋届次＋有效区间连接校工会名册 A；姓名不作唯一键；后续退出不回溯取消历史资格；T 名册吻合→PASS_FACT；F→NOT_APPLICABLE/建议渠道；U→SOURCE_UNAVAILABLE，冲突→CONFLICT；下一校工会资格经办。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "semantic", targetScope: 'case' },
+    { id: "R004", title: "文书署名与权利主体一致", requirement: "原稿规则 R004：R004 文书署名与权利主体一致；C02—C04；T=收到声称本人提案文本；F=仅批次准备、尚无提案；U=提交者/署名关联无法读取；SRC-008/012；F007—F009/F012/F015/F022；M004/M008；核 M004 原件署名与 F008 可信身份、收件事件及版本；B 原签名不能被 OCR 自动改写；T 一致→PASS_FACT；署名≠真实身份→CONFLICT；U→UNREADABLE/NEEDS_MATERIAL；下一本人及校工会。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "semantic", targetScope: 'case' },
+    { id: "R005", title: "提案正文范围与结构事实", requirement: "原稿规则 R005：R005 提案正文范围与结构事实；C02/C07；T=申请首提或正文已修订；F=无正文提交阶段；U=正文不可解析；SRC-008/012/014/015；F015—F019/F022；M004；只核题目、案由、建议内容及版本是否存在、可读且归当前案；不评价建议是否科学、应否立案；T 可读与归属清楚→PASS_FACT；空页→NEEDS_MATERIAL，扫描不可读→UNREADABLE；校本必填格式另由 R032 核，下一代表/校工会。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R006", title: "引用事实及附件一一对应", requirement: "原稿规则 R006：R006 引用事实及附件一一对应；C02/C07/C11；T=正文逐项引用附件/具体事实；F=明确无引用；U=有附件标题但来源/页码不明；SRC-008/012；F016/F023；M004/M005；核引文—附件页—提案号—版本、形成主体；校内记录 A 可替代上传；不以附件断定实体事实成立；T 完整归属→PASS_FACT；引用缺页→NEEDS_MATERIAL；混入他案→CONFLICT；下一代表/材料持有人。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "semantic", targetScope: 'case' },
+    { id: "R007", title: "代交事实及授权", requirement: "原稿规则 R007：R007 代交事实及授权；C04/C14；T=实际提交人不同于提案权主体/代理主张；F=本人直接签交有可信记录；U=提交会话身份未知；SRC-008/012；F007/F008/F012/F013；M002/M007/M008；比授权人、受托人、所代理动作、期限、提案版本；A 的登录只证实际操作者，B 的授权仍需验；T 授权证据一致→PASS_FACT 仅代理事实；冒用→CONFLICT；校本是否承认代理形式由 R032 单独给 POLICY_UNCONFIRMED；下一本人/校工会。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R008", title: "联名/附议与签署范围", requirement: "原稿规则 R008：R008 联名/附议与签署范围；C03/C07；T=提案声明多名代表/团体签署；F=可信证明只有本人独立提出；U=签名人数或归属不可知；SRC-008/010（仅反例）/012；F011/F014/F022；M002/M004/M006；每个签名对人、届次及所签版本，核一人一授权；不采用外校“1+2”人数和会前一个月；T 签署事实一致→PASS_FACT；版本错位→CONFLICT；合法形式/人数须另由 R032 核且保持 POLICY_UNCONFIRMED；下一校工会和签署人。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R009", title: "敏感材料最小披露", requirement: "原稿规则 R009：R009 敏感材料最小披露；C02/C07/C11/C12/C17；T=案由、附件或答复涉及个人/未公开数据；F=有权核实非敏感；U=保密类别未知；SRC-008/012/019；F016—F019/F023；M004/M005/M017/M019/M027；以原材料分类和有权保密意见定访问范围；第6条必要性及第28—30条涉敏特别要求须经有权数据保护人员确认；保密判断不得由 OCR 定性；T 确有可信权限限定→PASS_FACT（仅访问控制事实）；未知→NEEDS_HUMAN_DECISION，越权暴露阻断；下一保密/工会有权人员。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R010", title: "真实接收及案号", requirement: "原稿规则 R010：R010 真实接收及案号；C02/C06/C08；T=声称已正式递交/接收；F=本地草稿未提交；U=收件台账失联；SRC-001/008/014；F006/F020—F022；M004/M008；校工会 A 的收件号、时间、通道与当前内容版本核对；内部临时案 ID 不冒充正式立案号；T 对上→PASS_FACT 仅“已接收”；U→SOURCE_UNAVAILABLE；上传成功≠校方收件；下一校工会经办。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R011", title: "截止与批次时间比对", requirement: "原稿规则 R011：R011 截止与批次时间比对；C06；T=有效征集起止与可信接收时间都可取；F=尚无正式接收或不需要时限核证；U=通知截止或可信接收时间缺一；SRC-008/010（禁止移植）/012；F003—F005/F020/F021；M001/M008；用 A 中当期通知的时间区间对 F021；F020 本地填写仅主张；是否受理迟交为独立裁量；T 时序一致→PASS_FACT；实际超出只报“时序事实”，不自动拒收；U→POLICY_UNCONFIRMED/SOURCE_UNAVAILABLE；下一校工会。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R012", title: "修订、替换与证据指纹", requirement: "原稿规则 R012：R012 修订、替换与证据指纹；C07及后续重审；T=当前材料指纹/版本相较前次变更；F=版本确实未变；U=前后版本无法关联；SRC-008/012；F022/F023/F026/F042；M004/M005/M009；old→new 哈希、提案号、每项附件、签名范围和提交时点；不可覆写历史；重审仅影响字段对应 R；T 链完整→PASS_FACT（版本事实）并生成受影响重审；链断→CONFLICT；下一代表/工会经办。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "semantic", targetScope: 'case' },
+    { id: "R013", title: "正式补正要求及期限", requirement: "原稿规则 R013：R013 正式补正要求及期限；C07；T=声称学校已发补正要求；F=代表主动修改且无校方补正；U=通知来源无法验证；SRC-012/014/015；F024/F025；M010；核通知原文、对象、发出和送达、时限是否源自有权文件；不得自造“逾期不补即驳回”；T 通知事实有证→PASS_FACT；U→SOURCE_UNAVAILABLE；期限校本效力由 R032 单独核定；下一校工会。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R014", title: "补正件实际递交", requirement: "原稿规则 R014：R014 补正件实际递交；C07；T=声称已经补件；F=只有补正要求未递交；U=更新记录不完整；SRC-008/012；F020/F022—F026；M004/M009/M011；核新提交附件与原问题项对应、收件时间及指纹；补正件独立于学校发的 M010；T 新件真实且关联正确→PASS_FACT；已发生应有件缺→NEEDS_MATERIAL；下一代表/校工会经办。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "semantic", targetScope: 'case' },
+    { id: "R015", title: "审查会议或审核行为存在", requirement: "原稿规则 R015：R015 审查会议或审核行为存在；C08/C09；T=已进入有权机构审议并声称有记录；F=案件尚在提交/补件；U=议事记录失联；SRC-001/003/004/008/011/014/015；F006/F027/F030；M008/M012；核会名、日期、议题清单、提案号、当时版本；章程第44条只证执委会受授权职责，不能替真实审定记录；T 存在真实审查事实→PASS_FACT；U→SOURCE_UNAVAILABLE；无权个人批注不能成立机构决定；下一委员会/工会。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R016", title: "立案/不立案决定真实性及权限", requirement: "原稿规则 R016：R016 立案/不立案决定真实性及权限；C08/C09/C10；T=主张有正式审定结论；F=只有初审、尚未出决定；U=决定件或授权表无法取得；SRC-001/003/004/006/008/012/014/015；F027—F030；M003/M012；比 A 的决定号、签发人、组织授权、政策效力、决定指向的提案版本；2025 校长办公会个例不普适；T 且原件/授权/效力均可核→PASS_FACT（仅“正式结论存在”）；仅有原文未核权限→NEEDS_HUMAN_DECISION/POLICY_UNCONFIRMED；U→SOURCE_UNAVAILABLE；下一真正有权审定机构。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R017", title: "审定结果通知及送达", requirement: "原稿规则 R017：R017 审定结果通知及送达；C09；T=宣称已告知代表审定结果；F=未宣称已告知/尚无决定；U=通知渠道或原件不可得；SRC-008/012/014；F006/F028/F030/F042；M012/M013；核正文结论与同版本 M012 一致、收件人及通知送达证据；校本是否强制通知待核；T 通知事实一致→PASS_FACT；无送达不能输出已告知；U→SOURCE_UNAVAILABLE；下一校工会/收件人。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R018", title: "并案、重复及转普通建议", requirement: "原稿规则 R018：R018 并案、重复及转普通建议；C09；T=有两案关联/不立案转建议主张；F=无合并/转办事件；U=仅标题相似无法识别正式处理；SRC-003/008/010/012/017（外校均仅参考）；F006/F015—F017/F031；M004/M012/M014；保留每案主体、诉求、版本和原编号；只有 A 的正式关联决定能触发关联；不得机器合并或照搬外校转建议程序；T 关联文书一致→PASS_FACT；仅相似→NEEDS_HUMAN_DECISION；校本结果种类不明→POLICY_UNCONFIRMED；下一审定组织。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R019", title: "分办与主协办确定", requirement: "原稿规则 R019：R019 分办与主协办确定；C10/C11；T=声称已分办给某部门；F=审查中尚未分办；U=分办文书无法取到；SRC-003/006/008/012；F006/F018/F032/F033；M012/M015；分办号、权限来源、提案号、主协办及先后时序；不从 2025 校长办公会议题推全部个案；T 分办事实一致→PASS_FACT；与审定冲突→CONFLICT；U→SOURCE_UNAVAILABLE；下一校工会分办经办。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R020", title: "承办单位签收与归口", requirement: "原稿规则 R020：R020 承办单位签收与归口；C10/C11；T=声称承办单位已收件；F=仅发出分办尚未宣称收件；U=部门收文台账不可得；SRC-003/006/008；F032—F034；M015/M016；每主办/协办单位分别核收件文号、时间、范围，不能把协办当主签发单位；T 接收事实相符→PASS_FACT；U→SOURCE_UNAVAILABLE，不推定拒办；下一承办单位。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R021", title: "办理进展与已落实证据", requirement: "原稿规则 R021：R021 办理进展与已落实证据；C11/C12；T=承办主张措施已实施/按进度办理；F=无实施主张，仅讨论方案；U=记录缺页或阶段不明；SRC-003/006/008/012；F032/F035；M015/M017；把计划、过程、已实施分别标记；对原措施逐项指向承办 A 记录、实施时间及附件，不能推定采纳；T 所主张层级有对应履职证据→PASS_FACT（仅该层级事实）；主张已实施却只有计划→NEEDS_MATERIAL；实质采纳由原有权机构裁量；下一主承办。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "semantic", targetScope: 'case' },
+    { id: "R022", title: "外部实体审批只读引用", requirement: "原稿规则 R022：R022 外部实体审批只读引用；C11/C12；T=答复明示资金、采购、人事、科研等已有批准/否决；F=纯建议或无实体决定主张；U=引用编号/所有权未知；SRC-006/008/013；F035/F036；M017/M018；查原 G50/S/T Owner、Decision ID、结论、版本、效力时间；旧 run@rev、口头“已批”不得充当前决定；T 引用可信且有效→PASS_FACT 仅“引用存在”；矛盾→CONFLICT；U→SOURCE_UNAVAILABLE；下一原业务 Owner。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R023", title: "承办答复原件与签发者", requirement: "原稿规则 R023：R023 承办答复原件与签发者；C12；T=承办宣称已正式答复；F=办理中尚无答复；U=签发记录/授权不可取；SRC-006/008/012；F006/F035/F037/F038；M003/M017/M019；核 M019 原文、针对的 M004 版本、主办/协办身份、成文日、签发凭据；不能凭扫描章猜授权；T 且原文、版本、签发者及授权均可核→PASS_FACT；仅见答复草稿或权限不明→POLICY_UNCONFIRMED/NEEDS_HUMAN_DECISION；下一主承办及签发授权机关。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R024", title: "答复送达与接收", requirement: "原稿规则 R024：R024 答复送达与接收；C12/C13；T=声称答复已交代表；F=尚无正式答复/尚未交付；U=回执渠道不可访问；SRC-008/012；F038/F039/F042；M019/M020；送达对象身份、送达时间、答复版本三方比对；“答复 PDF 存在”非送达证据；T 可对→PASS_FACT；旧版本回执→CONFLICT；U→SOURCE_UNAVAILABLE；下一工会/承办送达经办。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "semantic", targetScope: 'case' },
+    { id: "R025", title: "代表本人反馈与询问监督", requirement: "原稿规则 R025：R025 代表本人反馈与询问监督；C13；T=有代表反馈/异议/询问主张；F=确实尚未反馈；U=反馈主体或文件不可取；SRC-008/012；F008/F039/F042；M002/M020/M021；比当时反馈权主体、签署意愿、答复版本及实际时间；未回复不等于满意，满意不等于实体办结；T 意思表示可核→PASS_FACT；代勾/错版→CONFLICT；U→SOURCE_UNAVAILABLE；下一本人及校工会。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R026", title: "撤回请求真实性", requirement: "原稿规则 R026：R026 撤回请求真实性；C14；T=提案人主张撤回/变更继续办理的请求；F=无撤回请求；U=身份或请求原件无法核；SRC-008/012/014；F008/F013/F040/F042；M002/M007/M022；对本人身份/代理范围、请求时点、所针对原案与版本，只证申请意愿，不判准许；T 请求事实成立→PASS_FACT；校本是否允许该阶段撤回→POLICY_UNCONFIRMED；下一校工会/有权处置人。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R027", title: "撤回处置及效力", requirement: "原稿规则 R027：R027 撤回处置及效力；C14；T=声称撤回已被批准或处理；F=仅提出请求尚未有处置；U=处置原件/权限未知；SRC-008/012/014/015；F029/F030/F040/F042；M003/M022/M023；比决定签发机关、授权范围、原提案状态与生效时点；保留既有立案与办件事件；T 且处置文书及权限核证一致→PASS_FACT（仅“有权处置已记录”）；权限不明→NEEDS_HUMAN_DECISION；U→SOURCE_UNAVAILABLE；下一有权处置机构。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R028", title: "复核/异议请求真实性", requirement: "原稿规则 R028：R028 复核/异议请求真实性；C15；T=当事人对具体决定/答复提出异议、请求复核；F=无请求；U=对象、主体或收件未知；SRC-008/012；F008/F029/F040/F042；M002/M024；比所争原决定版本、提出主体与时间、新证据锚点；不得因提出异议而撤销原决定；T 请求事实成立→PASS_FACT；渠道/期限未核→POLICY_UNCONFIRMED；下一校工会或实际授权复核机构。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R029", title: "复核/重新办理结果", requirement: "原稿规则 R029：R029 复核/重新办理结果；C15；T=有“复核结果/责令重办”主张；F=复核尚未决定；U=结果或组织权限未取得；SRC-008/012/014/015；F029/F030/F040/F042；M003/M024/M025；核原决定与新决定的关联、组织签发、效力版本和通知；不覆写旧案事实；T 且新结果原件、授权及关联均已核→PASS_FACT（仅决定存在事实）；权限未明→NEEDS_HUMAN_DECISION；U→SOURCE_UNAVAILABLE；下一校本有权复核机关。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R030", title: "届次/资格变动对历史提案影响", requirement: "原稿规则 R030：R030 届次/资格变动对历史提案影响；C16；T=有补选、撤换、退休、调离或跨届；F=可信资料证实无变化；U=名单变更不可得；SRC-002/008/012；F002/F008—F011/F026；M002/M026；以事件日期对当时名册有效区间，原身份和原提交版本留存；不得用当前状态否定过去合法行为；T 变化事实可核→PASS_FACT；后续承接规则未知→POLICY_UNCONFIRMED；下一校工会资格经办。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "semantic", targetScope: 'case' },
+    { id: "R031", title: "督办汇总与大会审议覆盖", requirement: "原稿规则 R031：R031 督办汇总与大会审议覆盖；C17；T=主张本案已纳入某届次办理报告/会议审议；F=尚未报告或无此主张；U=报告来源不可访问；SRC-004/005/008/011/014/015；F002/F003/F006/F041/F042；M012/M019/M027；章程第43条第（五）项直接确立报告审议职能；仍逐案核报告年度、会议、案号/汇总口径，报告总数不能反推单案已采纳/终结；T 覆盖事实可信→PASS_FACT；单案办结仍需原案证据；U→SOURCE_UNAVAILABLE；下一校工会/执委会。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "semantic", targetScope: 'case' },
+    { id: "R032", title: "校本政策及授权时效", requirement: "原稿规则 R032：R032 校本政策及授权时效；C01/C03/C06/C08/C12/C14/C15；T=某核验或签发依赖校本规则/权限；F=纯原件可读性等不涉校本阈值；U=版本效力/废改不可核；SRC-005/008/009/010（外校或转载只背景）/011/012/014/015/016/018；F004/F005/F014/F025/F029/F038；M001/M003；核发文机关、原件附件、通过/公布、生效/废止、适用届次、授权范围；2018目录与2019/2020/2025列名不能视为现行正文；2012联合通知也未规定单案阈值；T 校本效力源真实且适用→PASS_FACT 仅“政策适用事实”；U→POLICY_UNCONFIRMED，不能硬判联名数、逾期、终结；下一工会及制度管理者。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R033", title: "程序事件与旧结论版本连续性", requirement: "原稿规则 R033：R033 程序事件与旧结论版本连续性；C02—C17；T=跨阶段引用前序事实或材料替换；F=目前只有单一尚未接收的草稿；U=原始事件索引断链；SRC-008/012；F006/F022/F026/F030/F038/F042；M008/M009/M012/M015/M019/M025/M027；按时间索引 Case/Revision/Event/Decision 及来源哈希；只将失效旧 Check 标过期，禁止构造缺失签发事件；T 链完整→PASS_FACT；版本错配→CONFLICT，来源失联→SOURCE_UNAVAILABLE；下一原事件 Owner/校工会。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+    { id: "R034", title: "角色访问与材料脱敏权限", requirement: "原稿规则 R034：R034 角色访问与材料脱敏权限；所有进入敏感卷宗的操作；T=发生读取、共享、导出或送达敏感字段；F=无访问/披露行为；U=访问者授权不明；SRC-001/008/012/019；F008/F012/F019/F023/F029/F036/F039/F040；M002/M003/M005/M018/M019/M021/M024；服务端真实 actor、权限范围、所属案、访问目的、必要性及数据版本审核；前端角色、邮件抄送及公开新闻不能授予权限；涉及法定敏感信息时另核处理依据；T 访问者经授权且内容最小化→PASS_FACT 仅访问核验；未核权限→NEEDS_HUMAN_DECISION 且不披露；下一业务 Owner/保密或隐私负责人。本地事实/证据预审；校本政策、权限或终局决定未确认时必须人工复核，不得自动批准或拒绝。", execution: "manual", targetScope: 'case' },
+      ],
+    },
+  ],
+  policyVersionIds: [],
+  stages: [
+    { id: "batch-intake", name: "A 当期征集启动", kind: "manual-review", executorRole: "reviewer", workflowOwner: 'local', nextStageId: "submission" },
+    { id: "submission", name: "B 起草/代交/提交", kind: "manual-review", executorRole: "reviewer", workflowOwner: 'local', nextStageId: "receipt-review" },
+    { id: "receipt-review", name: "C 接收、初核与补正（拟）", kind: "manual-review", executorRole: "reviewer", workflowOwner: 'local', nextStageId: "authorized-filing" },
+    { id: "authorized-filing", name: "D 专门机构审查、立案/不立案/并案或转建议（校本待确认）", kind: "manual-review", executorRole: "teacher", workflowOwner: 'local', nextStageId: "handling" },
+    { id: "handling", name: "E 分办及承办落实", kind: "manual-review", executorRole: "reviewer", workflowOwner: 'local', nextStageId: "reply-feedback" },
+    { id: "reply-feedback", name: "F 回复/采纳情况说明与代表反馈", kind: "manual-review", executorRole: "reviewer", workflowOwner: 'local', nextStageId: "oversight-report" },
+    { id: "oversight-report", name: "G 督办、复核、汇总与下一次大会报告", kind: "finalize", executorRole: "teacher", workflowOwner: 'local' },
+  ],
+  outputs: [
+    { id: 'review-feedback', kind: 'item-feedback', audience: 'reviewer' },
+    { id: 'supplement-checklist', kind: 'supplement-list', audience: 'teacher' },
+  ],
+  autoPassPolicy: { enabled: false },
+  status: 'draft',
+  createdAt: '2026-10-24T00:00:00.000Z',
+}
+
+export default templateVersion

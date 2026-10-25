@@ -1,0 +1,204 @@
+bun test v1.4.0 (34cbb9a40)
+[配置] 已创建 SDK 配置目录: /tmp/p06-owner-recovery-hgx5YO/sdk-config
+[协作工具] EventBus 阻塞事件监听已注册
+[配置] 已创建 Agent 会话目录: /tmp/p06-owner-recovery-hgx5YO/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/p06-owner-recovery-hgx5YO/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p06-owner-recovery-hgx5YO/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-owner-recovery-hgx5YO/agent-workspaces/default/SESSION_0157a78f0ce6
+[Agent 会话] 已创建会话: 合成普通 Agent (SESSION_0157a78f0ce6)
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-owner-recovery-hgx5YO/agent-workspaces/default/SESSION_d975d4da1c95
+[Agent 会话] 已创建会话: 合成隐藏审核 (SESSION_d975d4da1c95)
+[数据恢复] 从 .bak 文件恢复: /tmp/p06-owner-recovery-hgx5YO/agent-sessions.json
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-owner-recovery-hgx5YO/agent-workspaces/default/SESSION_0e1007ef1a6a
+[Agent 会话] 已创建会话: 合成隐藏审核 (SESSION_0e1007ef1a6a)
+[配置] 已创建 Pi 检查点目录: /tmp/p06-owner-recovery-hgx5YO/agent-checkpoints
+[Agent 会话] 已清理 session 工作目录: /tmp/p06-owner-recovery-hgx5YO/agent-workspaces/default/SESSION_0e1007ef1a6a
+[Agent 会话] 已删除会话: 合成隐藏审核 (SESSION_0e1007ef1a6a)
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-owner-recovery-hgx5YO/agent-workspaces/default/SESSION_ce7376642dd4
+[Agent 会话] 已创建会话: 合成隐藏审核 (SESSION_ce7376642dd4)
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-owner-recovery-hgx5YO/agent-workspaces/default/SESSION_00db86494860
+[Agent 会话] 已创建会话: 合成隐藏审核 (SESSION_00db86494860)
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-owner-recovery-hgx5YO/agent-workspaces/default/SESSION_f51db6d6c42f
+[Agent 会话] 已创建会话: 合成隐藏审核 (SESSION_f51db6d6c42f)
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-owner-recovery-hgx5YO/agent-workspaces/default/SESSION_bc1029a413f3
+[Agent 会话] 已创建会话: 合成普通 Agent (SESSION_bc1029a413f3)
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-owner-recovery-hgx5YO/agent-workspaces/default/SESSION_4ad22c5fc0d9
+[Agent 会话] 已创建会话: 合成普通 Agent (SESSION_4ad22c5fc0d9)
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-owner-recovery-hgx5YO/agent-workspaces/default/SESSION_e2cf30896700
+[Agent 会话] 已创建会话: 合成普通 Agent (SESSION_e2cf30896700)
+[配置] 已创建 SDK 配置目录: /tmp/p06-pi-permission-wiring-ZT5HyE/sdk-config
+[协作工具] EventBus 阻塞事件监听已注册
+[身份] 设备身份: Linux (Bot) (SESSION_a85f00da3095)
+[渠道管理] 已创建渠道: 合成权限渠道 (SESSION_f9b94321ea84)
+[配置] 已创建 Agent 会话目录: /tmp/p06-pi-permission-wiring-ZT5HyE/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/p06-pi-permission-wiring-ZT5HyE/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/p06-pi-permission-wiring-ZT5HyE/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-pi-permission-wiring-ZT5HyE/agent-workspaces/default/SESSION_30b349f8b974
+[Agent 会话] 已创建会话: 合成 auto 权限 (SESSION_30b349f8b974)
+[Agent 会话] 已更新会话: 合成 auto 权限 (SESSION_30b349f8b974)
+[渠道管理] 已应用渠道配置迁移或预设模型更新
+[Agent 编排] 请求路由: {
+  sessionId: "SESSION_30b349f8b974",
+  requestSource: "agent-message",
+  channelId: "SESSION_f9b94321ea84",
+  modelId: "synthetic-model",
+  provider: "deepseek",
+}
+[Agent 编排] Resume 状态: sdkSessionId=无, proma sessionId=SESSION_30b349f8b974
+[Agent 编排] 启动 Pi runtime，模型: synthetic-model, resume: 无
+[Agent 工作区] 已创建 plugin manifest: default
+[Agent 工作区] 已创建默认工作区
+[Agent 编排] 使用 session 级别 cwd: /tmp/p06-pi-permission-wiring-ZT5HyE/agent-workspaces/default/SESSION_30b349f8b974 (默认工作区/SESSION_30b349f8b974)
+[Agent 编排] 无 sdkSessionId，将作为新会话启动（回填历史上下文）
+[Pi 桥接] 已挂载 5 个工具（激活组: 仅基础）
+[Agent 编排] 权限模式: auto（外部覆盖）
+[Skill 路由] {"sessionId":"SESSION_30b349f8b974","allowed":[],"blocked":[],"selected":[],"diagnostics":[]}
+[代理配置] 配置文件不存在，使用默认配置
+[配置] 已创建 Pi 检查点目录: /tmp/p06-pi-permission-wiring-ZT5HyE/agent-checkpoints
+[Agent 编排] 开始通过 Adapter 遍历事件流...
+[Agent 编排] SDK 路由输入: {
+  sessionId: "SESSION_30b349f8b974",
+  channelId: "SESSION_f9b94321ea84",
+  provider: "deepseek",
+  configuredModelId: "synthetic-model",
+  effectiveSdkModelId: "synthetic-model",
+  oneMillionContextEnabled: false,
+  betaCount: 0,
+  authMode: "api-key",
+  agentUrlOrigin: "https://example.invalid",
+  agentUrlPathname: "/",
+  appProxyEnabled: true,
+}
+[Agent 编排] result 到达: sessionId=SESSION_30b349f8b974, subtype=success, terminal_reason=undefined, keepChannelOpen=false
+[Agent 会话] 已更新会话: 合成 auto 权限 (SESSION_30b349f8b974)
+[Agent 会话] 已更新会话: 合成 auto 权限 (SESSION_30b349f8b974)
+[配置] 已创建 Agent 会话工作目录: /tmp/p06-pi-permission-wiring-ZT5HyE/agent-workspaces/default/SESSION_646ff61127ab
+[Agent 会话] 已创建会话: 合成模式热切换 (SESSION_646ff61127ab)
+[Agent 会话] 已更新会话: 合成模式热切换 (SESSION_646ff61127ab)
+[Agent 编排] 请求路由: {
+  sessionId: "SESSION_646ff61127ab",
+  requestSource: "agent-message",
+  channelId: "SESSION_f9b94321ea84",
+  modelId: "synthetic-model",
+  provider: "deepseek",
+}
+[Agent 编排] Resume 状态: sdkSessionId=无, proma sessionId=SESSION_646ff61127ab
+[Agent 编排] 启动 Pi runtime，模型: synthetic-model, resume: 无
+[Agent 编排] 使用 session 级别 cwd: /tmp/p06-pi-permission-wiring-ZT5HyE/agent-workspaces/default/SESSION_646ff61127ab (默认工作区/SESSION_646ff61127ab)
+[Agent 编排] 无 sdkSessionId，将作为新会话启动（回填历史上下文）
+[Pi 桥接] 已挂载 5 个工具（激活组: 仅基础）
+[Agent 编排] 权限模式: auto（外部覆盖）
+[Skill 路由] {"sessionId":"SESSION_646ff61127ab","allowed":[],"blocked":[],"selected":[],"diagnostics":[]}
+[代理配置] 配置文件不存在，使用默认配置
+[Agent 编排] 开始通过 Adapter 遍历事件流...
+[Agent 编排] SDK 路由输入: {
+  sessionId: "SESSION_646ff61127ab",
+  channelId: "SESSION_f9b94321ea84",
+  provider: "deepseek",
+  configuredModelId: "synthetic-model",
+  effectiveSdkModelId: "synthetic-model",
+  oneMillionContextEnabled: false,
+  betaCount: 0,
+  authMode: "api-key",
+  agentUrlOrigin: "https://example.invalid",
+  agentUrlPathname: "/",
+  appProxyEnabled: true,
+}
+[Agent 编排] 运行中权限模式已切换: sessionId=SESSION_646ff61127ab, mode=plan
+[Agent 编排] 运行中权限模式已切换: sessionId=SESSION_646ff61127ab, mode=bypassPermissions
+[Agent 编排] result 到达: sessionId=SESSION_646ff61127ab, subtype=success, terminal_reason=undefined, keepChannelOpen=false
+[Agent 会话] 已更新会话: 合成模式热切换 (SESSION_646ff61127ab)
+[Agent 会话] 已更新会话: 合成模式热切换 (SESSION_646ff61127ab)
+[配置] 已创建配置目录: /tmp/p06-live-gates-ascgmznf/config
+[配置] 已创建 SDK 配置目录: /tmp/review-main-bridge-0FzBFG/sdk-config
+[身份] 设备身份: Linux (Bot) (SESSION_d7b5f1585d78)
+[渠道管理] 已创建渠道: 合成审核渠道 (SESSION_d927d9311bc5)
+[设置] 已更新 keys: agentChannelId, agentModelId
+[审核模板] 已发布: bridge-SESSION_165659bbf0d3@1
+[渠道管理] 已应用渠道配置迁移或预设模型更新
+[配置] 已创建 Agent 会话目录: /tmp/review-main-bridge-0FzBFG/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/review-main-bridge-0FzBFG/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/review-main-bridge-0FzBFG/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-0FzBFG/agent-workspaces/default/SESSION_0b355cde5ded
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_165659bbf0d3 (SESSION_0b355cde5ded)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_165659bbf0d3 (SESSION_0b355cde5ded)
+[审核模板] 已发布: bridge-SESSION_9668c6a1aa22@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-0FzBFG/agent-workspaces/default/SESSION_6d17a3409393
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_9668c6a1aa22 (SESSION_6d17a3409393)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_9668c6a1aa22 (SESSION_6d17a3409393)
+[审核模板] 已发布: bridge-SESSION_44d92104c4e8@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-0FzBFG/agent-workspaces/default/SESSION_2942560736a6
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_44d92104c4e8 (SESSION_2942560736a6)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_44d92104c4e8 (SESSION_2942560736a6)
+[审核模板] 已发布: bridge-SESSION_0a66fbaee250@1
+[审核模板] 已发布: bridge-SESSION_590e05ab25be@1
+[渠道管理] 已更新渠道: 合成审核渠道 (SESSION_d927d9311bc5)
+[渠道管理] 已更新渠道: 合成审核渠道 (SESSION_d927d9311bc5)
+[审核模板] 已发布: bridge-SESSION_5dbf5735e4e3@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-0FzBFG/agent-workspaces/default/SESSION_d14f8e9f5b2c
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_5dbf5735e4e3 (SESSION_d14f8e9f5b2c)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_5dbf5735e4e3 (SESSION_d14f8e9f5b2c)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_5dbf5735e4e3 (SESSION_d14f8e9f5b2c)
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-0FzBFG/agent-workspaces/default/SESSION_d5e87ba6f890
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_5dbf5735e4e3 (SESSION_d5e87ba6f890)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_5dbf5735e4e3 (SESSION_d5e87ba6f890)
+[渠道管理] 已创建渠道: 独立合成渠道 (SESSION_0e47fb034135)
+[审核模板] 已发布: bridge-SESSION_8f74febc7fbd@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-0FzBFG/agent-workspaces/default/SESSION_93b45f499d7f
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_8f74febc7fbd (SESSION_93b45f499d7f)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_8f74febc7fbd (SESSION_93b45f499d7f)
+[审核模板] 已发布: bridge-SESSION_48d8ec0dd8a2@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-0FzBFG/agent-workspaces/default/SESSION_7112122ce1ec
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_48d8ec0dd8a2 (SESSION_7112122ce1ec)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_48d8ec0dd8a2 (SESSION_7112122ce1ec)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_48d8ec0dd8a2 (SESSION_7112122ce1ec)
+[审核模板] 已发布: bridge-SESSION_634a991c5297@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-0FzBFG/agent-workspaces/default/SESSION_123728483342
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_634a991c5297 (SESSION_123728483342)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_634a991c5297 (SESSION_123728483342)
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-0FzBFG/agent-workspaces/default/SESSION_72d48d9bad90
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_634a991c5297 (SESSION_72d48d9bad90)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_634a991c5297 (SESSION_72d48d9bad90)
+[审核专区] IPC 处理器注册完成
+[审核模板] 已发布: bridge-SESSION_66f2a81b7b9e@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-main-bridge-0FzBFG/agent-workspaces/default/SESSION_3d686786ab68
+[Agent 会话] 已创建会话: 审核：bridge-SESSION_66f2a81b7b9e (SESSION_3d686786ab68)
+[Agent 会话] 已更新会话: 审核：bridge-SESSION_66f2a81b7b9e (SESSION_3d686786ab68)
+[配置] 已创建 SDK 配置目录: /tmp/review-startup-io-0ipzHD/sdk-config
+[审核模板] 已发布: startup-SESSION_8128c6b2d140@1
+[配置] 已创建 Agent 会话目录: /tmp/review-startup-io-0ipzHD/agent-sessions
+[配置] 已创建 Agent 工作区目录: /tmp/review-startup-io-0ipzHD/agent-workspaces
+[配置] 已创建 Agent 工作区: /tmp/review-startup-io-0ipzHD/agent-workspaces/default
+[配置] 已创建 Agent 会话工作目录: /tmp/review-startup-io-0ipzHD/agent-workspaces/default/SESSION_8b4744b339af
+[Agent 会话] 已创建会话: 合成 owner (SESSION_8b4744b339af)
+[审核模板] 已发布: startup-SESSION_faed8ec86ae7@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-startup-io-0ipzHD/agent-workspaces/default/SESSION_6518a8048f74
+[Agent 会话] 已创建会话: 合成 owner (SESSION_6518a8048f74)
+[审核模板] 已发布: startup-SESSION_84ba6b5b4f19@1
+[配置] 已创建 Agent 会话工作目录: /tmp/review-startup-io-0ipzHD/agent-workspaces/default/SESSION_691fcf1280b4
+[Agent 会话] 已创建会话: 合成 owner (SESSION_691fcf1280b4)
+[审核模板] 已发布: bg-probe-template-1e65472a@1
+[审核模板] 已发布: bg-probe-template-cb60329a@1
+[审核模板] 已发布: bg-probe-template-9780bf11@1
+[审核模板] 已发布: bg-probe-template-77cf2687@1
+[审核模板] 已发布: bg-probe-template-7e0706ec@1
+[审核模板] 已发布: bg-probe-template-29889dea@1
+[审核模板] 已发布: bg-probe-template-b49fda63@1
+[审核模板] 已发布: bg-probe-template-a9480829@1
+[审核模板] 已发布: bg-probe-template-43414af6@1
+[审核模板] 已发布: bg-probe-template-1636ec04@1
+[审核模板] 已发布: bg-probe-template-459b8bc7@1
+[审核模板] 已发布: bg-probe-template-b74bd345@1
+[审核模板] 已发布: bg-probe-template-3186d5b6@1
+[审核模板] 已发布: bg-probe-template-ae1d9339@1
+[审核模板] 已发布: bg-probe-template-4a98e723@1
+[审核模板] 已发布: bg-probe-template-64cb7013@1
+[审核模板] 已发布: bg-probe-template-4fb61053@1
+[审核模板] 已发布: bg-probe-template-73375741@1
+[审核模板] 已发布: bg-probe-template-7f1c6e55@1
+[审核模板] 已发布: bg-probe-template-2a16c55a@1
+[审核模板] 已发布: bg-probe-template-f1f07fcb@1
+R1_EQUIV_HOOK_CONTROLLER witness_reads=2 stale_rejected=true
+R1_EQUIV_HOOK_HOOK witness_reads=2 stale_rejected=true
+R1_EQUIV_CONTROLLER_HOOK witness_reads=2 stale_rejected=true
+R1_EQUIV_DELAYED_VALIDITY validity_reads=2 stale_rejected=true

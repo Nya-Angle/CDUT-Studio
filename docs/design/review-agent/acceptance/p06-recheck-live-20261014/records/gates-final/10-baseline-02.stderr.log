@@ -1,0 +1,12 @@
+
+apps/electron/src/main/lib/review/run-service-v2.artifacts.test.ts:
+(pass) N2b 节点产物与事件（R03） > Given 正常运行 When 执行 Then 每节点产物落盘且事件即时回调（修正误判 1） [4.43ms]
+(pass) N2b 节点产物与事件（R03） > Given 中途失败 When 运行 Then 已完成节点产物保留（崩溃可续） [1.77ms]
+(pass) N2b 节点产物与事件（R03） > Given 产物被删 When 恢复 Then 该节点重做（R03 恢复核验） [2.16ms]
+(pass) N2b 输入快照完整性（R04，修正误判 3） > Given caseFields 变化 When 计算 hash Then 变化（旧实现不包含 caseFields） [0.09ms]
+(pass) coverage 由产物账本装配（G12） > Given 模板无政策规则 When 运行 Then coverage 由材料账本如实给出（plannedChecks=0） [2.69ms]
+
+ 5 pass
+ 0 fail
+ 12 expect() calls
+Ran 5 tests across 1 file. [70.00ms]

@@ -1,0 +1,29 @@
+{
+  "name": "reboot-recovered-native",
+  "sourceSha": "e7323fb48e95ac1247027ad2e2d200f49a71a590",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014",
+  "argv": [
+    "node",
+    "scripts/qa/review-live-io.mjs",
+    "reboot-recovered"
+  ],
+  "startedAt": "2026-10-14T15:13:59.853656+00:00",
+  "environment": {
+    "NO_COLOR": "1",
+    "QA_REPORT_DIR": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/io",
+    "QA_PROFILE_ROOT": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile",
+    "QA_APPLICATION_SHA": "e7323fb48e95ac1247027ad2e2d200f49a71a590"
+  },
+  "finishedAt": "2026-10-14T15:14:04.607460+00:00",
+  "exitCode": 0,
+  "files": {
+    "reboot-recovered-native.stdout.log": {
+      "sha256": "966bdadde6aee93d52493253a341e634b941995c94386428b4353d8e64964166",
+      "bytes": 68
+    },
+    "reboot-recovered-native.stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  }
+}

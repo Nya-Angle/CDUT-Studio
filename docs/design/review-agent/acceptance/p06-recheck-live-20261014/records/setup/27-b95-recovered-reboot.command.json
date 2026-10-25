@@ -1,0 +1,38 @@
+{
+  "name": "27-b95-recovered-reboot",
+  "sourceSha": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027",
+  "cwd": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014",
+  "argv": [
+    "xvfb-run",
+    "-a",
+    "-s",
+    "-screen 0 1600x1000x24",
+    "bun",
+    "run",
+    "dev"
+  ],
+  "startedAt": "2026-10-14T16:31:16.087127+00:00",
+  "environment": {
+    "NO_COLOR": "1",
+    "PROFER_DEV": "1",
+    "PROFER_DEV_INSTANCE": "p06-recheck-live-auth-20261014",
+    "PROFER_VITE_PORT": "5176",
+    "QA_PROFILE_ROOT": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile",
+    "PROFER_CONFIG_DIR": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile/config",
+    "PROFER_USER_DATA_DIR": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile/user-data",
+    "ELECTRON_OVERRIDE_DIST_PATH": "/home/miku/Bot/CDUTStudio/.workdir/p06-recheck-live-20261014-private/authorized-profile/electron-dist",
+    "QA_APPLICATION_SHA": "b95b44f7a06bb1e1ae21a985b5bb4cd9f5581027"
+  },
+  "finishedAt": "2026-10-14T16:32:43.907257+00:00",
+  "exitCode": 1,
+  "files": {
+    "27-b95-recovered-reboot.stdout.log": {
+      "sha256": "16f0abfc0c181006e7d1fe6601569d4f396f36ecc30d772c76a96a4298562afb",
+      "bytes": 27440
+    },
+    "27-b95-recovered-reboot.stderr.log": {
+      "sha256": "7d77ac5e8748a129fcfe08415b0d4b6c94861b1df89e89d550cb37d39aa5e43c",
+      "bytes": 81
+    }
+  }
+}

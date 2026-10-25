@@ -1,0 +1,61 @@
+{
+  "domain": "G05",
+  "templateId": "g05-t02",
+  "businessDraft": "C-v0.1",
+  "businessSourceFile": "G05-T02_正式业务模板_MD_v0.1.md",
+  "businessSha256": "502e40a96c247d3d80df791534a416c070c5a5a2f54d6538b7b2864863ebd802",
+  "commonBaselineSha": "a7a6a11d4840ad64cfc858c17b35f35180adf063",
+  "workspace": "templates/g05-t02/workspace.json",
+  "selection": "templates/g05-t02/synthetic-selection.json",
+  "case": "templates/g05-t02/synthetic-case.json",
+  "coverage": "templates/g05-t02/coverage.json",
+  "moduleCount": 27,
+  "moduleUses": 27,
+  "sourceBindingCount": 67,
+  "sourceCount": 62,
+  "rawRuleCount": 46,
+  "rawNonRuleIdCount": 151,
+  "sharedFrozenModuleReuse": [],
+  "sharedReuseRationale": "候选 B01/B02 的冻结参数/实例作用域尚未逐R比对，本轮优先完整本地域局部模块，避免错用共享权威",
+  "d1": "PASS_SYNTHETIC_AUTHORING_AND_CLI",
+  "d3": "PASS_SYNTHETIC_TRANSFER_AND_CLI",
+  "d2": "PASS_SYNTHETIC_SCOPED_PLAN_AND_CLI",
+  "pi": "PASS_SYNTHETIC_PENDING_ONLY",
+  "status": "PARTIAL",
+  "policy": "POLICY_HOLD",
+  "gold": "NOT_ACCESSED",
+  "branchAxes": {
+    "primary": [
+      "student-team",
+      "department-team"
+    ],
+    "conditions": [
+      "br03",
+      "br04",
+      "br05",
+      "br06",
+      "br07",
+      "br08",
+      "br09",
+      "br10",
+      "br11",
+      "br12",
+      "br13",
+      "br14",
+      "br15"
+    ]
+  },
+  "branchNote": "BR applicable/unknown is a guard; original multi-value enums remain semantic and current school authority is POLICY_HOLD",
+  "onlineModel": "NOT_RUN",
+  "realSchoolApproval": "NOT_AUTHORIZED",
+  "technicalEvidence": "https://github.com/Fuck-GH-Admin/cdut-studio-review-agent/actions/runs/39051560191",
+  "semanticBusinessJudgment": "NOT_RUN",
+  "unresolvedClasses": [
+    "ENGINE_COMPLEX_STAGE",
+    "ENGINE_ADVANCED_EVIDENCE",
+    "POLICY_CURRENT_CDUT",
+    "EXTERNAL_AUTHORITY",
+    "TEST_GOLD_AND_ONLINE_MODEL"
+  ],
+  "statusReason": "All source-locked authoring and synthetic Pi pending-only checks passed, but full adjudicative business semantics, current rules, authority events, and Gold were not executed"
+}
