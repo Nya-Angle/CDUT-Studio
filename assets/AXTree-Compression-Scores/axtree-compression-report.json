@@ -1,0 +1,335 @@
+{
+  "benchmarkTimestamp": "2026-10-25T12:37:58.070Z",
+  "environment": {
+    "electronVersion": "43.7.7",
+    "chromiumVersion": "150.0.7871.250",
+    "nodeVersion": "24.21.0",
+    "os": "win32"
+  },
+  "summary": {
+    "realWorldSitesAverage": {
+      "tokenCompressionRatePercent": 90.89,
+      "compactTokenCompressionRatePercent": 94.05,
+      "domNodePruningRatePercent": 88.11,
+      "tokenReductionFactor": 23.6
+    },
+    "allSamplesCount": 9
+  },
+  "records": [
+    {
+      "name": "GitHub 官方门户首页 (Developer Platform)",
+      "category": "Large Online Portal",
+      "url": "https://github.com",
+      "title": "GitHub · Change is constant. GitHub keeps you ahead. · GitHub · GitHub",
+      "rawMetrics": {
+        "htmlChars": 585177,
+        "htmlBytes": 585277,
+        "htmlTokens": 163852,
+        "totalDomNodes": 2415,
+        "domJsonBytes": 871351,
+        "rawAxNodesCount": 1493,
+        "rawAxJsonBytes": 524475
+      },
+      "observationMetrics": {
+        "cdpDepth": 8,
+        "cdpDepthNodes": 1058,
+        "candidatesCount": 247,
+        "selectedCount": 240,
+        "prettyBytes": 29879,
+        "prettyTokens": 8360,
+        "compactBytes": 19775,
+        "compactTokens": 5531
+      },
+      "ratios": {
+        "tokenCompressPercent": 94.9,
+        "compactTokenCompressPercent": 96.62,
+        "byteCompressPercent": 94.89,
+        "tokenReductionFactor": 19.6,
+        "domNodePruningPercent": 90.06,
+        "domJsonCompressionPercent": 96.57,
+        "axNodePruningPercent": 83.92,
+        "axJsonReductionPercent": 94.3
+      }
+    },
+    {
+      "name": "必应搜索引擎首页 (Bing Search)",
+      "category": "Large Online Portal",
+      "url": "https://www.bing.com",
+      "title": "搜索 - Microsoft 必应",
+      "rawMetrics": {
+        "htmlChars": 372426,
+        "htmlBytes": 383827,
+        "htmlTokens": 106515,
+        "totalDomNodes": 1040,
+        "domJsonBytes": 400969,
+        "rawAxNodesCount": 579,
+        "rawAxJsonBytes": 283902
+      },
+      "observationMetrics": {
+        "cdpDepth": 8,
+        "cdpDepthNodes": 212,
+        "candidatesCount": 49,
+        "selectedCount": 49,
+        "prettyBytes": 5959,
+        "prettyTokens": 1648,
+        "compactBytes": 3877,
+        "compactTokens": 1065
+      },
+      "ratios": {
+        "tokenCompressPercent": 98.45,
+        "compactTokenCompressPercent": 99,
+        "byteCompressPercent": 98.45,
+        "tokenReductionFactor": 64.6,
+        "domNodePruningPercent": 95.29,
+        "domJsonCompressionPercent": 98.51,
+        "axNodePruningPercent": 91.54,
+        "axJsonReductionPercent": 97.9
+      }
+    },
+    {
+      "name": "Bun 现代全栈技术门户 (Bun.sh Modern SPA)",
+      "category": "Large Modern SPA",
+      "url": "https://bun.sh",
+      "title": "Bun — A fast all-in-one JavaScript runtime",
+      "rawMetrics": {
+        "htmlChars": 263800,
+        "htmlBytes": 264013,
+        "htmlTokens": 73864,
+        "totalDomNodes": 4877,
+        "domJsonBytes": 972915,
+        "rawAxNodesCount": 2885,
+        "rawAxJsonBytes": 1004758
+      },
+      "observationMetrics": {
+        "cdpDepth": 8,
+        "cdpDepthNodes": 2550,
+        "candidatesCount": 917,
+        "selectedCount": 240,
+        "prettyBytes": 30449,
+        "prettyTokens": 8502,
+        "compactBytes": 20345,
+        "compactTokens": 5673
+      },
+      "ratios": {
+        "tokenCompressPercent": 88.49,
+        "compactTokenCompressPercent": 92.32,
+        "byteCompressPercent": 88.47,
+        "tokenReductionFactor": 8.7,
+        "domNodePruningPercent": 95.08,
+        "domJsonCompressionPercent": 96.87,
+        "axNodePruningPercent": 91.68,
+        "axJsonReductionPercent": 96.97
+      }
+    },
+    {
+      "name": "Node.js 官方多语言开发文档 (Nodejs.org Docs)",
+      "category": "Large Technical Docs",
+      "url": "https://nodejs.org/en",
+      "title": "Node.js — Run JavaScript Everywhere",
+      "rawMetrics": {
+        "htmlChars": 533212,
+        "htmlBytes": 533254,
+        "htmlTokens": 149300,
+        "totalDomNodes": 1609,
+        "domJsonBytes": 469884,
+        "rawAxNodesCount": 554,
+        "rawAxJsonBytes": 196561
+      },
+      "observationMetrics": {
+        "cdpDepth": 8,
+        "cdpDepthNodes": 554,
+        "candidatesCount": 198,
+        "selectedCount": 198,
+        "prettyBytes": 23317,
+        "prettyTokens": 6526,
+        "compactBytes": 14977,
+        "compactTokens": 4191
+      },
+      "ratios": {
+        "tokenCompressPercent": 95.63,
+        "compactTokenCompressPercent": 97.19,
+        "byteCompressPercent": 95.63,
+        "tokenReductionFactor": 22.9,
+        "domNodePruningPercent": 87.69,
+        "domJsonCompressionPercent": 95.04,
+        "axNodePruningPercent": 64.26,
+        "axJsonReductionPercent": 88.14
+      }
+    },
+    {
+      "name": "维基百科: 无障碍网页设计 (Wikipedia Long Article)",
+      "category": "Massive Content Encyclopedia",
+      "url": "https://en.wikipedia.org/wiki/Web_accessibility",
+      "title": "Web accessibility - Wikipedia",
+      "rawMetrics": {
+        "htmlChars": 676941,
+        "htmlBytes": 677933,
+        "htmlTokens": 189552,
+        "totalDomNodes": 6229,
+        "domJsonBytes": 1478027,
+        "rawAxNodesCount": 7320,
+        "rawAxJsonBytes": 2783542
+      },
+      "observationMetrics": {
+        "cdpDepth": 8,
+        "cdpDepthNodes": 716,
+        "candidatesCount": 255,
+        "selectedCount": 240,
+        "prettyBytes": 30097,
+        "prettyTokens": 8427,
+        "compactBytes": 19993,
+        "compactTokens": 5598
+      },
+      "ratios": {
+        "tokenCompressPercent": 95.55,
+        "compactTokenCompressPercent": 97.05,
+        "byteCompressPercent": 95.56,
+        "tokenReductionFactor": 22.5,
+        "domNodePruningPercent": 96.15,
+        "domJsonCompressionPercent": 97.96,
+        "axNodePruningPercent": 96.72,
+        "axJsonReductionPercent": 98.92
+      }
+    },
+    {
+      "name": "百度搜索首页 (Baidu Search)",
+      "category": "Search Engine",
+      "url": "https://www.baidu.com",
+      "title": "百度一下，你就知道",
+      "rawMetrics": {
+        "htmlChars": 15366,
+        "htmlBytes": 15682,
+        "htmlTokens": 4392,
+        "totalDomNodes": 101,
+        "domJsonBytes": 29354,
+        "rawAxNodesCount": 91,
+        "rawAxJsonBytes": 36871
+      },
+      "observationMetrics": {
+        "cdpDepth": 8,
+        "cdpDepthNodes": 85,
+        "candidatesCount": 36,
+        "selectedCount": 36,
+        "prettyBytes": 4337,
+        "prettyTokens": 1216,
+        "compactBytes": 2801,
+        "compactTokens": 786
+      },
+      "ratios": {
+        "tokenCompressPercent": 72.31,
+        "compactTokenCompressPercent": 82.1,
+        "byteCompressPercent": 72.34,
+        "tokenReductionFactor": 3.6,
+        "domNodePruningPercent": 64.36,
+        "domJsonCompressionPercent": 85.23,
+        "axNodePruningPercent": 60.44,
+        "axJsonReductionPercent": 88.24
+      }
+    },
+    {
+      "name": "成都理工大学教务综合系统 (CDUT Portal 课表/成绩/考务/选课)",
+      "category": "Campus Business Portal",
+      "url": "file:///C:/Users/Belie/Desktop/CDUT-Studio/test-fixtures/cdut-portal.html",
+      "title": "成都理工大学综合教务管理系统 - 学生个人中心",
+      "rawMetrics": {
+        "htmlChars": 7522,
+        "htmlBytes": 8528,
+        "htmlTokens": 2390,
+        "totalDomNodes": 352,
+        "domJsonBytes": 59789,
+        "rawAxNodesCount": 545,
+        "rawAxJsonBytes": 193490
+      },
+      "observationMetrics": {
+        "cdpDepth": 8,
+        "cdpDepthNodes": 545,
+        "candidatesCount": 219,
+        "selectedCount": 219,
+        "prettyBytes": 25589,
+        "prettyTokens": 7170,
+        "compactBytes": 16367,
+        "compactTokens": 4588
+      },
+      "ratios": {
+        "tokenCompressPercent": -200,
+        "compactTokenCompressPercent": -91.97,
+        "byteCompressPercent": -200.06,
+        "tokenReductionFactor": 0.3,
+        "domNodePruningPercent": 37.78,
+        "domJsonCompressionPercent": 57.2,
+        "axNodePruningPercent": 59.82,
+        "axJsonReductionPercent": 86.78
+      }
+    },
+    {
+      "name": "高校重大科研专项经费核算与执行监测看板 (密集数据报表 50行)",
+      "category": "Enterprise Big DataGrid",
+      "url": "file:///C:/Users/Belie/Desktop/CDUT-Studio/test-fixtures/complex-enterprise-table.html",
+      "title": "高校科研经费与科研项目综合治理看板",
+      "rawMetrics": {
+        "htmlChars": 40087,
+        "htmlBytes": 44464,
+        "htmlTokens": 12472,
+        "totalDomNodes": 1484,
+        "domJsonBytes": 243939,
+        "rawAxNodesCount": 3906,
+        "rawAxJsonBytes": 1275386
+      },
+      "observationMetrics": {
+        "cdpDepth": 8,
+        "cdpDepthNodes": 3906,
+        "candidatesCount": 1206,
+        "selectedCount": 240,
+        "prettyBytes": 28774,
+        "prettyTokens": 8066,
+        "compactBytes": 18670,
+        "compactTokens": 5237
+      },
+      "ratios": {
+        "tokenCompressPercent": 35.33,
+        "compactTokenCompressPercent": 58.01,
+        "byteCompressPercent": 35.29,
+        "tokenReductionFactor": 1.5,
+        "domNodePruningPercent": 83.83,
+        "domJsonCompressionPercent": 88.2,
+        "axNodePruningPercent": 93.86,
+        "axJsonReductionPercent": 97.74
+      }
+    },
+    {
+      "name": "CDUT-Studio 智联万站工作流中枢看板 (现代 SaaS SPA)",
+      "category": "Enterprise SaaS Dashboard",
+      "url": "file:///C:/Users/Belie/Desktop/CDUT-Studio/test-fixtures/modern-saas-dashboard.html",
+      "title": "CDUT Studio 智联万站 · 智能体编排与工作流中枢",
+      "rawMetrics": {
+        "htmlChars": 4792,
+        "htmlBytes": 5225,
+        "htmlTokens": 1462,
+        "totalDomNodes": 108,
+        "domJsonBytes": 20602,
+        "rawAxNodesCount": 154,
+        "rawAxJsonBytes": 55829
+      },
+      "observationMetrics": {
+        "cdpDepth": 8,
+        "cdpDepthNodes": 154,
+        "candidatesCount": 51,
+        "selectedCount": 51,
+        "prettyBytes": 6601,
+        "prettyTokens": 1845,
+        "compactBytes": 4435,
+        "compactTokens": 1238
+      },
+      "ratios": {
+        "tokenCompressPercent": -26.2,
+        "compactTokenCompressPercent": 15.32,
+        "byteCompressPercent": -26.33,
+        "tokenReductionFactor": 0.8,
+        "domNodePruningPercent": 52.78,
+        "domJsonCompressionPercent": 67.96,
+        "axNodePruningPercent": 66.88,
+        "axJsonReductionPercent": 88.18
+      }
+    }
+  ]
+}

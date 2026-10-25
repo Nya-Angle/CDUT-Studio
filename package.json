@@ -24,6 +24,7 @@
     "typecheck": "bun run --filter='*' typecheck",
     "check:boundaries": "bun scripts/check-boundaries.ts",
     "benchmark:ui": "bun run packages/benchmark-multihop/src/server.ts",
+    "benchmark:axtree": "node scripts/run-axtree-benchmark.cjs",
     "test": "bun test --isolate"
   },
   "devDependencies": {

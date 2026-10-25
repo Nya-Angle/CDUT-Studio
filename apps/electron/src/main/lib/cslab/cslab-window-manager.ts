@@ -50,7 +50,7 @@ function getIconPath(): string | undefined {
   return existsSync(iconPath) ? iconPath : undefined
 }
 
-/** 默认贴在主窗口右侧，空间不足时回退到同屏右缘；窗口高度尽量与主窗口等高。 */
+/** 默认窗口大小位置：全桌面（workArea）的左半部分 */
 function getInitialBounds(): Electron.Rectangle {
   const main = getMainWindow()
   const hasMain = Boolean(main && !main.isDestroyed())
@@ -59,18 +59,11 @@ function getInitialBounds(): Electron.Rectangle {
     : screen.getPrimaryDisplay()
   const area = display.workArea
 
-  const width = Math.min(DEFAULT_WIDTH, Math.max(MIN_WIDTH, area.width - 40))
-  const mainHeight = hasMain ? main!.getBounds().height : DEFAULT_HEIGHT
-  const height = Math.min(Math.max(MIN_HEIGHT, mainHeight), area.height - 40)
-  const mainBounds = hasMain ? main!.getBounds() : null
-  const y = mainBounds
-    ? Math.min(Math.max(mainBounds.y, area.y), area.y + area.height - height)
-    : area.y + Math.round((area.height - height) / 2)
-  let x = mainBounds
-    ? mainBounds.x + mainBounds.width + 12
-    : area.x + Math.round((area.width - width) / 2)
-  if (x + width > area.x + area.width) x = area.x + area.width - width - 12
-  if (x < area.x) x = area.x + 12
+  // 严格要求：默认窗口大小位置彻底更改为全桌面的左半部分
+  const width = Math.floor(area.width / 2)
+  const height = area.height
+  const x = area.x
+  const y = area.y
 
   return { x, y, width, height }
 }

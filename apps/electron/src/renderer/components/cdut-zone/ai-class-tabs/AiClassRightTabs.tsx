@@ -434,6 +434,7 @@ export function AiClassRightTabs({ sessionId }: AiClassRightTabsProps): React.Re
                   }
                 }}
                 onClick={() => handleTabClick(tab)}
+                data-tour-tab={tab.type}
                 className={cn(
                   'group/tab flex max-w-[170px] shrink-0 cursor-pointer items-center gap-1.5 rounded-md px-2 py-1 text-[11px] transition-colors',
                   isActive
@@ -518,13 +519,19 @@ export function AiClassRightTabs({ sessionId }: AiClassRightTabsProps): React.Re
           </div>
         )}
         {activeTab?.type === 'mindmap' && (
-          <AiClassMindMapTab sessionId={sessionId} mindmapId={String(activeTab.data.mindmapId ?? '')} />
+          <div data-tour="ai-class-mindmap-view" className="h-full">
+            <AiClassMindMapTab sessionId={sessionId} mindmapId={String(activeTab.data.mindmapId ?? '')} />
+          </div>
         )}
         {activeTab?.type === 'flashcard' && (
-          <AiClassFlashcardTab sessionId={sessionId} deckId={String(activeTab.data.flashcardDeckId ?? '')} />
+          <div data-tour="ai-class-flashcard-view" className="h-full">
+            <AiClassFlashcardTab sessionId={sessionId} deckId={String(activeTab.data.flashcardDeckId ?? '')} />
+          </div>
         )}
         {activeTab?.type === 'quiz' && (
-          <AiClassQuizTab sessionId={sessionId} quizId={String(activeTab.data.quizSessionId ?? '')} />
+          <div data-tour="ai-class-quiz-view" className="h-full">
+            <AiClassQuizTab sessionId={sessionId} quizId={String(activeTab.data.quizSessionId ?? '')} />
+          </div>
         )}
       </div>
 

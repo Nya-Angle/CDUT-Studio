@@ -13,6 +13,9 @@ import { Download, Eraser, Loader2, Maximize2, Minus, Plus, RotateCcw } from 'lu
 import { toast } from 'sonner'
 import { buildNodeStudyPrompt, flattenMindMap, type MindMapData, type MindMapNode } from '@profer/shared'
 import { Z_LAYER } from '@profer/ui'
+import { useAtomValue } from 'jotai'
+import { cn } from '@/lib/utils'
+import { coachTourCurrentStepKeyAtom } from '@/atoms/coach-tour-atoms'
 import { MindMapCanvas, MindMapFullscreenModal, buildMindMapScene, useMindMapViewport, type MindMapPt } from '@/components/ai-elements/mindmap-canvas'
 
 interface AiClassMindMapTabProps {
@@ -21,6 +24,8 @@ interface AiClassMindMapTabProps {
 }
 
 export function AiClassMindMapTab({ sessionId, mindmapId }: AiClassMindMapTabProps): React.ReactElement {
+  const currentTourStepKey = useAtomValue(coachTourCurrentStepKeyAtom)
+  const isTourMindmap = currentTourStepKey === 'ai-class-mindmap'
   const [mindmap, setMindmap] = React.useState<MindMapData | null>(null)
   const [loading, setLoading] = React.useState(true)
   const [overrides, setOverrides] = React.useState<Record<string, MindMapPt>>({})
@@ -166,13 +171,31 @@ export function AiClassMindMapTab({ sessionId, mindmapId }: AiClassMindMapTabPro
         <button type="button" title="自适应复位" className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground" onClick={() => viewport.fit()}>
           <RotateCcw size={13} />
         </button>
-        <button type="button" title="全屏大图" className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground" onClick={() => setFullscreen(true)}>
+        <button
+          type="button"
+          title={isTourMindmap ? '引导步骤中暂不可用' : '全屏大图'}
+          disabled={isTourMindmap}
+          className={cn(
+            'rounded p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground',
+            isTourMindmap && 'cursor-not-allowed opacity-35 hover:bg-transparent hover:text-muted-foreground',
+          )}
+          onClick={() => setFullscreen(true)}
+        >
           <Maximize2 size={13} />
         </button>
         <button type="button" title="还原自动布局" className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground" onClick={resetLayout}>
           <Eraser size={13} />
         </button>
-        <button type="button" title="导出 OPML" className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground" onClick={exportOpml}>
+        <button
+          type="button"
+          title={isTourMindmap ? '引导步骤中暂不可用' : '导出 OPML'}
+          disabled={isTourMindmap}
+          className={cn(
+            'rounded p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground',
+            isTourMindmap && 'cursor-not-allowed opacity-35 hover:bg-transparent hover:text-muted-foreground',
+          )}
+          onClick={exportOpml}
+        >
           <Download size={13} />
         </button>
       </div>

@@ -18,6 +18,7 @@ interface CsLabSlideDrawerProps {
   wide?: boolean
   onClose: () => void
   children: React.ReactNode
+  dataTour?: string
 }
 
 /** 抽屉宽度预设：普通 / 宽屏分别独立记忆。 */
@@ -46,6 +47,7 @@ export function CsLabSlideDrawer({
   wide = false,
   onClose,
   children,
+  dataTour,
 }: CsLabSlideDrawerProps): React.ReactElement {
   const [normalWidth, setNormalWidth] = useAtom(cslabDrawerNormalWidthAtom)
   const [wideWidth, setWideWidth] = useAtom(cslabDrawerWideWidthAtom)
@@ -129,6 +131,7 @@ export function CsLabSlideDrawer({
     <>
       <div
         aria-hidden={!open}
+        data-tour={dataTour}
         className={cn(
           'relative flex h-full shrink-0 overflow-hidden border-l bg-cslab-bg',
           isResizing ? 'transition-none' : 'transition-[width] duration-[250ms] ease-out',

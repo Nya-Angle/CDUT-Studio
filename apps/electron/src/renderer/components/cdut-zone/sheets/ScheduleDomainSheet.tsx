@@ -241,11 +241,11 @@ function RadarBanner({
 export function ScheduleDomainSheet(): React.ReactElement {
   const [tab, setTab] = React.useState<'mine' | 'other'>('mine')
   // 周次默认值按北京时间估算当前教学周，避免离线/冷启动时错误显示第 1 周
-  const [week, setWeek] = React.useState<number>(() => computeBeijingTeachingWeek())
+  const [week, setWeek] = React.useState<number>(1)
   // 用户是否手动切换过周次（自动识别的当前教学周仅作首次默认值，绝不覆盖用户选择）
   const weekTouchedRef = React.useRef(false)
   // 星期默认值锁定北京时间（与宿主系统时区无关）
-  const [selectedDay, setSelectedDay] = React.useState<number>(() => getBeijingTimeInfo().dayOfWeek)
+  const [selectedDay, setSelectedDay] = React.useState<number>(1)
   const [loading, setLoading] = React.useState(true)
   const [data, setData] = React.useState<CdutDomainToolResult | null>(null)
   // SWR 陈旧数据：抽屉打开先读离线缓存秒开渲染，网络成功后热更新并原子落盘

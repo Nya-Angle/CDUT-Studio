@@ -595,7 +595,22 @@ def main():
 
     series = []
     for mask_label, mask in series_masks:
-        curves = extract_lines(mask) if args.mode == "line" else extract_scatter(mask)
+        if args.mode == "line":
+            raw_curves = extract_lines(mask)
+            valid_curves = []
+            for c_pixels in raw_curves:
+                if len(c_pixels) < 6:
+                    continue
+                xs = [p[0] for p in c_pixels]
+                ys = [p[1] for p in c_pixels]
+                if (max(xs) - min(xs)) < 20 and (max(ys) - min(ys)) < 20:
+                    continue
+                valid_curves.append(c_pixels)
+            valid_curves.sort(key=lambda pts: -len(pts))
+            max_c = max(1, int(getattr(args, "series_count", 3))) if getattr(args, "series_count", None) else 3
+            curves = valid_curves[:max_c] if valid_curves else (raw_curves[:1] if raw_curves else [])
+        else:
+            curves = extract_scatter(mask)
         for index, pixels in enumerate(curves):
             values = []
             pixel_list = []
