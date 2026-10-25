@@ -30,7 +30,7 @@ const VIEWPORT_MARGIN = 12
 
 /**
  * 计算气泡位置：
- * 1. 锚点缺失 → 视口居中（降级，不阻断流程）
+ * 1. 锚点缺失 → 默认视口居中（若明确偏好 left / right 则贴合对应侧边，避免遮挡中央内容）
  * 2. 锚点近乎全屏（≥80% 面积）→ 卡在其下缘居中（遮罩环贴着屏幕边缘，气泡放底部不挡内容）
  * 3. 偏好方位空间不足时按 bottom → top → right → left 回退
  * 4. 最后钳制进视口安全边距
@@ -44,6 +44,18 @@ export function computeCardPosition(
   const vw = viewport.width
   const vh = viewport.height
   if (!rect) {
+    if (placement === 'left') {
+      return {
+        left: VIEWPORT_MARGIN + 24,
+        top: Math.max(VIEWPORT_MARGIN, (vh - card.height) / 2),
+      }
+    }
+    if (placement === 'right') {
+      return {
+        left: Math.max(VIEWPORT_MARGIN, vw - card.width - VIEWPORT_MARGIN - 24),
+        top: Math.max(VIEWPORT_MARGIN, (vh - card.height) / 2),
+      }
+    }
     return {
       left: Math.max(VIEWPORT_MARGIN, (vw - card.width) / 2),
       top: Math.max(VIEWPORT_MARGIN, (vh - card.height) / 2),
@@ -62,49 +74,77 @@ export function computeCardPosition(
     top: rect.top - SPOTLIGHT_PADDING,
     right: rect.left + rect.width + SPOTLIGHT_PADDING,
     bottom: rect.top + rect.height + SPOTLIGHT_PADDING,
-  }
-  const candidates: Exclude<CoachTourPlacement, 'auto'>[] = placement === 'auto'
-    ? ['bottom', 'top', 'right', 'left']
-    : [placement, 'bottom', 'top', 'right', 'left']
-  let chosen: Exclude<CoachTourPlacement, 'auto'> = candidates[0] ?? 'bottom'
-  for (const candidate of candidates) {
-    if (candidate === 'bottom' && padded.bottom + CARD_GAP + card.height <= vh - VIEWPORT_MARGIN) { chosen = candidate; break }
-    if (candidate === 'top' && padded.top - CARD_GAP - card.height >= VIEWPORT_MARGIN) { chosen = candidate; break }
-    if (candidate === 'right' && padded.right + CARD_GAP + card.width <= vw - VIEWPORT_MARGIN) { chosen = candidate; break }
-    if (candidate === 'left' && padded.left - CARD_GAP - card.width >= VIEWPORT_MARGIN) { chosen = candidate; break }
+    centerX: rect.left + rect.width / 2,
+    centerY: rect.top + rect.height / 2,
   }
 
-  const centerX = (padded.left + padded.right) / 2 - card.width / 2
-  const centerY = (padded.top + padded.bottom) / 2 - card.height / 2
-  let left: number
-  let top: number
-  if (chosen === 'bottom') { left = centerX; top = padded.bottom + CARD_GAP }
-  else if (chosen === 'top') { left = centerX; top = padded.top - CARD_GAP - card.height }
-  else if (chosen === 'right') { left = padded.right + CARD_GAP; top = centerY }
-  else { left = padded.left - CARD_GAP - card.width; top = centerY }
+  const fits = {
+    bottom: vh - padded.bottom - CARD_GAP - card.height >= VIEWPORT_MARGIN,
+    top: padded.top - CARD_GAP - card.height >= VIEWPORT_MARGIN,
+    right: vw - padded.right - CARD_GAP - card.width >= VIEWPORT_MARGIN,
+    left: padded.left - CARD_GAP - card.width >= VIEWPORT_MARGIN,
+  }
+
+  let finalPlacement: 'top' | 'bottom' | 'left' | 'right'
+  if (placement !== 'auto' && fits[placement]) {
+    finalPlacement = placement
+  } else if (fits.bottom) {
+    finalPlacement = 'bottom'
+  } else if (fits.top) {
+    finalPlacement = 'top'
+  } else if (fits.right) {
+    finalPlacement = 'right'
+  } else if (fits.left) {
+    finalPlacement = 'left'
+  } else {
+    finalPlacement = 'bottom'
+  }
+
+  let rawLeft = 0
+  let rawTop = 0
+  switch (finalPlacement) {
+    case 'bottom':
+      rawLeft = padded.centerX - card.width / 2
+      rawTop = padded.bottom + CARD_GAP
+      break
+    case 'top':
+      rawLeft = padded.centerX - card.width / 2
+      rawTop = padded.top - CARD_GAP - card.height
+      break
+    case 'right':
+      rawLeft = padded.right + CARD_GAP
+      rawTop = padded.centerY - card.height / 2
+      break
+    case 'left':
+      rawLeft = padded.left - CARD_GAP - card.width
+      rawTop = padded.centerY - card.height / 2
+      break
+  }
 
   return {
-    left: clamp(left, VIEWPORT_MARGIN, Math.max(VIEWPORT_MARGIN, vw - card.width - VIEWPORT_MARGIN)),
-    top: clamp(top, VIEWPORT_MARGIN, Math.max(VIEWPORT_MARGIN, vh - card.height - VIEWPORT_MARGIN)),
+    left: clamp(rawLeft, VIEWPORT_MARGIN, Math.max(VIEWPORT_MARGIN, vw - card.width - VIEWPORT_MARGIN)),
+    top: clamp(rawTop, VIEWPORT_MARGIN, Math.max(VIEWPORT_MARGIN, vh - card.height - VIEWPORT_MARGIN)),
   }
 }
 
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(Math.max(value, min), max)
-}
-
-/** 多个矩形的外接矩形（用于「视觉同一面板但 DOM 分散在多个容器」的锚点联合）；空数组返回 null */
+/** 联合多个矩形取外接矩形（用于 unionSelectors） */
 export function unionRects(rects: AnchorRect[]): AnchorRect | null {
   if (rects.length === 0) return null
   let left = Infinity
   let top = Infinity
   let right = -Infinity
   let bottom = -Infinity
-  for (const rect of rects) {
-    left = Math.min(left, rect.left)
-    top = Math.min(top, rect.top)
-    right = Math.max(right, rect.left + rect.width)
-    bottom = Math.max(bottom, rect.top + rect.height)
+  for (const r of rects) {
+    if (r.left < left) left = r.left
+    if (r.top < top) top = r.top
+    const rRight = r.left + r.width
+    const rBottom = r.top + r.height
+    if (rRight > right) right = rRight
+    if (rBottom > bottom) bottom = rBottom
   }
   return { left, top, width: right - left, height: bottom - top }
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max)
 }

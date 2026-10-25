@@ -60,6 +60,7 @@ export function CdutQuickBar({ onSelect }: CdutQuickBarProps): React.ReactElemen
       {CDUT_QUICK_FEATURES.map((feature) => (
         <button
           key={feature.id}
+          data-tour-quick-feature={feature.id}
           type="button"
           onClick={() => onSelect(feature)}
           className="flex items-center gap-2 rounded-full border border-surface-border/80 bg-card/80 px-4 py-2 text-xs font-medium shadow-sm transition-all hover:bg-primary/10 hover:text-primary"

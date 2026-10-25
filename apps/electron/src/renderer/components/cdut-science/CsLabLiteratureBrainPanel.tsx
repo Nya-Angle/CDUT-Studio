@@ -11,6 +11,7 @@ import type { CsLabLiteratureSearchResult } from '@profer/shared'
 interface CsLabLiteratureBrainPanelProps {
   labId: string
   onOpenLiterature: (uri: string, page: number) => void
+  initialQuery?: string
 }
 
 const TEXT_LAYER_HINT = '文献缺少文本层（扫描版 PDF），请导入带 OCR/文本层的 PDF 后再建索引。'
@@ -23,8 +24,9 @@ function isTextLayerMessage(message?: string): boolean {
 export function CsLabLiteratureBrainPanel({
   labId,
   onOpenLiterature,
+  initialQuery,
 }: CsLabLiteratureBrainPanelProps): React.ReactElement {
-  const [query, setQuery] = React.useState('')
+  const [query, setQuery] = React.useState(initialQuery ?? '')
   const [result, setResult] = React.useState<CsLabLiteratureSearchResult | null>(null)
   const [indexInfo, setIndexInfo] = React.useState<string | null>(null)
   const [busy, setBusy] = React.useState<'build' | 'search' | null>(null)
@@ -49,28 +51,39 @@ export function CsLabLiteratureBrainPanel({
     }
   }
 
-  const search = async (): Promise<void> => {
-    if (!query.trim()) return
-    setBusy('search')
-    setError(null)
-    setHint(null)
-    try {
-      const payload = await window.electronAPI.cslab.searchLiterature({
-        labId,
-        query: query.trim(),
-        topK: 8,
-      })
-      setResult(payload)
-      if (!payload.ok) {
-        if (isTextLayerMessage(payload.message)) setHint(TEXT_LAYER_HINT)
-        else setError(payload.message ?? '检索失败')
+  const search = React.useCallback(
+    async (customQuery?: string): Promise<void> => {
+      const q = (customQuery ?? query).trim()
+      if (!q) return
+      setBusy('search')
+      setError(null)
+      setHint(null)
+      try {
+        const payload = await window.electronAPI.cslab.searchLiterature({
+          labId,
+          query: q,
+          topK: 8,
+        })
+        setResult(payload)
+        if (!payload.ok) {
+          if (isTextLayerMessage(payload.message)) setHint(TEXT_LAYER_HINT)
+          else setError(payload.message ?? '检索失败')
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : '检索失败')
+      } finally {
+        setBusy(null)
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : '检索失败')
-    } finally {
-      setBusy(null)
+    },
+    [labId, query],
+  )
+
+  React.useEffect(() => {
+    if (initialQuery && initialQuery.trim()) {
+      setQuery(initialQuery)
+      void search(initialQuery)
     }
-  }
+  }, [initialQuery, search])
 
   return (
     <div className="space-y-4">

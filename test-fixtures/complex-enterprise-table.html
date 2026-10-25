@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>高校科研经费与科研项目综合治理看板</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background: #fafafa; }
+    nav { background: #1a202c; color: white; padding: 12px 24px; display: flex; justify-content: space-between; }
+    .container { padding: 20px; max-width: 1400px; margin: 0 auto; }
+    .toolbar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    input, select, button { padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; }
+    button { background: #2563eb; color: white; border: none; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    th, td { border: 1px solid #e5e7eb; padding: 8px 12px; font-size: 13px; text-align: left; }
+    th { background: #f3f4f6; }
+    .pagination { margin-top: 16px; display: flex; gap: 8px; justify-content: center; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div style="font-weight: bold;">高校科学技术发展研究院 · 重大重点专项经费核算与执行监测台账</div>
+    <div><span>管理员：计财处01</span> <button style="background: #4b5563;">切换角色</button></div>
+  </nav>
+  <div class="container">
+    <div class="toolbar">
+      <input type="text" placeholder="按项目编号或负责人检索..." style="width: 260px;" />
+      <select>
+        <option>全部经费来源 (国家自然科学基金 / 重点研发 / 省厅重大 / 横向委托)</option>
+        <option>国家自然科学基金重大项目</option>
+        <option>国家重点研发计划专项</option>
+        <option>四川省科技厅重点研发计划</option>
+      </select>
+      <select>
+        <option>全部执行进度 (正常执行 / 即将结题 / 预算预警 / 审计待查)</option>
+        <option>预算执行率 > 80%</option>
+        <option>预算执行率 < 40% (预警)</option>
+      </select>
+      <button>应用筛选条件</button>
+      <button style="background: #059669;">批量导出财务审计报表</button>
+      <button style="background: #d97706;">导入执行回执</button>
+    </div>
+    <div style="overflow-x: auto;">
+      <table id="projects-table">
+        <thead>
+          <tr>
+            <th>项目编号</th>
+            <th>项目名称</th>
+            <th>所属学院/重点实验室</th>
+            <th>项目负责人</th>
+            <th>立项批复经费(万元)</th>
+            <th>已拨付到账(万元)</th>
+            <th>累计支出执行(万元)</th>
+            <th>执行进度</th>
+            <th>当前状态</th>
+            <th>操作审计</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <!-- 生成50行真实密度数据 -->
+        </tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <button disabled>上一页</button>
+      <button style="background: #1d4ed8;">1</button>
+      <button style="background: white; color: black; border: 1px solid #ccc;">2</button>
+      <button style="background: white; color: black; border: 1px solid #ccc;">3</button>
+      <button style="background: white; color: black; border: 1px solid #ccc;">4</button>
+      <button style="background: white; color: black; border: 1px solid #ccc;">5</button>
+      <button>下一页</button>
+    </div>
+  </div>
+  <script>
+    const tbody = document.getElementById('table-body');
+    const depts = ['地球物理学院', '核技术与自动化工程学院', '地球科学学院', '计算机与网络安全学院', '环境与土木工程学院', '沉积地质研究院'];
+    const names = ['张教授', '王院士', '李教授', '刘研究员', '陈研究员', '杨副教授', '赵特聘研究员'];
+    const statuses = ['正常在研', '结题验收中', '中期检查', '预算预警', '审计备案'];
+    for (let i = 1; i <= 50; i++) {
+      const tr = document.createElement('tr');
+      const approved = (100 + i * 15.5).toFixed(1);
+      const allocated = (approved * 0.9).toFixed(1);
+      const spent = (allocated * 0.75).toFixed(1);
+      const rate = ((spent / approved) * 100).toFixed(1) + '%';
+      tr.innerHTML = `
+        <td><strong>CDUT-PRJ-2024-${1000 + i}</strong></td>
+        <td>油气藏地质及开发工程深层油气相态与渗流演化理论研究第\${i}期</td>
+        <td>\${depts[i % depts.length]}</td>
+        <td>\${names[i % names.length]}</td>
+        <td>￥\${approved}</td>
+        <td>￥\${allocated}</td>
+        <td>￥\${spent}</td>
+        <td><span style="color: green; font-weight: bold;">\${rate}</span></td>
+        <td><span style="background: #dbeafe; color: #1e40af; padding: 2px 6px; border-radius: 4px;">\${statuses[i % statuses.length]}</span></td>
+        <td>
+          <button style="padding: 4px 8px; font-size: 12px;">明细</button>
+          <button style="padding: 4px 8px; font-size: 12px; background: #e11d48;">预算预警</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    }
+  </script>
+</body>
+</html>

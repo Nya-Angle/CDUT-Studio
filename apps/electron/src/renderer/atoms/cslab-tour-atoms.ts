@@ -11,6 +11,8 @@ export type CsLabTourCommand =
   | { id: number; kind: 'open-table-at-index'; index: number }
   | { id: number; kind: 'open-asset-by-title'; title: string }
   | { id: number; kind: 'open-plot'; plotId: string }
+  | { id: number; kind: 'open-academic-search'; query: string }
+  | { id: number; kind: 'close-drawer' }
   | { id: number; kind: 'refresh-assets' }
 
 export interface CsLabTourAck {

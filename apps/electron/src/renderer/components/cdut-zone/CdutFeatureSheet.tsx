@@ -40,6 +40,13 @@ export function CdutFeatureSheet({
   // 全局模态叠加登记：抽屉拉起时，智联万站原生视口必须让位
   useGlobalOverlay(open)
 
+  // 支持外部通过事件关闭抽屉（供新手引导蒙版点击或超时自动关闭使用）
+  React.useEffect(() => {
+    const handleClose = () => onOpenChange(false)
+    window.addEventListener('cdut:close-feature-sheet', handleClose)
+    return () => window.removeEventListener('cdut:close-feature-sheet', handleClose)
+  }, [onOpenChange])
+
   const renderContent = () => {
     if (!feature) return null
 
@@ -66,6 +73,7 @@ export function CdutFeatureSheet({
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
+        data-tour="cdut-feature-sheet"
         side="right"
         className="flex w-full flex-col p-6 sm:w-[680px] sm:max-w-2xl"
       >
@@ -74,12 +82,14 @@ export function CdutFeatureSheet({
             {feature ? <feature.icon size={20} className="text-primary" /> : null}
             <span>{feature?.title ?? '功能模块'}</span>
           </SheetTitle>
-          <SheetDescription className="text-xs">
-            {feature?.desc ?? 'CDUT 专区一站式教务与学习辅助平台'}
+          <SheetDescription className="text-xs text-muted-foreground">
+            {feature?.desc ?? '成理专属业务域卡片'}
           </SheetDescription>
         </SheetHeader>
 
-        <div className="min-h-0 flex-1">{renderContent()}</div>
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+          {renderContent()}
+        </div>
       </SheetContent>
     </Sheet>
   )

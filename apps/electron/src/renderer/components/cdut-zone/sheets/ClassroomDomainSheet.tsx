@@ -206,6 +206,12 @@ export function ClassroomDomainSheet(): React.ReactElement {
         </button>
       </div>
 
+      {/* 演示模式说明条 */}
+      <div className="mb-4 flex items-start gap-2 rounded-xl border border-amber-500/25 bg-amber-500/10 p-3 text-xs leading-relaxed text-amber-700 dark:text-amber-300">
+        <Sparkles className="mt-0.5 size-4 shrink-0 text-amber-500" />
+        <p>自习空教室处于演示模式（未真实登录校内统一身份认证），暂无法实时获取真实排课雷达数据。实际使用时连接个人真实账户即可正常查询。</p>
+      </div>
+
       {/* 筛选控制器卡片 */}
       <div className="mb-4 space-y-3 rounded-xl border border-surface-border/60 bg-card p-3.5 shadow-xs">
         {/* 校区选择 */}

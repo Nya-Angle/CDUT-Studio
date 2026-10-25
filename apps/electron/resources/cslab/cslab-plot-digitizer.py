@@ -283,7 +283,24 @@ def main():
         emit({"ok": False, "message": "标定刻度不足，至少需要 X/Y 各 2 个刻度"})
         return
 
-    curves = extract_lines(mask) if args.mode == "line" else extract_scatter(mask)
+    if args.mode == "line":
+        raw_curves = extract_lines(mask)
+        # 过滤短碎线与网格噪点碎片，杜绝通道数爆炸（保证预期在 1~3 条主曲线内）
+        valid_curves = []
+        for c_pixels in raw_curves:
+            if len(c_pixels) < 6:
+                continue
+            xs = [p[0] for p in c_pixels]
+            ys = [p[1] for p in c_pixels]
+            if (max(xs) - min(xs)) < 20 and (max(ys) - min(ys)) < 20:
+                continue
+            valid_curves.append(c_pixels)
+        valid_curves.sort(key=lambda pts: -len(pts))
+        max_c = max(1, int(getattr(args, "series_count", 3))) if getattr(args, "series_count", None) else 3
+        curves = valid_curves[:max_c] if valid_curves else (raw_curves[:1] if raw_curves else [])
+    else:
+        curves = extract_scatter(mask)
+
     if not curves:
         emit({"ok": False, "message": "未提取到有效曲线或散点"})
         return

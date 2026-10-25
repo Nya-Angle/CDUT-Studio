@@ -46,6 +46,7 @@ const DEMO_DATA_FILES = [
   'rutile-raman-532nm.csv',
   'silicon-srm640-benchmark.csv',
   '1792573114138-6ac8d0-石榴石_Y_Al_O____YAG____Ia-3d_完整立方晶胞.cif',
+  'biogeo_basin_dem.asc',
 ] as const
 
 /** PNG 不能走仪器格式嗅探流水线，按 fig 图层单独登记。 */

@@ -1,0 +1,10 @@
+Name,Category,Url,RawHtmlBytes,RawHtmlTokens,TotalDomNodes,RawAxNodes,ObservationElements,ObsPrettyBytes,ObsPrettyTokens,ObsCompactBytes,ObsCompactTokens,TokenCompressionRate(%),CompactTokenCompressionRate(%),DOMNodePruningRate(%),ReductionFactor(x)
+"GitHub 官方门户首页 (Developer Platform)","Large Online Portal","https://github.com",585277,163852,2415,1493,240,29879,8360,19775,5531,94.9,96.62,90.06,19.6
+"必应搜索引擎首页 (Bing Search)","Large Online Portal","https://www.bing.com",383827,106515,1040,579,49,5959,1648,3877,1065,98.45,99,95.29,64.6
+"Bun 现代全栈技术门户 (Bun.sh Modern SPA)","Large Modern SPA","https://bun.sh",264013,73864,4877,2885,240,30449,8502,20345,5673,88.49,92.32,95.08,8.7
+"Node.js 官方多语言开发文档 (Nodejs.org Docs)","Large Technical Docs","https://nodejs.org/en",533254,149300,1609,554,198,23317,6526,14977,4191,95.63,97.19,87.69,22.9
+"维基百科: 无障碍网页设计 (Wikipedia Long Article)","Massive Content Encyclopedia","https://en.wikipedia.org/wiki/Web_accessibility",677933,189552,6229,7320,240,30097,8427,19993,5598,95.55,97.05,96.15,22.5
+"百度搜索首页 (Baidu Search)","Search Engine","https://www.baidu.com",15682,4392,101,91,36,4337,1216,2801,786,72.31,82.1,64.36,3.6
+"成都理工大学教务综合系统 (CDUT Portal 课表/成绩/考务/选课)","Campus Business Portal","file:///C:/Users/Belie/Desktop/CDUT-Studio/test-fixtures/cdut-portal.html",8528,2390,352,545,219,25589,7170,16367,4588,-200,-91.97,37.78,0.3
+"高校重大科研专项经费核算与执行监测看板 (密集数据报表 50行)","Enterprise Big DataGrid","file:///C:/Users/Belie/Desktop/CDUT-Studio/test-fixtures/complex-enterprise-table.html",44464,12472,1484,3906,240,28774,8066,18670,5237,35.33,58.01,83.83,1.5
+"CDUT-Studio 智联万站工作流中枢看板 (现代 SaaS SPA)","Enterprise SaaS Dashboard","file:///C:/Users/Belie/Desktop/CDUT-Studio/test-fixtures/modern-saas-dashboard.html",5225,1462,108,154,51,6601,1845,4435,1238,-26.2,15.32,52.78,0.8
