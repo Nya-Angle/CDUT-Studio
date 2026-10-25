@@ -62,6 +62,11 @@ export function getSettings(): AppSettings {
     const developerModeEnabled = data.developerModeEnabled ?? pluginSystemEnabled ?? false
     _settingsCache = {
       ...data,
+      agentChannelId: data.agentChannelId || 'eval-huawei-zhichuangbei',
+      agentChannelIds: data.agentChannelIds && data.agentChannelIds.length > 0
+        ? (data.agentChannelIds.includes('eval-huawei-zhichuangbei') ? data.agentChannelIds : ['eval-huawei-zhichuangbei', ...data.agentChannelIds])
+        : ['eval-huawei-zhichuangbei'],
+      agentModelId: data.agentModelId || 'Deepseek-V4-flash',
       pocketModeEnabled: data.pocketModeEnabled ?? tabletModeEnabled,
       pocketModePort: data.pocketModePort ?? tabletModePort,
       themeMode: data.themeMode || DEFAULT_THEME_MODE,
