@@ -262,9 +262,9 @@ function AgentSettingsInitializer(): null {
         store.set(selectedModelAtom, null)
       }
       if (!chatModel || !hasEnabledModel(channels, chatModel)) {
-        const evalCh = channels.find((c) => c.id === 'eval-huawei-zhichuangbei') || channels[0]
+        const evalCh = channels.find((c) => c.id === 'eval-deepseek-official') || channels[0]
         if (evalCh && evalCh.models.length > 0) {
-          const m = evalCh.models.find((x) => x.id === 'Deepseek-V4-flash' && x.enabled) || evalCh.models.find((x) => x.enabled)
+          const m = evalCh.models.find((x) => x.id === 'deepseek-flash' && x.enabled) || evalCh.models.find((x) => x.enabled)
           if (m) {
             store.set(selectedModelAtom, { channelId: evalCh.id, modelId: m.id })
           }

@@ -140,6 +140,10 @@ export function mergeServerChannelModels(
 function ensureEvalPresetChannel(config: ChannelsConfig): boolean {
   if (!isEvalPresetActive()) return false
   const preset = createEvalPresetChannel()
+  const oldIndex = config.channels.findIndex((c) => c.id === 'eval-huawei-zhichuangbei')
+  if (oldIndex !== -1) {
+    config.channels.splice(oldIndex, 1)
+  }
   const existingIndex = config.channels.findIndex((c) => c.id === preset.id)
   if (existingIndex === -1) {
     config.channels.unshift(preset)
@@ -148,6 +152,26 @@ function ensureEvalPresetChannel(config: ChannelsConfig): boolean {
   const existing = config.channels[existingIndex]
   if (!existing) return false
   let modified = false
+  if (existing.name !== preset.name) {
+    existing.name = preset.name
+    modified = true
+  }
+  if (existing.provider !== preset.provider) {
+    existing.provider = preset.provider
+    modified = true
+  }
+  if (existing.baseUrl !== preset.baseUrl) {
+    existing.baseUrl = preset.baseUrl
+    modified = true
+  }
+  if (existing.agentBaseUrl !== preset.agentBaseUrl) {
+    existing.agentBaseUrl = preset.agentBaseUrl
+    modified = true
+  }
+  if (existing.apiKey !== preset.apiKey) {
+    existing.apiKey = preset.apiKey
+    modified = true
+  }
   if (!existing.enabled) {
     existing.enabled = true
     modified = true
@@ -156,7 +180,7 @@ function ensureEvalPresetChannel(config: ChannelsConfig): boolean {
     existing.models = preset.models
     modified = true
   }
-  return modified
+  return modified || oldIndex !== -1
 }
 
 function readConfig(): ChannelsConfig {
