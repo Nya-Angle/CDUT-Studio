@@ -19,7 +19,7 @@ import { join } from 'node:path'
 import { getUserProfile } from './user-profile-service'
 import { getWorkspaceMcpConfig } from './workspace-mcp-config'
 import type { BrowserUserContextSnapshot } from './browser-controller'
-import { getConfigDirName, getStudySessionDir, resolveConfigDir } from './config-paths'
+import { getBrainScratchDir, getConfigDirName, getStudySessionDir, resolveConfigDir } from './config-paths'
 import { DEEPSEEK_SUBAGENT_MODEL_ID } from './agent-model-routing'
 import { buildAgentPlatformPrompt } from './agent-platform-prompt'
 import type { AgentPlatformProjectCandidate } from './agent-platform-prompt'
@@ -143,7 +143,7 @@ The session viewport features an advanced multimodal rendering engine capable of
 
 ### 2. Diagrams, Flowcharts & Plotting (Mermaid 与 Python 制图)
 - **Plotting & Diagramming Strategy**: When you intend to draw or generate diagrams, charts, plots, or visual illustrations, both **Python-based plotting** (e.g. matplotlib, seaborn) and **Mermaid** are excellent choices.
-- **Python Plotting Priority**: If choosing Python plotting yields a better visual presentation, higher fidelity, richer detail, or superior rendering effect, **prioritize using Python plotting** (save the generated image to the workspace or scratch directory and embed it via local Markdown image syntax).
+- **Python Plotting Priority**: If choosing Python plotting yields a better visual presentation, higher fidelity, richer detail, or superior rendering effect, **prioritize using Python plotting** (save the generated image to the workspace or scratch directory and embed it via local Markdown image syntax). However, for conceptual explanations, mathematical theory, learning outlines, and rapid Q&A (e.g. explaining limits, derivatives, integrals, architecture), **always prioritize zero-latency native Markdown elements first**: LaTeX formulas, Markdown comparison tables, and fenced \`\`\`mermaid / \`\`\`mindmap blocks, rather than blocking the reply to run heavy scripts unless numerical computation or exact plotting is specifically requested.
 - **Mermaid Usage & Syntax**: Render flowcharts (\`flowchart TD\` / \`flowchart LR\`), sequence diagrams, and state topologies exclusively inside fenced \`\`\`mermaid code blocks when lightweight structural or relational diagrams are most appropriate.
 
 
@@ -728,6 +728,13 @@ Your product identity is always CDUT Studio; never present yourself as another v
 function buildArtifactsBlock(sessionId: string): string {
   const appDataDir = resolveConfigDir().replace(/\\/g, '/')
   const artifactDir = `${appDataDir}/brain/${sessionId}`
+  if (sessionId && sessionId.trim()) {
+    try {
+      getBrainScratchDir(sessionId)
+    } catch {
+      // 容错处理：避免权限或环境问题阻断 prompt 构建
+    }
+  }
   return `<artifacts>
 Artifacts are special markdown (.md) documents that you can create to present structured information to the user.
 All artifacts should be written to the artifact directory: \`${artifactDir}\`. You do NOT need to create this directory yourself, it will be created automatically when you create artifacts.

@@ -369,6 +369,34 @@ export function getAgentSessionMessagesPath(id: string): string {
 }
 
 /**
+ * 获取指定会话的 Brain 产物目录（如果不存在则自动递归创建）
+ *
+ * @param sessionId 会话 ID
+ * @returns ~/.cdutai/brain/{sessionId}
+ */
+export function getBrainArtifactDir(sessionId: string): string {
+  const dir = join(getConfigDir(), 'brain', sessionId)
+  if (!existsSync(dir)) {
+    mkdirSync(dir, { recursive: true })
+  }
+  return dir
+}
+
+/**
+ * 获取指定会话的 Brain Scratch 临时脚本与数据目录（如果不存在则自动递归创建）
+ *
+ * @param sessionId 会话 ID
+ * @returns ~/.cdutai/brain/{sessionId}/scratch
+ */
+export function getBrainScratchDir(sessionId: string): string {
+  const dir = join(getBrainArtifactDir(sessionId), 'scratch')
+  if (!existsSync(dir)) {
+    mkdirSync(dir, { recursive: true })
+  }
+  return dir
+}
+
+/**
  * 获取指定 Pi Host Harness 会话级事件账本路径。
  *
  * 与 Profer 展示消息、Project Graph JSONL 并列，但仅保存内部执行控制事实；

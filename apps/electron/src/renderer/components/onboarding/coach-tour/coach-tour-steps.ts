@@ -24,7 +24,7 @@ export const DEMO_CDUT_ACCOUNT = {
 } as const
 
 /** 演示提问：常规 Agent 的图示讲解（精炼聚焦，确保20-30秒内迅速输出） */
-export const PROMPT_CALCULUS = '详细讲解微积分核心概念，图文并茂让我快速理解。'
+export const PROMPT_CALCULUS = '给我讲解下微积分，并用一两张图帮我理解下'
 
 /** 演示提问：AI 速课堂精读问答（严格控制在40秒以内快速收敛） */
 export const PROMPT_HONGLOU_Q1 =
@@ -143,7 +143,7 @@ export const COACH_TOUR_STEPS: CoachTourStep[] = [
   {
     key: 'calculus',
     title: '让 Agent 用图示讲清楚',
-    body: '我们先用一个精炼的问题热身。问题已填入输入框，请点击发送；发送后输入框将被蒙版锁定，模型回复生成结束后将解锁下一步。',
+    body: '我们先用一个有一定复杂度的问题热身。问题已填入输入框，请点击发送；发送后输入框将被蒙版锁定，模型回复生成结束后将解锁下一步。',
     selectors: ['[data-input-mode="agent"]'],
     pulseSelectors: SEND_BUTTON_PULSE,
     placement: 'top',
