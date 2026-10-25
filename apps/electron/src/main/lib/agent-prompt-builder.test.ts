@@ -1048,4 +1048,17 @@ describe('系统提示词管线模式隔离与近因', () => {
     expect(prompt).toContain('agent-workspaces/**')
     expect(prompt).toContain('<working_memory>')
   })
+
+  test('包含 Python 制图与 Mermaid 双轨制图及 Python 优先规则', () => {
+    const prompt = buildSystemPrompt({
+      workspaceName: 'Demo',
+      workspaceSlug: 'demo-workspace',
+      sessionId: 'session-123',
+      permissionMode: 'auto',
+    })
+
+    expect(prompt).toContain('Mermaid 与 Python 制图')
+    expect(prompt).toContain('prioritize using Python plotting')
+    expect(prompt).toContain('both **Python-based plotting**')
+  })
 })

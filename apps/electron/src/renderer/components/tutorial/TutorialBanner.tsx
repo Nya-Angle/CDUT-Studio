@@ -1,35 +1,40 @@
-﻿/**
+/**
  * TutorialBanner - 教程推荐横幅
  *
  * 固定在右下角的浮动卡片，引导用户查看教程。
  * - 不区分新老用户，使用 tutorialBannerDismissed 字段控制
  * - 用户点击「立即学习」或「稍后再学」后永不再显示
+ * - 调整为：仅在系统公告栏被用户首次关闭时触发弹出
  * - 明确告知教程的下次访问位置：设置 > 教程
  */
 
 import * as React from 'react'
-import { useStore } from 'jotai'
+import { useAtomValue, useStore } from 'jotai'
 import { GraduationCap, X } from 'lucide-react'
 import { Button } from '@profer/ui/primitives/button'
 import { Z_LAYER } from '@profer/ui'
 import { openTutorialTab } from '@/lib/tab-activation'
+import { bulletinSessionDismissedAtom } from '@/atoms/bulletin-atoms'
 
 export function TutorialBanner(): React.ReactElement | null {
   const [visible, setVisible] = React.useState(false)
   const [dismissed, setDismissed] = React.useState(true)
+  const sessionDismissed = useAtomValue(bulletinSessionDismissedAtom)
   const store = useStore()
 
+  // 仅在系统公告栏被用户首次关闭时，触发「CDUT Studio 使用教程」右下角通知
   React.useEffect(() => {
+    if (!sessionDismissed) return
     window.electronAPI
       .getSettings()
       .then((settings) => {
         if (!settings.tutorialBannerDismissed) {
           setDismissed(false)
-          setTimeout(() => setVisible(true), 1500)
+          setTimeout(() => setVisible(true), 500)
         }
       })
       .catch(console.error)
-  }, [])
+  }, [sessionDismissed])
 
   const handleDismiss = async () => {
     setVisible(false)

@@ -48,6 +48,15 @@ import {
   updateAgentSessionMeta,
 } from '../agent-session-manager'
 import { createAgentPreset, listAgentPresets } from '../agent-preset-manager'
+import {
+  saveMindmap,
+  saveFlashcardDeck,
+  saveQuiz,
+  saveTabs,
+  getMindmap,
+  createHomeTab,
+} from '../study/study-session-store'
+import { createInitialFsrs } from '../study/fsrs-scheduler'
 import { ingestStudyDocuments, listStudyDocuments } from '../study/study-document-indexer'
 import {
   assertStudyId,
@@ -289,6 +298,7 @@ async function runEnsureDemoAiClassSession(): Promise<EnsureDemoAiClassResult> {
   const ingested = listStudyDocuments(session.sessionId).some(
     (document) => document.fileName === DEMO_NOVEL_FILE_NAME,
   )
+  seedDemoAiClassArtifacts(session.sessionId)
   const refreshed = listAiClassSessions().find((item) => item.sessionId === session.sessionId)
   return {
     session: refreshed ?? session,
@@ -1231,5 +1241,145 @@ export function readCachedGraphEdges(sessionId: string): KnowledgeGraphEdge[] {
     return Array.isArray(cached?.edges) ? cached.edges : []
   } catch {
     return []
+  }
+}
+
+/**
+ * 新手引导：为演示课堂预置精良的思维导图、抽认卡与自测题工件（首创即落盘）。
+ */
+function seedDemoAiClassArtifacts(sessionId: string): void {
+  try {
+    const existing = getMindmap(sessionId)
+    if (existing) return
+
+    const now = Date.now()
+    const mindmapId = 'demo-honglou-mindmap'
+    const flashcardDeckId = 'demo-honglou-flashcards'
+    const quizSessionId = 'demo-honglou-quiz'
+
+    // 1. 思维导图
+    saveMindmap(sessionId, {
+      id: mindmapId,
+      title: '《红楼梦》前五回核心架构与伏线网络',
+      sourceDocs: [DEMO_NOVEL_FILE_NAME],
+      createdAt: now,
+      root: {
+        id: 'root',
+        label: '《红楼梦》前五回纲领',
+        children: [
+          {
+            id: 'c1',
+            label: '神话源起与宿命',
+            notes: '女娲补天遗石 / 绛珠仙草与神瑛侍者还泪之约',
+            children: [
+              { id: 'c1-1', label: '大荒山无稽崖青埂峰' },
+              { id: 'c1-2', label: '太虚幻境与警幻仙姑' },
+            ],
+          },
+          {
+            id: 'c2',
+            label: '现实根基：贾府与四大家族',
+            notes: '门子葫芦案引出贾、史、王、薛四大家族护官符',
+            children: [
+              { id: 'c2-1', label: '贾不假白玉为堂金做马' },
+              { id: 'c2-2', label: '阿房宫三百里住不下金陵一个史' },
+            ],
+          },
+          {
+            id: 'c3',
+            label: '主线人物命运伏线',
+            notes: '第五回太虚幻境金陵十二钗图册判词与红楼梦引子十二支曲',
+            children: [
+              { id: 'c3-1', label: '玉带林中挂，金簪雪里埋' },
+              { id: 'c3-2', label: '凡鸟偏从末世来，都知爱慕此生才' },
+            ],
+          },
+        ],
+      },
+    })
+
+    // 2. 抽认卡
+    saveFlashcardDeck(sessionId, {
+      id: flashcardDeckId,
+      title: '《红楼梦》核心考点抽认卡',
+      difficulty: 'medium',
+      mode: 'standard',
+      createdAt: now,
+      cards: [
+        {
+          id: 'fc-1',
+          front: '《红楼梦》中「护官符」所指的四大家族分别是什么？',
+          back: '贾（贾不假）、史（保龄侯）、王（统领县官）、薛（珍珠如土）。',
+          topic: '四大家族',
+          fsrs: createInitialFsrs(),
+        },
+        {
+          id: 'fc-2',
+          front: '「玉带林中挂，金簪雪里埋」分别暗示了哪两位主角的命运？',
+          back: '林黛玉（玉带林倒读）与薛宝钗（雪里埋金簪）。',
+          topic: '金陵判词',
+          fsrs: createInitialFsrs(),
+        },
+        {
+          id: 'fc-3',
+          front: '第五回中贾宝玉游览太虚幻境时，警幻仙子引导他看的是什么册子？',
+          back: '《金陵十二钗正册》、《金陵十二钗副册》、《金陵十二钗又副册》。',
+          topic: '太虚图册',
+          fsrs: createInitialFsrs(),
+        },
+      ],
+    })
+
+    // 3. 自测练习
+    saveQuiz(sessionId, {
+      id: quizSessionId,
+      title: '《红楼梦》前五回精读自测卷',
+      totalQuestions: 2,
+      difficulty: 'medium',
+      completed: false,
+      score: 0,
+      estimatedTheta: 0,
+      createdAt: now,
+      questions: [
+        {
+          id: 'q-1',
+          type: 'single',
+          question: '「都道是金玉良姻，俺只念木石前盟」中的「木石前盟」指的是谁与谁的渊源？',
+          options: [
+            { key: 'A', text: '神瑛侍者与绛珠仙草（贾宝玉与林黛玉）' },
+            { key: 'B', text: '贾宝玉与薛宝钗' },
+            { key: 'C', text: '甄士隐与贾雨村' },
+            { key: 'D', text: '贾琏与王熙凤' },
+          ],
+          answer: ['A'],
+          explanation: '前世为灵河岸上神瑛侍者以甘露灌溉绛珠仙草，今世以眼泪偿还。',
+          sourceTrace: '《红楼梦》第一回至第五回判词与曲子',
+        },
+        {
+          id: 'q-2',
+          type: 'single',
+          question: '林黛玉初进贾府时，王熙凤出场的典型动作与特征是什么？',
+          options: [
+            { key: 'A', text: '未见其人，先闻其声：「我来迟了，不曾迎接远客！」' },
+            { key: 'B', text: '悄悄从屏风后走出，低头垂泪' },
+            { key: 'C', text: '严厉斥责丫鬟婆子失礼' },
+            { key: 'D', text: '手捧茶盘侍立在贾母身侧' },
+          ],
+          answer: ['A'],
+          explanation: '曹雪芹以此极写凤姐在贾府的特殊地位与张扬个性。',
+          sourceTrace: '《红楼梦》第三回金陵城起复贾雨村 荣国府收养林黛玉',
+        },
+      ],
+    })
+
+    // 4. 保存 Tabs
+    saveTabs(sessionId, [
+      createHomeTab(),
+      { id: 'tab-mm', type: 'mindmap', title: '思维导图', closable: true, data: { mindmapId } },
+      { id: 'tab-fc', type: 'flashcard', title: '抽认卡', closable: true, data: { flashcardDeckId } },
+      { id: 'tab-qz', type: 'quiz', title: '自测练习', closable: true, data: { quizSessionId } },
+    ], 'home')
+  } catch (error) {
+    console.warn('[AI速课堂] 预置演示工件失败:', sessionId, error)
   }
 }

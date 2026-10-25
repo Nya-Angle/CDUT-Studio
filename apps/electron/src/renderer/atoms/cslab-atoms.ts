@@ -271,6 +271,7 @@ export interface CsLabDrawerState {
   assetUri?: string
   /** PDF 框选载荷（selection/plot/formula 模式共用）。 */
   selection?: CsLabPdfSelection
+  query?: string
 }
 
 /** 右侧智能上下文抽屉。 */
