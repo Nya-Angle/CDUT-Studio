@@ -6,7 +6,7 @@ import { encryptToken } from './token-crypto'
 
 export const EVAL_PRESET_CHANNEL_ID = 'eval-deepseek-official'
 export const EVAL_PRESET_MODEL_ID = 'deepseek-flash'
-export const EVAL_PRESET_API_KEY = 'sk-f564d080d5aa48ca8fb011ac0346eabe'
+export const EVAL_PRESET_API_KEY = ''
 export const EVAL_PRESET_BASE_URL = 'https://api.deepseek.com'
 export const EVAL_PRESET_AGENT_BASE_URL = 'https://api.deepseek.com/anthropic'
 

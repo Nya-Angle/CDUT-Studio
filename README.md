@@ -4,8 +4,8 @@
 
 <a id="cdut-studio-"></a>
 <a id="top"></a>
-# CDUT Studio 🦖
-### 成都理工大学定制 AI 智能体工作台
+<h1 align="center">CDUT Studio 🦖</h1>
+<h3 align="center">成都理工大学定制 AI 智能体工作台</h3>
 
 <p align="center">
   <strong>“穷究于理，成就于工”</strong><br>
