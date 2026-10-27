@@ -157,7 +157,7 @@ function DynamicElementShield({ selector }: { selector: string }): React.ReactEl
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-auto absolute cursor-not-allowed z-50 bg-transparent"
+      className="pointer-events-auto absolute cursor-not-allowed z-10 bg-transparent"
       style={{
         left: shieldRect.left,
         top: shieldRect.top,
@@ -206,34 +206,9 @@ export function CoachTourOverlay(): React.ReactElement | null {
     setTourCurrentStepKey(open ? step?.key ?? null : null)
   }, [open, step?.key, setTourCurrentStepKey])
 
-  // 砚小龙任务状态轮询
-  const [petRunning, setPetRunning] = React.useState(false)
+  // 智联万站步骤需让原生网页视图正常呈现，用户才能看到砚小龙驱动百度搜索与官网跳转的实时过程
   const isYanhuStep = step?.cdutSubView === 'yanhu-express'
-
-  React.useEffect(() => {
-    if (!open || !isYanhuStep) {
-      setPetRunning(false)
-      return
-    }
-    let cancelled = false
-    const poll = async () => {
-      try {
-        const st = await window.electronAPI.yanhuExpress.petGetChatStatus()
-        if (!cancelled && st.running) {
-          setPetRunning(true)
-        }
-      } catch {}
-    }
-    const timer = window.setInterval(poll, 400)
-    return () => {
-      cancelled = true
-      window.clearInterval(timer)
-    }
-  }, [open, isYanhuStep])
-
-  // 智联万站步骤中，用户点击发送前蒙版遮盖网页部分、突出砚小龙
-  const hideWebviewForYanhu = isYanhuStep && !petRunning
-  useGlobalOverlay(open && (!isYanhuStep || hideWebviewForYanhu))
+  useGlobalOverlay(open && !isYanhuStep)
 
   const runner = useCoachTourRunner(open, step)
   const wait = useCoachTourWait({
@@ -353,12 +328,9 @@ export function CoachTourOverlay(): React.ReactElement | null {
     if (step.key === 'cdut-login' && isSheetOpen) {
       return ['[data-tour="cdut-quickbar"]', '[data-tour="cdut-feature-sheet"]']
     }
-    if (step.key === 'yanhu' && !petRunning) {
-      // 发送前深色蒙版遮盖网页部分，仅露出置顶透明窗口中的砚小龙
-      return []
-    }
+    
     return step.selectors
-  }, [step, calculusSent, isSheetOpen, petRunning])
+  }, [step, calculusSent, isSheetOpen])
 
   const prepareReady = runner.phase === 'ready'
   const stepRef = React.useRef<CoachTourStep | undefined>(step)
@@ -659,7 +631,7 @@ export function CoachTourOverlay(): React.ReactElement | null {
       {isStep15To17Disabled && frame && (
         <div
           aria-hidden="true"
-          className="pointer-events-auto absolute rounded-xl z-50 cursor-not-allowed bg-transparent"
+          className="pointer-events-auto absolute rounded-xl z-10 cursor-not-allowed bg-transparent"
           style={{
             left: frame.left,
             top: frame.top,
@@ -703,7 +675,7 @@ export function CoachTourOverlay(): React.ReactElement | null {
         tabIndex={-1}
         style={{ left: cardPosition.left, top: cardPosition.top, transition }}
         className={cn(
-          'pointer-events-auto absolute w-[350px] max-w-[calc(100vw-24px)] rounded-xl border border-border bg-popover p-4 text-popover-foreground shadow-2xl outline-none',
+          'pointer-events-auto absolute z-[100] w-[350px] max-w-[calc(100vw-24px)] rounded-xl border border-border bg-popover p-4 text-popover-foreground shadow-2xl outline-none',
           !reduceMotion && 'animate-in fade-in-0 zoom-in-95 duration-200',
         )}
         onClick={(event) => event.stopPropagation()}

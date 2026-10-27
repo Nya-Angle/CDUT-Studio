@@ -246,7 +246,7 @@ export const COACH_TOUR_STEPS: CoachTourStep[] = [
   {
     key: 'yanhu',
     title: '智联万站 · 砚小龙',
-    body: '请看屏幕左侧的指引卡片与中央的砚小龙浮窗：底层网页已由阴影覆盖，指令已填入输入框，请点击砚小龙卡片里的【发送】按钮。发送后将驱动浏览器访问百度搜索成理官网（支持中途随时点击「跳过本步」进入下一模块）。',
+    body: '右侧为 CDUT Studio 内置浏览器，中央浮动的是桌面伙伴「砚小龙」：演示指令已自动填入输入框，请点击砚小龙卡片里的【发送】按钮。它将自主驱动浏览器访问百度并进入成理官网（支持中途随时点击「跳过本步」进入下一模块）。',
     selectors: ['[data-tour="yanhu-express-stage"]'],
     placement: 'left',
     view: 'cdut-zone',
