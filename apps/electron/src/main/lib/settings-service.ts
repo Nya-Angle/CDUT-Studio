@@ -62,6 +62,11 @@ export function getSettings(): AppSettings {
     const developerModeEnabled = data.developerModeEnabled ?? pluginSystemEnabled ?? false
     _settingsCache = {
       ...data,
+      agentChannelId: data.agentChannelId === 'eval-huawei-zhichuangbei' ? 'eval-deepseek-official' : (data.agentChannelId || 'eval-deepseek-official'),
+      agentChannelIds: data.agentChannelIds && data.agentChannelIds.length > 0
+        ? data.agentChannelIds.map((id) => (id === 'eval-huawei-zhichuangbei' ? 'eval-deepseek-official' : id))
+        : ['eval-deepseek-official'],
+      agentModelId: data.agentModelId === 'Deepseek-V4-flash' ? 'deepseek-flash' : (data.agentModelId || 'deepseek-flash'),
       pocketModeEnabled: data.pocketModeEnabled ?? tabletModeEnabled,
       pocketModePort: data.pocketModePort ?? tabletModePort,
       themeMode: data.themeMode || DEFAULT_THEME_MODE,

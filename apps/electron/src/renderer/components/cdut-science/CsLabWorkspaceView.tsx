@@ -911,6 +911,15 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
           await openAssetInPane(activePaneId, target)
         } else if (tourCommand.kind === 'refresh-assets') {
           await refreshAssets()
+        } else if (tourCommand.kind === 'open-academic-search') {
+          setDrawer({
+            open: true,
+            mode: 'brain',
+            title: `文献智脑 · ${tourCommand.query}`,
+            query: tourCommand.query,
+          })
+        } else if (tourCommand.kind === 'close-drawer') {
+          setDrawer((previous) => ({ ...previous, open: false }))
         } else {
           await openPlotInPane(activePaneId, tourCommand.plotId)
         }
@@ -2314,6 +2323,7 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
               onCanvasSaved={(paneId, document) => {
                 setPaneCanvases((previous) => ({ ...previous, [paneId]: document }))
                 void refreshAssets()
+                setDrawer((previous) => ({ ...previous, open: false }))
               }}
               onOpenNodeTarget={(target) => {
                 // Bug 6：推演画布 file/link 节点的引用导航，统一在此解析落点。
@@ -2502,6 +2512,7 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
               demoCalibration={drawer.selection?.demoCalibration}
               onSaved={() => {
                 void refreshAssets()
+                setDrawer((previous) => ({ ...previous, open: false }))
               }}
             />
           )}
@@ -2544,6 +2555,7 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
               labId={labId}
               onChanged={() => {
                 void refreshAssets()
+                setDrawer((previous) => ({ ...previous, open: false }))
               }}
             />
           )}

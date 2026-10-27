@@ -261,6 +261,15 @@ function AgentSettingsInitializer(): null {
         console.warn('[AgentSettings] selectedModel 指向已删除、停用或无效的模型配置，清除')
         store.set(selectedModelAtom, null)
       }
+      if (!chatModel || !hasEnabledModel(channels, chatModel)) {
+        const evalCh = channels.find((c) => c.id === 'eval-deepseek-official') || channels[0]
+        if (evalCh && evalCh.models.length > 0) {
+          const m = evalCh.models.find((x) => x.id === 'deepseek-flash' && x.enabled) || evalCh.models.find((x) => x.enabled)
+          if (m) {
+            store.set(selectedModelAtom, { channelId: evalCh.id, modelId: m.id })
+          }
+        }
+      }
 
       // 验证并加载 Agent 渠道/模型
       if (settings.agentChannelId && channelIds.has(settings.agentChannelId)) {

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>成都理工大学综合教务管理系统 - 学生个人中心</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 0; background: #f5f7fa; }
+    header { background: #003366; color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .layout { display: flex; min-height: calc(100vh - 50px); }
+    aside { width: 240px; background: #ffffff; border-right: 1px solid #e2e8f0; padding: 15px; }
+    main { flex: 1; padding: 25px; }
+    .menu-group { margin-bottom: 15px; }
+    .menu-title { font-weight: bold; margin-bottom: 8px; color: #2d3748; }
+    .menu-item { padding: 6px 12px; margin-bottom: 4px; display: block; color: #4a5568; text-decoration: none; border-radius: 4px; }
+    .menu-item:hover, .menu-item.active { background: #ebf8ff; color: #3182ce; }
+    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { border: 1px solid #e2e8f0; padding: 10px; text-align: left; }
+    th { background: #edf2f7; color: #4a5568; }
+    .filter-bar { display: flex; gap: 12px; align-items: center; margin-bottom: 15px; }
+    button, input, select { padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 4px; }
+    button { background: #3182ce; color: white; cursor: pointer; border: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div><strong>成都理工大学教务管理服务平台</strong> (CDUT-Studio In-App Verification)</div>
+    <div><span>当前登录：李同学 (202305010999)</span> <button>安全退出</button></div>
+  </header>
+  <div class="layout">
+    <aside>
+      <div class="menu-group">
+        <div class="menu-title">🎓 学籍成绩</div>
+        <a href="#info" class="menu-item active">学籍卡片查询</a>
+        <a href="#grade" class="menu-item">学期成绩查询</a>
+        <a href="#grade-all" class="menu-item">历年成绩总单</a>
+        <a href="#gpa" class="menu-item">绩点排名分析</a>
+      </div>
+      <div class="menu-group">
+        <div class="menu-title">📚 培养与课表</div>
+        <a href="#plan" class="menu-item">指导性教学计划</a>
+        <a href="#schedule" class="menu-item">学期个人课表</a>
+        <a href="#classroom" class="menu-item">空闲教室检索</a>
+      </div>
+      <div class="menu-group">
+        <div class="menu-title">✏️ 选课中心</div>
+        <a href="#select-public" class="menu-item">通识选修课选课</a>
+        <a href="#select-major" class="menu-item">专业拓展课选课</a>
+        <a href="#select-drop" class="menu-item">退选课办理</a>
+      </div>
+      <div class="menu-group">
+        <div class="menu-title">📝 考务与等级考试</div>
+        <a href="#exam-plan" class="menu-item">期末考试日程查询</a>
+        <a href="#cet-reg" class="menu-item">全国大学英语四六级报名</a>
+        <a href="#slow-exam" class="menu-item">缓考/补考申请审核</a>
+      </div>
+      <div class="menu-group">
+        <div class="menu-title">⭐ 实践与毕业</div>
+        <a href="#project" class="menu-item">大学生创新创业项目</a>
+        <a href="#intern" class="menu-item">毕业实习日志填报</a>
+        <a href="#thesis" class="menu-item">本科毕业论文选题</a>
+      </div>
+    </aside>
+    <main>
+      <div class="card">
+        <h2>2025-2026学年秋季学期 课程修读与成绩明细</h2>
+        <div class="filter-bar">
+          <label>开课学期：</label>
+          <select name="semester">
+            <option selected>2025-2026-1</option>
+            <option>2024-2025-2</option>
+            <option>2024-2025-1</option>
+          </select>
+          <label>课程类型：</label>
+          <select name="courseType">
+            <option selected>全部类型</option>
+            <option>必修课</option>
+            <option>限选课</option>
+            <option>任选课</option>
+          </select>
+          <input type="text" placeholder="课程名称/课程编号模糊搜索" />
+          <button id="btn-query">立即检索</button>
+          <button id="btn-export" style="background: #38a169;">导出成绩单PDF</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>序号</th>
+              <th>课程编号</th>
+              <th>课程名称</th>
+              <th>学分</th>
+              <th>学时</th>
+              <th>考核方式</th>
+              <th>平时成绩</th>
+              <th>期末成绩</th>
+              <th>综合总评</th>
+              <th>绩点 (GPA)</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>CS301</td>
+              <td>分布式系统与云计算</td>
+              <td>3.5</td>
+              <td>56</td>
+              <td>考试</td>
+              <td>92</td>
+              <td>88</td>
+              <td>89</td>
+              <td>3.9</td>
+              <td><button>查卷详情</button></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>CS304</td>
+              <td>计算机体系结构与编译原理</td>
+              <td>4.0</td>
+              <td>64</td>
+              <td>考试</td>
+              <td>95</td>
+              <td>91</td>
+              <td>92</td>
+              <td>4.0</td>
+              <td><button>查卷详情</button></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>GEO201</td>
+              <td>地球科学导论与地质大数据</td>
+              <td>2.0</td>
+              <td>32</td>
+              <td>考查</td>
+              <td>86</td>
+              <td>90</td>
+              <td>88</td>
+              <td>3.8</td>
+              <td><button>查卷详情</button></td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>AI402</td>
+              <td>智能体系统与具身智能决策</td>
+              <td>3.0</td>
+              <td>48</td>
+              <td>大作业</td>
+              <td>98</td>
+              <td>96</td>
+              <td>97</td>
+              <td>4.0</td>
+              <td><button>查卷详情</button></td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>MA205</td>
+              <td>应用数理统计与随机过程</td>
+              <td>3.5</td>
+              <td>56</td>
+              <td>考试</td>
+              <td>84</td>
+              <td>82</td>
+              <td>83</td>
+              <td>3.3</td>
+              <td><button>查卷详情</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>期末缓考/重修申诉登记表单</h3>
+        <form id="appeal-form">
+          <div style="display: flex; gap: 20px; margin-bottom: 12px;">
+            <div style="flex: 1;">
+              <label>申请课程：</label>
+              <input type="text" value="CS304 计算机体系结构与编译原理" style="width: 100%; box-sizing: border-box;" />
+            </div>
+            <div style="flex: 1;">
+              <label>申请类型：</label>
+              <select style="width: 100%; box-sizing: border-box;">
+                <option>成绩复核与查分申诉</option>
+                <option>因病缓考申请</option>
+                <option>学分置换认定</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-bottom: 12px;">
+            <label>申诉详细事由（至少20字）：</label>
+            <textarea style="width: 100%; height: 80px; box-sizing: border-box; border: 1px solid #cbd5e0; border-radius: 4px; padding: 8px;">平时实验报告第四次成绩未被系统正确计入，已与任课教师沟通确认补录。</textarea>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <input type="checkbox" id="agree" checked />
+            <label for="agree">本人承诺所填报材料真实有效，知晓学术诚信要求</label>
+          </div>
+          <div style="margin-top: 15px; display: flex; gap: 10px;">
+            <button type="submit">提交审核申请</button>
+            <button type="button" style="background: #718096;">重置草稿</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

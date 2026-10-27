@@ -248,6 +248,7 @@ export function CsLabMolstarViewer({
   // ===== 初始化 / 销毁 =====
   React.useEffect(() => {
     let disposed = false
+    let ro: ResizeObserver | null = null
     const container = containerRef.current
     if (!container) return
 
@@ -267,6 +268,16 @@ export function CsLabMolstarViewer({
         const ok = await plugin.initViewerAsync(canvas, container)
         if (!ok) throw new Error('WebGL 画布初始化失败')
 
+        if (typeof ResizeObserver !== 'undefined') {
+          ro = new ResizeObserver(() => {
+            if (plugin.canvas3d) {
+              plugin.canvas3d.handleResize()
+              plugin.canvas3d.requestDraw()
+            }
+          })
+          ro.observe(container)
+        }
+
         try {
           const renderer = plugin.canvas3d?.props.renderer
           if (renderer) {
@@ -283,7 +294,13 @@ export function CsLabMolstarViewer({
           console.warn('[CSLab Mol*] 背景色设置失败:', error)
         }
 
-        if (!disposed) setReady(true)
+        if (!disposed) {
+          setReady(true)
+          requestAnimationFrame(() => {
+            plugin.canvas3d?.handleResize()
+            plugin.canvas3d?.requestDraw()
+          })
+        }
       } catch (error) {
         console.error('[CSLab Mol*] 初始化失败:', error)
         if (!disposed) {
@@ -297,6 +314,8 @@ export function CsLabMolstarViewer({
 
     return () => {
       disposed = true
+      ro?.disconnect()
+      ro = null
       setReady(false)
       const plugin = pluginRef.current
       pluginRef.current = null
@@ -446,6 +465,10 @@ export function CsLabMolstarViewer({
         }
 
         await PluginCommands.Camera.Reset(plugin, {})
+        if (plugin.canvas3d) {
+          plugin.canvas3d.handleResize()
+          plugin.canvas3d.requestCameraReset()
+        }
         if (!cancelled) setState('ready')
       } catch (error) {
         console.error('[CSLab Mol*] 结构载入失败:', error)

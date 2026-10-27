@@ -810,7 +810,7 @@ export function AgentMessages({ sessionId, sessionModelId, agentRuntime, message
   return (
     <FileAccessSessionProvider sessionId={sessionId}>
     <BasePathsProvider basePaths={resolvedBasePaths}>
-    <div ref={historySelectionRootRef} className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
+    <div ref={historySelectionRootRef} data-tour="agent-messages-container" className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
       <Conversation resize={ready && !transitioning ? 'smooth' : 'instant'} className={cn('relative z-10', ready ? (skipFadeIn ? 'opacity-100' : 'opacity-100 transition-opacity duration-200') : 'opacity-0')}>
       <ScrollPositionManager id={sessionId} ready={ready} />
       <TopHistoryLoader

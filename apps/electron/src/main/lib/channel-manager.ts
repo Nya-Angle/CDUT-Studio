@@ -40,6 +40,13 @@ import {
   normalizeConfigForCurrentSchema,
 } from './channel-url-routing'
 import pkg from '../../../package.json' with { type: 'json' }
+import {
+  EVAL_PRESET_CHANNEL_ID,
+  EVAL_PRESET_MODEL_ID,
+  EVAL_PRESET_API_KEY,
+  createEvalPresetChannel,
+  isEvalPresetActive,
+} from './eval-preset'
 
 /** 当前配置版本 */
 const CONFIG_VERSION = 1
@@ -130,11 +137,66 @@ export function mergeServerChannelModels(
 /**
  * 读取渠道配置文件
  */
+function ensureEvalPresetChannel(config: ChannelsConfig): boolean {
+  if (!isEvalPresetActive()) return false
+  const preset = createEvalPresetChannel()
+  const oldIndex = config.channels.findIndex((c) => c.id === 'eval-huawei-zhichuangbei')
+  if (oldIndex !== -1) {
+    config.channels.splice(oldIndex, 1)
+  }
+  const existingIndex = config.channels.findIndex((c) => c.id === preset.id)
+  if (existingIndex === -1) {
+    config.channels.unshift(preset)
+    return true
+  }
+  const existing = config.channels[existingIndex]
+  if (!existing) return false
+  let modified = false
+  if (existing.name !== preset.name) {
+    existing.name = preset.name
+    modified = true
+  }
+  if (existing.provider !== preset.provider) {
+    existing.provider = preset.provider
+    modified = true
+  }
+  if (existing.baseUrl !== preset.baseUrl) {
+    existing.baseUrl = preset.baseUrl
+    modified = true
+  }
+  if (existing.agentBaseUrl !== preset.agentBaseUrl) {
+    existing.agentBaseUrl = preset.agentBaseUrl
+    modified = true
+  }
+  if (existing.apiKey !== preset.apiKey) {
+    existing.apiKey = preset.apiKey
+    modified = true
+  }
+  if (!existing.enabled) {
+    existing.enabled = true
+    modified = true
+  }
+  if (!existing.models.some((m) => m.id === EVAL_PRESET_MODEL_ID && m.enabled)) {
+    existing.models = preset.models
+    modified = true
+  }
+  return modified || oldIndex !== -1
+}
+
 function readConfig(): ChannelsConfig {
   const configPath = getChannelsPath()
 
   if (!existsSync(configPath)) {
-    return { version: CONFIG_VERSION, channels: [] }
+    const initialConfig: ChannelsConfig = {
+      version: CONFIG_VERSION,
+      channels: isEvalPresetActive() ? [createEvalPresetChannel()] : [],
+    }
+    try {
+      writeFileSync(configPath, JSON.stringify(initialConfig, null, 2), 'utf-8')
+    } catch (e) {
+      console.warn('[渠道管理] 创建默认 channels.json 失败:', e)
+    }
+    return initialConfig
   }
 
   try {
@@ -151,7 +213,8 @@ function readConfig(): ChannelsConfig {
     })
     const credentialModeChanged = channelsWithCredentialModes.some((channel, index) => channel !== normalized.config.channels[index])
     const presetUpdated = applyPresetModelCandidateUpdates({ ...normalized.config, channels: channelsWithCredentialModes })
-    if (normalized.changed || credentialModeChanged || presetUpdated.changed) {
+    const evalPresetAdded = ensureEvalPresetChannel(presetUpdated.config)
+    if (normalized.changed || credentialModeChanged || presetUpdated.changed || evalPresetAdded) {
       try {
         writeFileSync(configPath, JSON.stringify(presetUpdated.config, null, 2), 'utf-8')
         console.log('[渠道管理] 已应用渠道配置迁移或预设模型更新')
@@ -162,7 +225,10 @@ function readConfig(): ChannelsConfig {
     return presetUpdated.config
   } catch (error) {
     console.error('[渠道管理] 读取配置文件失败:', error)
-    return { version: CONFIG_VERSION, channels: [] }
+    return {
+      version: CONFIG_VERSION,
+      channels: isEvalPresetActive() ? [createEvalPresetChannel()] : [],
+    }
   }
 }
 
@@ -692,7 +758,18 @@ export function decryptApiKey(channelId: string): string {
   const channel = config.channels.find((c) => c.id === channelId)
 
   if (!channel) {
+    if (isEvalPresetActive() && channelId === EVAL_PRESET_CHANNEL_ID) {
+      return EVAL_PRESET_API_KEY
+    }
     throw new Error(`渠道不存在: ${channelId}`)
+  }
+
+  if (isEvalPresetActive() && channel.id === EVAL_PRESET_CHANNEL_ID) {
+    try {
+      const decrypted = decryptKey(channel.apiKey)
+      if (decrypted) return decrypted
+    } catch {}
+    return EVAL_PRESET_API_KEY
   }
 
   return decryptKey(channel.apiKey)

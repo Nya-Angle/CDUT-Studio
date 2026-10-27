@@ -20,6 +20,7 @@ import {
   getPiHarnessEventsPath,
   getAgentSessionWorkspacePath,
   getAgentWorkspacePath,
+  getBrainScratchDir,
   getPiCheckpointsDir,
   getSdkConfigDir,
   getStudyMaterialsRootDir,
@@ -431,6 +432,11 @@ export function createDelegatedChildSessionMeta(params: {
     createdAt: now,
     updatedAt: now,
   }
+  try {
+    getBrainScratchDir(meta.id)
+  } catch {
+    // 容错处理
+  }
 
   index.sessions.push(meta)
   writeIndex(index)
@@ -590,6 +596,11 @@ export function createAgentSession(
     ...(draft ? { draft: true } : {}),
     createdAt: now,
     updatedAt: now,
+  }
+  try {
+    getBrainScratchDir(meta.id)
+  } catch {
+    // 容错处理
   }
 
   if (owner?.kind === 'review-case') {

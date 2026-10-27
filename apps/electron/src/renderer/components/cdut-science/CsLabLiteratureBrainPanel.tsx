@@ -21,6 +21,7 @@ interface CsLabLiteratureBrainPanelProps {
   onOpenLiterature: (uri: string, page: number, bbox?: [number, number, number, number]) => void
   onToast?: (kind: 'info' | 'success' | 'error', text: string) => void
   onOpenCanvas?: (relPath: string) => void
+  initialQuery?: string
 }
 
 const TEXT_LAYER_HINT = '文献缺少文本层（扫描版 PDF），请导入带 OCR/文本层的 PDF 后再建索引。'
@@ -43,8 +44,9 @@ export function CsLabLiteratureBrainPanel({
   onOpenLiterature,
   onToast,
   onOpenCanvas,
+  initialQuery,
 }: CsLabLiteratureBrainPanelProps): React.ReactElement {
-  const [query, setQuery] = React.useState('')
+  const [query, setQuery] = React.useState(initialQuery ?? '')
   const [result, setResult] = React.useState<CsLabLiteratureSearchResult | null>(null)
   const [indexInfo, setIndexInfo] = React.useState<string | null>(null)
   const [busy, setBusy] = React.useState<'build' | 'search' | null>(null)
@@ -116,28 +118,39 @@ export function CsLabLiteratureBrainPanel({
     }
   }
 
-  const search = async (): Promise<void> => {
-    if (!query.trim()) return
-    setBusy('search')
-    setError(null)
-    setHint(null)
-    try {
-      const payload = await window.electronAPI.cslab.searchLiterature({
-        labId,
-        query: query.trim(),
-        topK: 8,
-      })
-      setResult(payload)
-      if (!payload.ok) {
-        if (isTextLayerMessage(payload.message)) setHint(TEXT_LAYER_HINT)
-        else setError(payload.message ?? '检索失败')
+  const search = React.useCallback(
+    async (customQuery?: string): Promise<void> => {
+      const q = (customQuery ?? query).trim()
+      if (!q) return
+      setBusy('search')
+      setError(null)
+      setHint(null)
+      try {
+        const payload = await window.electronAPI.cslab.searchLiterature({
+          labId,
+          query: q,
+          topK: 8,
+        })
+        setResult(payload)
+        if (!payload.ok) {
+          if (isTextLayerMessage(payload.message)) setHint(TEXT_LAYER_HINT)
+          else setError(payload.message ?? '检索失败')
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : '检索失败')
+      } finally {
+        setBusy(null)
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : '检索失败')
-    } finally {
-      setBusy(null)
+    },
+    [labId, query],
+  )
+
+  React.useEffect(() => {
+    if (initialQuery && initialQuery.trim()) {
+      setQuery(initialQuery)
+      void search(initialQuery)
     }
-  }
+  }, [initialQuery, search])
 
   /** 清空搜索：一键回退全景图谱视图。 */
   const clearSearch = (): void => {

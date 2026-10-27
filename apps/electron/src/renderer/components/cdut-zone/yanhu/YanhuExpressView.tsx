@@ -24,6 +24,7 @@ import {
 import { resolvedThemeAtom } from '@/atoms/theme'
 import { isGlobalOverlayActiveAtom } from '@/atoms/overlay-atoms'
 import { yanhuActiveTabAtom, yanhuLoadingAtom, yanhuTabsAtom } from '@/atoms/yanhu-express-atoms'
+import { coachTourCurrentStepKeyAtom, coachTourOpenAtom } from '@/atoms/coach-tour-atoms'
 import { YanhuTabStrip } from './YanhuTabStrip'
 import { YanhuNavBar } from './YanhuNavBar'
 import { YanhuBlockedPage } from './YanhuBlockedPage'
@@ -55,6 +56,9 @@ export function YanhuExpressView(): React.ReactElement {
   const resolvedTheme = useAtomValue(resolvedThemeAtom)
   // 全局模态叠加态：任一全局阻断性模态打开时，原生 WebContentsView 必须让位（见 overlay-atoms）
   const overlayActive = useAtomValue(isGlobalOverlayActiveAtom)
+  const tourOpen = useAtomValue(coachTourOpenAtom)
+  const tourStepKey = useAtomValue(coachTourCurrentStepKeyAtom)
+  const isTourYanhu = tourOpen && tourStepKey === 'yanhu'
   const overlayActiveRef = React.useRef(overlayActive)
   overlayActiveRef.current = overlayActive
 
@@ -254,7 +258,7 @@ export function YanhuExpressView(): React.ReactElement {
   // （模态打开时原生视图立即隐去、关闭时立即原位恢复，均无重载、不丢页面状态）
   React.useEffect(() => {
     publishRef.current()
-  }, [enabled, tabsState.activeTabId, overlayActive])
+  }, [enabled, tabsState.activeTabId, overlayActive, isTourYanhu])
 
   // ===== 操作封装 =====
   const run = React.useCallback(
@@ -279,7 +283,6 @@ export function YanhuExpressView(): React.ReactElement {
     <div
       ref={rootRef}
       data-yanhu-native-host
-      data-tour="yanhu-express-stage"
       className="flex min-h-0 flex-1 flex-col overflow-hidden bg-content-area"
     >
       <YanhuTabStrip
@@ -307,7 +310,14 @@ export function YanhuExpressView(): React.ReactElement {
         onNavigate={(url) => run(() => api.navigate({ url }))}
       />
 
-      <div className="relative min-h-0 flex-1">
+      <div className="relative min-h-0 flex-1 flex overflow-hidden">
+        {isTourYanhu && (
+          <div
+            aria-hidden="true"
+            className="w-[390px] shrink-0 border-r border-border/40 bg-card/40 backdrop-blur-sm"
+          />
+        )}
+        <div data-tour="yanhu-express-stage" className="relative min-h-0 flex-1">
         {/* 原生 WebContentsView 的占位宿主：主进程按本矩形精确摆放原生视图 */}
         <div ref={pageRef} className="absolute inset-0 bg-content-area" aria-label="智联万站页面" />
         {blockedTarget ? (
@@ -326,6 +336,7 @@ export function YanhuExpressView(): React.ReactElement {
             onOpenExternal={openExternal}
           />
         ) : null}
+        </div>
       </div>
     </div>
   )

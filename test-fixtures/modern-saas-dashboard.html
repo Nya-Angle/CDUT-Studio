@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>CDUT Studio 智联万站 · 智能体编排与工作流中枢</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; display: flex; height: 100vh; background: #0f172a; color: #f8fafc; }
+    .sidebar { width: 260px; background: #1e293b; padding: 20px; border-right: 1px solid #334155; }
+    .content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+    .topbar { height: 60px; background: #1e293b; border-bottom: 1px solid #334155; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; }
+    .dashboard { padding: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 16px; }
+    .tabs { display: flex; gap: 8px; border-bottom: 1px solid #334155; padding-bottom: 12px; margin-bottom: 16px; }
+    .tab { padding: 8px 16px; border-radius: 6px; background: #0f172a; cursor: pointer; border: 1px solid #334155; color: #94a3b8; }
+    .tab.active { background: #3b82f6; color: white; border-color: #3b82f6; }
+    button { padding: 8px 16px; border-radius: 6px; border: none; background: #3b82f6; color: white; cursor: pointer; font-weight: 500; }
+    input { background: #0f172a; border: 1px solid #334155; color: white; padding: 8px 12px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h3 style="color: #60a5fa;">CDUT Studio 2.0</h3>
+    <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 8px;">
+      <button style="text-align: left; background: #2563eb;">⚡ 智能编排看板</button>
+      <button style="text-align: left; background: transparent; border: 1px solid #334155;">🤖 智能体实例池</button>
+      <button style="text-align: left; background: transparent; border: 1px solid #334155;">🌐 受管浏览器集群</button>
+      <button style="text-align: left; background: transparent; border: 1px solid #334155;">📊 评测与指标分析</button>
+      <button style="text-align: left; background: transparent; border: 1px solid #334155;">⚙️ 系统参数与模型网关</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="topbar">
+      <div>
+        <input type="text" placeholder="全局搜索模型、任务、会话..." style="width: 320px;" />
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <button style="background: #10b981;">新建会话任务</button>
+        <button style="background: #6366f1;">导入数据集</button>
+        <button style="background: #475569;">用户通知 (3)</button>
+      </div>
+    </div>
+    <div class="dashboard">
+      <div class="grid">
+        <div class="card">
+          <div style="color: #94a3b8; font-size: 14px;">当前在线 Agent 节点</div>
+          <div style="font-size: 28px; font-weight: bold; margin-top: 8px;">12 / 16</div>
+        </div>
+        <div class="card">
+          <div style="color: #94a3b8; font-size: 14px;">内置浏览器平均延时</div>
+          <div style="font-size: 28px; font-weight: bold; margin-top: 8px; color: #34d399;">182 ms</div>
+        </div>
+        <div class="card">
+          <div style="color: #94a3b8; font-size: 14px;">今日上下文压缩节省</div>
+          <div style="font-size: 28px; font-weight: bold; margin-top: 8px; color: #60a5fa;">98.4%</div>
+        </div>
+        <div class="card">
+          <div style="color: #94a3b8; font-size: 14px;">执行成功率 (Pass Rate)</div>
+          <div style="font-size: 28px; font-weight: bold; margin-top: 8px; color: #fbbf24;">99.2%</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active">运行中工作流 (5)</div>
+        <div class="tab">历史回放 (128)</div>
+        <div class="tab">待审阅审批流 (2)</div>
+        <div class="tab">资源监控图表</div>
+      </div>
+
+      <div class="card">
+        <h3>多模态与无障碍树观察配置</h3>
+        <p style="color: #94a3b8;">针对大模型上下文窗口，配置内置浏览器的 AXTree 剪枝与深度策略。</p>
+        <div style="display: flex; gap: 24px; margin-top: 16px;">
+          <div>
+            <label style="display: block; margin-bottom: 6px;">默认观测深度 (AX Depth):</label>
+            <input type="number" value="8" style="width: 120px;" />
+          </div>
+          <div>
+            <label style="display: block; margin-bottom: 6px;">可交互元素保留上限 (Max Elements):</label>
+            <input type="number" value="240" style="width: 140px;" />
+          </div>
+          <div>
+            <label style="display: block; margin-bottom: 6px;">可交互与语义上下文配额比例:</label>
+            <input type="text" value="2:1 (160:80)" disabled style="width: 140px; opacity: 0.7;" />
+          </div>
+        </div>
+        <div style="margin-top: 20px; display: flex; gap: 12px;">
+          <button>保存观察策略配置</button>
+          <button style="background: transparent; border: 1px solid #475569;">恢复默认推荐值</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

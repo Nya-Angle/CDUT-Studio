@@ -11,3 +11,6 @@ import { atom } from 'jotai'
 
 /** 是否展示界面蒙层引导 */
 export const coachTourOpenAtom = atom(false)
+
+/** 当前引导步骤的 Key（无引导时为 null） */
+export const coachTourCurrentStepKeyAtom = atom<string | null>(null)

@@ -22,7 +22,6 @@ import {
   DEMO_CDUT_ACCOUNT,
   PROMPT_CALCULUS,
   PROMPT_HONGLOU_Q1,
-  PROMPT_HONGLOU_Q2,
   PROMPT_YANHU,
   type CoachTourStep,
   type CoachTourTrigger,
@@ -160,13 +159,25 @@ export function useCoachTourRunner(
           enterAiClass(result.session.sessionId, result.session.courseName)
           return
         }
+        case 'switch-tab-mindmap': {
+          const btn = document.querySelector<HTMLElement>('[data-tour-tab="mindmap"]')
+          btn?.click()
+          return
+        }
+        case 'switch-tab-flashcard': {
+          const btn = document.querySelector<HTMLElement>('[data-tour-tab="flashcard"]')
+          btn?.click()
+          return
+        }
+        case 'switch-tab-quiz': {
+          const btn = document.querySelector<HTMLElement>('[data-tour-tab="quiz"]')
+          btn?.click()
+          return
+        }
         case 'fill-honglou-q1':
           await fillComposer(PROMPT_HONGLOU_Q1, '[data-tour="ai-class-chat"] [data-input-mode="agent"]')
           return
-        case 'fill-honglou-q2':
-          await fillComposer(PROMPT_HONGLOU_Q2, '[data-tour="ai-class-chat"] [data-input-mode="agent"]')
-          return
-        case 'prepare-pet-demo': {
+                case 'prepare-pet-demo': {
           await waitForSelector('[data-tour="yanhu-express-stage"]', READY_SELECTOR_TIMEOUT)
           // 引导蒙层会隐藏原生网页视图，这里用舞台 DOM 矩形为桌宠提供有效视口
           const stage = document.querySelector<HTMLElement>('[data-tour="yanhu-express-stage"]')
