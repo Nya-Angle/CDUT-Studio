@@ -25,6 +25,8 @@ interface YanhuNavBarProps {
   loading: boolean
   /** 当前是否处于内置拦截页 */
   blocked: boolean
+  /** 隐藏地址输入框与校内书签胶囊栏（保留多标签栏与导航按钮） */
+  hideAddressBar?: boolean
   onBack: () => void
   onForward: () => void
   onReload: () => void
@@ -50,6 +52,7 @@ export function YanhuNavBar({
   canGoForward,
   loading,
   blocked,
+  hideAddressBar = false,
   onBack,
   onForward,
   onReload,
@@ -94,44 +97,50 @@ export function YanhuNavBar({
         </NavButton>
       </div>
 
-      <form onSubmit={handleSubmit} className="relative min-w-0 flex-1">
-        <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2">
-          {blocked ? (
-            <TriangleAlert size={13} className="text-destructive" />
-          ) : trusted ? (
-            <Lock size={13} className="text-emerald-500" />
-          ) : (
-            <Unlock size={13} className="text-muted-foreground/60" />
-          )}
-        </span>
-        <input
-          type="text"
-          value={draft}
-          spellCheck={false}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          onChange={(event) => setDraft(event.target.value)}
-          placeholder="输入网址或域名（支持站外访问）"
-          className="h-8 w-full rounded-lg border border-border/60 bg-background/70 pl-8 pr-3 text-xs text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/50 focus:bg-background"
-        />
-      </form>
+      {hideAddressBar ? (
+        <div className="flex-1" aria-hidden="true" />
+      ) : (
+        <>
+          <form onSubmit={handleSubmit} className="relative min-w-0 flex-1">
+            <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2">
+              {blocked ? (
+                <TriangleAlert size={13} className="text-destructive" />
+              ) : trusted ? (
+                <Lock size={13} className="text-emerald-500" />
+              ) : (
+                <Unlock size={13} className="text-muted-foreground/60" />
+              )}
+            </span>
+            <input
+              type="text"
+              value={draft}
+              spellCheck={false}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              onChange={(event) => setDraft(event.target.value)}
+              placeholder="输入网址或域名（支持站外访问）"
+              className="h-8 w-full rounded-lg border border-border/60 bg-background/70 pl-8 pr-3 text-xs text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/50 focus:bg-background"
+            />
+          </form>
 
-      <div className="flex shrink-0 items-center gap-1 overflow-x-auto">
-        <span className="hidden items-center gap-1 text-[10px] font-medium text-muted-foreground/60 lg:flex">
-          <BookMarked size={12} />
-        </span>
-        {YANHU_BOOKMARKS.map((bookmark) => (
-          <button
-            key={bookmark.id}
-            type="button"
-            onClick={() => handleBookmarkClick(bookmark.url)}
-            className="shrink-0 rounded-full border border-border/50 bg-background/60 px-2.5 py-1 text-[11px] font-medium text-foreground/80 transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
-            title={bookmark.url}
-          >
-            {bookmark.label}
-          </button>
-        ))}
-      </div>
+          <div className="flex shrink-0 items-center gap-1 overflow-x-auto">
+            <span className="hidden items-center gap-1 text-[10px] font-medium text-muted-foreground/60 lg:flex">
+              <BookMarked size={12} />
+            </span>
+            {YANHU_BOOKMARKS.map((bookmark) => (
+              <button
+                key={bookmark.id}
+                type="button"
+                onClick={() => handleBookmarkClick(bookmark.url)}
+                className="shrink-0 rounded-full border border-border/50 bg-background/60 px-2.5 py-1 text-[11px] font-medium text-foreground/80 transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+                title={bookmark.url}
+              >
+                {bookmark.label}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
 
       {/* 实时底层诊断控制台快捷入口 */}
       <div className="flex shrink-0 items-center border-l border-border/40 pl-1.5">

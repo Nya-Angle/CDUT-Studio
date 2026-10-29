@@ -7,7 +7,14 @@
  */
 
 import * as React from 'react'
-import { BrainCircuit, ChevronRight, Compass, FileCheck2, type LucideIcon } from 'lucide-react'
+import {
+  BookOpen,
+  BrainCircuit,
+  ChevronRight,
+  Compass,
+  FileCheck2,
+  type LucideIcon,
+} from 'lucide-react'
 import { CdutLogo } from '@/components/shared/CdutLogo'
 
 interface CdutHeroSectionProps {
@@ -64,7 +71,7 @@ const BENTO_MODULES: BentoModule[] = [
 
 export function CdutHeroSection({ onSelect }: CdutHeroSectionProps): React.ReactElement {
   return (
-    <section className="my-auto flex flex-1 flex-col items-center justify-center gap-8 py-6">
+    <section className="my-auto flex flex-1 flex-col items-center justify-center gap-5 py-4">
       {/* 居中校徽（含微淡晕影） */}
       <div className="flex flex-col items-center gap-3">
         {/* Logo 容器自适应高度，图片底部对齐容器底边 */}
@@ -85,35 +92,61 @@ export function CdutHeroSection({ onSelect }: CdutHeroSectionProps): React.React
         </p>
       </div>
 
-      {/* Bento 三大战略板块 */}
-      <div className="grid w-full max-w-5xl grid-cols-3 gap-5">
+      {/* Bento 三大战略板块（高度压缩：图标/标题/标签单行排布） */}
+      <div className="grid w-full max-w-5xl grid-cols-3 gap-3">
         {BENTO_MODULES.map((mod) => (
           <button
             key={mod.id}
             type="button"
             data-tour={`cdut-module-${mod.id}`}
             onClick={() => onSelect?.(mod.id)}
-            className={`group relative flex flex-col gap-3 overflow-hidden rounded-2xl border border-surface-border/60 bg-gradient-to-br ${mod.surface} p-5 text-left shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg ${mod.glow}`}
+            className={`group relative flex flex-col gap-2 overflow-hidden rounded-2xl border border-surface-border/60 bg-gradient-to-br ${mod.surface} px-4 py-3 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${mod.glow}`}
           >
-            <span
-              className={`flex size-9 items-center justify-center rounded-xl ${mod.accent}`}
-            >
-              <mod.icon size={17} />
-            </span>
-            <div className="space-y-1">
-              <h3 className="text-sm font-semibold text-foreground">{mod.title}</h3>
-              <span className="inline-block rounded-md bg-muted/60 px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+            <div className="flex min-w-0 items-center gap-2.5">
+              <span
+                className={`flex size-8 shrink-0 items-center justify-center rounded-lg ${mod.accent}`}
+              >
+                <mod.icon size={16} />
+              </span>
+              <h3 className="shrink-0 text-sm font-semibold text-foreground">{mod.title}</h3>
+              <span className="min-w-0 truncate rounded-md bg-muted/60 px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
                 {mod.tag}
               </span>
+              <ChevronRight
+                size={15}
+                className="ml-auto shrink-0 text-muted-foreground/60 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:text-primary"
+              />
             </div>
-            <p className="text-xs leading-relaxed text-muted-foreground">{mod.desc}</p>
-            <ChevronRight
-              size={15}
-              className="absolute bottom-4 right-4 text-muted-foreground/60 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:text-primary"
-            />
+            <p className="line-clamp-2 text-[11px] leading-snug text-muted-foreground">{mod.desc}</p>
           </button>
         ))}
       </div>
+
+      {/* 居中新入口：AI 问渠学堂（复用智联万站同款内置浏览器） */}
+      <button
+        type="button"
+        onClick={() => onSelect?.('wqxt')}
+        className="group flex w-full max-w-md items-center gap-3 overflow-hidden rounded-2xl border border-cyan-500/25 bg-gradient-to-r from-cyan-500/10 via-sky-500/5 to-card px-4 py-3 text-left shadow-sm backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-500/40 hover:shadow-lg hover:shadow-cyan-500/15"
+      >
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400">
+          <BookOpen size={17} />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="flex items-center gap-2">
+            <span className="text-sm font-semibold text-foreground">AI 问渠学堂</span>
+            <span className="shrink-0 rounded-md bg-muted/60 px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+              智慧教学 · 课程中心
+            </span>
+          </span>
+          <span className="mt-0.5 block truncate text-[11px] text-muted-foreground">
+            免密直达成都理工大学在线课程中心，课程学习与教学资源一站汇聚。
+          </span>
+        </span>
+        <ChevronRight
+          size={15}
+          className="shrink-0 text-muted-foreground/60 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:text-primary"
+        />
+      </button>
     </section>
   )
 }

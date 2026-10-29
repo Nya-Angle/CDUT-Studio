@@ -93,10 +93,11 @@ function registerProtocolsAndHandlers(): void {
   // ClearType 是为浅色背景+深色文字设计的，在深色代码块背景下会产生彩色边缘，导致文字模糊。
   if (process.platform === 'win32') {
     app.commandLine.appendSwitch('disable-lcd-text')
-    // 原始动态 Splash 在部分 NVIDIA + D3D11 环境闪动；D3D11on12 后端已在受影响
-    // RTX 3060 Windows 环境完整显示且不闪，同时启动后的主页面正常。保留环境变量覆盖，便于其他机器 A/B。
-    const angleBackend = process.env.PROFER_ANGLE_BACKEND ?? 'd3d11on12'
-    if (['d3d11', 'd3d9', 'd3d11on12', 'gl', 'swiftshader'].includes(angleBackend)) {
+    // 仅在显式配置 PROFER_ANGLE_BACKEND 时切换 ANGLE 后端：默认 d3d11on12 会让 Chromium
+    // 的 NV12 视频纹理采样为 (Y=0,U=0,V=0)，YUV→RGB 后恒为 RGB(0,135,0) 全程绿屏，
+    // 且 <canvas>.drawImage(video) 读取同一 GPU 纹理导致截屏 PNG 同为绿屏。
+    const angleBackend = process.env.PROFER_ANGLE_BACKEND
+    if (angleBackend && ['d3d11', 'd3d9', 'd3d11on12', 'gl', 'swiftshader'].includes(angleBackend)) {
       app.commandLine.appendSwitch('use-angle', angleBackend)
       console.info(`[图形] ANGLE backend: ${angleBackend}`)
     }
@@ -106,7 +107,10 @@ function registerProtocolsAndHandlers(): void {
     // 需要恢复硬件解码（如笔记本省电场景）时，设 PROFER_ENABLE_HW_VIDEO_DECODE=1。
     if (process.env.PROFER_ENABLE_HW_VIDEO_DECODE !== '1') {
       app.commandLine.appendSwitch('disable-accelerated-video-decode')
-      console.info('[图形] 已禁用视频硬件解码（规避非全屏绿屏）')
+      // 禁止软解帧被封装为 DXGI_FORMAT_NV12 GpuMemoryBuffer：该共享纹理在部分后端下
+      // 绑定失败并采样为全 0，是「视频与截屏同时绿屏」的另一条独立成因。
+      app.commandLine.appendSwitch('disable-gpu-memory-buffer-video-frames')
+      console.info('[图形] 已禁用视频硬件解码与 NV12 GMB（规避视频及截屏绿屏）')
     }
     // 叠加关闭 DirectComposition 视频覆盖层：该硬件覆盖层在部分 Windows 驱动下会把
     // 页面内合成的视频整帧呈成绿色/花屏，改回普通纹理合成即可规避（保留硬件解码）。

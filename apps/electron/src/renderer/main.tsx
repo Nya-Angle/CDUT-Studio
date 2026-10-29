@@ -262,53 +262,78 @@ function AgentSettingsInitializer(): null {
         store.set(selectedModelAtom, null)
       }
       if (!chatModel || !hasEnabledModel(channels, chatModel)) {
-        const evalCh = channels.find((c) => c.id === 'eval-deepseek-official') || channels[0]
-        if (evalCh && evalCh.models.length > 0) {
-          const m = evalCh.models.find((x) => x.id === 'deepseek-flash' && x.enabled) || evalCh.models.find((x) => x.enabled)
-          if (m) {
-            store.set(selectedModelAtom, { channelId: evalCh.id, modelId: m.id })
-          }
+        const firstChannel = channels.find(
+          (c) => c.enabled && c.models.some((m) => m.enabled),
+        )
+        const firstModel = firstChannel?.models.find((m) => m.enabled)
+        if (firstChannel && firstModel) {
+          store.set(selectedModelAtom, { channelId: firstChannel.id, modelId: firstModel.id })
         }
       }
 
-      // 验证并加载 Agent 渠道/模型
-      if (settings.agentChannelId && channelIds.has(settings.agentChannelId)) {
-        setAgentChannelId(settings.agentChannelId)
-      } else if (settings.agentChannelId && !channelIds.has(settings.agentChannelId)) {
-        // 渠道已删除，清除无效设置
+      // 验证并加载 Agent 渠道/模型；不写死任何渠道 ID，缺失时从真实渠道动态兜底
+      const settingsPatch: {
+        agentChannelId?: string
+        agentModelId?: string
+        agentChannelIds?: string[]
+      } = {}
+      const validAgentChannelId =
+        settings.agentChannelId && channelIds.has(settings.agentChannelId)
+          ? settings.agentChannelId
+          : undefined
+      const fallbackChannel = channels.find(
+        (c) => c.enabled && c.models.some((m) => m.enabled),
+      )
+      const effectiveAgentChannelId = validAgentChannelId ?? fallbackChannel?.id
+      if (settings.agentChannelId && !validAgentChannelId && !effectiveAgentChannelId) {
         console.warn('[AgentSettings] agentChannelId 指向已删除的渠道，清除')
-        window.electronAPI.updateSettings({ agentChannelId: undefined, agentModelId: undefined }).catch(console.error)
       }
-      if (settings.agentModelId && (!settings.agentChannelId || channelIds.has(settings.agentChannelId))) {
-        setAgentModelId(settings.agentModelId)
+
+      const effectiveChannel = channels.find((c) => c.id === effectiveAgentChannelId)
+      const configuredModelUsable = !!(
+        effectiveChannel &&
+        settings.agentModelId &&
+        effectiveChannel.models.some((m) => m.id === settings.agentModelId && m.enabled)
+      )
+      const effectiveAgentModelId = configuredModelUsable
+        ? settings.agentModelId
+        : effectiveChannel?.models.find((m) => m.enabled)?.id
+
+      if (effectiveAgentChannelId) {
+        setAgentChannelId(effectiveAgentChannelId)
+        if (effectiveAgentChannelId !== settings.agentChannelId) {
+          settingsPatch.agentChannelId = effectiveAgentChannelId
+        }
+      } else if (settings.agentChannelId) {
+        settingsPatch.agentChannelId = undefined
+      }
+
+      if (effectiveAgentModelId) {
+        setAgentModelId(effectiveAgentModelId)
+        if (effectiveAgentModelId !== settings.agentModelId) {
+          settingsPatch.agentModelId = effectiveAgentModelId
+        }
+      } else if (settings.agentModelId) {
+        settingsPatch.agentModelId = undefined
+      }
+
+      // 加载 Agent 启用渠道列表，过滤已删除的渠道，并保证当前默认渠道在列表内
+      const validAgentChannelIds = (settings.agentChannelIds ?? []).filter((id) =>
+        channelIds.has(id),
+      )
+      if (effectiveAgentChannelId && !validAgentChannelIds.includes(effectiveAgentChannelId)) {
+        validAgentChannelIds.push(effectiveAgentChannelId)
+      }
+      setAgentChannelIds(validAgentChannelIds)
+      if (validAgentChannelIds.join('|') !== (settings.agentChannelIds ?? []).join('|')) {
+        console.warn('[AgentSettings] 清理了已删除的 agentChannelIds')
+        settingsPatch.agentChannelIds = validAgentChannelIds
+      }
+
+      if (Object.keys(settingsPatch).length > 0) {
+        window.electronAPI.updateSettings(settingsPatch).catch(console.error)
       }
       setAgentRuntime(settings.agentRuntime ?? 'pi')
-
-      // 加载 Agent 启用渠道列表，过滤已删除的渠道
-      if (settings.agentChannelIds && settings.agentChannelIds.length > 0) {
-        const validIds = settings.agentChannelIds.filter((id) => channelIds.has(id))
-        setAgentChannelIds(validIds)
-        // 如果有渠道被清理，持久化更新后的列表
-        if (validIds.length !== settings.agentChannelIds.length) {
-          console.warn('[AgentSettings] 清理了已删除的 agentChannelIds')
-          window.electronAPI.updateSettings({ agentChannelIds: validIds }).catch(console.error)
-        }
-      } else if (settings.agentChannelId && channelIds.has(settings.agentChannelId)) {
-        // 迁移：旧版本只有 agentChannelId，自动转为数组
-        const migrated = [settings.agentChannelId]
-        setAgentChannelIds(migrated)
-        window.electronAPI.updateSettings({ agentChannelIds: migrated }).catch(console.error)
-      }
-
-      // 兜底：agentChannelId 存在但不在 agentChannelIds 白名单中，自动修复不一致
-      if (settings.agentChannelId && channelIds.has(settings.agentChannelId)) {
-        const currentIds = settings.agentChannelIds?.filter((id) => channelIds.has(id)) ?? []
-        if (!currentIds.includes(settings.agentChannelId)) {
-          const fixedIds = [...currentIds, settings.agentChannelId]
-          setAgentChannelIds(fixedIds)
-          window.electronAPI.updateSettings({ agentChannelIds: fixedIds }).catch(console.error)
-        }
-      }
 
       if (settings.agentThinking) {
         setThinking(settings.agentThinking)

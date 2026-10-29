@@ -1,5 +1,8 @@
 /**
  * 官方 DeepSeek 内置模型预设 (Eval Preset)
+ *
+ * 已停用：保留常量与辅助函数以兼容历史引用与测试，运行时不再向
+ * channels.json / settings.json 注入空壳渠道。
  */
 import type { Channel } from '@profer/shared'
 import { encryptToken } from './token-crypto'
@@ -11,7 +14,7 @@ export const EVAL_PRESET_BASE_URL = 'https://api.deepseek.com'
 export const EVAL_PRESET_AGENT_BASE_URL = 'https://api.deepseek.com/anthropic'
 
 export function isEvalPresetActive(): boolean {
-  return true
+  return false
 }
 
 export function createEvalPresetChannel(): Channel {

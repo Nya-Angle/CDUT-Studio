@@ -13,6 +13,7 @@
 
 import { webFrame } from 'electron'
 import { buildYanhuFingerprintScript } from './yanhu-fingerprint-script'
+import { buildWqxtLivingRoomCleanerScript } from './wqxt-livingroom-cleaner'
 
 function applyYanhuFingerprint(): void {
   try {
@@ -26,4 +27,17 @@ function applyYanhuFingerprint(): void {
   }
 }
 
+function applyWqxtCleaner(): void {
+  try {
+    // 脚本自检 hostname：非问渠课堂页面直接返回，对智联万站零影响
+    void webFrame.executeJavaScript(buildWqxtLivingRoomCleanerScript()).catch(() => {
+      // 页面可能尚未就绪或已销毁，忽略
+    })
+  } catch (err) {
+    // 绝不能因注入异常影响页面加载
+    console.warn('[AI 问渠学堂·Preload] 页面净化脚本注入失败:', err)
+  }
+}
+
 applyYanhuFingerprint()
+applyWqxtCleaner()
