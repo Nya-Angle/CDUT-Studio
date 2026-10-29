@@ -8,10 +8,10 @@
  *   - CDP 注入是权威的 document-start 时序（先于任何内联/外链脚本）；
  *   - 本 Preload 注入保证即使 CDP 不可用（调试器被占用等）也不留指纹破绽。
  *
- * 安全边界：本 Preload **不向页面暴露任何特权 API**，只做单向环境伪装。
+ * 安全边界：本 Preload **不向页面暴露任何特权 API**，只做单向环境伪装与内部事件监听。
  */
 
-import { webFrame } from 'electron'
+import { ipcRenderer, webFrame } from 'electron'
 import { buildYanhuFingerprintScript } from './yanhu-fingerprint-script'
 import { buildWqxtLivingRoomCleanerScript } from './wqxt-livingroom-cleaner'
 
@@ -39,5 +39,36 @@ function applyWqxtCleaner(): void {
   }
 }
 
+function applyWqxtDownloadBridge(): void {
+  try {
+    if (typeof window === 'undefined') return
+    // 仅在顶层窗口挂载桥接，避免子 iframe 重复监听并向主进程同时发送多个相同下载请求
+    if (window.top !== window) return
+    const w = window as any
+    if (w.__profer_wqxt_download_bridge_installed) return
+    w.__profer_wqxt_download_bridge_installed = true
+
+    window.addEventListener('message', (event) => {
+      // 仅接收来自当前主窗口自身的合法下载指令，过滤跨帧或非本窗干扰
+      if (event.source !== window) return
+      if (
+        event &&
+        event.data &&
+        typeof event.data === 'object' &&
+        event.data.type === '__profer_wqxt_download'
+      ) {
+        const url = typeof event.data.url === 'string' ? event.data.url : ''
+        const filename = typeof event.data.filename === 'string' ? event.data.filename : undefined
+        if (url) {
+          ipcRenderer.send('yanhu-download-video', { url, filename })
+        }
+      }
+    })
+  } catch (err) {
+    console.warn('[AI 问渠学堂·Preload] 下载桥接监听失败:', err)
+  }
+}
+
 applyYanhuFingerprint()
 applyWqxtCleaner()
+applyWqxtDownloadBridge()

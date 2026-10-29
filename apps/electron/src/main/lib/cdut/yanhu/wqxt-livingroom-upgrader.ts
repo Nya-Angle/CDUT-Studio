@@ -15,6 +15,14 @@ export const WQXT_NYA_PLAYER_ID = '__profer-nya-player'
 export const WQXT_UPGRADE_STYLE_ID = '__profer-wqxt-upgrade-css'
 /** 学习资源下载卡片宿主 ID */
 export const WQXT_RESOURCE_PANEL_ID = '__profer-wqxt-resource-panel'
+/** 课堂教学视频资源卡片宿主 ID */
+export const WQXT_RESOURCE_CARD_VIDEO_ID = '__profer-resource-card-video'
+/** 课堂教学视频「开始下载」按钮 ID */
+export const WQXT_BTN_VIDEO_DOWNLOAD_ID = '__profer-btn-video-download'
+/** 课堂教学视频清晰度下拉框 ID */
+export const WQXT_SELECT_VIDEO_RES_ID = '__profer-video-resolution-select'
+/** 课堂教学视频状态栏 ID */
+export const WQXT_VIDEO_STATUS_ID = '__profer-video-status'
 /** 底部 CDUT Studio 底栏宿主 ID */
 export const WQXT_FOOTER_ID = '__profer-wqxt-footer'
 /** 扫码观看全局模态层 ID */
@@ -60,6 +68,24 @@ div.header-info.profer-wqxt-header-upgraded > :not(#__profer-wqxt-edu-header) {
 }
 #cmcPlayer_container.profer-nya-upgraded > :not(#__profer-nya-player) {
   display: none !important;
+}
+
+/* ===== 0. 原生 CMC 字幕 UI 物理屏蔽（Nya Player 为唯一字幕入口） ===== */
+.cmc-subtitlepanel,
+.cmc-subtitle-container,
+.cmc-subtitle-view,
+.cmc-subtitles,
+[class*="cmc-subtitle"],
+.cmc-control-btn[title*="字幕"],
+.cmc-control-btn[aria-label*="字幕"],
+.control-content [class*="subtitle"],
+.cmc-rightkey .rightkey-item[keytype="subtitle"],
+#cmcPlayer_container > [class*="subtitle"]:not(#__profer-nya-player),
+.main_resize_con > [class*="subtitle"]:not(#__profer-nya-player) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 /* ===== 1. 顶部导航卡片容器 (#__profer-wqxt-edu-header) ===== */
@@ -868,9 +894,36 @@ div.header-info.profer-wqxt-header-upgraded > :not(#__profer-wqxt-edu-header) {
   background: none;
 }
 #__profer-nya-player .subtitle-panel {
-  width: 180px;
-  gap: 8px;
-  padding: 12px;
+  width: 200px;
+  gap: 10px;
+  padding: 12px 14px;
+}
+#__profer-nya-player .subtitle-lang-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-glass);
+}
+#__profer-nya-player .sub-lang-chip {
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  color: var(--text-sub);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+#__profer-nya-player .sub-lang-chip:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+#__profer-nya-player .sub-lang-chip.is-active {
+  background: var(--primary-color);
+  color: #ffffff;
+  font-weight: 600;
 }
 #__profer-nya-player .context-menu {
   position: absolute;
@@ -1469,6 +1522,39 @@ div.header-info.profer-wqxt-header-upgraded > :not(#__profer-wqxt-edu-header) {
   cursor: not-allowed !important;
   transform: none !important;
   box-shadow: none !important;
+}
+#__profer-wqxt-resource-panel .profer-video-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin-top: 2px !important;
+}
+#__profer-wqxt-resource-panel .profer-video-select {
+  flex: 1 1 180px !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  padding: 7px 10px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #334155 !important;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  outline: none !important;
+  transition: all 0.2s ease !important;
+}
+#__profer-wqxt-resource-panel .profer-video-select:hover {
+  border-color: #a5b4fc !important;
+}
+#__profer-wqxt-resource-panel .profer-video-select:focus {
+  border-color: #a5b4fc !important;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12) !important;
+}
+#__profer-wqxt-resource-panel .profer-video-select:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
 }
 
 /* 3.9 页面底部通栏：CDUT Studio 官方底栏 */
@@ -2126,6 +2212,7 @@ function buildPlayerHtml(): string {
             <svg viewBox="0 0 24 24"><path d="M19 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm-8 10H7v-2h4v2zm6 0h-4v-2h4v2z"></path></svg>
           </button>
           <div class="flyout-panel subtitle-panel">
+            <div class="subtitle-lang-group" id="sub-lang-group" style="display: none;"></div>
             <div class="slider-row"><span>字号</span><input type="range" id="sub-size-slider" min="14" max="36" value="22" /></div>
           </div>
         </div>
@@ -2185,7 +2272,7 @@ function buildPlayerHtml(): string {
 </div>`
 }
 
-/** 学习资源下载区 HTML：自上而下包含 PPT、智能摘要、语音转录三大卡片 */
+/** 学习资源下载区 HTML：自上而下包含 PPT、智能摘要、语音转录、课堂教学视频四大卡片 */
 function buildResourcePanelHtml(): string {
   return `<section class="resource-panel-container" id="${WQXT_RESOURCE_PANEL_ID}">
   <div class="resource-panel-header">
@@ -2199,7 +2286,7 @@ function buildResourcePanelHtml(): string {
       </div>
       <div>
         <h2 class="resource-panel-title">学习资源下载</h2>
-        <p class="resource-panel-desc">课件幻灯片、智能要点摘要与中英双语语音转录</p>
+        <p class="resource-panel-desc">课件幻灯片、原片视频、智能要点摘要与中英双语语音转录</p>
       </div>
     </div>
   </div>
@@ -2266,6 +2353,26 @@ function buildResourcePanelHtml(): string {
         </button>
       </div>
     </div>
+
+    <!-- 4. 课堂教学视频 -->
+    <div class="resource-card-item" id="${WQXT_RESOURCE_CARD_VIDEO_ID}">
+      <div class="resource-card-item-header">
+        <div class="resource-card-title-group">
+          <h3 class="resource-card-title">课堂教学视频</h3>
+          <span class="resource-badge">原片下载</span>
+        </div>
+      </div>
+      <div class="resource-status" id="${WQXT_VIDEO_STATUS_ID}"></div>
+      <div class="resource-actions profer-video-toolbar">
+        <select class="profer-video-select" id="${WQXT_SELECT_VIDEO_RES_ID}" aria-label="选择视频清晰度">
+          <option value="">正在探测可用清晰度…</option>
+        </select>
+        <button class="resource-btn primary" id="${WQXT_BTN_VIDEO_DOWNLOAD_ID}" aria-label="下载课堂教学原视频" title="解密后的 TS 切片直接封装为 MP4（未重封装），VLC / PotPlayer / MPV 与主流浏览器均可播放；极少数严格校验 moov/mdat 的播放器可能提示格式异常。">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <span>开始下载视频</span>
+        </button>
+      </div>
+    </div>
   </div>
 </section>`
 }
@@ -2314,6 +2421,10 @@ export function buildWqxtUpgradeRuntimeScript(): string {
     var HEADER_ID = ${JSON.stringify(WQXT_EDU_HEADER_ID)};
     var PLAYER_ID = ${JSON.stringify(WQXT_NYA_PLAYER_ID)};
     var RESOURCE_PANEL_ID = ${JSON.stringify(WQXT_RESOURCE_PANEL_ID)};
+    var VIDEO_CARD_ID = ${JSON.stringify(WQXT_RESOURCE_CARD_VIDEO_ID)};
+    var VIDEO_BTN_ID = ${JSON.stringify(WQXT_BTN_VIDEO_DOWNLOAD_ID)};
+    var VIDEO_SELECT_ID = ${JSON.stringify(WQXT_SELECT_VIDEO_RES_ID)};
+    var VIDEO_STATUS_ID = ${JSON.stringify(WQXT_VIDEO_STATUS_ID)};
     var FOOTER_ID = ${JSON.stringify(WQXT_FOOTER_ID)};
     var QR_MODAL_ID = ${JSON.stringify(WQXT_QR_MODAL_ID)};
     var AI_DOCK_ID = ${JSON.stringify(WQXT_AI_DOCK_ID)};
@@ -2344,6 +2455,17 @@ export function buildWqxtUpgradeRuntimeScript(): string {
     var lastClickToggleAt = 0;
     var subPreviewTimer = null;
     var subtitleVisible = false;
+    var SUB_VISIBLE_KEY = 'profer_sub_visible';
+    var SUB_SIZE_KEY = 'profer_sub_size';
+    var SUB_LANG_KEY = 'profer_sub_lang';
+    var subPrefLoaded = false;
+    var subPref = { visible: null, size: 22, lang: '' };
+    var subDesiredKnown = false;
+    var subRestoreDone = false;
+    var subLangRestoreDone = false;
+    var subLangSig = null;
+    var nativeCmdGuard = { target: null, until: 0 };
+    var nativeLangGuard = { label: null, until: 0 };
     var lastPlaying = null;
     var lastMuted = null;
     var pptObserver = null;
@@ -2373,6 +2495,207 @@ export function buildWqxtUpgradeRuntimeScript(): string {
     function readText(selector, root) {
       var node = (root || document).querySelector(selector);
       return node && node.textContent ? node.textContent.trim() : '';
+    }
+
+    function clampSubSize(value) {
+      var n = parseInt(value, 10);
+      if (!isFinite(n)) n = 22;
+      return Math.max(14, Math.min(36, n));
+    }
+    function readStoredSubPrefs() {
+      subPrefLoaded = true;
+      subPref.visible = null;
+      subPref.size = 22;
+      subPref.lang = '';
+      try {
+        var v = localStorage.getItem(SUB_VISIBLE_KEY);
+        if (v === '1') subPref.visible = true;
+        else if (v === '0') subPref.visible = false;
+        var s = localStorage.getItem(SUB_SIZE_KEY);
+        if (s !== null) subPref.size = clampSubSize(s);
+        var l = localStorage.getItem(SUB_LANG_KEY);
+        if (l) subPref.lang = l;
+      } catch (e) {}
+    }
+    function saveSubPref(key, value) {
+      try { localStorage.setItem(key, String(value)); } catch (e) {}
+    }
+
+    function findNativeSubtitleSwitch() {
+      return document.querySelector('.cmc-subtitlepanel .text-switch') ||
+             document.querySelector('#cmcPlayer_container .text-switch') ||
+             document.querySelector('.text-switch') || null;
+    }
+    /** 读原生开关真实态：true / false / null（未知）。null 时禁止被动驱动，避免盲目反转 */
+    function readSwitchOn(sw) {
+      if (!sw) return null;
+      var cls = ' ' + (sw.className || '') + ' ';
+      if (/(?:^| )(?:is-checked|active|on|checked|selected)(?: |$)/.test(cls)) return true;
+      if (sw.getAttribute) {
+        var aria = sw.getAttribute('aria-checked');
+        if (aria === 'true') return true;
+        if (aria === 'false') return false;
+      }
+      var input = sw.querySelector ? sw.querySelector('input[type="checkbox"], input[type="radio"]') : null;
+      if (input) return !!input.checked;
+      return null;
+    }
+    function getNativeSubtitleState() {
+      var sw = findNativeSubtitleSwitch();
+      var on = readSwitchOn(sw);
+      return { known: on !== null, enabled: on === true, node: sw };
+    }
+    function findNativeSubtitleLauncher() {
+      return document.querySelector('.cmc-rightkey .rightkey-item[keytype="subtitle"]') ||
+             document.querySelector('.cmc-control-btn[title*="字幕"]') ||
+             document.querySelector('.cmc-control-btn[aria-label*="字幕"]') ||
+             document.querySelector('#cmc_cmcPlayer_container [class*="subtitle-btn"]') || null;
+    }
+    /** 原生开关可能随面板懒渲染：先点开原生入口（面板已被 CSS 隐身，无视觉副作用） */
+    function openNativeSubtitlePanel() {
+      if (document.querySelector('.cmc-subtitlepanel')) return true;
+      var launcher = findNativeSubtitleLauncher();
+      if (!launcher) return false;
+      try { emitMouseSequence(launcher.querySelector('svg, path, i, span') || launcher); }
+      catch (e) { try { launcher.click(); } catch (e2) {} }
+      return true;
+    }
+    /**
+     * 幂等驱动：仅在「已知且不一致」时点击一次；interactive 为用户显式操作/首次恢复，
+     * 允许在未知态点击并尝试打开原生面板。被动同步（syncVideo）绝不盲目点击。
+     */
+    function driveNativeSubtitle(target, interactive) {
+      var now = Date.now();
+      if (nativeCmdGuard.target === target && now < nativeCmdGuard.until) return false;
+      var sw = findNativeSubtitleSwitch();
+      if (!sw) {
+        if (interactive) openNativeSubtitlePanel();
+        return false;
+      }
+      var current = readSwitchOn(sw);
+      if (current === null) {
+        if (!interactive) return false;
+      } else if (current === target) {
+        return true;
+      }
+      try { sw.click(); } catch (e) {}
+      nativeCmdGuard.target = target;
+      nativeCmdGuard.until = now + 1000;
+      return true;
+    }
+
+    function collectNativeSubtitleOptions(panel) {
+      if (!panel) return [];
+      var nodes;
+      try {
+        nodes = panel.querySelectorAll('.el-radio, .cmc-radio, .option, .radio-item, .lang-item, [class*="radio"]');
+      } catch (e) { return []; }
+      var out = [];
+      var seen = {};
+      for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        if (!node) continue;
+        // 跳过会吞并子选项的包裹层（如 .cmc-radio-group）
+        if (node.querySelector && node.querySelector('.el-radio, .cmc-radio, .option, .radio-item, .lang-item')) continue;
+        var label = (node.textContent || '').replace(/\\s+/g, ' ').trim();
+        if (!label || label.length > 14) continue;
+        if (!/中文|英文|双语|中英|简体|繁体|字幕/.test(label)) continue;
+        if (seen[label]) continue;
+        seen[label] = true;
+        out.push({ label: label, node: node, active: isSubtitleOptionActive(node) });
+      }
+      return out;
+    }
+    function isSubtitleOptionActive(node) {
+      if (!node) return false;
+      var own = ' ' + (node.className || '') + ' ';
+      if (/(?:^| )(?:is-checked|active|checked|selected)(?: |$)/.test(own)) return true;
+      if (node.getAttribute && node.getAttribute('aria-checked') === 'true') return true;
+      var input = node.querySelector ? node.querySelector('input[type="radio"], input[type="checkbox"]') : null;
+      if (input) return !!input.checked;
+      var marked = node.querySelector ? node.querySelector('.is-checked, .active, .checked, .selected, [aria-checked="true"]') : null;
+      return !!marked;
+    }
+    /** 芯片渲染签名比对：只有标签或激活态变化才重写 DOM，杜绝观察器风暴 */
+    function syncNativeSubtitleLanguages() {
+      var group = byId('sub-lang-group');
+      if (!group) return;
+      var panel = document.querySelector('.cmc-subtitlepanel');
+      var opts = collectNativeSubtitleOptions(panel);
+      var sig = '';
+      for (var i = 0; i < opts.length; i++) sig += opts[i].label + ':' + (opts[i].active ? '1' : '0') + '|';
+      if (sig !== subLangSig) {
+        subLangSig = sig;
+        group.innerHTML = '';
+        if (opts.length >= 2) {
+          for (var j = 0; j < opts.length; j++) {
+            var chip = document.createElement('span');
+            chip.className = 'sub-lang-chip' + (opts[j].active ? ' is-active' : '');
+            chip.setAttribute('data-lang', opts[j].label);
+            chip.textContent = opts[j].label;
+            group.appendChild(chip);
+          }
+          if (group.style.display) group.style.display = '';
+        } else if (group.style.display !== 'none') {
+          group.style.display = 'none';
+        }
+      }
+      // 语种偏好恢复：面板已真实出现才视为可恢复，避免把「面板尚未渲染」误判为「无多语种」
+      if (!subLangRestoreDone && subPref.lang && panel) {
+        subLangRestoreDone = true;
+        var target = null;
+        for (var k = 0; k < opts.length; k++) if (opts[k].label === subPref.lang) target = opts[k];
+        if (target && !target.active) selectNativeSubtitleLanguage(subPref.lang, true);
+      }
+    }
+    function selectNativeSubtitleLanguage(label, silent) {
+      var now = Date.now();
+      if (nativeLangGuard.label === label && now < nativeLangGuard.until) return;
+      nativeLangGuard.label = label;
+      nativeLangGuard.until = now + 800;
+      var opts = collectNativeSubtitleOptions(document.querySelector('.cmc-subtitlepanel'));
+      var target = null;
+      for (var i = 0; i < opts.length; i++) if (opts[i].label === label) target = opts[i];
+      if (!target) { if (!silent) openNativeSubtitlePanel(); return; }
+      if (target.active) return;
+      var inner = target.node.querySelector ? target.node.querySelector('input[type="radio"], input[type="checkbox"]') : null;
+      try { emitMouseSequence(inner || target.node); }
+      catch (e) { try { target.node.click(); } catch (e2) {} }
+      subPref.lang = label;
+      saveSubPref(SUB_LANG_KEY, label);
+      subLangSig = null; // 下一轮按原生真实激活态重建芯片
+    }
+
+    /** 每次 syncVideo 调用；force=true 表示换课/换视频节点后重新对齐一次 */
+    function restoreSubtitleState(force) {
+      if (!subPrefLoaded) readStoredSubPrefs();
+      var box = byId('subtitle-box');
+      var slider = byId('sub-size-slider');
+      var size = clampSubSize(subPref.size);
+      if (slider && slider.value !== String(size)) slider.value = String(size);
+      if (box && box.style.fontSize !== size + 'px') box.style.fontSize = size + 'px';
+
+      if (!subDesiredKnown) {
+        if (subPref.visible === true || subPref.visible === false) {
+          subtitleVisible = subPref.visible;
+          subDesiredKnown = true;
+        } else {
+          var st = getNativeSubtitleState();
+          if (st.known) { subtitleVisible = st.enabled; subDesiredKnown = true; }
+        }
+      }
+
+      var btn = byId('subtitle-btn');
+      if (btn && subDesiredKnown) btn.classList.toggle('is-active', subtitleVisible);
+
+      if ((force || !subRestoreDone) && subDesiredKnown) {
+        subRestoreDone = true;
+        driveNativeSubtitle(subtitleVisible, true);
+      } else if (subDesiredKnown) {
+        driveNativeSubtitle(subtitleVisible, false); // 被动收敛：已知不一致才点；一致则空转
+      }
+      syncNativeSubtitleLanguages();
+      if (subDesiredKnown) syncSubtitle();
     }
 
     function ensureStyle() {
@@ -2783,10 +3106,28 @@ export function buildWqxtUpgradeRuntimeScript(): string {
       var subtitleBtn = node.querySelector('#subtitle-btn');
       if (subtitleBtn) subtitleBtn.addEventListener('click', toggleSubtitle);
       var sizeSlider = node.querySelector('#sub-size-slider');
-      if (sizeSlider) sizeSlider.addEventListener('input', function () {
-        var box = byId('subtitle-box');
-        if (box) box.style.fontSize = this.value + 'px';
-        flashSubtitlePreview('字幕字号预览', true);
+      if (sizeSlider) {
+        sizeSlider.addEventListener('input', function () {
+          var box = byId('subtitle-box');
+          if (box) box.style.fontSize = this.value + 'px';
+          subPref.size = clampSubSize(this.value);
+          flashSubtitlePreview('字幕字号预览', true);
+        });
+        // 松手落盘：input 只做实时预览，change 才持久化
+        sizeSlider.addEventListener('change', function () {
+          subPref.size = clampSubSize(this.value);
+          saveSubPref(SUB_SIZE_KEY, subPref.size);
+        });
+      }
+
+      var langGroup = node.querySelector('#sub-lang-group');
+      if (langGroup) langGroup.addEventListener('click', function (event) {
+        var chip = event.target && event.target.closest ? event.target.closest('.sub-lang-chip') : null;
+        if (!chip) return;
+        var label = chip.getAttribute('data-lang') || '';
+        if (!label) return;
+        selectNativeSubtitleLanguage(label, false);
+        wake();
       });
 
       var settings = node.querySelectorAll('.segment-btn');
@@ -2910,6 +3251,9 @@ export function buildWqxtUpgradeRuntimeScript(): string {
         // 站点重建视频节点时，清掉仍留在视口内的旧实例，避免画面/声音双轨叠加
         if (videoEl && videoEl.parentNode === viewport) viewport.removeChild(videoEl);
         videoEl = candidate;
+        subRestoreDone = false;
+        subLangRestoreDone = false;
+        subLangSig = null;
       }
       if (videoEl.parentNode !== viewport) {
         if (!videoOriginalParent) {
@@ -2937,7 +3281,7 @@ export function buildWqxtUpgradeRuntimeScript(): string {
         videoEl.addEventListener('playing', function () { setShown(byId('__profer-buffer-spinner'), false); });
         videoEl.addEventListener('ended', function () { showReplay(true); syncPlayState(); });
       }
-      syncSubtitle();
+      restoreSubtitleState(false);
       updateTime();
       updateProgress();
       updateBuffer();
@@ -3174,18 +3518,21 @@ export function buildWqxtUpgradeRuntimeScript(): string {
 
     function toggleSubtitle() {
       subtitleVisible = !subtitleVisible;
-      // 联动站点原生字幕开关（.cmc-subtitlepanel .text-switch），否则站点字幕流不会启动
-      var sw = document.querySelector('.cmc-subtitlepanel .text-switch') ||
-               document.querySelector('#cmcPlayer_container .text-switch');
-      if (sw) { try { sw.click(); } catch (e) {} }
-      if (subtitleVisible) flashSubtitlePreview('字幕已开启', false);
-      else {
-        // 关闭字幕：取消进行中的提示并立即收起浮层
+      subDesiredKnown = true;
+      saveSubPref(SUB_VISIBLE_KEY, subtitleVisible ? '1' : '0');
+      // 幂等驱动原生开关：先读真实态，仅在不一致时点击一次
+      driveNativeSubtitle(subtitleVisible, true);
+      if (subtitleVisible) {
+        flashSubtitlePreview('字幕已开启', false);
+      } else {
+        // 关闭字幕：取消进行中的提示，清空文本并立即收起浮层
         if (subPreviewTimer) { clearTimeout(subPreviewTimer); subPreviewTimer = null; }
-        syncSubtitle();
+        var box = byId('subtitle-box');
+        if (box) { setText(box, ''); box.style.display = 'none'; }
       }
       var btn = byId('subtitle-btn');
       if (btn) btn.classList.toggle('is-active', subtitleVisible);
+      syncSubtitle();
       wake();
     }
 
@@ -3364,7 +3711,7 @@ export function buildWqxtUpgradeRuntimeScript(): string {
       return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
-    function triggerDownload(blob, filename) {
+    function triggerDownload(blob, filename, revokeDelay) {
       var a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
       a.download = filename;
@@ -3373,7 +3720,7 @@ export function buildWqxtUpgradeRuntimeScript(): string {
       setTimeout(function () {
         try { URL.revokeObjectURL(a.href); } catch (e) {}
         if (a.parentNode) a.parentNode.removeChild(a);
-      }, 1000);
+      }, typeof revokeDelay === 'number' ? revokeDelay : 1000);
     }
 
     function copyText(text) {
@@ -3406,6 +3753,725 @@ export function buildWqxtUpgradeRuntimeScript(): string {
       }
       if (!title || title === '加载课程中...') title = document.title || '问渠学堂课堂';
       return title.trim();
+    }
+
+    // ---------- 课堂教学视频下载 ----------
+    // 说明：解密后的 TS 切片按官方方式直接封装为 video/mp4（未重封装），
+    // VLC / PotPlayer / MPV 与主流浏览器均可播放；极少数严格校验 moov/mdat box 的播放器可能提示格式异常。
+    var VIDEO_RATE_NAMES = {
+      '0': '原画 (MP4/HLS)',
+      '1': '超清 (1080P)',
+      '2': '高清 (720P)',
+      '3': '标清 (480P)',
+      '4': '极速',
+      '-101': '极速 (HLS)',
+      '-102': '标清 (HLS)',
+      '-103': '高清 (HLS)',
+      '-104': '超清 (HLS)'
+    };
+    var VIDEO_RATE_SHORT = {
+      '0': '原画',
+      '1': '超清',
+      '2': '高清',
+      '3': '标清',
+      '4': '极速',
+      '-101': '极速',
+      '-102': '标清',
+      '-103': '高清',
+      '-104': '超清'
+    };
+
+    var videoAbort = null;
+    var videoDownloadKey = '';
+    var videoRoomVmCache = null;
+
+    function strToBytes(str) {
+      return new TextEncoder().encode(str);
+    }
+
+    function hexToBytes(hexStr) {
+      if (!hexStr) return new Uint8Array(0);
+      var clean = String(hexStr).replace(/[^0-9a-fA-F]/g, '');
+      if (clean.length % 2 !== 0) clean = '0' + clean;
+      var out = new Uint8Array(clean.length / 2);
+      for (var i = 0; i < out.length; i++) {
+        out[i] = parseInt(clean.substr(i * 2, 2), 16);
+      }
+      return out;
+    }
+
+    function bytesToStr(bytes) {
+      return new TextDecoder('utf-8').decode(bytes);
+    }
+
+    function newUuid() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (Math.random() * 16) | 0;
+        var v = c === 'x' ? r : ((r & 0x3) | 0x8);
+        return v.toString(16);
+      });
+    }
+
+    function md5(string) {
+      function rotateLeft(lValue, iShiftBits) {
+        return (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
+      }
+      function addUnsigned(lX, lY) {
+        var lX4, lY4, lX8, lY8, lResult;
+        lX8 = (lX & 0x80000000);
+        lY8 = (lY & 0x80000000);
+        lX4 = (lX & 0x40000000);
+        lY4 = (lY & 0x40000000);
+        lResult = (lX & 0x3fffffff) + (lY & 0x3fffffff);
+        if (lX4 & lY4) return (lResult ^ 0x80000000 ^ lX8 ^ lY8);
+        if (lX4 | lY4) {
+          if (lResult & 0x40000000) return (lResult ^ 0xc0000000 ^ lX8 ^ lY8);
+          return (lResult ^ 0x40000000 ^ lX8 ^ lY8);
+        }
+        return (lResult ^ lX8 ^ lY8);
+      }
+      function F(x, y, z) { return (x & y) | ((~x) & z); }
+      function G(x, y, z) { return (x & z) | (y & (~z)); }
+      function H(x, y, z) { return (x ^ y ^ z); }
+      function I(x, y, z) { return (y ^ (x | (~z))); }
+      function FF(a, b, c, d, x, s, ac) {
+        a = addUnsigned(a, addUnsigned(addUnsigned(F(b, c, d), x), ac));
+        return addUnsigned(rotateLeft(a, s), b);
+      }
+      function GG(a, b, c, d, x, s, ac) {
+        a = addUnsigned(a, addUnsigned(addUnsigned(G(b, c, d), x), ac));
+        return addUnsigned(rotateLeft(a, s), b);
+      }
+      function HH(a, b, c, d, x, s, ac) {
+        a = addUnsigned(a, addUnsigned(addUnsigned(H(b, c, d), x), ac));
+        return addUnsigned(rotateLeft(a, s), b);
+      }
+      function II(a, b, c, d, x, s, ac) {
+        a = addUnsigned(a, addUnsigned(addUnsigned(I(b, c, d), x), ac));
+        return addUnsigned(rotateLeft(a, s), b);
+      }
+      function convertToWordArray(str) {
+        var lWordCount;
+        var lMessageLength = str.length;
+        var lNumberOfWordsTemp1 = lMessageLength + 8;
+        var lNumberOfWordsTemp2 = (lNumberOfWordsTemp1 - (lNumberOfWordsTemp1 % 64)) / 64;
+        var lNumberOfWords = (lNumberOfWordsTemp2 + 1) * 16;
+        var lWordArray = [];
+        var lBytePosition = 0;
+        var lByteCount = 0;
+        while (lByteCount < lMessageLength) {
+          lWordCount = (lByteCount - (lByteCount % 4)) / 4;
+          lBytePosition = (lByteCount % 4) * 8;
+          lWordArray[lWordCount] = (lWordArray[lWordCount] | (str.charCodeAt(lByteCount) << lBytePosition));
+          lByteCount++;
+        }
+        lWordCount = (lByteCount - (lByteCount % 4)) / 4;
+        lBytePosition = (lByteCount % 4) * 8;
+        lWordArray[lWordCount] = lWordArray[lWordCount] | (0x80 << lBytePosition);
+        lWordArray[lNumberOfWords - 2] = lMessageLength << 3;
+        lWordArray[lNumberOfWords - 1] = lMessageLength >>> 29;
+        return lWordArray;
+      }
+      function wordToHex(lValue) {
+        var wordToHexValue = '';
+        var wordToHexValueTemp = '';
+        var lByte;
+        var lCount;
+        for (lCount = 0; lCount <= 3; lCount++) {
+          lByte = (lValue >>> (lCount * 8)) & 255;
+          wordToHexValueTemp = '0' + lByte.toString(16);
+          wordToHexValue = wordToHexValue + wordToHexValueTemp.substr(wordToHexValueTemp.length - 2, 2);
+        }
+        return wordToHexValue;
+      }
+      function utf8Encode(str) {
+        str = str.replace(/\\r\\n/g, '\\n');
+        var utftext = '';
+        for (var n = 0; n < str.length; n++) {
+          var c = str.charCodeAt(n);
+          if (c < 128) {
+            utftext += String.fromCharCode(c);
+          } else if ((c > 127) && (c < 2048)) {
+            utftext += String.fromCharCode((c >> 6) | 192);
+            utftext += String.fromCharCode((c & 63) | 128);
+          } else {
+            utftext += String.fromCharCode((c >> 12) | 224);
+            utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+            utftext += String.fromCharCode((c & 63) | 128);
+          }
+        }
+        return utftext;
+      }
+      var x = [];
+      var k, AA, BB, CC, DD, a, b, c, d;
+      var S11 = 7, S12 = 12, S13 = 17, S14 = 22;
+      var S21 = 5, S22 = 9, S23 = 14, S24 = 20;
+      var S31 = 4, S32 = 11, S33 = 16, S34 = 23;
+      var S41 = 6, S42 = 10, S43 = 15, S44 = 21;
+      string = utf8Encode(string);
+      x = convertToWordArray(string);
+      a = 0x67452301; b = 0xefcdab89; c = 0x98badcfe; d = 0x10325476;
+      for (k = 0; k < x.length; k += 16) {
+        AA = a; BB = b; CC = c; DD = d;
+        a = FF(a, b, c, d, x[k + 0], S11, 0xd76aa478);
+        d = FF(d, a, b, c, x[k + 1], S12, 0xe8c7b756);
+        c = FF(c, d, a, b, x[k + 2], S13, 0x242070db);
+        b = FF(b, c, d, a, x[k + 3], S14, 0xc1bdceee);
+        a = FF(a, b, c, d, x[k + 4], S11, 0xf57c0faf);
+        d = FF(d, a, b, c, x[k + 5], S12, 0x4787c62a);
+        c = FF(c, d, a, b, x[k + 6], S13, 0xa8304613);
+        b = FF(b, c, d, a, x[k + 7], S14, 0xfd469501);
+        a = FF(a, b, c, d, x[k + 8], S11, 0x698098d8);
+        d = FF(d, a, b, c, x[k + 9], S12, 0x8b44f7af);
+        c = FF(c, d, a, b, x[k + 10], S13, 0xffff5bb1);
+        b = FF(b, c, d, a, x[k + 11], S14, 0x895cd7be);
+        a = FF(a, b, c, d, x[k + 12], S11, 0x6b901122);
+        d = FF(d, a, b, c, x[k + 13], S12, 0xfd987193);
+        c = FF(c, d, a, b, x[k + 14], S13, 0xa679438e);
+        b = FF(b, c, d, a, x[k + 15], S14, 0x49b40821);
+        a = GG(a, b, c, d, x[k + 1], S21, 0xf61e2562);
+        d = GG(d, a, b, c, x[k + 6], S22, 0xc040b340);
+        c = GG(c, d, a, b, x[k + 11], S23, 0x265e5a51);
+        b = GG(b, c, d, a, x[k + 0], S24, 0xe9b6c7aa);
+        a = GG(a, b, c, d, x[k + 5], S21, 0xd62f105d);
+        d = GG(d, a, b, c, x[k + 10], S22, 0x02441453);
+        c = GG(c, d, a, b, x[k + 15], S23, 0xd8a1e681);
+        b = GG(b, c, d, a, x[k + 4], S24, 0xe7d3fbc8);
+        a = GG(a, b, c, d, x[k + 9], S21, 0x21e1cde6);
+        d = GG(d, a, b, c, x[k + 14], S22, 0xc33707d6);
+        c = GG(c, d, a, b, x[k + 3], S23, 0xf4d50d87);
+        b = GG(b, c, d, a, x[k + 8], S24, 0x455a14ed);
+        a = GG(a, b, c, d, x[k + 13], S21, 0xa9e3e905);
+        d = GG(d, a, b, c, x[k + 2], S22, 0xfcefa3f8);
+        c = GG(c, d, a, b, x[k + 7], S23, 0x676f02d9);
+        b = GG(b, c, d, a, x[k + 12], S24, 0x8d2a4c8a);
+        a = HH(a, b, c, d, x[k + 5], S31, 0xfffa3942);
+        d = HH(d, a, b, c, x[k + 8], S32, 0x8771f681);
+        c = HH(c, d, a, b, x[k + 11], S33, 0x6d9d6122);
+        b = HH(b, c, d, a, x[k + 14], S34, 0xfde5380c);
+        a = HH(a, b, c, d, x[k + 1], S31, 0xa4beea44);
+        d = HH(d, a, b, c, x[k + 4], S32, 0x4bdecfa9);
+        c = HH(c, d, a, b, x[k + 7], S33, 0xf6bb4b60);
+        b = HH(b, c, d, a, x[k + 10], S34, 0xbebfbc70);
+        a = HH(a, b, c, d, x[k + 13], S31, 0x289b7ec6);
+        d = HH(d, a, b, c, x[k + 0], S32, 0xeaa127fa);
+        c = HH(c, d, a, b, x[k + 3], S33, 0xd4ef3085);
+        b = HH(b, c, d, a, x[k + 6], S34, 0x04881d05);
+        a = HH(a, b, c, d, x[k + 9], S31, 0xd9d4d039);
+        d = HH(d, a, b, c, x[k + 12], S32, 0xe6db99e5);
+        c = HH(c, d, a, b, x[k + 15], S33, 0x1fa27cf8);
+        b = HH(b, c, d, a, x[k + 2], S34, 0xc4ac5665);
+        a = II(a, b, c, d, x[k + 0], S41, 0xf4292244);
+        d = II(d, a, b, c, x[k + 7], S42, 0x432aff97);
+        c = II(c, d, a, b, x[k + 14], S43, 0xab9423a7);
+        b = II(b, c, d, a, x[k + 5], S44, 0xfc93a039);
+        a = II(a, b, c, d, x[k + 12], S41, 0x655b59c3);
+        d = II(d, a, b, c, x[k + 3], S42, 0x8f0ccc92);
+        c = II(c, d, a, b, x[k + 10], S43, 0xffeff47d);
+        b = II(b, c, d, a, x[k + 1], S44, 0x85845dd1);
+        a = II(a, b, c, d, x[k + 8], S41, 0x6fa87e4f);
+        d = II(d, a, b, c, x[k + 15], S42, 0xfe2ce6e0);
+        c = II(c, d, a, b, x[k + 6], S43, 0xa3014314);
+        b = II(b, c, d, a, x[k + 13], S44, 0x4e0811a1);
+        a = II(a, b, c, d, x[k + 4], S41, 0xf7537e82);
+        d = II(d, a, b, c, x[k + 11], S42, 0xbd3af235);
+        c = II(c, d, a, b, x[k + 2], S43, 0x2ad7d2bb);
+        b = II(b, c, d, a, x[k + 9], S44, 0xeb86d391);
+        a = addUnsigned(a, AA);
+        b = addUnsigned(b, BB);
+        c = addUnsigned(c, CC);
+        d = addUnsigned(d, DD);
+      }
+      var temp = wordToHex(a) + wordToHex(b) + wordToHex(c) + wordToHex(d);
+      return temp.toLowerCase();
+    }
+
+    async function decryptAesCbc(encryptedBytes, keyBytes, ivBytes) {
+      var cryptoKey = await window.crypto.subtle.importKey('raw', keyBytes, { name: 'AES-CBC' }, false, ['decrypt']);
+      var decrypted = await window.crypto.subtle.decrypt({ name: 'AES-CBC', iv: ivBytes }, cryptoKey, encryptedBytes);
+      return new Uint8Array(decrypted);
+    }
+
+    function fetchWithRetry(url, options, retries) {
+      function attempt(left) {
+        return fetch(url, options).then(function (resp) {
+          if (!resp.ok) throw new Error('请求失败: ' + resp.status + ' (' + url + ')');
+          return resp;
+        }).catch(function (err) {
+          if (err && err.name === 'AbortError') throw err;
+          if (!left || left <= 0) throw err;
+          return new Promise(function (resolve) { setTimeout(resolve, 300); }).then(function () {
+            return attempt(left - 1);
+          });
+        });
+      }
+      return attempt(typeof retries === 'number' ? retries : 2);
+    }
+
+    function findVideoRoomVm() {
+      if (videoRoomVmCache && videoRoomVmCache.$el && document.body.contains(videoRoomVmCache.$el)) {
+        return videoRoomVmCache;
+      }
+      var allEls = document.querySelectorAll('*');
+      for (var i = 0; i < allEls.length; i++) {
+        var vm = allEls[i].__vue__;
+        if (vm && vm.$data && 'pptList' in vm.$data && 'liveInfo' in vm.$data) {
+          videoRoomVmCache = vm;
+          return vm;
+        }
+      }
+      return null;
+    }
+
+    var VideoAuthManager = {
+      getContext: function () {
+        var roomVm = findVideoRoomVm();
+        var store = (roomVm && roomVm.$store) || window.store;
+        var userinfo = (store && store.state && store.state.userinfo) || {};
+        var params = new URLSearchParams(location.search.indexOf('?') >= 0 ? location.search : (location.hash.split('?')[1] || ''));
+        var courseId = (roomVm && roomVm.course_id) || params.get('course_id') || params.get('id') || '';
+        if (!courseId) {
+          var m = location.hash.match(/[?&]course_id=([^&]+)/);
+          if (m) courseId = m[1];
+        }
+        var subId = (roomVm && roomVm.liveInfo && roomVm.liveInfo.sub_id) || (roomVm && roomVm.sub_id) || params.get('sub_id') || '';
+        if (!subId) {
+          var ms = location.hash.match(/[?&]sub_id=([^&]+)/);
+          if (ms) subId = ms[1];
+        }
+        return {
+          roomVm: roomVm,
+          userinfo: userinfo,
+          courseId: decodeURIComponent(courseId || ''),
+          subId: decodeURIComponent(subId || ''),
+          cdnEncrypt: (roomVm && roomVm.cdnEncrypt) || ''
+        };
+      },
+      verifyStudentAccess: async function () {
+        var ctx = this.getContext();
+        var userinfo = ctx.userinfo || {};
+        var hasStream = collectVideoSources().length > 0;
+        if (!userinfo || !userinfo.id) {
+          if (hasStream) {
+            return { allowed: true, degraded: true, user: userinfo, reasonText: '⚠️ 身份信息不可用，已依据当前播放凭证降级放行' };
+          }
+          return { allowed: false, reason: '未检测到登录状态，且当前页面没有可用的播放流' };
+        }
+        var roles = userinfo.roles || [];
+        var isStudent = false;
+        var isAdmin = false;
+        var hasRoleInfo = roles.length > 0;
+        for (var i = 0; i < roles.length; i++) {
+          var role = roles[i] || {};
+          if (role.code === 'student' || (role.name && role.name.indexOf('学生') > -1)) isStudent = true;
+          if (role.code === 'admin') isAdmin = true;
+        }
+        var rolename = userinfo.rolename || '';
+        if (rolename) hasRoleInfo = true;
+        if (rolename.indexOf('学生') > -1) isStudent = true;
+        if (!isStudent && !isAdmin) {
+          if (hasRoleInfo) {
+            return { allowed: false, reason: '抱歉，当前账号身份非在籍学生，视频下载权限仅向本校学生开放' };
+          }
+          if (hasStream) {
+            return { allowed: true, degraded: true, user: userinfo, reasonText: '⚠️ 未获取到角色信息，已依据当前播放凭证降级放行' };
+          }
+          return { allowed: false, reason: '未获取到角色信息，且当前页面没有可用的播放流' };
+        }
+        if (ctx.courseId && ctx.subId) {
+          try {
+            var authUrl = '/coursesourceapi/course/study-auth/' + encodeURIComponent(ctx.courseId) + '/' + encodeURIComponent(ctx.subId);
+            var resp = await fetch(authUrl, {
+              headers: { 'Tenant-Id': String(userinfo.tenant_id || ''), username: userinfo.account || '' },
+              credentials: 'include'
+            });
+            var payload = await resp.json();
+            if (payload && payload.code === 200 && payload.data && payload.data.hasPermission === false) {
+              return { allowed: false, reason: '您所在机构或选课名单中未包含该课程，无权下载该视频' };
+            }
+          } catch (e) {
+            console.warn('[WQXT Video] 远端鉴权接口异常，已降级放行:', e);
+            return { allowed: true, degraded: true, user: userinfo, reasonText: '⚠️ 鉴权接口异常，已依据当前播放凭证降级放行' };
+          }
+        }
+        return { allowed: true, user: userinfo };
+      }
+    };
+
+    var VideoSignPipeline = {
+      decryptCdnConfig: async function (cdnEncryptHex) {
+        try {
+          var keyBytes = strToBytes('roZ68Okc5MUTMraM');
+          var ivBytes = strToBytes('7384627385960726');
+          var cipherBytes = hexToBytes(cdnEncryptHex);
+          var decryptedBytes = await decryptAesCbc(cipherBytes, keyBytes, ivBytes);
+          var configList = JSON.parse(bytesToStr(decryptedBytes));
+          if (configList && configList.length > 0) return configList[0];
+        } catch (err) {
+          console.warn('[WQXT Video] CDN 配置解密失败:', err);
+        }
+        return null;
+      },
+      computeTxSecret: function (url, encryptKey, invalidTime) {
+        var pathname = new URL(url).pathname;
+        var filename = pathname.substring(pathname.lastIndexOf('/') + 1);
+        if (filename.indexOf('.') > -1) filename = filename.substring(0, filename.indexOf('.'));
+        var expireTimestamp = Math.floor(Date.now() / 1000) + Number(invalidTime);
+        var txTime = expireTimestamp.toString(16);
+        var txSecret = md5(encryptKey + filename + txTime);
+        return { txSecret: txSecret, txTime: txTime };
+      },
+      computePlayAuthToken: function (url, uid, tenantId, phone) {
+        var timestamp = Math.floor(Date.now() / 1000);
+        var reversedPhone = String(phone || '').split('').reverse().join('');
+        var pathname = new URL(url).pathname;
+        var sign = md5(pathname + uid + tenantId + reversedPhone + timestamp);
+        return uid + '-' + timestamp + '-' + sign;
+      },
+      buildSecurePlayUrl: async function (rawUrl, cdnEncryptHex) {
+        var ctx = VideoAuthManager.getContext();
+        var user = ctx.userinfo || {};
+        var targetUrl = rawUrl;
+        targetUrl += (targetUrl.indexOf('?') > -1 ? '&' : '?') + 'clientUUID=' + newUuid();
+        if (user.id && user.tenant_id) {
+          targetUrl += '&t=' + this.computePlayAuthToken(targetUrl, user.id, user.tenant_id, user.phone);
+        }
+        if (cdnEncryptHex) {
+          var cdnConfig = await this.decryptCdnConfig(cdnEncryptHex);
+          if (cdnConfig && cdnConfig.encryptKey && cdnConfig.invalidTime) {
+            var ticket = this.computeTxSecret(targetUrl, cdnConfig.encryptKey, cdnConfig.invalidTime);
+            targetUrl += '&txSecret=' + ticket.txSecret + '&txTime=' + ticket.txTime;
+          }
+        }
+        return targetUrl;
+      }
+    };
+
+    var VideoHlsDownloader = {
+      parseM3U8: function (m3u8Text, baseUrl) {
+        var lines = m3u8Text.split(/\\r?\\n/);
+        var segments = [];
+        var currentKey = null;
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i].replace(/^\\s+|\\s+$/g, '');
+          if (!line) continue;
+          if (line.indexOf('#EXT-X-KEY:') === 0) {
+            var methodMatch = line.match(/METHOD=([^,]+)/);
+            var method = methodMatch ? methodMatch[1] : null;
+            if (method === 'AES-128') {
+              var uriMatch = line.match(/URI="([^"]+)"/);
+              var ivMatch = line.match(/IV=0x([0-9a-fA-F]+)/);
+              currentKey = {
+                method: method,
+                url: uriMatch ? new URL(uriMatch[1], baseUrl).href : null,
+                iv: ivMatch ? hexToBytes(ivMatch[1]) : null
+              };
+            } else if (method === 'NONE') {
+              currentKey = null;
+            }
+          } else if (line.charAt(0) !== '#') {
+            segments.push({ url: new URL(line, baseUrl).href, key: currentKey });
+          }
+        }
+        return segments;
+      },
+      downloadSegments: async function (segments, signal, onProgress) {
+        var total = segments.length;
+        var completed = 0;
+        var results = new Array(total);
+        var keyCache = {};
+        var nextIndex = 0;
+        var lastReportTime = 0;
+        var lastReportPct = -1;
+
+        async function fetchSegment(index) {
+          if (signal && signal.aborted) throw new DOMException('Aborted', 'AbortError');
+          var item = segments[index];
+          var keyBuffer = null;
+          if (item.key && item.key.url) {
+            if (!keyCache[item.key.url]) {
+              var keyResp = await fetchWithRetry(item.key.url, { signal: signal, credentials: 'omit' }, 1);
+              keyCache[item.key.url] = await keyResp.arrayBuffer();
+            }
+            keyBuffer = keyCache[item.key.url];
+          }
+          var resp = await fetchWithRetry(item.url, { signal: signal }, 2);
+          var dataBuffer = await resp.arrayBuffer();
+          var finalData;
+          if (keyBuffer) {
+            var iv = item.key.iv;
+            if (!iv) {
+              iv = new Uint8Array(16);
+              for (var b = 15; b >= 12; b--) {
+                iv[b] = (index >> ((15 - b) * 8)) & 0xff;
+              }
+            }
+            finalData = await decryptAesCbc(new Uint8Array(dataBuffer), keyBuffer, iv);
+          } else {
+            finalData = new Uint8Array(dataBuffer);
+          }
+          dataBuffer = null;
+          results[index] = finalData;
+          completed++;
+
+          // 节流 UI 进度刷新：每 1000ms 或进度每增加 2% 才更新一次 DOM，防止 MutationObserver 洪水风暴
+          var now = Date.now();
+          var pct = Math.round((completed / total) * 100);
+          if (now - lastReportTime >= 1000 || (pct !== lastReportPct && pct % 2 === 0) || completed === total) {
+            lastReportTime = now;
+            lastReportPct = pct;
+            if (onProgress) onProgress(completed, total, pct);
+          }
+          // 主动交还微任务/宏任务执行权，避免 V8 事件循环饥饿导致整个页面与浏览器无响应
+          if (index % 5 === 0) {
+            await new Promise(function (resolve) { setTimeout(resolve, 0); });
+          }
+        }
+        async function worker() {
+          while (nextIndex < total) {
+            if (signal && signal.aborted) break;
+            var index = nextIndex;
+            nextIndex++;
+            await fetchSegment(index);
+          }
+        }
+        var workers = [];
+        var concurrency = 3;
+        for (var w = 0; w < Math.min(concurrency, total); w++) workers.push(worker());
+        await Promise.all(workers);
+        if (signal && signal.aborted) throw new DOMException('Aborted', 'AbortError');
+        return results;
+      },
+      exportMergedFile: function (buffers, filename) {
+        var blob = new Blob(buffers, { type: 'video/mp4' });
+        for (var bi = 0; bi < buffers.length; bi++) {
+          buffers[bi] = null;
+        }
+        buffers.length = 0;
+        triggerDownload(blob, filename, 60000);
+      }
+    };
+
+    function collectVideoSources() {
+      var ctx = VideoAuthManager.getContext();
+      var raw = [];
+      var playurl = (ctx.roomVm && ctx.roomVm.liveInfo && ctx.roomVm.liveInfo.playurl) || {};
+      var key;
+      for (key in playurl) {
+        if (!Object.prototype.hasOwnProperty.call(playurl, key)) continue;
+        var url = playurl[key];
+        if (!url || typeof url !== 'string') continue;
+        var isHls = url.indexOf('.m3u8') > -1;
+        var baseName = VIDEO_RATE_NAMES[key] || ('清晰度 ' + key);
+        var baseShort = VIDEO_RATE_SHORT[key] || ('清晰度' + key);
+        var prettyLabel;
+        if (!isHls) {
+          var cleanName = baseName.replace(/\\s*\\(MP4\\/HLS\\)/g, '').trim();
+          prettyLabel = cleanName + ' (MP4 · 极速下载)';
+        } else {
+          var cleanHlsName = baseName.replace(/\\s*\\(MP4\\/HLS\\)/g, '').replace(/\\s*\\(HLS\\)/g, '').trim();
+          prettyLabel = cleanHlsName + ' (HLS 切片流 · 备用)';
+        }
+        var numKey = parseInt(key, 10);
+        var sortWeight = 0;
+        if (isHls) {
+          var hlsOrder = { '-104': 1, '-103': 2, '-102': 3, '-101': 4 };
+          sortWeight = 1000 + (hlsOrder[key] || 10);
+        } else {
+          var mp4Order = { '0': 0, '1': 1, '2': 2, '3': 3, '4': 4 };
+          sortWeight = mp4Order[key] !== undefined ? mp4Order[key] : (isNaN(numKey) ? 50 : numKey);
+        }
+        raw.push({
+          key: key,
+          url: url,
+          isHls: isHls,
+          order: sortWeight,
+          label: prettyLabel,
+          short: baseShort
+        });
+      }
+      if (!raw.length) {
+        var liveUrl = (ctx.roomVm && ctx.roomVm.liveUrl) || (ctx.roomVm && ctx.roomVm.liveInfo && ctx.roomVm.liveInfo.liveUrl) || '';
+        if (typeof liveUrl === 'string' && liveUrl) {
+          var liveHls = liveUrl.indexOf('.m3u8') > -1;
+          raw.push({
+            key: 'live',
+            url: liveUrl,
+            isHls: liveHls,
+            order: liveHls ? 2000 : 50,
+            label: liveHls ? '当前播放流 (HLS 切片流 · 备用)' : '当前清晰度 (MP4 · 极速下载)',
+            short: '当前清晰度'
+          });
+        }
+      }
+      if (!raw.length && videoEl) {
+        var current = videoEl.currentSrc || videoEl.src || '';
+        if (/^https?:/i.test(current)) {
+          var curHls = current.indexOf('.m3u8') > -1;
+          raw.push({
+            key: 'current',
+            url: current,
+            isHls: curHls,
+            order: curHls ? 3000 : 60,
+            label: curHls ? '当前播放源 (HLS 切片流 · 备用)' : '当前播放源 (MP4 · 极速下载)',
+            short: '当前播放源'
+          });
+        }
+      }
+      // 严格排序：MP4 直链排在最前面（按清晰度原画->超清->高清->标清），HLS 切片流严格后置备用
+      raw.sort(function (a, b) {
+        if (!a.isHls && b.isHls) return -1;
+        if (a.isHls && !b.isHls) return 1;
+        return a.order - b.order;
+      });
+      return raw;
+    }
+
+    function refreshVideoOptions(panel, force) {
+      if (!panel || (panel.__proferVideoBusy && !force)) return;
+      var select = panel.querySelector('#' + VIDEO_SELECT_ID);
+      if (!select) return;
+      var sources = collectVideoSources();
+      var signature = '';
+      for (var i = 0; i < sources.length; i++) {
+        signature += sources[i].url + '@' + sources[i].label + '|';
+      }
+      if (panel.__proferVideoSig === signature) return;
+      panel.__proferVideoSig = signature;
+      var prevValue = select.value;
+      while (select.firstChild) select.removeChild(select.firstChild);
+      if (!sources.length) {
+        var empty = document.createElement('option');
+        empty.value = '';
+        empty.textContent = '暂无可用视频源';
+        empty.disabled = true;
+        select.appendChild(empty);
+        panel.__proferVideoLabel = '';
+        return;
+      }
+      for (var j = 0; j < sources.length; j++) {
+        var opt = document.createElement('option');
+        opt.value = sources[j].url;
+        opt.textContent = sources[j].label;
+        opt.setAttribute('data-label', sources[j].short);
+        select.appendChild(opt);
+      }
+      var restored = false;
+      for (var k = 0; k < select.options.length; k++) {
+        if (select.options[k].value === prevValue) {
+          select.selectedIndex = k;
+          restored = true;
+          break;
+        }
+      }
+      if (!restored) select.selectedIndex = 0;
+      var chosen = select.options[select.selectedIndex];
+      panel.__proferVideoLabel = chosen ? chosen.getAttribute('data-label') : '';
+    }
+
+    // 课节切换检测：下载中若 courseId / subId 发生变化，立即终止上一轮切片拉取
+    function abortVideoIfLessonChanged() {
+      if (!videoAbort || !videoDownloadKey) return;
+      var ctx = VideoAuthManager.getContext();
+      var key = (ctx.courseId || '') + '|' + (ctx.subId || '');
+      if (key === videoDownloadKey) return;
+      try { videoAbort.abort(); } catch (e) {}
+      videoAbort = null;
+      videoDownloadKey = '';
+    }
+
+    async function downloadClassroomVideo(panel) {
+      if (!panel || panel.__proferVideoBusy) return;
+      var statusEl = panel.querySelector('#' + VIDEO_STATUS_ID);
+      var btn = panel.querySelector('#' + VIDEO_BTN_ID);
+      var select = panel.querySelector('#' + VIDEO_SELECT_ID);
+      if (!btn) return;
+      var btnLabel = btn.querySelector('span');
+      if (videoAbort) {
+        try { videoAbort.abort(); } catch (e) {}
+      }
+      var controller = new AbortController();
+      videoAbort = controller;
+      var signal = controller.signal;
+      var ctx = VideoAuthManager.getContext();
+      videoDownloadKey = (ctx.courseId || '') + '|' + (ctx.subId || '');
+      panel.__proferVideoBusy = true;
+      btn.disabled = true;
+      if (btnLabel) btnLabel.textContent = '正在下载…';
+      if (select) select.disabled = true;
+      function restoreControls() {
+        panel.__proferVideoBusy = false;
+        btn.disabled = false;
+        if (btnLabel) btnLabel.textContent = '开始下载视频';
+        if (select) select.disabled = false;
+      }
+      try {
+        setResourceStatus(statusEl, '正在校验本校学生身份与播放鉴权…');
+        var auth = await VideoAuthManager.verifyStudentAccess();
+        if (!auth.allowed) {
+          setResourceStatus(statusEl, auth.reason || '鉴权未通过，无法下载视频。', true);
+          restoreControls();
+          if (videoAbort === controller) videoAbort = null;
+          return;
+        }
+        if (auth.degraded && auth.reasonText) setResourceStatus(statusEl, auth.reasonText);
+        refreshVideoOptions(panel, true);
+        var chosenUrl = select ? select.value : '';
+        if (!chosenUrl) {
+          setResourceStatus(statusEl, '⚠️ 未探测到可下载的播放流，请先确认课程视频已正常加载。', true);
+          restoreControls();
+          if (videoAbort === controller) videoAbort = null;
+          return;
+        }
+        var chosenOption = select ? select.options[select.selectedIndex] : null;
+        var qualityLabel = (chosenOption && chosenOption.getAttribute('data-label')) || panel.__proferVideoLabel || '原画';
+        setResourceStatus(statusEl, '正在生成 CDN 签名防护凭证…');
+        var signedUrl = await VideoSignPipeline.buildSecurePlayUrl(chosenUrl, ctx.cdnEncrypt);
+        var safeTitle = getCourseTitle(ctx.roomVm).replace(/[\\\\/:*?\"<>|]/g, '_');
+        var filename = '【' + safeTitle + '】_' + qualityLabel + '.mp4';
+        if (chosenUrl.indexOf('.m3u8') === -1) {
+          setResourceStatus(statusEl, '🚀 已调起系统下载：' + filename + '（后台下载中，请在系统下载列表或下载目录查看，请勿重复点击）');
+          var downloadLink = signedUrl + (signedUrl.indexOf('?') > -1 ? '&' : '?') + 'wqxt_filename=' + encodeURIComponent(filename);
+          try {
+            window.postMessage({
+              type: '__profer_wqxt_download',
+              url: downloadLink,
+              filename: filename
+            }, '*');
+          } catch (e) {}
+          if (btnLabel) btnLabel.textContent = '下载已调起';
+          setTimeout(function () {
+            restoreControls();
+            refreshVideoOptions(panel);
+          }, 8000);
+        } else {
+          setResourceStatus(statusEl, '正在拉取切片索引…');
+          var indexResp = await fetchWithRetry(signedUrl, { signal: signal }, 1);
+          var m3u8Text = await indexResp.text();
+          var segments = VideoHlsDownloader.parseM3U8(m3u8Text, signedUrl);
+          if (!segments.length) throw new Error('未在 m3u8 中解析到有效分片');
+          var segmentBuffers = await VideoHlsDownloader.downloadSegments(segments, signal, function (cur, tot, pct) {
+            setResourceStatus(statusEl, '正在拉取切片 ' + cur + '/' + tot + ' (' + pct + '%)');
+          });
+          setResourceStatus(statusEl, '正在合并保存 MP4 文件…');
+          VideoHlsDownloader.exportMergedFile(segmentBuffers, filename);
+          segmentBuffers = null;
+          setResourceStatus(statusEl, '✅ 视频下载完成：' + filename);
+        }
+      } catch (err) {
+        if (err && err.name === 'AbortError') {
+          setResourceStatus(statusEl, '⏹️ 视频下载已取消。');
+        } else {
+          setResourceStatus(statusEl, '❌ 视频下载失败: ' + (err && err.message ? err.message : String(err)), true);
+        }
+      } finally {
+        if (chosenUrl.indexOf('.m3u8') !== -1) {
+          if (videoAbort === controller) videoAbort = null;
+          if (videoDownloadKey !== '') videoDownloadKey = '';
+          restoreControls();
+          refreshVideoOptions(panel);
+        }
+      }
     }
 
     function buildLectureHtml(title, slideList) {
@@ -3899,14 +4965,18 @@ export function buildWqxtUpgradeRuntimeScript(): string {
     function upgradeResourcePanel() {
       var contentInfo = document.querySelector('.living-page-content .content-info');
       if (!contentInfo) return false;
-      if (!document.getElementById(RESOURCE_PANEL_ID)) {
+      var panel = document.getElementById(RESOURCE_PANEL_ID);
+      if (!panel) {
         var wrap = document.createElement('div');
         wrap.innerHTML = RESOURCE_PANEL_HTML.trim();
         var node = wrap.firstElementChild;
         if (!node) return false;
         contentInfo.appendChild(node);
         bindResourcePanel(node);
+        refreshVideoOptions(node);
+        return true;
       }
+      refreshVideoOptions(panel);
       return true;
     }
 
@@ -3926,6 +4996,18 @@ export function buildWqxtUpgradeRuntimeScript(): string {
 
       var btnTranscriptMd = node.querySelector('#__profer-btn-transcript-md');
       if (btnTranscriptMd) btnTranscriptMd.addEventListener('click', function () { exportTranscriptToMd(); });
+
+      var videoSelect = node.querySelector('#' + VIDEO_SELECT_ID);
+      if (videoSelect) {
+        videoSelect.addEventListener('change', function () {
+          var opt = videoSelect.options[videoSelect.selectedIndex];
+          node.__proferVideoLabel = opt ? (opt.getAttribute('data-label') || '') : '';
+        });
+      }
+      var btnVideoDownload = node.querySelector('#' + VIDEO_BTN_ID);
+      if (btnVideoDownload) {
+        btnVideoDownload.addEventListener('click', function () { downloadClassroomVideo(node); });
+      }
     }
 
     function upgradeFooter() {
@@ -3942,10 +5024,23 @@ export function buildWqxtUpgradeRuntimeScript(): string {
     }
 
     function destroy() {
+      if (videoAbort) {
+        try { videoAbort.abort(); } catch (e) {}
+        videoAbort = null;
+        videoDownloadKey = '';
+      }
       if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
       if (qrPollTimer) { clearInterval(qrPollTimer); qrPollTimer = null; }
       if (headerPollTimer) { clearInterval(headerPollTimer); headerPollTimer = null; }
       if (subPreviewTimer) { clearTimeout(subPreviewTimer); subPreviewTimer = null; }
+      subDesiredKnown = false;
+      subRestoreDone = false;
+      subLangRestoreDone = false;
+      subLangSig = null;
+      subPrefLoaded = false;
+      subPref = { visible: null, size: 22, lang: '' };
+      nativeCmdGuard = { target: null, until: 0 };
+      nativeLangGuard = { label: null, until: 0 };
       if (pptObserver) {
         try { pptObserver.disconnect(); } catch (e) {}
         pptObserver = null;
@@ -4008,6 +5103,7 @@ export function buildWqxtUpgradeRuntimeScript(): string {
       syncHeader();
       upgradePlayer();
       ensurePptSync();
+      abortVideoIfLessonChanged();
       upgradeResourcePanel();
       upgradeFooter();
       ensureKeydown();

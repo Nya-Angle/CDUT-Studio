@@ -77,17 +77,22 @@ describe('旗舰演示实验室', () => {
     expect(meta.calibration?.y?.ticks?.length).toBe(2)
   })
 
-  test('Given 主 DNA 与金红石资产 When 读取 Then 默认视口元数据存在', async () => {
+  test('Given 主 DNA、金红石与硅 POSCAR 资产 When 读取 Then 默认视口元数据存在', async () => {
     const { getMolAsset } = await import('./cslab-mol')
     const dna = demo.assets.find((item) => item.title === 'b_dna_double_helix.pdb')
     const rutile = demo.assets.find((item) => item.title === 'rutile_tio2.cif')
+    const silicon = demo.assets.find((item) => item.title === 'silicon_diamond.poscar')
     expect(dna).toBeTruthy()
     expect(rutile).toBeTruthy()
+    expect(silicon).toBeTruthy()
     const dnaAsset = await getMolAsset(demo.lab.id, dna!.uri)
     const rutileAsset = await getMolAsset(demo.lab.id, rutile!.uri)
+    const siliconAsset = await getMolAsset(demo.lab.id, silicon!.uri)
     expect(dnaAsset?.defaultSettings?.autoSpin).toBe(true)
     expect(rutileAsset?.defaultSettings?.supercell).toEqual({ na: 2, nb: 2, nc: 3 })
     expect(rutileAsset?.defaultSettings?.miller).toEqual([1, 1, 0])
+    expect(siliconAsset?.format).toBe('poscar')
+    expect(siliconAsset?.defaultSettings?.supercell).toEqual({ na: 2, nb: 2, nc: 2 })
   })
 
   test('Given 旧演示实验室名称 When ensureDemoLabs Then 清理旧沙箱且幂等', async () => {

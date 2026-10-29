@@ -182,3 +182,64 @@ export function parsePoscar(text: string): CsLabStructureParseResult {
     warnings,
   }
 }
+
+function normalizeCifElement(element: string): string {
+  const trimmed = element.trim()
+  if (!/^[A-Za-z]{1,3}$/.test(trimmed)) return 'X'
+  return trimmed[0]!.toUpperCase() + trimmed.slice(1).toLowerCase()
+}
+
+function buildFormula(atoms: CsLabCrystalAtom[]): string {
+  const counts = new Map<string, number>()
+  for (const atom of atoms) {
+    const symbol = normalizeCifElement(atom.element)
+    counts.set(symbol, (counts.get(symbol) ?? 0) + 1)
+  }
+  return [...counts.entries()].map(([symbol, count]) => `${symbol}${count}`).join(' ')
+}
+
+/**
+ * 将 POSCAR 文本转换为内存中的 P1 CIF 字符串，供 Mol* cifCore 渲染。
+ * 原始文件不被修改；解析失败时抛出 CsLabPoscarParseError。
+ */
+export function poscarToCif(text: string): string {
+  const { cell, atoms } = parsePoscar(text)
+  const lines = [
+    '# CDUT Science POSCAR bridge (in-memory, source unchanged)',
+    'data_cslab_poscar',
+    "_audit_creation_method 'CDUT Science POSCAR bridge'",
+    `_chemical_formula_sum '${buildFormula(atoms)}'`,
+    `_cell_length_a ${cell.a.toFixed(6)}`,
+    `_cell_length_b ${cell.b.toFixed(6)}`,
+    `_cell_length_c ${cell.c.toFixed(6)}`,
+    `_cell_angle_alpha ${cell.alpha.toFixed(6)}`,
+    `_cell_angle_beta ${cell.beta.toFixed(6)}`,
+    `_cell_angle_gamma ${cell.gamma.toFixed(6)}`,
+    `_cell_volume ${cell.volume.toFixed(6)}`,
+    "_space_group_name_H-M_alt 'P 1'",
+    '_space_group_IT_number 1',
+    "_symmetry_space_group_name_H-M 'P 1'",
+    '_symmetry_Int_Tables_number 1',
+    '',
+    'loop_',
+    '_space_group_symop_operation_xyz',
+    "'x, y, z'",
+    '',
+    'loop_',
+    '_atom_site_label',
+    '_atom_site_type_symbol',
+    '_atom_site_fract_x',
+    '_atom_site_fract_y',
+    '_atom_site_fract_z',
+    '_atom_site_occupancy',
+    '_atom_site_U_iso_or_equiv',
+  ]
+
+  for (const atom of atoms) {
+    const symbol = normalizeCifElement(atom.element)
+    const [x, y, z] = atom.fractional
+    lines.push(`${atom.label} ${symbol} ${x.toFixed(8)} ${y.toFixed(8)} ${z.toFixed(8)} 1.0 0.0100`)
+  }
+
+  return `${lines.join('\n')}\n`
+}

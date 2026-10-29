@@ -204,7 +204,7 @@ export {
   parseStructureText,
 } from './cslab-analysis'
 export { CsLabCifParseError, normalizeElement, parseCif, tokenizeCif } from './cslab-cif'
-export { CsLabPoscarParseError, parsePoscar } from './cslab-poscar'
+export { CsLabPoscarParseError, parsePoscar, poscarToCif } from './cslab-poscar'
 export { CsLabXyzParseError, parseXyz } from './cslab-xyz'
 export {
   CSLAB_SPACE_GROUP_SEEDS,

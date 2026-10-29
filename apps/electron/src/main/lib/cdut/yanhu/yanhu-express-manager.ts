@@ -16,7 +16,7 @@
  */
 
 import { join } from 'node:path'
-import { BrowserWindow, Menu, View, WebContentsView, clipboard, session as electronSession, shell, type Session, type WebContents } from 'electron'
+import { BrowserWindow, Menu, View, WebContentsView, clipboard, ipcMain, session as electronSession, shell, type Session, type WebContents } from 'electron'
 import {
   buildYanhuBlockedUrl,
   isYanhuBlockedUrl,
@@ -326,6 +326,17 @@ export class YanhuExpressManager {
   /** 同源同路径窗口打开的合并台账：key = origin+pathname -> { tabId, at } */
   private readonly recentWindowOpenTabs = new Map<string, { tabId: string; at: number }>()
 
+  /** 待下载视频文件名为 URL -> 定制文件名映射 */
+  private readonly pendingDownloads = new Map<string, string>()
+
+  constructor() {
+    ipcMain.on('yanhu-download-video', (event, payload?: { url?: string; filename?: string }) => {
+      if (!payload?.url) return
+      const wc = event.sender
+      this.triggerVideoDownload(wc, payload.url, payload.filename)
+    })
+  }
+
   /** 主进程 -> 渲染进程广播 */
   private send(channel: string, payload: unknown): void {
     if (!this.owner || this.owner.isDestroyed()) return
@@ -419,6 +430,42 @@ export class YanhuExpressManager {
     }
 
     // 全部守卫安装流程结束后再置位：若中途抛错，标记不落地，后续调用可重试安装，避免守卫永久缺失
+    // 问渠学堂课堂教学视频下载守卫：自动识别并注入定制文件名
+    try {
+      ses.on('will-download', (_event, item) => {
+        const url = item.getURL()
+        const chain = item.getURLChain()
+        let filename = this.pendingDownloads.get(url)
+        if (!filename && chain) {
+          for (const u of chain) {
+            if (this.pendingDownloads.has(u)) {
+              filename = this.pendingDownloads.get(u)
+              break
+            }
+          }
+        }
+        if (!filename) {
+          try {
+            const u = new URL(url)
+            const qName = u.searchParams.get('wqxt_filename')
+            if (qName) filename = decodeURIComponent(qName)
+          } catch {}
+        }
+        if (filename) {
+          item.setSaveDialogOptions({
+            defaultPath: filename,
+          })
+        }
+        item.once('done', () => {
+          this.pendingDownloads.delete(url)
+          const clean = url.split('?')[0]
+          if (clean) this.pendingDownloads.delete(clean)
+        })
+      })
+    } catch (err) {
+      console.warn('[AI 问渠学堂] 安装视频下载守卫失败:', err)
+    }
+
     this.sessionGuarded = true
   }
 
@@ -843,6 +890,12 @@ export class YanhuExpressManager {
         this.handleCertInterstitialSentinel(tab, certSentinel)
         return
       }
+      // 问渠学堂课堂原视频下载拦截：禁止跨域视频流直接进行主框架整页导航，转为主进程原生下载
+      if (this.isVideoDownloadUrl(url)) {
+        event.preventDefault()
+        this.triggerVideoDownload(wc, url)
+        return
+      }
       const allowed = yanhuDomainGatekeeper.isAllowed(url)
       logYanhuEvent('will-navigate', { tabId: tab.id, url, allowed, via: 'main' })
       if (allowed) return
@@ -859,6 +912,11 @@ export class YanhuExpressManager {
         this.handleCertInterstitialSentinel(tab, certSentinel)
         return
       }
+      // 问渠学堂课堂原视频下载拦截：禁止跨域视频流直接进行主框架整页导航，转为主进程原生下载
+      if (this.isVideoDownloadUrl(url)) {
+        event.preventDefault()
+        return
+      }
       if (isWebUrl(url)) tab.lastRequestedUrl = url
       const allowed = yanhuDomainGatekeeper.isAllowed(url)
       logYanhuEvent('will-navigate', { tabId: tab.id, url, allowed, via: 'redirect' })
@@ -872,6 +930,12 @@ export class YanhuExpressManager {
       const certSentinel = parseCertInterstitialSentinel(url)
       if (certSentinel) {
         this.handleCertInterstitialSentinel(tab, certSentinel)
+        return
+      }
+      // 问渠学堂课堂原视频下载拦截：禁止跨域视频流直接进行主框架整页导航，转为主进程原生下载
+      if (this.isVideoDownloadUrl(url)) {
+        event.preventDefault()
+        this.triggerVideoDownload(wc, url)
         return { action: 'deny' }
       }
       if (yanhuDomainGatekeeper.isAllowed(url)) {
@@ -1009,6 +1073,53 @@ export class YanhuExpressManager {
    * Preload 已在 document-start 注入；此处覆盖 SPA 路由切换（选择页 → 教学页）以及
    * Preload 不可用的极端场景。脚本内部按 hostname / 路由自检，并复用已挂载的实例。
    */
+  /** 判定是否为问渠课堂视频下载/直链导航 */
+  public isVideoDownloadUrl(url: string): boolean {
+    if (!url || typeof url !== 'string') return false
+    try {
+      const u = new URL(url)
+      const host = u.hostname.toLowerCase()
+      if (host === 'play.wqxt.cdut.edu.cn' || host.endsWith('.wqxt.cdut.edu.cn')) {
+        return (
+          u.pathname.endsWith('.mp4') ||
+          u.pathname.includes('/play/') ||
+          u.searchParams.has('wqxt_filename')
+        )
+      }
+      return false
+    } catch {
+      return false
+    }
+  }
+
+  /** 短时间内的重复下载触发抑制台账（cleanUrl -> timestamp） */
+  private readonly recentTriggeredDownloads = new Map<string, number>()
+
+  /** 触发 WebContents 级别的原生视频下载（不触发整页导航，保留合法 Referer） */
+  public triggerVideoDownload(wc: WebContents, url: string, filename?: string): void {
+    if (!wc || wc.isDestroyed()) return
+    const targetUrl = url.trim()
+    const cleanUrl = targetUrl.split('?')[0] || targetUrl
+    const now = Date.now()
+    const lastAt = this.recentTriggeredDownloads.get(cleanUrl) || 0
+    if (now - lastAt < 8000) return
+    this.recentTriggeredDownloads.set(cleanUrl, now)
+    let resolvedFilename = filename?.trim()
+    if (!resolvedFilename) {
+      try {
+        const u = new URL(targetUrl)
+        const qName = u.searchParams.get('wqxt_filename')
+        if (qName) resolvedFilename = decodeURIComponent(qName)
+      } catch {}
+    }
+    if (resolvedFilename) {
+      this.pendingDownloads.set(targetUrl, resolvedFilename)
+      const clean = targetUrl.split('?')[0]
+      if (clean) this.pendingDownloads.set(clean, resolvedFilename)
+    }
+    wc.downloadURL(targetUrl)
+  }
+
   private applyWqxtCleanerIfNeeded(tab: YanhuTabRecord): void {
     const wc = tab.view?.webContents
     if (!wc || wc.isDestroyed()) return

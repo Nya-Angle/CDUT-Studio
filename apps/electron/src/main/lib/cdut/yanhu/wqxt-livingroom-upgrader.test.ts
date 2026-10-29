@@ -6,16 +6,21 @@
  */
 
 import { describe, expect, test } from 'bun:test'
+import { yanhuExpressManager } from './yanhu-express-manager'
 import {
   WQXT_AI_DOCK_ID,
   WQXT_AI_PANEL_ID,
+  WQXT_BTN_VIDEO_DOWNLOAD_ID,
   WQXT_EDU_HEADER_ID,
   WQXT_FOOTER_ID,
   WQXT_NYA_PLAYER_ID,
   WQXT_QR_MODAL_ID,
+  WQXT_RESOURCE_CARD_VIDEO_ID,
   WQXT_RESOURCE_PANEL_ID,
+  WQXT_SELECT_VIDEO_RES_ID,
   WQXT_UPGRADE_CSS,
   WQXT_UPGRADE_STYLE_ID,
+  WQXT_VIDEO_STATUS_ID,
   buildWqxtUpgradeRuntimeScript,
 } from './wqxt-livingroom-upgrader'
 
@@ -174,6 +179,27 @@ describe('课堂内页全宽与双窗布局', () => {
     expect(WQXT_UPGRADE_CSS).toContain('bottom: 24px !important')
     expect(WQXT_UPGRADE_CSS).toContain('@media (prefers-color-scheme: dark)')
   })
+
+  test('原生 CMC 字幕 UI 全量物理屏蔽，且不误伤定制浮层', () => {
+    for (const sel of [
+      '.cmc-subtitlepanel',
+      '[class*="cmc-subtitle"]',
+      '.cmc-control-btn[title*="字幕"]',
+      '.cmc-control-btn[aria-label*="字幕"]',
+      '.cmc-rightkey .rightkey-item[keytype="subtitle"]',
+    ]) expect(WQXT_UPGRADE_CSS).toContain(sel)
+    // 屏蔽规则四件套齐备
+    expect(WQXT_UPGRADE_CSS).toContain('pointer-events: none !important')
+    // 定制浮层与定制面板样式仍在
+    expect(WQXT_UPGRADE_CSS).toContain('#__profer-nya-player .subtitle-overlay')
+    expect(WQXT_UPGRADE_CSS).toContain('#__profer-nya-player .subtitle-panel')
+  })
+
+  test('定制字幕面板扩展语种芯片样式', () => {
+    expect(WQXT_UPGRADE_CSS).toContain('.subtitle-lang-group')
+    expect(WQXT_UPGRADE_CSS).toContain('.sub-lang-chip')
+    expect(WQXT_UPGRADE_CSS).toContain('.sub-lang-chip.is-active')
+  })
 })
 
 describe('buildWqxtUpgradeRuntimeScript', () => {
@@ -210,6 +236,36 @@ describe('buildWqxtUpgradeRuntimeScript', () => {
     expect(script).toContain('main_resize_con')
     expect(script).toContain('字幕已开启')
     expect(script).toContain('字幕字号预览')
+  })
+
+  test('字幕幂等状态机：读取原生真实态后才决定是否点击', () => {
+    expect(script).toContain('driveNativeSubtitle')
+    expect(script).toContain('getNativeSubtitleState')
+    expect(script).toContain('readSwitchOn')
+    for (const flag of ['is-checked', 'active', 'aria-checked', 'input[type="checkbox"]'])
+      expect(script).toContain(flag)
+    expect(script).toContain('nativeCmdGuard')
+  })
+
+  test('多语种动态提取与原生代理', () => {
+    expect(script).toContain('collectNativeSubtitleOptions')
+    expect(script).toContain('syncNativeSubtitleLanguages')
+    expect(script).toContain('selectNativeSubtitleLanguage')
+    expect(script).toContain('#sub-lang-group')
+    expect(script).toContain('sub-lang-chip')
+    expect(script).toContain('中文|英文|双语|中英')
+  })
+
+  test('本地偏好记忆：显隐 / 字号 / 语种三键位', () => {
+    for (const key of ['profer_sub_visible', 'profer_sub_size', 'profer_sub_lang'])
+      expect(script).toContain(key)
+    expect(script).toContain('localStorage.getItem')
+    expect(script).toContain('localStorage.setItem')
+    expect(script).toContain('restoreSubtitleState')
+  })
+
+  test('关闭字幕严格收拢浮层（清文本 + 立即隐藏）', () => {
+    expect(script).toContain("setText(box, '')")
   })
 
   test('真全屏：状态图标切换与双击手势', () => {
@@ -387,5 +443,85 @@ describe('buildWqxtUpgradeRuntimeScript', () => {
     expect(script).toContain('footer-logo-badge')
     expect(script).toContain('footer-brand-title')
     expect(script).toContain('CDUT Studio')
+  })
+})
+
+describe('课堂教学视频下载', () => {
+  const script = buildWqxtUpgradeRuntimeScript()
+
+  test('新增视频资源卡片 ID 与下拉样式符合约定', () => {
+    expect(WQXT_RESOURCE_CARD_VIDEO_ID).toBe('__profer-resource-card-video')
+    expect(WQXT_BTN_VIDEO_DOWNLOAD_ID).toBe('__profer-btn-video-download')
+    expect(WQXT_SELECT_VIDEO_RES_ID).toBe('__profer-video-resolution-select')
+    expect(WQXT_VIDEO_STATUS_ID).toBe('__profer-video-status')
+    expect(WQXT_UPGRADE_CSS).toContain('.profer-video-toolbar')
+    expect(WQXT_UPGRADE_CSS).toContain('.profer-video-select')
+    expect(WQXT_UPGRADE_CSS).toContain('#__profer-wqxt-resource-panel .profer-video-select:focus')
+  })
+
+  test('学习资源下载区新增第四张「课堂教学视频」卡片', () => {
+    expect(script).toContain('__profer-resource-card-video')
+    expect(script).toContain('__profer-btn-video-download')
+    expect(script).toContain('__profer-video-resolution-select')
+    expect(script).toContain('__profer-video-status')
+    expect(script).toContain('课堂教学视频')
+    expect(script).toContain('原片下载')
+    expect(script).toContain('开始下载视频')
+    expect(script).toContain('downloadClassroomVideo')
+    expect(script).toContain('refreshVideoOptions')
+    expect(script).toContain('collectVideoSources')
+  })
+
+  test('原视频下载：签名链路 / HLS 切片 / AES 解密 / 优雅降级', () => {
+    expect(script).toContain('VideoSignPipeline')
+    expect(script).toContain('VideoHlsDownloader')
+    expect(script).toContain('VideoAuthManager')
+    expect(script).toContain('decryptAesCbc')
+    expect(script).toContain('md5')
+    expect(script).toContain('clientUUID')
+    expect(script).toContain('txSecret')
+    expect(script).toContain('txTime')
+    expect(script).toContain('EXT-X-KEY')
+    expect(script).toContain('AES-128')
+    expect(script).toContain('m3u8')
+    expect(script).toContain('video/mp4')
+    expect(script).toContain('study-auth')
+    expect(script).toContain('原画')
+    expect(script).toContain('超清')
+    expect(script).toContain('高清')
+    expect(script).toContain('标清')
+    expect(script).toContain('极速')
+    expect(script).toContain('已依据当前播放凭证降级放行')
+    expect(script).toContain('【')
+    expect(script).toContain('.mp4')
+  })
+
+  test('原视频下载健壮性：切片重试 / Abort 中断 / 切片内存释放 / TS 直封装说明', () => {
+    expect(script).toContain('fetchWithRetry')
+    expect(script).toContain('AbortController')
+    expect(script).toContain('videoAbort')
+    expect(script).toContain('signal.aborted')
+    expect(script).toContain('AbortError')
+    expect(script).toContain('视频下载已取消')
+    expect(script).toContain('buffers.length = 0')
+    expect(script).toContain('fetchWithRetry(item.url, { signal: signal }, 2)')
+    expect(script).toContain('未重封装')
+    expect(script).toContain('MP4 · 极速下载')
+    expect(script).toContain('HLS 切片流 · 备用')
+    expect(script).toContain('lastReportTime')
+    expect(script).toContain('dataBuffer = null')
+  })
+
+  test('方案1主进程原生下载通道：消息桥接与导航拦截', () => {
+    expect(script).toContain('__profer_wqxt_download')
+    expect(script).toContain('wqxt_filename')
+    expect(yanhuExpressManager.isVideoDownloadUrl('https://play.wqxt.cdut.edu.cn/play/0/default/2026/10/08/f8de03a82add039dc66de8b8f1e80b74_1920_1080.mp4?clientUUID=xxx&t=yyy')).toBe(true)
+    expect(yanhuExpressManager.isVideoDownloadUrl('https://play.wqxt.cdut.edu.cn/play/something')).toBe(true)
+    expect(yanhuExpressManager.isVideoDownloadUrl('https://classroom.wqxt.cdut.edu.cn/livingroom?course_id=78678')).toBe(false)
+    expect(yanhuExpressManager.isVideoDownloadUrl('https://my.cdut.edu.cn/')).toBe(false)
+  })
+
+  test('运行时脚本可被解析（模板字符串转义正确）', () => {
+    expect(() => new Function(script)).not.toThrow()
   })
 })

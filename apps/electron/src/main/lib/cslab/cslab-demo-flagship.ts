@@ -66,6 +66,7 @@ const RESOURCE_FILES = [
   'b_dna_double_helix.pdb',
   'perovskite_cubic.cif',
   'rutile_tio2.cif',
+  'silicon_diamond.poscar',
   'biogeo_basin_dem.asc',
   FLAGSHIP_CD_FILE,
   FLAGSHIP_XRD_FILE,
@@ -317,6 +318,11 @@ export async function createFlagshipDemoLab(options: {
         highlightPolyhedra: true,
       },
     }),
+  )
+  setMolMetadata(
+    lab.id,
+    'silicon_diamond.poscar',
+    JSON.stringify({ defaultSettings: { supercell: { na: 2, nb: 2, nc: 2 } } }),
   )
 
   await ensureFlagshipDemoContent(lab, { demoDir })
