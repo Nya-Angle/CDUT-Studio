@@ -52,11 +52,12 @@ import { AiClassView } from './AiClassView'
 import { YanhuExpressView } from './yanhu/YanhuExpressView'
 import { ContentReviewView } from '@/components/content-review/ContentReviewView'
 
-/** 三大板块子页面标题映射 */
+/** 板块子页面标题映射 */
 const SUB_VIEW_TITLES: Record<Exclude<CdutSubViewId, null>, string> = {
   'ai-class': 'AI 速课堂',
   'yanhu-express': '智联万站',
   'material-review': '材料审核',
+  wqxt: 'AI 问渠学堂',
 }
 
 /** 未登录态：专区三大核心能力矩阵展示 */
@@ -136,7 +137,7 @@ export function CdutZoneView(): React.ReactElement {
       setSessionPickerOpen(true)
       return
     }
-    if (id !== 'yanhu-express' && id !== 'material-review') return
+    if (id !== 'yanhu-express' && id !== 'material-review' && id !== 'wqxt') return
     setSidebarRestore(sidebarCollapsed)
     setSidebarCollapsed(true)
     setActiveSubView(id)
@@ -326,6 +327,8 @@ export function CdutZoneView(): React.ReactElement {
                 <AiClassView />
               ) : activeSubView === 'yanhu-express' ? (
                 <YanhuExpressView />
+              ) : activeSubView === 'wqxt' ? (
+                <YanhuExpressView scope="wqxt" hideAddressBar />
               ) : (
                 <ContentReviewView />
               )}

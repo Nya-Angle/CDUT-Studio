@@ -3,11 +3,11 @@
  *
  * 核心交互与安全准则：
  *  - 全局：灰色阴影蒙版区域禁用一切交互（拦截点击与拖拽，不穿透到底层 DOM，不触发跳步）；
- *  - 第一步：不提供下一步与跳过按钮，引导用户点击新建会话开启新任务，创建后自动前进；
- *  - 第二步：用户点击发送并回复完成前，下一步按钮不解锁；发送后遮盖输入框、点亮模型回复区域；
- *  - 第三步：进入 CDUT 校园特区禁止跳过；
+ *  - 所有步骤均允许「跳过本步 / 下一步」，第 1 步、第 3 步与最后一步不再强制点击锚点；
+ *  - 任意时刻按 Esc 无条件退出；ArrowRight 始终前进，ArrowLeft 后退；
+ *  - 第二步：展示「待发送 / 生成中 / 已完成」三态提示；未配置模型时提示可先配置或直接跳过；
  *  - 第四步：校内专用通道，引导用户点击体验全部 4 个快捷通道，弹出右侧组件时将其纳入高亮，
- *    用户点击蒙版可关闭组件，3 秒无操作自动关闭；体验完 4 项后解锁下一步；
+ *    用户点击蒙版可关闭组件，3 秒无操作自动关闭；
  *  - 第五步：在问题填入前，输入框保持可见但禁用交互；
  *  - 第六步：智联万站发送前深色蒙版遮盖网页部分，仅凸显砚小龙；成理官网加载完成后提前解锁；
  *  - 第 15~17 步：高亮区域禁止交互，用户自主点击下一步继续；
@@ -23,9 +23,12 @@ import { toast } from 'sonner'
 import { coachTourCurrentStepKeyAtom, coachTourOpenAtom } from '@/atoms/coach-tour-atoms'
 import { activeViewAtom, type ActiveView } from '@/atoms/active-view'
 import {
+  agentChannelIdAtom,
+  agentModelIdAtom,
   agentSessionStreamingStateAtomFamily,
   currentAgentSessionIdAtom,
 } from '@/atoms/agent-atoms'
+import { channelsAtom, channelsLoadedAtom } from '@/atoms/conversation-atoms'
 import { cdutAccountAtom, cdutSubViewAtom } from '@/atoms/cdut-account-atoms'
 import { cslabAuthAtom } from '@/atoms/cslab-atoms'
 import { useGlobalOverlay } from '@/atoms/overlay-atoms'
@@ -200,6 +203,21 @@ export function CoachTourOverlay(): React.ReactElement | null {
   )
   const cdutAccount = useAtomValue(cdutAccountAtom)
   const cslabAuth = useAtomValue(cslabAuthAtom)
+  const channels = useAtomValue(channelsAtom)
+  const channelsLoaded = useAtomValue(channelsLoadedAtom)
+  const agentChannelId = useAtomValue(agentChannelIdAtom)
+  const agentModelId = useAtomValue(agentModelIdAtom)
+  // 与 AgentView 的 computedSelectedModel 同源，避免提示与实际输入框状态不一致
+  const hasUsableModel =
+    channelsLoaded &&
+    !!agentChannelId &&
+    !!agentModelId &&
+    channels.some(
+      (channel) =>
+        channel.id === agentChannelId &&
+        channel.enabled &&
+        channel.models.some((model) => model.id === agentModelId && model.enabled),
+    )
 
   // 同步全局引导步骤原子状态，供各子业务组件按步特化禁用
   React.useEffect(() => {
@@ -529,15 +547,6 @@ export function CoachTourOverlay(): React.ReactElement | null {
         event.preventDefault()
         close()
       } else if (event.key === 'ArrowRight') {
-        // 第一步、第二步、第四步未完成、第 6 步问答未结束时禁止右箭头跳步
-        if (
-          step?.key === 'welcome-agent' ||
-          (step?.key === 'calculus' && !calculusDone) ||
-          (step?.key === 'cdut-login' && clickedQuickFeatures.size < 4) ||
-          (step?.key === 'ai-class-q1' && wait.status !== 'done')
-        ) {
-          return
-        }
         event.preventDefault()
         next()
       } else if (event.key === 'ArrowLeft') {
@@ -549,7 +558,7 @@ export function CoachTourOverlay(): React.ReactElement | null {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [open, close, next, previous, step?.key, calculusDone, clickedQuickFeatures.size, wait.status])
+  }, [open, close, next, previous])
 
   if (!open || !step) return null
 
@@ -558,11 +567,11 @@ export function CoachTourOverlay(): React.ReactElement | null {
   const transition = reduceMotion ? 'none' : MOVE_TRANSITION
   const frame = rect ? clampFrameToViewport(rect) : null
 
-  // 按钮锁定逻辑
-  const isCalculusLocked = step.key === 'calculus' && !calculusDone
-  const isQuickBarLocked = step.key === 'cdut-login' && clickedQuickFeatures.size < 4
-  const isAiClassQ1Locked = step.key === 'ai-class-q1' && wait.status !== 'done'
-  const isNextButtonLocked = isCalculusLocked || isQuickBarLocked || isAiClassQ1Locked
+  // 完成状态仅用于提示文案；所有步骤始终允许手动前进/跳过
+  const isCalculusPending = step.key === 'calculus' && !calculusDone
+  const isQuickBarPending = step.key === 'cdut-login' && clickedQuickFeatures.size < 4
+  const isAiClassQ1Pending = step.key === 'ai-class-q1' && wait.status !== 'done'
+  const isStepPending = isCalculusPending || isQuickBarPending || isAiClassQ1Pending
 
   // 15~17 步高亮区域禁止所有交互
   const isStep15To17Disabled = ['table-1', 'table-2', 'geo-dem'].includes(step.key)
@@ -716,15 +725,22 @@ export function CoachTourOverlay(): React.ReactElement | null {
           {/* 第二步特定指引态 */}
           {step.key === 'calculus' && (
             <div className="mt-2.5 rounded-lg border border-border/70 bg-muted/40 p-2.5 text-xs">
-              {!calculusSent ? (
+              {!hasUsableModel ? (
+                <div className="flex items-start gap-2 text-amber-500 font-medium">
+                  <span className="mt-0.5 inline-block size-2 shrink-0 animate-ping rounded-full bg-amber-500" />
+                  <span>
+                    检测到尚未配置模型。你可以点击输入框右侧的模型选择器配置模型，也可以点击【跳过本步】继续体验其他功能演示。
+                  </span>
+                </div>
+              ) : !calculusSent ? (
                 <div className="flex items-center gap-2 text-amber-500 font-medium">
                   <span className="inline-block size-2 animate-ping rounded-full bg-amber-500" />
-                  请点击右下角发送按钮
+                  请点击右下角发送按钮，或点击【跳过本步】继续
                 </div>
               ) : !calculusDone ? (
                 <div className="flex items-center gap-2 text-primary font-medium">
                   <span className="inline-block size-2 animate-pulse rounded-full bg-primary" />
-                  模型正在生成回答中，请稍候（输入框已锁定）…
+                  模型正在生成回答中，请稍候（也可随时跳过本步）…
                 </div>
               ) : (
                 <div className="flex items-center gap-2 text-emerald-500 font-medium">
@@ -870,38 +886,23 @@ export function CoachTourOverlay(): React.ReactElement | null {
                 上一步
               </Button>
             )}
-            {/* 智联万站 · 砚小龙允许用户在中途跳过，进入下一个模块演示 */}
-            {step.key === 'yanhu' && (
+            {isLast ? (
+              <Button type="button" size="sm" className="h-7 px-2.5 text-xs" onClick={next}>
+                完成
+              </Button>
+            ) : isClickToAdvance ? (
               <Button
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="h-7 px-2.5 text-xs text-muted-foreground hover:text-foreground"
-                onClick={next}
-              >
-                跳过本步
-              </Button>
-            )}
-            {/* 第一步：不提供下一步与跳过按钮，只能点击新建会话 */}
-            {step.key === 'welcome-agent' ? (
-              <span className="text-[11px] text-muted-foreground/80 pr-1 font-medium">请点击新建会话继续</span>
-            ) : isClickToAdvance && interactive && !step.disallowSkip ? (
-              <Button type="button" variant="ghost" size="sm" className="h-7 px-2.5 text-xs" onClick={next}>
-                跳过本步
-              </Button>
-            ) : isClickToAdvance && interactive && step.disallowSkip ? (
-              <span className="text-[11px] text-muted-foreground/80 pr-1 font-medium">
-                {step.key === 'new-session' ? '请点击新建会话' : '请点击侧栏进入'}
-              </span>
-            ) : (
-              <Button
-                type="button"
-                size="sm"
                 className="h-7 px-2.5 text-xs"
-                disabled={isNextButtonLocked}
                 onClick={next}
               >
-                {isLast ? '完成' : isNextButtonLocked ? '等待完成' : '下一步'}
+                跳过本步
+              </Button>
+            ) : (
+              <Button type="button" size="sm" className="h-7 px-2.5 text-xs" onClick={next}>
+                {isStepPending ? '跳过本步' : '下一步'}
               </Button>
             )}
           </div>

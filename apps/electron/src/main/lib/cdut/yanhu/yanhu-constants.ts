@@ -8,11 +8,14 @@
  */
 
 import { join } from 'node:path'
-import { YANHU_DEFAULT_HOME_URL } from '@profer/shared'
+import { WQXT_DEFAULT_HOME_URL, YANHU_DEFAULT_HOME_URL } from '@profer/shared'
 import { getConfigDir } from '../../config-paths'
 
 /** 智联万站默认入口：砚湖易办（校内办事大厅升级版），与 @profer/shared 常量保持同源 */
 export const YANHU_HOME_URL = YANHU_DEFAULT_HOME_URL
+
+/** AI 问渠学堂默认/保底入口：成都理工大学在线课程中心 */
+export const WQXT_HOME_URL = WQXT_DEFAULT_HOME_URL
 
 /** 模拟的真实桌面 Chrome 版本（对齐 Chromium 133 稳定版） */
 export const YANHU_CHROME_VERSION = '133.0.0.0'
@@ -116,6 +119,15 @@ export const YANHU_WINDOW_OPEN_COALESCE_MS = 1500
  */
 export function getYanhuTabsPath(): string {
   return join(getConfigDir(), 'yanhu-express', 'tabs.json')
+}
+
+/**
+ * AI 问渠学堂标签拓扑文件路径（与智联万站互相隔离）。
+ *
+ * @returns ~/.cdutai/yanhu-express/wqxt-tabs.json
+ */
+export function getWqxtTabsPath(): string {
+  return join(getConfigDir(), 'yanhu-express', 'wqxt-tabs.json')
 }
 
 /**

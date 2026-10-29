@@ -23,11 +23,14 @@ import {
   parseCertInterstitialSentinel,
   parseYanhuBlockedTarget,
   YANHU_EXPRESS_IPC_CHANNELS,
+  WQXT_CLASSROOM_HOSTNAME,
+  type YanhuBrowserScope,
   type YanhuConsoleEntry,
   type YanhuCreateTabInput,
   type YanhuLoadedResource,
   type YanhuNavigateInput,
   type YanhuNetworkEntry,
+  type YanhuScopeInput,
   type YanhuTabItem,
   type YanhuTabsState,
   type YanhuUrlChangedEvent,
@@ -45,6 +48,7 @@ import { resolveYanhuCertBlockTarget } from './yanhu-cert-interstitial'
 import {
   YANHU_DORMANT_IDLE_MS,
   YANHU_DORMANT_MAX_BACKGROUND,
+  WQXT_HOME_URL,
   YANHU_HOME_URL,
   YANHU_WINDOW_OPEN_COALESCE_MS,
   hasOneTimeTicket,
@@ -53,7 +57,7 @@ import {
   stripOneTimeTicket,
 } from './yanhu-constants'
 import { isCdutDomain, isWebUrl, yanhuDomainGatekeeper } from './yanhu-domain-gatekeeper'
-import { yanhuTabsStore } from './yanhu-tabs-store'
+import { wqxtTabsStore, yanhuTabsStore, type YanhuTabsStore } from './yanhu-tabs-store'
 import { yanhuFingerprintEngine } from './yanhu-fingerprint-engine'
 import { yanhuDevToolsHub } from './yanhu-devtools-hub'
 import { syncThemeToWebContents, yanhuThemeService } from './yanhu-theme-service'
@@ -61,6 +65,10 @@ import { yanhuDiagnosticConsole } from './yanhu-diagnostic-console'
 import { stripStaleRuiShuCookies } from './yanhu-cookie-utils'
 import { yanhuDomDistillationEngine, type YanhuRawElement } from './yanhu-dom-distillation'
 import { logYanhuEvent } from './yanhu-event-log'
+import {
+  buildWqxtLivingRoomCleanerScript,
+  isWqxtWatermarkRequestUrl,
+} from './wqxt-livingroom-cleaner'
 import {
   buildCrossFrameDrainScript,
   normalizeCrossFrameDrain,
@@ -112,6 +120,22 @@ interface AppliedLayout {
   visible: boolean
   viewportBounds: { x: number; y: number; width: number; height: number }
   pageBounds: { x: number; y: number; width: number; height: number }
+}
+
+/**
+ * 单作用域标签状态桶。
+ *
+ * 智联万站与 AI 问渠学堂共享同一 CDUT 认证分区、Session 守卫与诊断控制台，
+ * 但各自持有独立的标签拓扑、落盘文件与默认/保底入口。
+ */
+interface YanhuScopeState {
+  tabs: Map<string, YanhuTabRecord>
+  tabOrder: string[]
+  activeTabId: string
+  initialized: boolean
+  store: YanhuTabsStore
+  homeUrl: string
+  homeTitle: string
 }
 
 const MIN_USABLE_BOUNDS = 4
@@ -233,15 +257,71 @@ export class YanhuExpressManager {
   private hostView: View | null = null
   private session: Session | null = null
 
-  private readonly tabs = new Map<string, YanhuTabRecord>()
-  private tabOrder: string[] = []
-  private activeTabId = ''
+  /** 两套互相隔离的标签状态桶（共享 Session / 宿主 / 布局） */
+  private readonly scopes: Record<YanhuBrowserScope, YanhuScopeState> = {
+    'yanhu-express': {
+      tabs: new Map(),
+      tabOrder: [],
+      activeTabId: '',
+      initialized: false,
+      store: yanhuTabsStore,
+      homeUrl: YANHU_HOME_URL,
+      homeTitle: '办事大厅',
+    },
+    wqxt: {
+      tabs: new Map(),
+      tabOrder: [],
+      activeTabId: '',
+      initialized: false,
+      store: wqxtTabsStore,
+      homeUrl: WQXT_HOME_URL,
+      homeTitle: 'AI 问渠学堂',
+    },
+  }
+  /** 当前激活作用域（渲染端唯一可见、IPC 缺省作用对象） */
+  private activeScope: YanhuBrowserScope = 'yanhu-express'
 
-  private initialized = false
+  /** 以下 getter 让既有方法体无需逐处改写：读写始终落在当前激活作用域 */
+  private get scopeState(): YanhuScopeState {
+    return this.scopes[this.activeScope]
+  }
+  private get tabs(): Map<string, YanhuTabRecord> {
+    return this.scopeState.tabs
+  }
+  private get tabOrder(): string[] {
+    return this.scopeState.tabOrder
+  }
+  private set tabOrder(value: string[]) {
+    this.scopeState.tabOrder = value
+  }
+  private get activeTabId(): string {
+    return this.scopeState.activeTabId
+  }
+  private set activeTabId(value: string) {
+    this.scopeState.activeTabId = value
+  }
+  private get initialized(): boolean {
+    return this.scopeState.initialized
+  }
+  private set initialized(value: boolean) {
+    this.scopeState.initialized = value
+  }
+  private get homeUrl(): string {
+    return this.scopeState.homeUrl
+  }
+  private get homeTitle(): string {
+    return this.scopeState.homeTitle
+  }
+  private get tabsStore(): YanhuTabsStore {
+    return this.scopeState.store
+  }
+
   /** 用户当前是否停留在智联万站子页面（决定原生视图可见性） */
   private presented = false
   private lastLayout: AppliedLayout | null = null
   private sessionGuarded = false
+  /** 当前处于 HTML5 全屏的标签 ID（null 表示未全屏） */
+  private htmlFullscreenTabId: string | null = null
 
   /** 同源同路径窗口打开的合并台账：key = origin+pathname -> { tabId, at } */
   private readonly recentWindowOpenTabs = new Map<string, { tabId: string; at: number }>()
@@ -255,6 +335,30 @@ export class YanhuExpressManager {
   /** 绑定主窗口（主进程启动时调用一次） */
   public setOwnerWindow(window: BrowserWindow): void {
     this.owner = window
+    // 窗口全屏态变化后重排：Windows 下 setFullScreen(true) 的尺寸过渡是异步的，
+    // 若在 enter-html-full-screen 回调内同步读取 contentBounds 可能拿到旧尺寸，需在
+    // enter/leave-full-screen 后再次重排；用户用系统快捷键退出全屏时也在此复位状态。
+    window.on('enter-full-screen', () => this.applyLayoutToActive())
+    window.on('leave-full-screen', () => {
+      this.htmlFullscreenTabId = null
+      this.applyLayoutToActive()
+    })
+    window.on('resize', () => {
+      if (this.htmlFullscreenTabId) this.applyLayoutToActive()
+    })
+  }
+
+  /** 退出 WebContents 侧 HTML5 全屏并复位主窗口全屏态 */
+  private exitHtmlFullscreen(): void {
+    if (!this.htmlFullscreenTabId) return
+    this.htmlFullscreenTabId = null
+    if (this.owner && !this.owner.isDestroyed() && this.owner.isFullScreen()) {
+      try {
+        this.owner.setFullScreen(false)
+      } catch {
+        // 窗口可能已销毁
+      }
+    }
   }
 
   /** 解析智联万站专属分区（复用特区账户，实现免密共享） */
@@ -273,8 +377,12 @@ export class YanhuExpressManager {
     if (this.sessionGuarded) return
     try {
       ses.setPermissionRequestHandler((_contents, permission, callback) => {
-        // 仅放行剪贴板（教务/办事大厅常见复制场景），其余权限一律拒绝
-        if (permission === 'clipboard-read' || permission === 'clipboard-sanitized-write') {
+        // 放行剪贴板（教务/办事大厅常见复制场景）与 HTML5 全屏（课堂教学页播放器真全屏）
+        if (
+          permission === 'clipboard-read' ||
+          permission === 'clipboard-sanitized-write' ||
+          permission === 'fullscreen'
+        ) {
           callback(true)
           return
         }
@@ -298,6 +406,16 @@ export class YanhuExpressManager {
       })
     } catch (err) {
       console.warn('[智联万站] 安装瑞数 400 自愈守卫失败:', err)
+    }
+
+    // 问渠学堂课堂教学页：网络层直接取消平铺水印图片请求（/pptnote/v1/get/course/watermark）。
+    // 该 Session 此前未使用 onBeforeRequest（诊断控制台占用的是 onResponseStarted），不存在监听器覆盖。
+    try {
+      ses.webRequest.onBeforeRequest({ urls: ['*://*.wqxt.cdut.edu.cn/*'] }, (details, callback) => {
+        callback({ cancel: isWqxtWatermarkRequestUrl(details.url) })
+      })
+    } catch (err) {
+      console.warn('[AI 问渠学堂] 安装水印拦截守卫失败:', err)
     }
 
     // 全部守卫安装流程结束后再置位：若中途抛错，标记不落地，后续调用可重试安装，避免守卫永久缺失
@@ -331,11 +449,13 @@ export class YanhuExpressManager {
     }
   }
 
-  /** 依据 webContentsId 反查标签记录（用于网络层事件定位标签） */
+  /** 依据 webContentsId 反查标签记录（用于网络层事件定位标签，跨作用域查找） */
   private findTabByWebContentsId(webContentsId: number): YanhuTabRecord | null {
-    for (const tab of this.tabs.values()) {
-      const wc = tab.view?.webContents
-      if (wc && !wc.isDestroyed() && wc.id === webContentsId) return tab
+    for (const scope of Object.values(this.scopes)) {
+      for (const tab of scope.tabs.values()) {
+        const wc = tab.view?.webContents
+        if (wc && !wc.isDestroyed() && wc.id === webContentsId) return tab
+      }
     }
     return null
   }
@@ -436,19 +556,20 @@ export class YanhuExpressManager {
   /**
    * 初始化或从落盘拓扑恢复。
    *
-   * 首次（无落盘）：创建激活的办事大厅标签。
+   * 首次（无落盘）：创建激活的默认首页标签（智联万站 → 办事大厅；问渠学堂 → 在线课程中心）。
    * 恢复：仅实例化激活标签，其余置休眠，点击时惰性唤醒。
    */
-  public initOrRestore(): YanhuTabsState {
+  public initOrRestore(input?: YanhuScopeInput): YanhuTabsState {
+    this.switchScope(input?.scope)
     if (this.initialized) return this.buildState()
     this.ensureHostView()
     this.getSession()
     this.initialized = true
 
-    const stored = yanhuTabsStore.load()
+    const stored = this.tabsStore.load()
     for (const item of stored.tabs) {
-      // 恢复时把哨兵拦截页复位为办事大厅，避免加载无效协议
-      const safeUrl = blockedTargetOf(item.url) ? YANHU_HOME_URL : item.url
+      // 恢复时把哨兵拦截页复位为当前作用域的默认首页，避免加载无效协议
+      const safeUrl = blockedTargetOf(item.url) ? this.homeUrl : item.url
       const record: YanhuTabRecord = {
         id: item.id,
         item: { ...item, url: safeUrl, isDormant: true, loading: false },
@@ -465,7 +586,7 @@ export class YanhuExpressManager {
       this.tabOrder.push(item.id)
     }
     if (this.tabOrder.length === 0) {
-      const created = this.createTabRecord(YANHU_HOME_URL, '办事大厅')
+      const created = this.createTabRecord(this.homeUrl, this.homeTitle)
       this.tabs.set(created.id, created)
       this.tabOrder.push(created.id)
     }
@@ -480,12 +601,50 @@ export class YanhuExpressManager {
     return this.buildState()
   }
 
-  /** 呈现视图（渲染端挂载子页面时调用） */
-  public showView(): YanhuTabsState {
-    if (!this.initialized) this.initOrRestore()
+  /** 读取当前激活的浏览器作用域（'yanhu-express' | 'wqxt'） */
+  public getActiveScope(): YanhuBrowserScope {
+    return this.activeScope
+  }
+
+  /** 呈现视图（渲染端挂载子页面时调用），并按需切换作用域 */
+  public showView(input?: YanhuScopeInput): YanhuTabsState {
+    this.switchScope(input?.scope)
+    if (!this.initialized) {
+      this.initOrRestore({ scope: this.activeScope })
+    } else {
+      // 二次切回时该作用域此前已被 switchScope 释放全部视图，initOrRestore 会因
+      // initialized === true 提前返回，必须在此惰性唤醒激活标签，否则网页视口全空（白屏）
+      const active = this.tabs.get(this.activeTabId)
+      if (active && !active.view && !active.blockedTarget) {
+        this.instantiateTab(active, { restoring: false })
+      }
+    }
     this.presented = true
     this.applyLayoutToActive()
+    this.emitTabs()
     return this.buildState()
+  }
+
+  /**
+   * 切换浏览器作用域。
+   *
+   * 切走前先落盘旧作用域最新拓扑，随后释放旧作用域全部底层视图（保留元数据置休眠），
+   * 确保非激活作用域不再产生事件、也不长期占用两份 WebContents。
+   * 回到旧作用域时由 showView 惰性唤醒激活标签。
+   */
+  private switchScope(scope?: YanhuBrowserScope): void {
+    if (!scope || scope === this.activeScope) return
+    // 切换作用域前退出可能残留的 HTML5 全屏
+    this.exitHtmlFullscreen()
+    // 落盘旧作用域最新 URL / 标题，避免释放视图后丢失最后状态
+    this.persist()
+    for (const tab of this.scopeState.tabs.values()) {
+      if (tab.view) this.releaseTabView(tab.id)
+    }
+    this.hideAllTabViews()
+    this.activeScope = scope
+    this.recentWindowOpenTabs.clear()
+    this.applyLayoutToActive()
   }
 
   /**
@@ -504,6 +663,7 @@ export class YanhuExpressManager {
 
   /** 隐藏视图（离开子页面时调用；保留标签与底层视图存活） */
   public hideView(): void {
+    this.exitHtmlFullscreen()
     this.presented = false
     this.applyLayoutToActive()
     this.persist()
@@ -511,7 +671,17 @@ export class YanhuExpressManager {
 
   /** 彻底销毁（登出等场景）：释放全部底层视图与宿主 */
   public dispose(): void {
-    for (const id of [...this.tabOrder]) this.disposeTabView(id)
+    this.exitHtmlFullscreen()
+    // 必须逐作用域切换后再销毁：disposeTabView 通过 this.tabs 查表，仅遍历会漏掉非激活作用域
+    for (const scope of ['yanhu-express', 'wqxt'] as const) {
+      this.activeScope = scope
+      for (const id of [...this.tabOrder]) this.disposeTabView(id)
+      this.tabs.clear()
+      this.tabOrder = []
+      this.activeTabId = ''
+      this.initialized = false
+    }
+    this.activeScope = 'yanhu-express'
     // 全部标签已销毁：清空该会话下的证书临时放行（仅内存态）
     wipeSessionGrants(CDUT_AUTH_CERT_SESSION_ID)
     if (this.hostView && this.owner && !this.owner.isDestroyed()) {
@@ -522,10 +692,6 @@ export class YanhuExpressManager {
       }
     }
     this.hostView = null
-    this.tabs.clear()
-    this.tabOrder = []
-    this.activeTabId = ''
-    this.initialized = false
     this.presented = false
     this.lastLayout = null
     this.recentWindowOpenTabs.clear()
@@ -609,15 +775,15 @@ export class YanhuExpressManager {
     // 主题媒体仿真（指纹与反反调试已由 Preload 权威注入，普通浏览保持 0 调试器介入）
     void syncThemeToWebContents(view.webContents, yanhuThemeService.resolveCurrentIsDark())
 
-    const desired = tab.item.url || YANHU_HOME_URL
+    const desired = tab.item.url || this.homeUrl
     // 一次性票据绝不再发（废票重发必然被踢回 CAS）
     const cleaned = stripOneTimeTicket(desired)
     // 票据型 SSO 应用页在恢复路径上重载必然换票、极易只剩空壳 → 回站内入口，重新走正常入口流程
-    const target = restoring && isYanhuSsoAppUrl(cleaned) ? YANHU_HOME_URL : cleaned
+    const target = restoring && isYanhuSsoAppUrl(cleaned) ? this.homeUrl : cleaned
     if (target !== desired) {
       logYanhuEvent('restore-fallback', { tabId: tab.id, from: desired, to: target })
       tab.item.url = target
-      tab.item.title = '办事大厅'
+      tab.item.title = this.homeTitle
       tab.item.isDormant = false
     }
     void this.loadWithFreshSignature(view.webContents, target)
@@ -635,6 +801,7 @@ export class YanhuExpressManager {
   private disposeTabView(tabId: string): void {
     const tab = this.tabs.get(tabId)
     if (!tab) return
+    if (this.htmlFullscreenTabId === tabId) this.exitHtmlFullscreen()
     // 授权撤销必须先于 view 判空：休眠标签同样已脱离浏览上下文，不能漏撤
     revokeTabGrants(CDUT_AUTH_CERT_SESSION_ID, tabId)
     tab.certInterstitial = null
@@ -715,6 +882,11 @@ export class YanhuExpressManager {
       return { action: 'deny' }
     })
 
+    // DOM 就绪：问渠课堂首次/整页加载后补偿净化（Preload 已在 document-start 注入，此处兜底）
+    wc.on('dom-ready', () => {
+      this.applyWqxtCleanerIfNeeded(tab)
+    })
+
     wc.on('did-start-loading', () => {
       tab.item.loading = true
       tab.item.error = null // 开始加载时重置错误状态
@@ -741,6 +913,7 @@ export class YanhuExpressManager {
       this.recomputeNavigation(tab)
       logYanhuEvent('did-navigate', { tabId: tab.id, url: tab.item.url })
       this.sanitizeOneTimeTicket(tab)
+      this.applyWqxtCleanerIfNeeded(tab)
       this.emitUrlChanged(tab)
       this.emitTabs()
       this.persist()
@@ -751,6 +924,7 @@ export class YanhuExpressManager {
       this.recomputeNavigation(tab)
       logYanhuEvent('did-navigate-in-page', { tabId: tab.id, url: tab.item.url })
       this.sanitizeOneTimeTicket(tab)
+      this.applyWqxtCleanerIfNeeded(tab)
       this.emitUrlChanged(tab)
       this.emitTabs()
     })
@@ -790,6 +964,7 @@ export class YanhuExpressManager {
     wc.on('destroyed', () => {
       // 视图被外部销毁（渲染进程崩溃等）时复位为休眠，避免脏引用
       tab.certInterstitial = null
+      if (this.htmlFullscreenTabId === tab.id) this.exitHtmlFullscreen()
       if (this.tabs.get(tab.id)?.view === view) {
         tab.view = null
         tab.item.isDormant = true
@@ -799,7 +974,54 @@ export class YanhuExpressManager {
       }
     })
 
+    // HTML5 真全屏：网页内 requestFullscreen 被 Chromium 放行后，让原生视图铺满整个
+    // 主窗口内容区，并驱动窗口进入系统全屏；退出时同步还原内缩布局。
+    wc.on('enter-html-full-screen', () => {
+      this.htmlFullscreenTabId = tab.id
+      if (this.owner && !this.owner.isDestroyed() && !this.owner.isFullScreen()) {
+        try {
+          this.owner.setFullScreen(true)
+        } catch {
+          // 窗口可能已销毁
+        }
+      }
+      this.applyLayoutToActive()
+    })
+
+    wc.on('leave-html-full-screen', () => {
+      if (this.htmlFullscreenTabId === tab.id) this.htmlFullscreenTabId = null
+      if (this.owner && !this.owner.isDestroyed() && this.owner.isFullScreen()) {
+        try {
+          this.owner.setFullScreen(false)
+        } catch {
+          // 窗口可能已销毁
+        }
+      }
+      this.applyLayoutToActive()
+    })
+
     this.recomputeNavigation(tab)
+  }
+
+  /**
+   * 问渠学堂页面净化补偿注入（幂等）。
+   *
+   * Preload 已在 document-start 注入；此处覆盖 SPA 路由切换（选择页 → 教学页）以及
+   * Preload 不可用的极端场景。脚本内部按 hostname / 路由自检，并复用已挂载的实例。
+   */
+  private applyWqxtCleanerIfNeeded(tab: YanhuTabRecord): void {
+    const wc = tab.view?.webContents
+    if (!wc || wc.isDestroyed()) return
+    let hostname: string
+    try {
+      hostname = new URL(wc.getURL()).hostname.toLowerCase()
+    } catch {
+      return
+    }
+    if (hostname !== WQXT_CLASSROOM_HOSTNAME) return
+    void wc.executeJavaScript(buildWqxtLivingRoomCleanerScript()).catch(() => {
+      // 页面尚未就绪或已销毁，忽略
+    })
   }
 
   /** 依据当前页面刷新标签的 URL / 标题 / 前进后退能力（被拦截时保持哨兵 URL） */
@@ -863,7 +1085,7 @@ export class YanhuExpressManager {
   /** 将标签切换为内置拦截页态（隐藏底层视图，交由渲染层展示 YanhuBlockedPage） */
   private blockTab(tab: YanhuTabRecord, targetUrl: string): void {
     const previous = tab.view?.webContents.getURL() || tab.item.url
-    tab.blockedPreviousUrl = previous && !isYanhuBlockedUrl(previous) ? previous : YANHU_HOME_URL
+    tab.blockedPreviousUrl = previous && !isYanhuBlockedUrl(previous) ? previous : this.homeUrl
     tab.blockedTarget = targetUrl
     tab.item.url = buildYanhuBlockedUrl(targetUrl)
     tab.item.title = '无法访问该网站'
@@ -884,7 +1106,7 @@ export class YanhuExpressManager {
   public returnFromBlocked(tabId?: string): YanhuTabsState {
     const tab = this.resolveTab(tabId)
     if (!tab || !tab.blockedTarget) return this.buildState()
-    const restoreUrl = tab.blockedPreviousUrl || YANHU_HOME_URL
+    const restoreUrl = tab.blockedPreviousUrl || this.homeUrl
     tab.blockedTarget = null
     tab.blockedPreviousUrl = null
     tab.item.url = restoreUrl
@@ -970,7 +1192,7 @@ export class YanhuExpressManager {
   /**
    * 处理证书插页按钮哨兵回投（will-navigate / will-redirect / setWindowOpenHandler 三通道拦截）。
    * allow：登记标签页级内存态临时放行并重新加载真实目标；
-   * back：显式加载 returnUrl（无则办事大厅首页），不走 goBack 以免回到被阻断条目形成插页循环。
+   * back：显式加载 returnUrl（无则当前作用域默认首页），不走 goBack 以免回到被阻断条目形成插页循环。
    */
   private handleCertInterstitialSentinel(tab: YanhuTabRecord, action: 'allow' | 'back'): void {
     const state = tab.certInterstitial
@@ -981,7 +1203,7 @@ export class YanhuExpressManager {
     const wc = tab.view?.webContents
     if (!wc || wc.isDestroyed()) return
 
-    const nextUrl = action === 'allow' ? state.targetUrl : (state.returnUrl ?? YANHU_HOME_URL)
+    const nextUrl = action === 'allow' ? state.targetUrl : (state.returnUrl ?? this.homeUrl)
     if (action === 'allow') {
       allowDomainTemporarily(CDUT_AUTH_CERT_SESSION_ID, tab.id, state.hostname)
     }
@@ -1008,12 +1230,12 @@ export class YanhuExpressManager {
 
   public createTab(input: YanhuCreateTabInput = {}): YanhuTabsState {
     if (!this.initialized) this.initOrRestore()
-    const rawUrl = input.url && input.url.trim() ? input.url.trim() : YANHU_HOME_URL
+    const rawUrl = input.url && input.url.trim() ? input.url.trim() : this.homeUrl
     // 与 navigate 保持同一入口语义：裸域名自动补全 https，无法规范化的输入转拦截页
     const decision = yanhuDomainGatekeeper.resolveAddressInput(rawUrl) ?? { allowed: false, url: rawUrl }
     const targetUrl = decision.url
 
-    const record = this.createTabRecord(YANHU_HOME_URL, '新标签页')
+    const record = this.createTabRecord(this.homeUrl, '新标签页')
     this.tabs.set(record.id, record)
     this.tabOrder.push(record.id)
     logYanhuEvent('tab-create', { tabId: record.id, url: targetUrl, activate: input.activate !== false })
@@ -1021,7 +1243,7 @@ export class YanhuExpressManager {
     if (!decision.allowed) {
       // 非网页协议新建：直接呈现拦截卡片
       record.blockedTarget = targetUrl
-      record.blockedPreviousUrl = this.tabs.get(this.activeTabId)?.item.url ?? YANHU_HOME_URL
+      record.blockedPreviousUrl = this.tabs.get(this.activeTabId)?.item.url ?? this.homeUrl
       record.item.url = buildYanhuBlockedUrl(targetUrl)
       record.item.title = '无法访问该网站'
       record.item.isDormant = false
@@ -1104,8 +1326,8 @@ export class YanhuExpressManager {
 
     if (this.activeTabId === tabId) {
       if (this.tabOrder.length === 0) {
-        // 关闭最后一个标签 → 重置为办事大厅首页
-        const fresh = this.createTabRecord(YANHU_HOME_URL, '办事大厅')
+        // 关闭最后一个标签 → 重置为当前作用域默认首页
+        const fresh = this.createTabRecord(this.homeUrl, this.homeTitle)
         this.tabs.set(fresh.id, fresh)
         this.tabOrder.push(fresh.id)
         this.activeTabId = fresh.id
@@ -1330,7 +1552,7 @@ export class YanhuExpressManager {
       tab.view && !tab.view.webContents.isDestroyed() ? tab.view.webContents.getURL() : ''
     // chrome-error:// 是失败页自身地址，不可作为重载目标
     const source = liveUrl && !liveUrl.startsWith('chrome-error://') ? liveUrl : tab.item.url
-    const cleanUrl = stripOneTimeTicket(source || YANHU_HOME_URL)
+    const cleanUrl = stripOneTimeTicket(source || this.homeUrl)
     tab.item.url = cleanUrl
     tab.item.loading = true
     if (!tab.view) {
@@ -1450,6 +1672,16 @@ export class YanhuExpressManager {
     }
 
     const active = this.tabs.get(this.activeTabId)
+    // HTML5 全屏期间铺满主窗口内容区：以 owner.getContentBounds() 为准，避免渲染层
+    // 尚未响应窗口全屏时沿用旧的内缩矩形导致侧边栏/标题栏露出。
+    const contentBounds =
+      active && this.htmlFullscreenTabId === active.id ? owner.getContentBounds() : null
+    const targetHostBounds = contentBounds
+      ? { x: 0, y: 0, width: contentBounds.width, height: contentBounds.height }
+      : hostBounds
+    const targetPageBounds = contentBounds
+      ? { x: 0, y: 0, width: contentBounds.width, height: contentBounds.height }
+      : { x: 0, y: 0, width: page.width, height: page.height }
     const usable =
       viewport.width > MIN_USABLE_BOUNDS &&
       viewport.height > MIN_USABLE_BOUNDS &&
@@ -1464,7 +1696,19 @@ export class YanhuExpressManager {
       !active.blockedTarget &&
       !active.item.error
 
-    if (visible) host.setBounds(hostBounds)
+    if (visible) host.setBounds(targetHostBounds)
+
+    // 防御性隐藏非激活作用域的残留视图（正常情况下 switchScope 已释放）
+    for (const [scopeName, scope] of Object.entries(this.scopes)) {
+      if (scopeName === this.activeScope) continue
+      for (const tab of scope.tabs.values()) {
+        try {
+          tab.view?.setVisible(false)
+        } catch {
+          // 视图可能已销毁
+        }
+      }
+    }
 
     for (const tab of this.tabs.values()) {
       if (!tab.view) continue
@@ -1472,7 +1716,7 @@ export class YanhuExpressManager {
       try {
         if (tab.view.getVisible() !== shouldShow) tab.view.setVisible(shouldShow)
         if (shouldShow) {
-          tab.view.setBounds({ x: 0, y: 0, width: page.width, height: page.height })
+          tab.view.setBounds(targetPageBounds)
         }
       } catch {
         // 视图可能已销毁
@@ -1571,7 +1815,7 @@ export class YanhuExpressManager {
     this.send(YANHU_EXPRESS_IPC_CHANNELS.ON_TABS_CHANGED, this.buildState())
   }
 
-  /** 持久化拓扑（哨兵拦截 URL 复位为办事大厅，避免落盘无效协议） */
+  /** 持久化拓扑（哨兵拦截 URL 复位为当前作用域默认首页，避免落盘无效协议） */
   private persist(): void {
     // 未完成初始化或拓扑为空时绝不落盘，避免竞态把用户已保存的标签清空
     if (!this.initialized || this.tabOrder.length === 0) return
@@ -1580,10 +1824,10 @@ export class YanhuExpressManager {
       activeTabId: state.activeTabId,
       tabs: state.tabs.map((tab) => ({
         ...tab,
-        url: blockedTargetOf(tab.url) ? YANHU_HOME_URL : tab.url,
+        url: blockedTargetOf(tab.url) ? this.homeUrl : tab.url,
       })),
     }
-    yanhuTabsStore.save(sanitized)
+    this.tabsStore.save(sanitized)
   }
 
   // ===== CDP 静默能力（为二期 AI 预留，按需附着） =====

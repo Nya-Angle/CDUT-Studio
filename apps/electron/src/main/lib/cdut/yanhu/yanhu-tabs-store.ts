@@ -11,7 +11,13 @@
 import { existsSync, mkdirSync } from 'node:fs'
 import { dirname } from 'node:path'
 import type { YanhuTabItem, YanhuTabsState } from '@profer/shared'
-import { YANHU_HOME_URL, YANHU_TABS_STORE_VERSION, getYanhuTabsPath } from './yanhu-constants'
+import {
+  WQXT_HOME_URL,
+  YANHU_HOME_URL,
+  YANHU_TABS_STORE_VERSION,
+  getWqxtTabsPath,
+  getYanhuTabsPath,
+} from './yanhu-constants'
 import { readJsonFileSafe, writeJsonFileAtomic } from '../../safe-file'
 
 /** 落盘结构契约（与规格书 4.3.1 一致） */
@@ -50,9 +56,12 @@ export function createYanhuTab(url: string = YANHU_HOME_URL, title = '新标签�
   }
 }
 
-/** 默认拓扑：单个办事大厅标签并激活 */
-export function createDefaultTabsState(): YanhuTabsState {
-  const tab = createYanhuTab(YANHU_HOME_URL, '办事大厅')
+/** 默认拓扑：单个指定首页标签并激活（默认办事大厅） */
+export function createDefaultTabsState(
+  defaultUrl: string = YANHU_HOME_URL,
+  defaultTitle = '办事大厅',
+): YanhuTabsState {
+  const tab = createYanhuTab(defaultUrl, defaultTitle)
   return { tabs: [tab], activeTabId: tab.id }
 }
 
@@ -93,13 +102,17 @@ function normalizeStoredTab(tab: YanhuTabItem): YanhuTabItem {
  * 任意一层损坏（非对象 / tabs 非数组 / 全部标签非法）都回退到默认首页，
  * 且确保 activeTabId 一定指向存在的标签。
  */
-export function normalizeStoredTabsState(raw: unknown): YanhuTabsState {
-  if (!raw || typeof raw !== 'object') return createDefaultTabsState()
+export function normalizeStoredTabsState(
+  raw: unknown,
+  defaultUrl: string = YANHU_HOME_URL,
+  defaultTitle = '办事大厅',
+): YanhuTabsState {
+  if (!raw || typeof raw !== 'object') return createDefaultTabsState(defaultUrl, defaultTitle)
   const candidate = raw as Partial<StoredYanhuTabs>
-  if (!Array.isArray(candidate.tabs)) return createDefaultTabsState()
+  if (!Array.isArray(candidate.tabs)) return createDefaultTabsState(defaultUrl, defaultTitle)
 
   const tabs = candidate.tabs.filter(isValidStoredTab).map(normalizeStoredTab)
-  if (tabs.length === 0) return createDefaultTabsState()
+  if (tabs.length === 0) return createDefaultTabsState(defaultUrl, defaultTitle)
 
   const firstTab = tabs[0]
   const fallbackActiveId = firstTab ? firstTab.id : ''
@@ -118,20 +131,30 @@ export function normalizeStoredTabsState(raw: unknown): YanhuTabsState {
  */
 export class YanhuTabsStore {
   private readonly filePath: string
+  /** 缺省/损坏时的兜底首页地址 */
+  private readonly homeUrl: string
+  /** 缺省/损坏时的兜底首页标题 */
+  private readonly homeTitle: string
 
-  constructor(filePath: string = getYanhuTabsPath()) {
+  constructor(
+    filePath: string = getYanhuTabsPath(),
+    homeUrl: string = YANHU_HOME_URL,
+    homeTitle = '办事大厅',
+  ) {
     this.filePath = filePath
+    this.homeUrl = homeUrl
+    this.homeTitle = homeTitle
   }
 
   /** 读取并归一化落盘拓扑；文件缺失或损坏时返回默认首页拓扑 */
   public load(): YanhuTabsState {
     try {
-      if (!existsSync(this.filePath)) return createDefaultTabsState()
+      if (!existsSync(this.filePath)) return createDefaultTabsState(this.homeUrl, this.homeTitle)
       const raw = readJsonFileSafe<StoredYanhuTabs>(this.filePath)
-      return normalizeStoredTabsState(raw)
+      return normalizeStoredTabsState(raw, this.homeUrl, this.homeTitle)
     } catch (err) {
       console.warn('[智联万站] 读取标签拓扑失败，回退默认首页:', err)
-      return createDefaultTabsState()
+      return createDefaultTabsState(this.homeUrl, this.homeTitle)
     }
   }
 
@@ -168,3 +191,6 @@ export class YanhuTabsStore {
 
 /** 全局单例（默认路径） */
 export const yanhuTabsStore = new YanhuTabsStore()
+
+/** AI 问渠学堂专属拓扑存储实例（独立落盘文件，默认/保底为在线课程中心） */
+export const wqxtTabsStore = new YanhuTabsStore(getWqxtTabsPath(), WQXT_HOME_URL, 'AI 问渠学堂')

@@ -13,7 +13,7 @@ import type { PresetReference, PresetReferenceReport, PresetScopeRebindResult, L
 import type { EmpiricalMetric, Hierarchical3DGraphData } from '@profer/shared'
 import { CDUT_AI_CLASS_IPC_CHANNELS, CDUT_ZONE_IPC_CHANNELS, STUDY_IPC_CHANNELS, type AiClassSessionSummary, type CdutAccountProfile, type CdutDomainCacheName, type CdutDomainToolResult, type CdutGatekeeperDecision, type CdutGatekeeperNoticeEvent, type CdutLoginInput, type CdutLoginResult, type CdutSavedAccountSummary, type CdutMutationConfirmRequest, type CdutMutationConfirmResult, type CdutToolInvokeParams, type KnowledgeGraphData, type StudyDocumentOutline, type StudyDocumentQueryInput, type StudyGraphCostEstimate, type StudyGraphGenerateInput, type StudyGraphProgressEvent, type StudyIngestDocumentsInput, type StudySearchKnowledgeInput, type StudySearchKnowledgeResult, type StudySetDocumentsActiveInput, type StudyToggleDocumentActiveInput } from '@profer/shared'
 import { LONGTERM_MEMORY_IPC_CHANNELS, type LongTermMemoryGraph, type LongTermMemoryHit, type LongTermMemoryNode, type LongTermMemoryNodeInput } from '@profer/shared'
-import { YANHU_EXPRESS_IPC_CHANNELS, type YanhuCloseRightInput, type YanhuCreateTabInput, type YanhuLoadingChangedEvent, type YanhuNavigateInput, type YanhuReorderTabsInput, type YanhuSyncThemeInput, type YanhuTabRefInput, type YanhuTabsState, type YanhuUrlChangedEvent, type YanhuViewLayout, type YanhuPetBootstrap, type YanhuPetChatInput, type YanhuPetChatStatus, type YanhuPetConfig, type YanhuPetMessage, type YanhuPetStateEvent, type YanhuPetStreamEvent, type YanhuPetTourFillEvent, type YanhuPetViewport, type YanhuPetWindowGeometry } from '@profer/shared'
+import { YANHU_EXPRESS_IPC_CHANNELS, type YanhuCloseRightInput, type YanhuCreateTabInput, type YanhuLoadingChangedEvent, type YanhuNavigateInput, type YanhuReorderTabsInput, type YanhuScopeInput, type YanhuSyncThemeInput, type YanhuTabRefInput, type YanhuTabsState, type YanhuUrlChangedEvent, type YanhuViewLayout, type YanhuPetBootstrap, type YanhuPetChatInput, type YanhuPetChatStatus, type YanhuPetConfig, type YanhuPetMessage, type YanhuPetStateEvent, type YanhuPetStreamEvent, type YanhuPetTourFillEvent, type YanhuPetViewport, type YanhuPetWindowGeometry } from '@profer/shared'
 import {
   CSLAB_IPC_CHANNELS,
   type CsLabAuthStatus,
@@ -2062,11 +2062,11 @@ export interface ElectronAPI {
 
   // ===== CDUT 专区 · 智联万站（Yanhu Express）内置浏览器 =====
   yanhuExpress: {
-    /** 初始化或从落盘拓扑恢复（仅实例化激活标签，其余休眠） */
-    initOrRestore: () => Promise<YanhuTabsState>
+    /** 初始化或从落盘拓扑恢复（仅实例化激活标签，其余休眠；scope 缺省保持当前作用域） */
+    initOrRestore: (input?: YanhuScopeInput) => Promise<YanhuTabsState>
     getTabsState: () => Promise<YanhuTabsState>
-    /** 呈现原生视图（挂载子页面时调用） */
-    showView: () => Promise<YanhuTabsState>
+    /** 呈现原生视图（挂载子页面时调用），并按需切换浏览器作用域 */
+    showView: (input?: YanhuScopeInput) => Promise<YanhuTabsState>
     /** 隐藏原生视图（离开子页面时调用，保留标签存活） */
     hideView: () => Promise<{ success: boolean }>
     /** 上报 renderer 测得的视图布局（CSS 像素，主进程换算为原生边界） */
@@ -4665,9 +4665,11 @@ const electronAPI: ElectronAPI = {
 
   // ===== CDUT 专区 · 智联万站（Yanhu Express）内置浏览器 =====
   yanhuExpress: {
-    initOrRestore: () => ipcRenderer.invoke(YANHU_EXPRESS_IPC_CHANNELS.INIT_OR_RESTORE),
+    initOrRestore: (input?: YanhuScopeInput) =>
+      ipcRenderer.invoke(YANHU_EXPRESS_IPC_CHANNELS.INIT_OR_RESTORE, input),
     getTabsState: () => ipcRenderer.invoke(YANHU_EXPRESS_IPC_CHANNELS.GET_TABS_STATE),
-    showView: () => ipcRenderer.invoke(YANHU_EXPRESS_IPC_CHANNELS.SHOW_VIEW),
+    showView: (input?: YanhuScopeInput) =>
+      ipcRenderer.invoke(YANHU_EXPRESS_IPC_CHANNELS.SHOW_VIEW, input),
     hideView: () => ipcRenderer.invoke(YANHU_EXPRESS_IPC_CHANNELS.HIDE_VIEW),
     updateBounds: (layout: YanhuViewLayout) =>
       ipcRenderer.invoke(YANHU_EXPRESS_IPC_CHANNELS.UPDATE_BOUNDS, layout),

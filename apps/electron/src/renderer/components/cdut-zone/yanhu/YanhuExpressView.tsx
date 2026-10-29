@@ -1,8 +1,9 @@
 /**
- * YanhuExpressView —— 智联万站主容器
+ * YanhuExpressView —— 智联万站 / AI 问渠学堂主容器
  *
  * 结构：YanhuTabStrip（多标签栏） + YanhuNavBar（导航栏） + 原生网页视口宿主。
  * 职责：
+ *   - 支持 scope 隔离（'yanhu-express' | 'wqxt'，两套独立标签拓扑）与隐藏地址栏模式；
  *   - 挂载时初始化/恢复标签拓扑，订阅主进程广播；
  *   - 测量视口几何并通过 IPC 上报，驱动主进程原生 WebContentsView 精准对齐；
  *   - 主题变更时通知主进程同步底色与网页媒体特征；
@@ -16,7 +17,9 @@ import * as React from 'react'
 import { useAtom, useAtomValue } from 'jotai'
 import {
   parseYanhuBlockedTarget,
+  WQXT_DEFAULT_HOME_URL,
   YANHU_DEFAULT_HOME_URL,
+  type YanhuBrowserScope,
   type YanhuLoadingChangedEvent,
   type YanhuTabsState,
   type YanhuUrlChangedEvent,
@@ -49,7 +52,17 @@ function nextLayoutRevision(): number {
 
 const ZERO_BOUNDS = { x: 0, y: 0, width: 0, height: 0 }
 
-export function YanhuExpressView(): React.ReactElement {
+interface YanhuExpressViewProps {
+  /** 浏览器作用域：两套标签拓扑互相隔离（默认智联万站） */
+  scope?: YanhuBrowserScope
+  /** 隐藏地址栏（地址输入框与书签胶囊），保留标签栏与导航按钮 */
+  hideAddressBar?: boolean
+}
+
+export function YanhuExpressView({
+  scope = 'yanhu-express',
+  hideAddressBar = false,
+}: YanhuExpressViewProps = {}): React.ReactElement {
   const [tabsState, setTabsState] = useAtom(yanhuTabsAtom)
   const [loadingMap, setLoadingMap] = useAtom(yanhuLoadingAtom)
   const activeTab = useAtomValue(yanhuActiveTabAtom)
@@ -103,10 +116,10 @@ export function YanhuExpressView(): React.ReactElement {
     })
 
     void api
-      .initOrRestore()
+      .initOrRestore({ scope })
       .then((state) => {
         if (alive) setTabsState(state)
-        return api.showView()
+        return api.showView({ scope })
       })
       .then((state) => {
         if (alive && state) setTabsState(state)
@@ -122,7 +135,7 @@ export function YanhuExpressView(): React.ReactElement {
       unsubUrl()
       void api.hideView().catch(() => {})
     }
-  }, [api, setTabsState, setLoadingMap])
+  }, [api, scope, setTabsState, setLoadingMap])
 
   // ===== 主题跟随（外壳由 Tailwind 语义类响应；底层视图/媒体特征由主进程同步） =====
   React.useEffect(() => {
@@ -176,7 +189,8 @@ export function YanhuExpressView(): React.ReactElement {
         }
         // 仅在本窗口实际可见时上报桌宠视口：不可见时上报会被主进程视作「几何有效」，
         // 与隐藏指令冲突（桌宠显隐必须与客户端主窗口 / 浏览器视图状态保持一致）。
-        if (visible) {
+        // 桌宠「砚小龙」仅对智联万站开放：问渠学堂（scope = 'wqxt'）源头不上报视口。
+        if (visible && scope === 'yanhu-express') {
           void api.petSyncViewport(petViewport).catch(() => {})
         }
         const key = [
@@ -252,7 +266,7 @@ export function YanhuExpressView(): React.ReactElement {
         })
         .catch(() => {})
     }
-  }, [api])
+  }, [api, scope])
 
   // 拦截态 / 故障态 / 激活标签 / 全局模态叠加态变化 → 重新校准可见性
   // （模态打开时原生视图立即隐去、关闭时立即原位恢复，均无重载、不丢页面状态）
@@ -304,6 +318,7 @@ export function YanhuExpressView(): React.ReactElement {
         canGoForward={!!activeTab?.canGoForward}
         loading={!!(activeTab && (loadingMap[activeTab.id] || activeTab.loading))}
         blocked={!!blockedTarget}
+        hideAddressBar={hideAddressBar}
         onBack={() => run(() => api.goBack())}
         onForward={() => run(() => api.goForward())}
         onReload={() => run(() => api.reload())}
@@ -324,7 +339,13 @@ export function YanhuExpressView(): React.ReactElement {
           <YanhuBlockedPage
             targetUrl={blockedTarget}
             onBack={() => run(() => api.goBack())}
-            onGoHome={() => run(() => api.navigate({ url: YANHU_DEFAULT_HOME_URL }))}
+            onGoHome={() =>
+              run(() =>
+                api.navigate({
+                  url: scope === 'wqxt' ? WQXT_DEFAULT_HOME_URL : YANHU_DEFAULT_HOME_URL,
+                }),
+              )
+            }
             onOpenExternal={openExternal}
           />
         ) : activeError ? (

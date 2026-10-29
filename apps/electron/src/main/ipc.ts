@@ -127,7 +127,7 @@ import type {
   BrowserAddBookmarkInput,
 } from '@profer/shared'
 import { KNOWLEDGE_IPC_CHANNELS, isReviewOwnedAgentSession } from '@profer/shared'
-import { CDUT_AI_CLASS_IPC_CHANNELS, CDUT_ZONE_IPC_CHANNELS, STUDY_IPC_CHANNELS, YANHU_EXPRESS_IPC_CHANNELS, type CdutDomainCacheName, type CdutDomainToolResult, type CdutGatekeeperDecision, type CdutLoginInput, type CdutMutationConfirmResult, type CdutToolInvokeParams, type StudyDocumentQueryInput, type StudyGraphGenerateInput, type StudyIngestDocumentsInput, type StudySearchKnowledgeInput, type StudySetDocumentsActiveInput, type StudyToggleDocumentActiveInput, type YanhuCdpInput, type YanhuCdpResult, type YanhuCloseRightInput, type YanhuCreateTabInput, type YanhuNavigateInput, type YanhuReorderTabsInput, type YanhuSyncThemeInput, type YanhuTabRefInput, type YanhuViewLayout } from '@profer/shared'
+import { CDUT_AI_CLASS_IPC_CHANNELS, CDUT_ZONE_IPC_CHANNELS, STUDY_IPC_CHANNELS, YANHU_EXPRESS_IPC_CHANNELS, type CdutDomainCacheName, type CdutDomainToolResult, type CdutGatekeeperDecision, type CdutLoginInput, type CdutMutationConfirmResult, type CdutToolInvokeParams, type StudyDocumentQueryInput, type StudyGraphGenerateInput, type StudyIngestDocumentsInput, type StudySearchKnowledgeInput, type StudySetDocumentsActiveInput, type StudyToggleDocumentActiveInput, type YanhuCdpInput, type YanhuCdpResult, type YanhuCloseRightInput, type YanhuCreateTabInput, type YanhuNavigateInput, type YanhuReorderTabsInput, type YanhuScopeInput, type YanhuSyncThemeInput, type YanhuTabRefInput, type YanhuViewLayout } from '@profer/shared'
 import type { UserProfile, AppSettings } from '../types'
 import { getRuntimeStatus, getGitRepoStatus, reinitializeRuntime } from './lib/runtime-init'
 import { browserController } from './lib/browser-controller'
@@ -6335,12 +6335,15 @@ export function registerIpcHandlers(): void {
 
   // ===== CDUT 专区 · 智联万站（Yanhu Express）轻量级定制浏览器 =====
   // 前端 100% 纯净：仅暴露浏览器外壳所需通道；底层 CDP 能力静默预留、不提供任何调试 UI 入口。
-  ipcMain.handle(YANHU_EXPRESS_IPC_CHANNELS.INIT_OR_RESTORE, () => yanhuExpressManager.initOrRestore())
+  ipcMain.handle(YANHU_EXPRESS_IPC_CHANNELS.INIT_OR_RESTORE, (_event, input?: YanhuScopeInput) =>
+    yanhuExpressManager.initOrRestore(input),
+  )
   ipcMain.handle(YANHU_EXPRESS_IPC_CHANNELS.GET_TABS_STATE, () => yanhuExpressManager.getTabsState())
-  ipcMain.handle(YANHU_EXPRESS_IPC_CHANNELS.SHOW_VIEW, () => {
-    const state = yanhuExpressManager.showView()
-    // 呈现智联万站时同步唤起桌宠子窗口（紧凑包裹，随同主窗口生命周期）
-    yanhuPetWindowManager.setPresented(true)
+  ipcMain.handle(YANHU_EXPRESS_IPC_CHANNELS.SHOW_VIEW, (_event, input?: YanhuScopeInput) => {
+    const state = yanhuExpressManager.showView(input)
+    // 桌宠「砚小龙」仅对智联万站开放，AI 问渠学堂强制收起
+    const allowPet = yanhuExpressManager.getActiveScope() === 'yanhu-express'
+    yanhuPetWindowManager.setPresented(allowPet)
     return state
   })
   ipcMain.handle(YANHU_EXPRESS_IPC_CHANNELS.HIDE_VIEW, () => {
@@ -6351,6 +6354,11 @@ export function registerIpcHandlers(): void {
   })
   ipcMain.handle(YANHU_EXPRESS_IPC_CHANNELS.UPDATE_BOUNDS, (_event, layout: YanhuViewLayout) => {
     yanhuExpressManager.updateBounds(layout)
+    // 桌宠「砚小龙」仅对智联万站开放，AI 问渠学堂下不呈现、不同步（含引导保活场景）
+    if (yanhuExpressManager.getActiveScope() !== 'yanhu-express') {
+      yanhuPetWindowManager.setPresented(false)
+      return { success: true }
+    }
     if (layout && layout.visible && layout.viewportBounds && layout.pageBounds) {
       yanhuPetWindowManager.setPresented(true)
       yanhuPetWindowManager.syncViewport({
@@ -6443,6 +6451,8 @@ export function registerIpcHandlers(): void {
     // 仅同步几何：呈现态由 SHOW_VIEW / HIDE_VIEW / UPDATE_BOUNDS(visible) 单一来源驱动。
     // 此前在此处 setPresented(true) 会让渲染层每帧上报视口都把桌宠重新置为呈现，
     // 与隐藏指令互相打架，造成桌宠在拦截页/错误页 show/hide 抖动。
+    // 桌宠「砚小龙」仅对智联万站开放，AI 问渠学堂丢弃视口上报。
+    if (yanhuExpressManager.getActiveScope() !== 'yanhu-express') return { success: true }
     if (rect) yanhuPetWindowManager.syncViewport(rect)
     return { success: true }
   })

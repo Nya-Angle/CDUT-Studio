@@ -265,8 +265,8 @@ export interface CdutMutationConfirmResult {
 
 // ===== Tool 9：CDUT 逆向反代大模型接入 =====
 
-/** CDUT 专区三大板块子页面标识；null 表示停留在专区首页 */
-export type CdutSubViewId = 'ai-class' | 'yanhu-express' | 'material-review' | null
+/** CDUT 专区板块子页面标识；null 表示停留在专区首页 */
+export type CdutSubViewId = 'ai-class' | 'yanhu-express' | 'material-review' | 'wqxt' | null
 
 /** Tool 9：CDUT 逆向反代大模型调用入参（提问内容由发起 AI 自行构造） */
 export interface CdutReverseProxyParams {
@@ -377,6 +377,83 @@ export interface StudySearchKnowledgeResult {
  * 智联万站默认入口：砚湖易办（校内办事大厅升级版，未指定工作区时冷启动直达）。
  */
 export const YANHU_DEFAULT_HOME_URL = 'https://bsdt.cdut.edu.cn/EIP/onewebsitehande/toPersonalCenterPage.htm'
+
+/**
+ * AI 问渠学堂默认入口：成都理工大学在线课程中心（未指定工作区时冷启动直达）。
+ */
+export const WQXT_DEFAULT_HOME_URL = 'https://classroom.wqxt.cdut.edu.cn/'
+
+/** AI 问渠学堂课堂域名（课堂教学页 / 课堂选择页共用） */
+export const WQXT_CLASSROOM_HOSTNAME = 'classroom.wqxt.cdut.edu.cn'
+
+/** AI 问渠学堂页面业务类型：课堂教学页 / 课堂选择页 / 其他页面 */
+export type WqxtPageType = 'livingroom' | 'selection' | 'other'
+
+/** 解析问渠课堂 URL；非该域名或非法 URL 返回 null */
+function parseWqxtClassroomUrl(rawUrl: string): URL | null {
+  if (!rawUrl || typeof rawUrl !== 'string') return null
+  try {
+    const parsed = new URL(rawUrl)
+    return parsed.hostname.toLowerCase() === WQXT_CLASSROOM_HOSTNAME ? parsed : null
+  } catch {
+    return null
+  }
+}
+
+/** 取查询串：优先 search，hash 路由携带的查询参数兜底 */
+function resolveWqxtQuery(parsed: URL): string {
+  if (parsed.search) return parsed.search
+  const queryIndex = parsed.hash.indexOf('?')
+  return queryIndex === -1 ? '' : parsed.hash.slice(queryIndex)
+}
+
+/**
+ * 判定 URL 是否为问渠学堂「课堂教学页面」。
+ *
+ * 匹配形如：
+ * - `https://classroom.wqxt.cdut.edu.cn/livingroom?course_id=123_id=456`
+ * - `https://classroom.wqxt.cdut.edu.cn/livingroom?course_id=123&sub_id=456&...`
+ * - `https://classroom.wqxt.cdut.edu.cn/#/livingroom?course_id=123`（hash 路由）
+ */
+export function isWqxtLivingRoomUrl(rawUrl: string): boolean {
+  const parsed = parseWqxtClassroomUrl(rawUrl)
+  if (!parsed) return false
+  const normalizedPath = parsed.pathname.replace(/\/+$/, '')
+  const isLivingRoomPath =
+    normalizedPath === '/livingroom' || /^#\/?livingroom(?:[/?]|$)/i.test(parsed.hash)
+  if (!isLivingRoomPath) return false
+  return /[?&]course_id=\d+/i.test(resolveWqxtQuery(parsed))
+}
+
+/**
+ * 判定 URL 是否为问渠学堂「课堂选择页面」（`https://classroom.wqxt.cdut.edu.cn` 根页面）。
+ */
+export function isWqxtSelectionUrl(rawUrl: string): boolean {
+  const parsed = parseWqxtClassroomUrl(rawUrl)
+  if (!parsed) return false
+  if (isWqxtLivingRoomUrl(rawUrl)) return false
+  const normalizedPath = parsed.pathname.replace(/\/+$/, '')
+  if (normalizedPath !== '' && normalizedPath !== '/index.html') return false
+  const normalizedHash = parsed.hash.replace(/^#\/?/, '').replace(/\/+$/, '')
+  return normalizedHash === '' || normalizedHash.toLowerCase() === 'index'
+}
+
+/** 解析问渠学堂当前页面业务类型 */
+export function resolveWqxtPageType(rawUrl: string): WqxtPageType {
+  if (isWqxtLivingRoomUrl(rawUrl)) return 'livingroom'
+  if (isWqxtSelectionUrl(rawUrl)) return 'selection'
+  return 'other'
+}
+
+/**
+ * 内置浏览器作用域：两套互相隔离的标签拓扑与落盘文件，共享同一 CDUT 认证分区。
+ */
+export type YanhuBrowserScope = 'yanhu-express' | 'wqxt'
+
+/** 作用域入参（IPC 与渲染层共用；缺省表示保持当前激活作用域） */
+export interface YanhuScopeInput {
+  scope?: YanhuBrowserScope
+}
 
 /**
  * 智联万站高频校内书签（导航栏快捷胶囊，顺序即展示顺序）。

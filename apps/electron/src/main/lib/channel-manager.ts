@@ -42,9 +42,6 @@ import {
 import pkg from '../../../package.json' with { type: 'json' }
 import {
   EVAL_PRESET_CHANNEL_ID,
-  EVAL_PRESET_MODEL_ID,
-  EVAL_PRESET_API_KEY,
-  createEvalPresetChannel,
   isEvalPresetActive,
 } from './eval-preset'
 
@@ -134,62 +131,44 @@ export function mergeServerChannelModels(
   })
 }
 
+/** 历史遗留的空壳渠道 ID：无用户配置价值，读取时静默清理 */
+const LEGACY_SHELL_CHANNEL_IDS = new Set(['eval-huawei-zhichuangbei'])
+
+/**
+ * 清理历史遗留的空壳渠道
+ *
+ * - `eval-huawei-zhichuangbei` 一律删除（早于 DeepSeek 预设的废弃占位）；
+ * - `eval-deepseek-official` 仅在 API Key 为空时删除（从未配置过的空壳），
+ *   避免误删用户真实配置过的 Key。
+ *
+ * 返回是否发生了删除，用于触发写盘。
+ */
+function cleanupLegacyShellChannels(config: ChannelsConfig): boolean {
+  if (isEvalPresetActive()) return false
+  let changed = false
+  for (let i = config.channels.length - 1; i >= 0; i--) {
+    const channel = config.channels[i]
+    if (!channel) continue
+    const isEmptyEvalPreset =
+      channel.id === EVAL_PRESET_CHANNEL_ID && (channel.apiKey ?? '') === ''
+    if (LEGACY_SHELL_CHANNEL_IDS.has(channel.id) || isEmptyEvalPreset) {
+      config.channels.splice(i, 1)
+      changed = true
+    }
+  }
+  return changed
+}
+
 /**
  * 读取渠道配置文件
  */
-function ensureEvalPresetChannel(config: ChannelsConfig): boolean {
-  if (!isEvalPresetActive()) return false
-  const preset = createEvalPresetChannel()
-  const oldIndex = config.channels.findIndex((c) => c.id === 'eval-huawei-zhichuangbei')
-  if (oldIndex !== -1) {
-    config.channels.splice(oldIndex, 1)
-  }
-  const existingIndex = config.channels.findIndex((c) => c.id === preset.id)
-  if (existingIndex === -1) {
-    config.channels.unshift(preset)
-    return true
-  }
-  const existing = config.channels[existingIndex]
-  if (!existing) return false
-  let modified = false
-  if (existing.name !== preset.name) {
-    existing.name = preset.name
-    modified = true
-  }
-  if (existing.provider !== preset.provider) {
-    existing.provider = preset.provider
-    modified = true
-  }
-  if (existing.baseUrl !== preset.baseUrl) {
-    existing.baseUrl = preset.baseUrl
-    modified = true
-  }
-  if (existing.agentBaseUrl !== preset.agentBaseUrl) {
-    existing.agentBaseUrl = preset.agentBaseUrl
-    modified = true
-  }
-  if (existing.apiKey !== preset.apiKey) {
-    existing.apiKey = preset.apiKey
-    modified = true
-  }
-  if (!existing.enabled) {
-    existing.enabled = true
-    modified = true
-  }
-  if (!existing.models.some((m) => m.id === EVAL_PRESET_MODEL_ID && m.enabled)) {
-    existing.models = preset.models
-    modified = true
-  }
-  return modified || oldIndex !== -1
-}
-
 function readConfig(): ChannelsConfig {
   const configPath = getChannelsPath()
 
   if (!existsSync(configPath)) {
     const initialConfig: ChannelsConfig = {
       version: CONFIG_VERSION,
-      channels: isEvalPresetActive() ? [createEvalPresetChannel()] : [],
+      channels: [],
     }
     try {
       writeFileSync(configPath, JSON.stringify(initialConfig, null, 2), 'utf-8')
@@ -213,8 +192,8 @@ function readConfig(): ChannelsConfig {
     })
     const credentialModeChanged = channelsWithCredentialModes.some((channel, index) => channel !== normalized.config.channels[index])
     const presetUpdated = applyPresetModelCandidateUpdates({ ...normalized.config, channels: channelsWithCredentialModes })
-    const evalPresetAdded = ensureEvalPresetChannel(presetUpdated.config)
-    if (normalized.changed || credentialModeChanged || presetUpdated.changed || evalPresetAdded) {
+    const legacyShellCleaned = cleanupLegacyShellChannels(presetUpdated.config)
+    if (normalized.changed || credentialModeChanged || presetUpdated.changed || legacyShellCleaned) {
       try {
         writeFileSync(configPath, JSON.stringify(presetUpdated.config, null, 2), 'utf-8')
         console.log('[渠道管理] 已应用渠道配置迁移或预设模型更新')
@@ -227,7 +206,7 @@ function readConfig(): ChannelsConfig {
     console.error('[渠道管理] 读取配置文件失败:', error)
     return {
       version: CONFIG_VERSION,
-      channels: isEvalPresetActive() ? [createEvalPresetChannel()] : [],
+      channels: [],
     }
   }
 }
@@ -758,18 +737,7 @@ export function decryptApiKey(channelId: string): string {
   const channel = config.channels.find((c) => c.id === channelId)
 
   if (!channel) {
-    if (isEvalPresetActive() && channelId === EVAL_PRESET_CHANNEL_ID) {
-      return EVAL_PRESET_API_KEY
-    }
     throw new Error(`渠道不存在: ${channelId}`)
-  }
-
-  if (isEvalPresetActive() && channel.id === EVAL_PRESET_CHANNEL_ID) {
-    try {
-      const decrypted = decryptKey(channel.apiKey)
-      if (decrypted) return decrypted
-    } catch {}
-    return EVAL_PRESET_API_KEY
   }
 
   return decryptKey(channel.apiKey)

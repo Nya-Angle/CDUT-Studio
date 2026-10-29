@@ -9,7 +9,7 @@
  * advanceOn：manual 手动下一步；click-anchor 用户点击高亮区；wait 等待业务状态。
  * waitFor：仅 advanceOn='wait' 时生效，支持 Agent 回合、特区登录、桌宠回合、CSLab 验密、选择器。
  * passthrough：为 true 时不铺整屏点击捕获层，允许用户聚焦输入框 / 输入密码 / 点击发送。
- * disallowSkip：禁止跳过当前步骤（强制要求完成锚点操作）。
+ * 所有步骤均允许跳过（不再提供强制锁定开关）。
  * interactive3D：放行 3D 视口内部的鼠标旋转、平移与缩放手势。
  */
 
@@ -118,8 +118,6 @@ export interface CoachTourStep {
   passthrough?: boolean
   /** 气泡内渲染的专属快捷操作 */
   action?: CoachTourAction
-  /** 禁止跳过本步（强制用户完成关键动作） */
-  disallowSkip?: boolean
   /** 放行 3D 视口内部的鼠标手势（旋转/平移/缩放） */
   interactive3D?: boolean
 }
@@ -133,17 +131,16 @@ export const COACH_TOUR_STEPS: CoachTourStep[] = [
   {
     key: 'welcome-agent',
     title: 'Agent 对话与任务',
-    body: 'CDUT Studio 以 Pi Agent 为唯一内核：直接用自然语言描述目标，它会自动查资料、读文件、跑命令、上网。点一下侧栏高亮的【新建会话】开启全新任务。',
+    body: 'CDUT Studio 以 Pi Agent 为唯一内核：直接用自然语言描述目标，它会自动查资料、读文件、跑命令、上网。点一下侧栏高亮的【新建会话】开启全新任务；也可点击【跳过本步】直接继续。',
     selectors: ['[data-profer-navigation-item="new-session"]'],
     placement: 'right',
     view: 'conversations',
     advanceOn: 'click-anchor',
-    disallowSkip: true,
   },
   {
     key: 'calculus',
     title: '让 Agent 用图示讲清楚',
-    body: '我们先用一个有一定复杂度的问题热身。问题已填入输入框，请点击发送；发送后输入框将被蒙版锁定，模型回复生成结束后将解锁下一步。',
+    body: '我们先用一个有一定复杂度的问题热身。问题已填入输入框，请点击发送；发送后需等待回复完成，也可以随时点击【跳过本步】继续。',
     selectors: ['[data-input-mode="agent"]'],
     pulseSelectors: SEND_BUTTON_PULSE,
     placement: 'top',
@@ -166,12 +163,11 @@ export const COACH_TOUR_STEPS: CoachTourStep[] = [
     placement: 'right',
     cdutSubView: null,
     advanceOn: 'click-anchor',
-    disallowSkip: true,
   },
   {
     key: 'cdut-login',
     title: '校内专用通道',
-    body: '成理师生的 4 大专用通道：今日课表、成绩与 GPA、自习空教室、期末考场。请依次点击体验全部 4 个按钮（注：自习空教室在演示模式下因无真实内网登录无法获取数据，实际登录后可正常检索）。体验完 4 个按钮后解锁下一步。',
+    body: '成理师生的 4 大专用通道：今日课表、成绩与 GPA、自习空教室、期末考场。请依次点击体验全部 4 个按钮（注：自习空教室在演示模式下因无真实内网登录无法获取数据，实际登录后可正常检索）。也可随时点击【跳过本步】继续。',
     selectors: ['[data-tour="cdut-quickbar"]'],
     placement: 'left',
     view: 'cdut-zone',
@@ -200,7 +196,7 @@ export const COACH_TOUR_STEPS: CoachTourStep[] = [
   {
     key: 'ai-class-q1',
     title: '精读导师问答',
-    body: '演示问题已自动填入，请点击发送。观察导师如何结合挂载的《红楼梦》原著快速精准提取核心脉络。回复完成后解锁下一步。',
+    body: '演示问题已自动填入，请点击发送。观察导师如何结合挂载的《红楼梦》原著快速精准提取核心脉络。也可以随时点击【跳过本步】继续。',
     selectors: ['[data-tour="ai-class-chat"]'],
     pulseSelectors: SEND_BUTTON_PULSE,
     placement: 'left',
@@ -287,7 +283,7 @@ export const COACH_TOUR_STEPS: CoachTourStep[] = [
   {
     key: 'science-gate',
     title: '解锁本机门禁',
-    body: '密码仅保存在本机，由操作系统安全存储或本地 AES-256-GCM 加密。引导会自动填入演示密码 123456；门禁验证通过后解锁下一步。',
+    body: '密码仅保存在本机，由操作系统安全存储或本地 AES-256-GCM 加密。引导会自动填入演示密码 123456；门禁验证通过后自动继续，也可随时点击【跳过本步】。',
     selectors: ['[data-tour="cslab-auth-gate"]', '[data-tour="cslab-workspace"]'],
     placement: 'top',
     view: 'cdut-science',
@@ -450,13 +446,12 @@ export const COACH_TOUR_STEPS: CoachTourStep[] = [
   {
     key: 'new-session',
     title: '回到清爽的新会话',
-    body: '演示到这里结束。点一下侧栏的「新建会话」，回到干净的 Agent 首页，开始你自己的第一个任务。',
+    body: '演示到这里结束。点一下侧栏的「新建会话」，回到干净的 Agent 首页，开始你自己的第一个任务；如不需要，也可点击【跳过本步】直接完成引导。',
     selectors: ['[data-profer-navigation-item="new-session"]'],
     placement: 'right',
     view: 'conversations',
     cdutSubView: null,
     advanceOn: 'click-anchor',
-    disallowSkip: true,
     restoreViewOnExit: false,
   },
   {
@@ -471,4 +466,4 @@ export const COACH_TOUR_STEPS: CoachTourStep[] = [
 ]
 
 /** 引导内容版本：增删步骤/大改文案时 +1，老用户升级后自动重播一次新指引 */
-export const CURRENT_COACH_TOUR_VERSION = 10
+export const CURRENT_COACH_TOUR_VERSION = 11

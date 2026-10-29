@@ -8,8 +8,9 @@
  *  Step 1：欢迎概览页（展示核心四大支柱，提供完整导览与快速跳过双入口）
  *  Step 2：核心功能导览（FeatureTour，8 组高拟真交互式演示舞台，支持暂停/切换/全键盘导航）
  *  Step 3：迁移数据指引（从其他设备 / 团队导入配置）
- *  Step 4：诗意插页（海内存知己，天涯若比邻——独立整屏电影感沉浸）
- *  Step 5：品牌收尾（CDUT Studio / 欢迎您！，进入主界面并自动平滑接力）
+ *  Step 4：模型配置（预置厂商快捷配置，可测试连通性并设为默认，也可跳过）
+ *  Step 5：诗意插页（海内存知己，天涯若比邻——独立整屏电影感沉浸）
+ *  Step 6：品牌收尾（CDUT Studio / 欢迎您！，进入主界面并自动平滑接力）
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -31,8 +32,9 @@ import { migrationImportDialogOpenAtom } from '@/atoms/migration-atoms'
 import { IntroWaterRipple } from './IntroWaterRipple'
 import { IntroFluidBackground } from './IntroFluidBackground'
 import { FeatureTour } from './FeatureTour'
+import { OnboardingModelSetup } from './OnboardingModelSetup'
 
-type OnboardingStep = 'intro' | 'welcome' | 'featureTour' | 'migration' | 'poetry' | 'ready'
+type OnboardingStep = 'intro' | 'welcome' | 'featureTour' | 'migration' | 'modelSetup' | 'poetry' | 'ready'
 
 interface OnboardingViewProps {
   onComplete: (openTutorial?: boolean) => void
@@ -81,6 +83,20 @@ export function OnboardingView({
 
   const handleOpenMigration = () => {
     setMigrationImportDialogOpen(true)
+  }
+
+  // 迁移页继续：已有可用渠道时直接进入诗意插页，否则补上模型配置环节
+  const handleMigrationContinue = async () => {
+    try {
+      const channels = await window.electronAPI.listChannels()
+      const hasUsableChannel = channels.some(
+        (channel) => channel.enabled && channel.models.some((model) => model.enabled),
+      )
+      setStep(hasUsableChannel ? 'poetry' : 'modelSetup')
+    } catch {
+      // 读取失败时仍进入配置页，避免用户被卡住
+      setStep('modelSetup')
+    }
   }
 
   const isFullScreenDark = step === 'intro' || step === 'featureTour' || step === 'poetry'
@@ -245,7 +261,7 @@ export function OnboardingView({
           </div>
 
           <div className="w-full max-w-sm mt-8 flex flex-col items-center gap-2">
-            <Button className="w-full h-11 text-sm font-semibold gap-1.5" onClick={() => setStep('poetry')}>
+            <Button className="w-full h-11 text-sm font-semibold gap-1.5" onClick={handleMigrationContinue}>
               <span>继续</span>
               <ChevronRight className="size-4" />
             </Button>
@@ -255,6 +271,8 @@ export function OnboardingView({
           </div>
         </div>
       )}
+
+      {step === 'modelSetup' && <OnboardingModelSetup onDone={() => setStep('poetry')} />}
 
       {step === 'poetry' && <PoetryInterlude onDone={() => setStep('ready')} />}
 

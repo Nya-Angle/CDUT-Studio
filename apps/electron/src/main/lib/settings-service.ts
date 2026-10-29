@@ -22,6 +22,9 @@ interface LegacyTabletModeSettings {
   pluginSystemEnabled?: boolean
 }
 
+/** 历史空壳渠道 ID：旧版本自动注入的占位渠道，读取设置时一律清理 */
+const LEGACY_SHELL_CHANNEL_IDS = new Set(['eval-deepseek-official', 'eval-huawei-zhichuangbei'])
+
 function getDefaultSettings(): AppSettings {
   return {
     themeMode: DEFAULT_THEME_MODE,
@@ -62,11 +65,14 @@ export function getSettings(): AppSettings {
     const developerModeEnabled = data.developerModeEnabled ?? pluginSystemEnabled ?? false
     _settingsCache = {
       ...data,
-      agentChannelId: data.agentChannelId === 'eval-huawei-zhichuangbei' ? 'eval-deepseek-official' : (data.agentChannelId || 'eval-deepseek-official'),
-      agentChannelIds: data.agentChannelIds && data.agentChannelIds.length > 0
-        ? data.agentChannelIds.map((id) => (id === 'eval-huawei-zhichuangbei' ? 'eval-deepseek-official' : id))
-        : ['eval-deepseek-official'],
-      agentModelId: data.agentModelId === 'Deepseek-V4-flash' ? 'deepseek-flash' : (data.agentModelId || 'deepseek-flash'),
+      agentChannelId:
+        data.agentChannelId && LEGACY_SHELL_CHANNEL_IDS.has(data.agentChannelId)
+          ? undefined
+          : data.agentChannelId,
+      agentChannelIds: (data.agentChannelIds ?? []).filter(
+        (id) => !LEGACY_SHELL_CHANNEL_IDS.has(id),
+      ),
+      agentModelId: data.agentModelId === 'Deepseek-V4-flash' ? 'deepseek-flash' : data.agentModelId,
       pocketModeEnabled: data.pocketModeEnabled ?? tabletModeEnabled,
       pocketModePort: data.pocketModePort ?? tabletModePort,
       themeMode: data.themeMode || DEFAULT_THEME_MODE,

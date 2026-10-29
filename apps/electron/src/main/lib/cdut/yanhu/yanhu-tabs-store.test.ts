@@ -15,7 +15,7 @@ import {
   createYanhuTab,
   normalizeStoredTabsState,
 } from './yanhu-tabs-store'
-import { YANHU_HOME_URL, isYanhuSsoAppUrl, stripOneTimeTicket } from './yanhu-constants'
+import { WQXT_HOME_URL, YANHU_HOME_URL, isYanhuSsoAppUrl, stripOneTimeTicket } from './yanhu-constants'
 
 describe('票据型 SSO 应用页的恢复语义（空白空壳根因防护）', () => {
   test('stripOneTimeTicket 剔除一次性 ticket，保留其它参数与 hash 路由', () => {
@@ -91,6 +91,39 @@ describe('YanhuTabsStore 读写', () => {
     expect(raw.version).toBe(1)
     expect(typeof raw.updatedAt).toBe('number')
     expect(Array.isArray(raw.tabs)).toBe(true)
+  })
+})
+
+describe('AI 问渠学堂独立拓扑（自定义默认/保底入口）', () => {
+  test('文件缺失时返回在线课程中心首页与专属标题', () => {
+    const store = new YanhuTabsStore(makeStorePath(), WQXT_HOME_URL, 'AI 问渠学堂')
+    const state = store.load()
+    expect(state.tabs).toHaveLength(1)
+    expect(state.tabs[0]?.url).toBe(WQXT_HOME_URL)
+    expect(state.tabs[0]?.title).toBe('AI 问渠学堂')
+    expect(state.activeTabId).toBe(state.tabs[0]?.id ?? '')
+  })
+
+  test('损坏兜底也落回在线课程中心，而非办事大厅', () => {
+    const filePath = makeStorePath()
+    const store = new YanhuTabsStore(filePath, WQXT_HOME_URL, 'AI 问渠学堂')
+    store.save(createDefaultTabsState(WQXT_HOME_URL, 'AI 问渠学堂'))
+    writeFileSync(filePath, '{ 这不是合法 JSON', 'utf-8')
+    const loaded = store.load()
+    expect(loaded.tabs).toHaveLength(1)
+    expect(loaded.tabs[0]?.url).toBe(WQXT_HOME_URL)
+  })
+
+  test('与智联万站各自落盘、互不串写', () => {
+    const expressStore = new YanhuTabsStore(makeStorePath())
+    const wqxtStore = new YanhuTabsStore(makeStorePath(), WQXT_HOME_URL, 'AI 问渠学堂')
+    const expressTab = createYanhuTab(YANHU_HOME_URL, '办事大厅')
+    const wqxtTab = createYanhuTab(WQXT_HOME_URL, 'AI 问渠学堂')
+    expressStore.save({ tabs: [expressTab], activeTabId: expressTab.id })
+    wqxtStore.save({ tabs: [wqxtTab], activeTabId: wqxtTab.id })
+
+    expect(expressStore.load().tabs.map((tab) => tab.url)).toEqual([YANHU_HOME_URL])
+    expect(wqxtStore.load().tabs.map((tab) => tab.url)).toEqual([WQXT_HOME_URL])
   })
 })
 
