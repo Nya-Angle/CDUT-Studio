@@ -6,7 +6,7 @@ on:
       ref:
         description: '要构建的分支、tag 或 commit SHA'
         required: false
-        default: 'next'
+        default: 'main'
       publish_release:
         description: '是否发布/挂载到 GitHub Release'
         required: false
@@ -97,19 +97,11 @@ jobs:
           node -e "console.log(require.resolve('@silurus/ooxml'))"
           bun run dist:mac
 
-      - name: Verify macOS updater metadata
-        working-directory: apps/electron
-        run: bun run verify:mac-update-assets
-
       - name: Upload macOS installable artifacts
         uses: actions/upload-artifact@v4
         with:
           name: CDUT-Studio-macOS-arm64-${{ github.ref_name }}
-          path: |
-            apps/electron/out/latest-mac.yml
-            apps/electron/out/*.dmg
-            apps/electron/out/*.zip
-            apps/electron/out/*.blockmap
+          path: apps/electron/out/*.dmg
           if-no-files-found: error
           retention-days: 14
 
@@ -128,18 +120,12 @@ jobs:
             echo "Release $tag exists, uploading macOS assets..."
             gh release upload "$tag" \
               apps/electron/out/*.dmg \
-              apps/electron/out/*.zip \
-              apps/electron/out/*.blockmap \
-              apps/electron/out/latest-mac.yml \
               --repo "${{ github.repository }}" \
               --clobber
           else
             echo "Release $tag not found, creating release..."
             gh release create "$tag" \
               apps/electron/out/*.dmg \
-              apps/electron/out/*.zip \
-              apps/electron/out/*.blockmap \
-              apps/electron/out/latest-mac.yml \
               --repo "${{ github.repository }}" \
               --title "CDUT Studio $tag" \
               --generate-notes

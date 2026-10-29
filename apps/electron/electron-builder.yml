@@ -148,9 +148,6 @@ mac:
     - target: dmg
       arch:
         - arm64
-    - target: zip
-      arch:
-        - arm64
 
 # DMG 布局
 # 保持简单的应用 + Applications 链接，避免本地无签名验证引入额外主题资源依赖。
