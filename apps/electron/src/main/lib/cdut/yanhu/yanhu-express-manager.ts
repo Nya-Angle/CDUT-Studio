@@ -930,11 +930,10 @@ export class YanhuExpressManager {
       const certSentinel = parseCertInterstitialSentinel(url)
       if (certSentinel) {
         this.handleCertInterstitialSentinel(tab, certSentinel)
-        return
+        return { action: 'deny' }
       }
       // 问渠学堂课堂原视频下载拦截：禁止跨域视频流直接进行主框架整页导航，转为主进程原生下载
       if (this.isVideoDownloadUrl(url)) {
-        event.preventDefault()
         this.triggerVideoDownload(wc, url)
         return { action: 'deny' }
       }
