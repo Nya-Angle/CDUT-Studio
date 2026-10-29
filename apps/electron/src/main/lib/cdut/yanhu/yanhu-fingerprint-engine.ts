@@ -95,6 +95,14 @@ export function applyYanhuSessionIdentity(ses: Session): void {
         requestHeaders[key] = value
       }
 
+      // 保证问渠播放与视频下载请求的 Referer 始终为合法的课堂源，防止 CDN 防盗链返回 403
+      if (details.url.includes('wqxt.cdut.edu.cn')) {
+        const currentRef = requestHeaders['Referer'] || requestHeaders['referer'] || ''
+        if (!currentRef || currentRef.includes('play.wqxt.cdut.edu.cn')) {
+          requestHeaders['Referer'] = 'https://classroom.wqxt.cdut.edu.cn/'
+        }
+      }
+
       callback({ requestHeaders })
     })
   } catch (err) {

@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "version": "1.0.0",
+      "date": "2026-10-29",
+      "title": "1.0.0",
+      "notes": "- CDUT Studio 1.0.0 正式版发布。"
+    },
+    {
       "version": "0.15.158",
       "date": "2026-10-25",
       "title": "0.15.158",

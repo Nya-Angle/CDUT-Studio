@@ -23,6 +23,8 @@ import {
   cellCenter,
   cellMaxLength,
   parseCifLattice,
+  parsePoscar,
+  poscarToCif,
   type CsLabAssetSummary,
   type CsLabAtomSiteSelection,
   type CsLabCrystalCell,
@@ -175,10 +177,17 @@ export function CsLabMolstarViewer({
     }
   }, [asset.title, captureViewport, labId, onToast])
 
-  const cell = React.useMemo<CsLabCrystalCell | null>(
-    () => (asset.format === 'cif' ? parseCifLattice(asset.text) : null),
-    [asset.format, asset.text],
-  )
+  const cell = React.useMemo<CsLabCrystalCell | null>(() => {
+    if (asset.format === 'cif') return parseCifLattice(asset.text)
+    if (asset.format === 'poscar') {
+      try {
+        return parsePoscar(asset.text).cell
+      } catch {
+        return null
+      }
+    }
+    return null
+  }, [asset.format, asset.text])
 
   const bands = React.useMemo(
     () => (selection ? findVibrationalBands(selection.element) : []),
@@ -383,19 +392,22 @@ export function CsLabMolstarViewer({
       planeRef.current = null
       try {
         await plugin.clear()
-        const file = Asset.File(
-          new File([asset.text], asset.title || `structure.${asset.format}`, {
-            type: 'text/plain',
-          }),
-        )
+        const isPoscar = asset.format === 'poscar'
+        const fileContent = isPoscar ? poscarToCif(asset.text) : asset.text
+        const fileName = isPoscar
+          ? `${(asset.title || 'structure').replace(/\.(poscar|vasp|contcar)$/i, '')}.cif`
+          : asset.title || `structure.${asset.format}`
+
+        // CIF 走 cifCore（小分子晶体学字典），失败再回退 mmcif；PDB 直接 pdb。
+        // POSCAR 已在内存中桥接为 P1 CIF，走同一 cifCore 管线。
+        const formatCandidates: Array<'pdb' | 'cifCore' | 'mmcif'> =
+          asset.format === 'pdb' ? ['pdb'] : ['cifCore', 'mmcif']
+
+        const file = Asset.File(new File([fileContent], fileName, { type: 'text/plain' }))
         const { data: dataRef } = await plugin.builders.data.readFile({
           file,
           isBinary: false,
         })
-
-        // CIF 走 cifCore（小分子晶体学字典），失败再回退 mmcif；PDB 直接 pdb。
-        const formatCandidates: Array<'pdb' | 'cifCore' | 'mmcif'> =
-          asset.format === 'pdb' ? ['pdb'] : ['cifCore', 'mmcif']
         let trajectory: Awaited<
           ReturnType<typeof plugin.builders.structure.parseTrajectory>
         > | null = null
@@ -730,7 +742,7 @@ export function CsLabMolstarViewer({
 
   const handlePick = (x: number): void => {
     setPickedX(x)
-    if (asset.format !== 'cif' || !cell) {
+    if (!cell || (asset.format !== 'cif' && asset.format !== 'poscar')) {
       onToast('info', '该结构没有可用晶胞参数，无法由 2θ 反算晶面')
       return
     }
