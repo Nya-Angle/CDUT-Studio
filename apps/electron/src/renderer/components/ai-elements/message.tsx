@@ -58,6 +58,7 @@ import {
   type AgentBlockSelectionUpdate,
   type AgentMarkdownBlock,
 } from './agent-block-copy'
+import { StreamBlockAutomaton, toAgentMarkdownBlock } from '@/lib/stream-block-automaton'
 
 // ===== Message 根容器 =====
 
@@ -492,6 +493,8 @@ interface MessageResponseProps {
   remarkPlugins?: RemarkPluginFn[]
   /** Agent 回答/已展开思考内容启用块级复制与多选。 */
   enableBlockCopy?: boolean
+  /** 由 Agent 流式渲染路径传入；仅在提供时启用双阶段块流水线。 */
+  isStreaming?: boolean
 }
 
 /** 稳定引用的插件数组，避免 react-markdown 每帧重建插件管线 */
@@ -501,6 +504,9 @@ const REMARK_PLUGINS = [remarkGfm, remarkMath]
 const REHYPE_PLUGINS: NonNullable<React.ComponentProps<typeof Markdown>['rehypePlugins']> = [
   [rehypeKatex, { strict: 'ignore' }],
 ]
+
+/** 流式尾部只保留 GFM：公式与图表源码以纯文本占位，闭合后才升级渲染。 */
+const TAIL_REMARK_PLUGINS = [remarkGfm]
 
 /**
  * 仅将本机 file:// URL 转为系统路径；拒绝 file://server/share 等远程主机形式。
@@ -1151,11 +1157,56 @@ function agentBlockMargin(block: AgentMarkdownBlock, previous?: AgentMarkdownBlo
   return { className: 'my-1.5', topRank: 6, bottomRank: 6, topBridgeClassName: '-bottom-1.5', bottomBridgeClassName: '-bottom-1.5' }
 }
 
+/** 流式尾部的代码围栏占位：纯 CSS 等宽容器，不触发 Shiki 高亮计算。 */
+const LightweightPre = React.memo(function LightweightPre({ children }: { children?: React.ReactNode }): React.ReactElement {
+  return (
+    <pre className="bg-muted/50 p-3 rounded font-mono text-sm overflow-x-auto select-text">
+      {children}
+    </pre>
+  )
+})
+
+/** 已闭合块的重型渲染体：完整 Remark/Rehype 管线，React.memo 保证流式期间不再重解析。 */
+const FrozenMarkdownBody = React.memo(function FrozenMarkdownBody({
+  source,
+  remarkPlugins,
+  components,
+}: {
+  source: string
+  remarkPlugins?: RemarkPluginFn[]
+  components: React.ComponentProps<typeof Markdown>['components']
+}): React.ReactElement {
+  const plugins = React.useMemo(
+    () => [...REMARK_PLUGINS, ...(remarkPlugins ?? []), remarkTableSource(source)],
+    [source, remarkPlugins],
+  )
+  return (
+    <Markdown remarkPlugins={plugins} rehypePlugins={REHYPE_PLUGINS} urlTransform={mentionUrlTransform} components={components}>{source}</Markdown>
+  )
+}, (prev, next) => prev.source === next.source && prev.remarkPlugins === next.remarkPlugins && prev.components === next.components)
+
+/** 活跃尾部渲染体：仅 GFM，不挂 KaTeX / Mermaid / MindMap / Shiki。 */
+const ActiveTailMarkdownBody = React.memo(function ActiveTailMarkdownBody({
+  source,
+  components,
+}: {
+  source: string
+  components: React.ComponentProps<typeof Markdown>['components']
+}): React.ReactElement {
+  return (
+    <Markdown remarkPlugins={TAIL_REMARK_PLUGINS} urlTransform={mentionUrlTransform} components={components}>{source}</Markdown>
+  )
+}, (prev, next) => prev.source === next.source && prev.components === next.components)
+
 /** 使用 react-markdown 渲染 assistant 消息内容，代码块使用 Shiki 语法高亮 */
 interface CopyableMarkdownBlockProps {
   block: AgentMarkdownBlock
   components: React.ComponentProps<typeof Markdown>['components']
-  remarkPlugins: NonNullable<React.ComponentProps<typeof Markdown>['remarkPlugins']>
+  /** 流式尾部轻量渲染：不挂 KaTeX / Shiki / Mermaid / MindMap */
+  lightweight: boolean
+  /** 尾部专用组件覆盖（轻量 pre / code） */
+  tailComponents: React.ComponentProps<typeof Markdown>['components']
+  remarkPlugins?: RemarkPluginFn[]
   selected: boolean
   selectedBefore: boolean
   selectedAfter: boolean
@@ -1182,7 +1233,7 @@ interface CopyableMarkdownBlockProps {
   copied: boolean
 }
 
-function CopyableMarkdownBlock({ block, components, remarkPlugins, selected, selectedBefore, selectedAfter, selecting, toolbarVisible, toolbarBlock, toolbarBlockSelected, marginClassName, selectionBridgeAfterClassName, markdownFormat, onSelect, onHover, onToolbarEnter, onToolbarLeave, toolbarExpanded, previewVisible, onCopy, onEnterSelection, onExitSelection, onMarkdownFormatChange, tableFormat, onTableFormatChange, selectionFormatMode, copied }: CopyableMarkdownBlockProps): React.ReactElement {
+function CopyableMarkdownBlock({ block, components, lightweight, tailComponents, remarkPlugins, selected, selectedBefore, selectedAfter, selecting, toolbarVisible, toolbarBlock, toolbarBlockSelected, marginClassName, selectionBridgeAfterClassName, markdownFormat, onSelect, onHover, onToolbarEnter, onToolbarLeave, toolbarExpanded, previewVisible, onCopy, onEnterSelection, onExitSelection, onMarkdownFormatChange, tableFormat, onTableFormatChange, selectionFormatMode, copied }: CopyableMarkdownBlockProps): React.ReactElement {
   const selectionGroupStart = selected && !selectedBefore
   const selectionGroupEnd = selected && !selectedAfter
   const selectionPaddingClassName = selected
@@ -1234,16 +1285,39 @@ function CopyableMarkdownBlock({ block, components, remarkPlugins, selected, sel
         </div>
       )}
       <div className="relative z-10 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
-        <Markdown remarkPlugins={remarkPlugins} rehypePlugins={REHYPE_PLUGINS} urlTransform={mentionUrlTransform} components={components}>{block.source}</Markdown>
+        {lightweight ? (
+          <ActiveTailMarkdownBody source={block.source} components={tailComponents} />
+        ) : (
+          <FrozenMarkdownBody source={block.source} remarkPlugins={remarkPlugins} components={components} />
+        )}
       </div>
     </div>
   )
 }
 
 export const MessageResponse = React.memo(
-  function MessageResponse({ children, className, basePath, basePaths, remarkPlugins, enableBlockCopy = false }: MessageResponseProps): React.ReactElement {
+  function MessageResponse({ children, className, basePath, basePaths, remarkPlugins, enableBlockCopy = false, isStreaming }: MessageResponseProps): React.ReactElement {
     const processed = React.useMemo(() => normalizeMarkdownEmphasisWhitespace(normalizeLatexDelimiters(normalizeHtmlMediaTags(children.replace(/<!--PROMA_AUTOMATION:[\s\S]*?-->/g, '').trim()))), [children])
-    const blocks = React.useMemo(() => parseAgentMarkdownBlocks(processed), [processed])
+    /** 双阶段流水线仅在显式提供 isStreaming 的 Agent 路径启用；历史块复制仍走全量块解析。 */
+    const automatonRef = React.useRef<StreamBlockAutomaton>()
+    if (!automatonRef.current) automatonRef.current = new StreamBlockAutomaton()
+    const pipelineEnabled = isStreaming !== undefined || enableBlockCopy
+    const streamNormalized = isStreaming === undefined ? null : processed.replace(/\r\n?/g, '\n')
+    const feed = React.useMemo(
+      () => (streamNormalized === null ? null : automatonRef.current!.feed(streamNormalized, !isStreaming)),
+      [streamNormalized, isStreaming],
+    )
+    /** 尾部块 id 与闭合块 id 连续：流结束冲刷后同一 key 原地转为冻结块，避免容器重建。 */
+    const streamTailId = isStreaming === true && feed?.activeTail ? String(feed.closedBlocks.length) : null
+    const blocks = React.useMemo(() => {
+      if (feed) {
+        const closed = feed.closedBlocks.map(toAgentMarkdownBlock)
+        return feed.activeTail
+          ? [...closed, { id: streamTailId!, source: feed.activeTail, kind: 'markdown' as const }]
+          : closed
+      }
+      return parseAgentMarkdownBlocks(processed)
+    }, [feed, processed, streamTailId])
     const [selection, setSelection] = React.useState<AgentBlockSelectionUpdate>({ selectedIds: new Set(), selecting: false })
     const { selectedIds, selecting } = selection
     const [selectionAnchorId, setSelectionAnchorId] = React.useState<string | null>(null)
@@ -1276,6 +1350,8 @@ export const MessageResponse = React.memo(
     }, [])
 
     React.useEffect(() => {
+      // 流式期 enableBlockCopy 为 false：选区与工具栏本就为空，避免每个 token 触发冗余 setState。
+      if (!enableBlockCopy) return
       exitSelection()
       clearHoverSwitchTimer()
       clearToolbarLeaveTimer()
@@ -1308,6 +1384,20 @@ export const MessageResponse = React.memo(
       img: MarkdownImage,
       pre: MarkdownPre,
       code: (props: React.HTMLAttributes<HTMLElement>) => <MarkdownInlineCode {...props} basePath={basePath} basePaths={basePaths} />,
+      table: MarkdownTable,
+    }), [basePath, basePaths])
+    /** 尾部组件覆盖：未闭合围栏用纯 CSS 等宽容器，不触发 Shiki / Mermaid / MindMap。 */
+    const tailComponents = React.useMemo(() => ({
+      a: MarkdownLink,
+      img: MarkdownImage,
+      pre: LightweightPre,
+      code: (props: React.HTMLAttributes<HTMLElement>) => {
+        const codeClassName = props.className
+        if (codeClassName && /\blanguage-\S+/.test(codeClassName)) {
+          return <code className={cn('font-mono', codeClassName)}>{props.children}</code>
+        }
+        return <MarkdownInlineCode {...props} basePath={basePath} basePaths={basePaths} />
+      },
       table: MarkdownTable,
     }), [basePath, basePaths])
     const containerClassName = cn('prose dark:prose-invert max-w-none text-[length:var(--md-preview-font-size,15px)]', 'prose-p:my-1.5 prose-p:leading-[1.6] prose-li:leading-[1.6] prose-pre:my-0 prose-headings:my-2 prose-hr:my-3', '[&_.code-block-wrapper+.code-block-wrapper]:mt-4', className)
@@ -1378,6 +1468,8 @@ export const MessageResponse = React.memo(
       exitSelection()
     }, [exitSelection])
     const hoverBlock = React.useCallback((block: AgentMarkdownBlock) => {
+      // 流式期不渲染工具栏：鼠标移动无需触发任何 hover 状态更新。
+      if (!enableBlockCopy) return
       clearHoverSwitchTimer()
       clearToolbarLeaveTimer()
       const currentId = hoveredBlockId
@@ -1394,7 +1486,7 @@ export const MessageResponse = React.memo(
         }
       }
       setHoveredBlockId(block.id)
-    }, [blocks, clearHoverSwitchTimer, clearToolbarLeaveTimer, hoveredBlockId, selectedIds, selecting])
+    }, [blocks, clearHoverSwitchTimer, clearToolbarLeaveTimer, enableBlockCopy, hoveredBlockId, selectedIds, selecting])
     const enterToolbar = React.useCallback(() => {
       clearHoverSwitchTimer()
       clearToolbarLeaveTimer()
@@ -1426,7 +1518,7 @@ export const MessageResponse = React.memo(
           : 'markdown'
     const toolbarAnchorIndex = findAgentSelectionToolbarAnchor(blocks, selectedIds, hoveredBlockId, selecting)
 
-    if (!enableBlockCopy) {
+    if (!pipelineEnabled) {
       const plugins = [...(remarkPlugins ? [...REMARK_PLUGINS, ...remarkPlugins] : [...REMARK_PLUGINS]), remarkTableSource(processed)]
       return (
         // 消息级统一 TooltipProvider：对话流内所有学术溯源胶囊共享同一上下文（见 MarkdownLink）
@@ -1449,7 +1541,7 @@ export const MessageResponse = React.memo(
           onPointerLeave={() => { clearHoverSwitchTimer(); scheduleHoverLeave() }}
         >
           {blocks.map((block, index) => {
-            const plugins = [...(remarkPlugins ? [...REMARK_PLUGINS, ...remarkPlugins] : [...REMARK_PLUGINS]), remarkTableSource(block.source)]
+            const lightweight = block.id === streamTailId
             const toolbarBlock = selecting && !selectedIds.has(block.id)
               ? null
               : index === toolbarAnchorIndex ? hoveredBlock : null
@@ -1459,13 +1551,13 @@ export const MessageResponse = React.memo(
             const margin = agentBlockMargin(block, previousBlock, nextBlock)
             const nextMargin = nextBlock ? agentBlockMargin(nextBlock, block, blocks[index + 2]) : margin
             const bridgeClassName = margin.bottomRank >= nextMargin.topRank ? margin.bottomBridgeClassName : nextMargin.topBridgeClassName
-            return <CopyableMarkdownBlock key={block.id} block={block} components={components} remarkPlugins={plugins} selected={selectedIds.has(block.id)} selectedBefore={selectedIds.has(previousBlock?.id ?? '')} selectedAfter={selectedIds.has(nextBlock?.id ?? '')} selecting={selecting} toolbarVisible={toolbarBlock !== null} toolbarBlock={toolbarBlock} toolbarBlockSelected={selectedIds.has(toolbarTarget.id)} copied={copied} toolbarExpanded={toolbarExpanded} previewVisible={!selecting && toolbarExpanded && toolbarBlock?.id === block.id} marginClassName={margin.className} selectionBridgeAfterClassName={bridgeClassName} markdownFormat={markdownFormat} selectionFormatMode={selectionFormatMode} onSelect={(event) => toggleBlock(block, event)} onHover={() => hoverBlock(block)} onToolbarEnter={enterToolbar} onToolbarLeave={leaveToolbar} onCopy={() => void (selecting ? copySelected() : copyBlock(toolbarTarget))} onEnterSelection={(event) => enterSelection(toolbarTarget, event)} onExitSelection={exitSelectionFromButton} onMarkdownFormatChange={setMarkdownFormat} tableFormat={tableFormatFor(toolbarTarget)} onTableFormatChange={(format) => updateTableFormat(toolbarTarget.id, format)} />
+            return <CopyableMarkdownBlock key={block.id} block={block} components={components} lightweight={lightweight} tailComponents={tailComponents} remarkPlugins={remarkPlugins} selected={selectedIds.has(block.id)} selectedBefore={selectedIds.has(previousBlock?.id ?? '')} selectedAfter={selectedIds.has(nextBlock?.id ?? '')} selecting={selecting} toolbarVisible={enableBlockCopy && toolbarBlock !== null} toolbarBlock={toolbarBlock} toolbarBlockSelected={selectedIds.has(toolbarTarget.id)} copied={copied} toolbarExpanded={toolbarExpanded} previewVisible={!selecting && toolbarExpanded && toolbarBlock?.id === block.id} marginClassName={margin.className} selectionBridgeAfterClassName={bridgeClassName} markdownFormat={markdownFormat} selectionFormatMode={selectionFormatMode} onSelect={(event) => toggleBlock(block, event)} onHover={() => hoverBlock(block)} onToolbarEnter={enterToolbar} onToolbarLeave={leaveToolbar} onCopy={() => void (selecting ? copySelected() : copyBlock(toolbarTarget))} onEnterSelection={(event) => enterSelection(toolbarTarget, event)} onExitSelection={exitSelectionFromButton} onMarkdownFormatChange={setMarkdownFormat} tableFormat={tableFormatFor(toolbarTarget)} onTableFormatChange={(format) => updateTableFormat(toolbarTarget.id, format)} />
           })}
         </div>
       </TooltipProvider>
     )
   },
-  (prevProps, nextProps) => prevProps.children === nextProps.children && prevProps.basePath === nextProps.basePath && prevProps.basePaths === nextProps.basePaths && prevProps.remarkPlugins === nextProps.remarkPlugins && prevProps.enableBlockCopy === nextProps.enableBlockCopy
+  (prevProps, nextProps) => prevProps.children === nextProps.children && prevProps.basePath === nextProps.basePath && prevProps.basePaths === nextProps.basePaths && prevProps.remarkPlugins === nextProps.remarkPlugins && prevProps.enableBlockCopy === nextProps.enableBlockCopy && prevProps.isStreaming === nextProps.isStreaming
 )
 
 // ===== UserMessageContent 可折叠用户消息 =====
