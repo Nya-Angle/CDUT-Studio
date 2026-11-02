@@ -7,26 +7,26 @@ export interface AgentMarkdownBlock {
   kind: AgentBlockKind
 }
 
-interface FenceOpener {
+export interface FenceOpener {
   character: '`' | '~'
   length: number
 }
 
-interface ListMarker {
+export interface ListMarker {
   indent: number
   contentIndent: number
   ordered: boolean
   empty: boolean
 }
 
-const FENCE_OPENER_RE = /^[ \t]*(`{3,}|~{3,})([^\n]*)$/
-const FENCE_CLOSER_RE = /^[ \t]*(`{3,}|~{3,})[ \t]*$/
-const LIST_MARKER_RE = /^([ \t]{0,3})([-+*]|\d+[.)])(?:([ \t]+)(.*))?$/
-const QUOTE_RE = /^[ \t]{0,3}>[ \t]?/
-const HEADING_RE = /^[ \t]{0,3}#{1,6}[ \t]/
-const SETEXT_HEADING_RE = /^[ \t]{0,3}(?:=+|-+)[ \t]*$/
-const THEMATIC_BREAK_RE = /^[ \t]{0,3}(?:[-*_][ \t]*){3,}$/
-const TABLE_SEPARATOR_RE = /^\s*\|?\s*:?-{3,}:?\s*(?:\|\s*:?-{3,}:?\s*)+\|?\s*$/
+export const FENCE_OPENER_RE = /^[ \t]*(`{3,}|~{3,})([^\n]*)$/
+export const FENCE_CLOSER_RE = /^[ \t]*(`{3,}|~{3,})[ \t]*$/
+export const LIST_MARKER_RE = /^([ \t]{0,3})([-+*]|\d+[.)])(?:([ \t]+)(.*))?$/
+export const QUOTE_RE = /^[ \t]{0,3}>[ \t]?/
+export const HEADING_RE = /^[ \t]{0,3}#{1,6}[ \t]/
+export const SETEXT_HEADING_RE = /^[ \t]{0,3}(?:=+|-+)[ \t]*$/
+export const THEMATIC_BREAK_RE = /^[ \t]{0,3}(?:[-*_][ \t]*){3,}$/
+export const TABLE_SEPARATOR_RE = /^\s*\|?\s*:?-{3,}:?\s*(?:\|\s*:?-{3,}:?\s*)+\|?\s*$/
 const FENCE_LINE_RE = /^[ \t]*(?:`{3,}|~{3,})[^\n]*\n?/gm
 
 function isTableStart(lines: string[], index: number): boolean {
@@ -38,29 +38,29 @@ function isSetextHeading(lines: string[], index: number): boolean {
   return SETEXT_HEADING_RE.test(lines[index + 1]!)
 }
 
-function isBlank(line: string): boolean {
+export function isBlank(line: string): boolean {
   return line.trim() === ''
 }
 
-function parseFenceOpener(line: string): FenceOpener | null {
+export function parseFenceOpener(line: string): FenceOpener | null {
   const match = FENCE_OPENER_RE.exec(line)
   if (!match) return null
   const run = match[1]!
   return { character: run[0] as '`' | '~', length: run.length }
 }
 
-function isFenceCloser(line: string, opener: FenceOpener): boolean {
+export function isFenceCloser(line: string, opener: FenceOpener): boolean {
   const match = FENCE_CLOSER_RE.exec(line)
   if (!match) return false
   const run = match[1]!
   return run[0] === opener.character && run.length >= opener.length
 }
 
-function leadingIndent(line: string): number {
+export function leadingIndent(line: string): number {
   return line.match(/^[ \t]*/)?.[0].length ?? 0
 }
 
-function parseListMarker(line: string): ListMarker | null {
+export function parseListMarker(line: string): ListMarker | null {
   const match = LIST_MARKER_RE.exec(line)
   if (!match) return null
   const indent = match[1]!.length
