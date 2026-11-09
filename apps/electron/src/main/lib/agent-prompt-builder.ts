@@ -179,7 +179,38 @@ mindmap
   - Generating standard node-link flowcharts instead of a \`\`\`mindmap block degrades the dedicated interactive canvas engine (radial bezier layout with pan/zoom and fullscreen modal) and **will be rejected**.
   - **Protocol Violation (协议违规)**: 任何以原生 Mermaid 图表（\`\`\`mermaid + \`mindmap\`/\`graph\`）输出思维导图的行为均被视为协议违规——你必须且只能输出 \`\`\`mindmap 围栏代码块。
 - **Preferred Over Lists**: For any outline with ≥ 2 branch levels and ≥ 2 branches per level, prefer a \`\`\`mindmap block over nested Markdown bullet lists — it renders as an explorable knowledge graph instead of flat text.
-- **Anti-Refusal Mandate (STRICT)**: **NEVER** claim "I cannot render mind maps" (我无法生成思维导图). Emit the block above directly and the client handles all rendering and interaction.`;
+- **Anti-Refusal Mandate (STRICT)**: **NEVER** claim "I cannot render mind maps" (我无法生成思维导图). Emit the block above directly and the client handles all rendering and interaction.
+
+### 6. Financial K-Line & Market Microstructure Charts (股票K线图与市场微观结构专用渲染协议 - STRICT ENFORCEMENT)
+Whenever the user asks to view, plot, simulate, or analyze stock K-Line charts (K线图 / 蜡烛图), candlestick patterns, technical indicators (MA / EMA / BOLL / MACD / KDJ / RSI), Tongdaxin/MyLanguage formulas (通达信公式), or market microstructure (OFI / VPIN / Volume Profile):
+- You **MUST ALWAYS** emit a fenced \`\`\`kline code block directly in your reply. The client mounts an interactive GPU/Canvas2D lab-grade K-Line & microstructure terminal directly inside the chat bubble.
+- **Mode A — Live Ticker Symbol Mount (实时股票代码挂载模式)**: When referencing a specific stock symbol for live streaming updates:
+\`\`\`kline
+mode: live
+symbol: SH600519
+name: 贵州茅台
+period: 1d
+indicators: MA, VOL, MACD
+\`\`\`
+- **Mode B — Inline Streaming OHLCV + Formula + Semantic Annotations (内联数据与通达信公式模式)**: When generating specific historical/synthetic K-line bars, custom Tongdaxin formulas, or buy/sell annotations:
+\`\`\`kline
+symbol: SZ000001
+name: 平安银行
+period: 1d
+formula: |
+  MA5: MA(C, 5);
+  MA20: MA(C, 20);
+  STICKLINE(CROSS(MA5, MA20), L, H, 2, 0), COLORYELLOW;
+annotations:
+  - signal | 4 | buy | 10.15 | 放量金叉突破
+---
+2026-03-01, 10.00, 10.25, 9.92, 10.18, 125000
+2026-03-02, 10.18, 10.30, 10.05, 10.12, 98000
+2026-03-03, 10.12, 10.15, 9.85, 9.90, 112000
+2026-03-04, 9.90, 10.22, 9.88, 10.20, 168000
+2026-03-05, 10.20, 10.65, 10.18, 10.58, 245000
+\`\`\`
+- **Anti-Refusal Mandate (STRICT)**: **NEVER** claim you cannot render interactive K-Line charts or real-time stock charts. Always emit a \`\`\`kline block.`;
 
 // ===== AI 速课堂专属提示词（专用身份整段替换通用 CDUT Studio Agent 身份） =====
 

@@ -143,65 +143,147 @@ export function ExpandedSidebar({ s }: { s: SidebarModel }): React.ReactElement 
         </Tooltip>
       </div>
 
-      {/* 顶级开关区：Agent 顶级开关 与 下方同级 CDUT 专区 开关 */}
-      <div className="px-3 pt-1 pb-1 flex flex-col gap-1.5 select-none titlebar-no-drag">
-        <button
-          type="button"
-          data-profer-navigation-region="mode-switcher-agent"
-          onClick={() => {
-            if (activeView !== 'conversations') {
-              setActiveView('conversations')
-            }
-          }}
-          className={cn(
-            'flex h-9 items-center justify-center gap-2 rounded-xl px-3 transition-colors duration-150 titlebar-no-drag',
-            activeView === 'conversations'
-              ? 'bg-primary text-primary-foreground font-medium shadow-sm'
-              : 'bg-primary/5 hover:bg-primary/10 text-foreground/70 hover:text-foreground border border-border/60'
-          )}
-        >
-          <Bot size={15} />
-          <span className="text-[13px]">Agent</span>
-        </button>
+      {/* 顶级开关区：Agent / CDUT 专区 / CDUT Science 轻量清凉扁平矩形组 */}
+      <div className="px-3 pt-1 pb-1 select-none titlebar-no-drag cursor-default">
+        <div className="flex flex-col gap-0 w-full overflow-hidden select-none cursor-default">
+          {/* 1. Agent */}
+          <button
+            type="button"
+            data-profer-navigation-region="mode-switcher-agent"
+            onClick={() => {
+              if (activeView !== 'conversations') {
+                setActiveView('conversations')
+              }
+            }}
+            className={cn(
+              'group relative flex h-9 w-full items-center justify-start gap-2.5 px-3.5 !cursor-default rounded-none border-b border-border select-none titlebar-no-drag focus:outline-none overflow-hidden',
+              activeView === 'conversations'
+                ? 'text-foreground font-medium'
+                : 'text-foreground/60 hover:text-foreground active:text-foreground'
+            )}
+          >
+            {/* 处于激活状态的常驻微底色：两端纯透明，中间微显 */}
+            {activeView === 'conversations' && (
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-foreground/[0.04] to-transparent"
+              />
+            )}
 
-        <button
-          type="button"
-          data-profer-navigation-region="mode-switcher-cdut"
-          onClick={() => {
-            if (activeView !== 'cdut-zone') {
-              setActiveView('cdut-zone')
-            }
-          }}
-          className={cn(
-            'flex h-9 items-center justify-center gap-2 rounded-xl px-3 transition-colors duration-150 titlebar-no-drag',
-            activeView === 'cdut-zone'
-              ? 'bg-primary text-primary-foreground font-medium shadow-sm'
-              : 'bg-primary/5 hover:bg-primary/10 text-foreground/70 hover:text-foreground border border-border/60'
-          )}
-        >
-          <GraduationCap size={15} />
-          <span className="text-[13px]">CDUT 专区</span>
-        </button>
+            {/* 鼠标移入/按下时的底色：两端纯透明，中间渐显；进场 75ms 极柔，退场 0 延迟瞬断 */}
+            <div
+              aria-hidden="true"
+              className={cn(
+                'absolute inset-0 pointer-events-none opacity-0 transition-none group-hover:transition-opacity group-hover:duration-75 group-hover:ease-out group-hover:opacity-100 group-active:opacity-100 group-active:transition-none',
+                activeView === 'conversations'
+                  ? 'bg-gradient-to-r from-transparent via-foreground/[0.07] to-transparent'
+                  : 'bg-gradient-to-r from-transparent via-foreground/[0.035] to-transparent'
+              )}
+            />
 
-        <button
-          type="button"
-          data-tour="cdut-science-entry"
-          data-profer-navigation-region="mode-switcher-cdut-science"
-          onClick={() => {
-            if (activeView !== 'cdut-science') {
-              setActiveView('cdut-science')
-            }
-          }}
-          className={cn(
-            'flex h-9 items-center justify-center gap-2 rounded-xl px-3 transition-colors duration-150 titlebar-no-drag',
-            activeView === 'cdut-science'
-              ? 'bg-primary text-primary-foreground font-medium shadow-sm'
-              : 'bg-primary/5 hover:bg-primary/10 text-foreground/70 hover:text-foreground border border-border/60'
-          )}
-        >
-          <Atom size={15} />
-          <span className="text-[13px]">CDUT Science</span>
-        </button>
+            <Bot
+              size={15}
+              className={cn(
+                'relative z-10 shrink-0 transition-none group-hover:transition-colors group-hover:duration-75',
+                activeView === 'conversations'
+                  ? 'text-foreground'
+                  : 'text-foreground/45 group-hover:text-foreground'
+              )}
+            />
+            <span className="relative z-10 text-[13px]">Agent</span>
+          </button>
+
+          {/* 2. CDUT 专区 */}
+          <button
+            type="button"
+            data-profer-navigation-region="mode-switcher-cdut"
+            onClick={() => {
+              if (activeView !== 'cdut-zone') {
+                setActiveView('cdut-zone')
+              }
+            }}
+            className={cn(
+              'group relative flex h-9 w-full items-center justify-start gap-2.5 px-3.5 !cursor-default rounded-none border-b border-border select-none titlebar-no-drag focus:outline-none overflow-hidden',
+              activeView === 'cdut-zone'
+                ? 'text-foreground font-medium'
+                : 'text-foreground/60 hover:text-foreground active:text-foreground'
+            )}
+          >
+            {activeView === 'cdut-zone' && (
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-foreground/[0.04] to-transparent"
+              />
+            )}
+
+            <div
+              aria-hidden="true"
+              className={cn(
+                'absolute inset-0 pointer-events-none opacity-0 transition-none group-hover:transition-opacity group-hover:duration-75 group-hover:ease-out group-hover:opacity-100 group-active:opacity-100 group-active:transition-none',
+                activeView === 'cdut-zone'
+                  ? 'bg-gradient-to-r from-transparent via-foreground/[0.07] to-transparent'
+                  : 'bg-gradient-to-r from-transparent via-foreground/[0.035] to-transparent'
+              )}
+            />
+
+            <GraduationCap
+              size={15}
+              className={cn(
+                'relative z-10 shrink-0 transition-none group-hover:transition-colors group-hover:duration-75',
+                activeView === 'cdut-zone'
+                  ? 'text-foreground'
+                  : 'text-foreground/45 group-hover:text-foreground'
+              )}
+            />
+            <span className="relative z-10 text-[13px]">CDUT 专区</span>
+          </button>
+
+          {/* 3. CDUT Science */}
+          <button
+            type="button"
+            data-tour="cdut-science-entry"
+            data-profer-navigation-region="mode-switcher-cdut-science"
+            onClick={() => {
+              if (activeView !== 'cdut-science') {
+                setActiveView('cdut-science')
+              }
+            }}
+            className={cn(
+              'group relative flex h-9 w-full items-center justify-start gap-2.5 px-3.5 !cursor-default rounded-none border-none select-none titlebar-no-drag focus:outline-none overflow-hidden',
+              activeView === 'cdut-science'
+                ? 'text-foreground font-medium'
+                : 'text-foreground/60 hover:text-foreground active:text-foreground'
+            )}
+          >
+            {activeView === 'cdut-science' && (
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-foreground/[0.04] to-transparent"
+              />
+            )}
+
+            <div
+              aria-hidden="true"
+              className={cn(
+                'absolute inset-0 pointer-events-none opacity-0 transition-none group-hover:transition-opacity group-hover:duration-75 group-hover:ease-out group-hover:opacity-100 group-active:opacity-100 group-active:transition-none',
+                activeView === 'cdut-science'
+                  ? 'bg-gradient-to-r from-transparent via-foreground/[0.07] to-transparent'
+                  : 'bg-gradient-to-r from-transparent via-foreground/[0.035] to-transparent'
+              )}
+            />
+
+            <Atom
+              size={15}
+              className={cn(
+                'relative z-10 shrink-0 transition-none group-hover:transition-colors group-hover:duration-75',
+                activeView === 'cdut-science'
+                  ? 'text-foreground'
+                  : 'text-foreground/45 group-hover:text-foreground'
+              )}
+            />
+            <span className="relative z-10 text-[13px]">CDUT Science</span>
+          </button>
+        </div>
       </div>
 
       {/* 新对话/新会话按钮 + 搜索按钮 */}
