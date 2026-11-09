@@ -297,3 +297,6 @@ export type {
   LiveScheduleCourse,
   CourseLiveStatus,
 } from './beijing-time'
+
+// Profer KLine Engine（实验室级 K 线内存池 / 平坦线段树 / 通达信公式编译器 / 三态 DSL / 大模型认知编码器）
+export * from './kline-engine/index'

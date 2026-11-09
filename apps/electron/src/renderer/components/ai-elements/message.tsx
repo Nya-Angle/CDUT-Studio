@@ -38,10 +38,9 @@ import {
   TooltipTrigger,
 } from '@profer/ui/primitives/tooltip'
 import { LoadingIndicator } from '@profer/ui/primitives/loading-indicator'
-import { CodeBlock, MermaidBlock, shouldInspectMermaidCodeBlock, shouldRenderMermaidCodeBlock, shouldRenderMindMapCodeBlock } from '@profer/ui'
+import { BlockRendererRegistry, CodeBlock } from '@profer/ui'
 import { detectLanguage } from '@profer/core/highlight'
-import { parseMindMapText } from '@profer/shared'
-import { MindMapBlock } from './MindMapBlock'
+import { globalOverlayCountAtom } from '@/atoms/overlay-atoms'
 import { FilePathChip, isAbsoluteFilePath, isRelativeFilePath } from './file-path-chip'
 import { useFileAccessSessionId } from './file-access-context'
 import { useOpenPreview } from '@/components/diff/preview-opener'
@@ -839,10 +838,18 @@ const HtmlCodeBlock = React.memo(function HtmlCodeBlock({
   )
 })
 
-/** 代码块 / Mermaid 渲染器 */
+/** 代码块 / 特殊图示（KLine / MindMap / Mermaid）统一分发渲染器 */
 const MarkdownPre = React.memo(function MarkdownPre({
   children: preChildren,
 }: { children?: React.ReactNode }): React.ReactElement {
+  const setOverlayCount = useSetAtom(globalOverlayCountAtom)
+  const handleOverlay = React.useCallback(
+    (active: boolean) => {
+      setOverlayCount((count) => (active ? count + 1 : Math.max(0, count - 1)))
+    },
+    [setOverlayCount],
+  )
+
   // react-markdown v10 把 <code> 替换成自定义组件后，type 不再是字符串 'code'，
   // 但 pre 的 code child 要么是原生 'code'（v9 及之前），要么是自定义函数/对象组件（v10+）。
   // 通过 type 形态过滤掉意外混入的其他原生 HTML 元素（如 span/div），降低未来 react-markdown
@@ -859,28 +866,15 @@ const MarkdownPre = React.memo(function MarkdownPre({
     const codeProps = codeChild.props as { className?: string; children?: React.ReactNode }
     const className = codeProps.className ?? ''
     const hasExplicitLang = /\blanguage-\S+/.test(className)
+    const rawCode = extractText(codeProps.children)
 
-    // ```mindmap 思维导图代码块：对话流只读预览 + 全屏可拖拽大图（§7.2）。
-    // 解析失败时静默回退到后续通用代码块 / Mermaid 渲染路径。
-    if (shouldRenderMindMapCodeBlock(className, extractText(codeProps.children))) {
-      const mindmapCode = extractText(codeProps.children).replace(/\r\n?/g, '\n').replace(/\n$/, '')
-      if (parseMindMapText(mindmapCode)) {
-        return <MindMapBlock code={mindmapCode} />
-      }
-    }
-
-    // 先用共享 mermaid 识别（覆盖 language-mermaid/mmd 以及未标语言但内容像 Mermaid 的情况）
-    if (shouldInspectMermaidCodeBlock(className)) {
-      // normalize Windows/legacy-Mac line endings before feeding to Mermaid parser
-      const mermaidCode = extractText(codeProps.children).replace(/\r\n?/g, '\n').replace(/\n$/, '')
-      // 防御性语法侦测：LLM 偶尔遗漏标记，将 Mermaid mindmap 语法误包进 ```mermaid 围栏。
-      // 命中首行/次行显式声明 mindmap 时自动改道专用导图画布，绝不回退为静态 Mermaid SVG
-      if (/^\s*mindmap\b/m.test(mermaidCode) && parseMindMapText(mermaidCode)) {
-        return <MindMapBlock code={mermaidCode} />
-      }
-      if (shouldRenderMermaidCodeBlock(className, mermaidCode)) {
-        return <MermaidBlock code={mermaidCode} />
-      }
+    // 通过 BlockRendererRegistry 统一分发 kline / mindmap / mermaid 等独立可视化模块
+    const specialBlock = BlockRendererRegistry.resolve(className, rawCode, {
+      isStreaming: false,
+      onOverlayLifecycleChange: handleOverlay,
+    })
+    if (specialBlock) {
+      return specialBlock.element
     }
 
     // HTML 代码块：头部提供「渲染」切换，点击后在会话区域直接渲染
@@ -1157,8 +1151,29 @@ function agentBlockMargin(block: AgentMarkdownBlock, previous?: AgentMarkdownBlo
   return { className: 'my-1.5', topRank: 6, bottomRank: 6, topBridgeClassName: '-bottom-1.5', bottomBridgeClassName: '-bottom-1.5' }
 }
 
-/** 流式尾部的代码围栏占位：纯 CSS 等宽容器，不触发 Shiki 高亮计算。 */
+/** 流式尾部的代码围栏占位：支持渐进式流式渲染的图示（如 ```kline）实时渲染，其余代码块用纯 CSS 等宽容器占位。 */
 const LightweightPre = React.memo(function LightweightPre({ children }: { children?: React.ReactNode }): React.ReactElement {
+  const setOverlayCount = useSetAtom(globalOverlayCountAtom)
+  const handleOverlay = React.useCallback(
+    (active: boolean) => {
+      setOverlayCount((count) => (active ? count + 1 : Math.max(0, count - 1)))
+    },
+    [setOverlayCount],
+  )
+  const codeChild = React.Children.toArray(children).find(
+    (child): child is React.ReactElement => React.isValidElement(child),
+  )
+  if (codeChild) {
+    const codeProps = codeChild.props as { className?: string; children?: React.ReactNode }
+    const specialStreaming = BlockRendererRegistry.resolve(
+      codeProps.className ?? '',
+      extractText(codeProps.children),
+      { isStreaming: true, onOverlayLifecycleChange: handleOverlay },
+    )
+    if (specialStreaming) {
+      return specialStreaming.element
+    }
+  }
   return (
     <pre className="bg-muted/50 p-3 rounded font-mono text-sm overflow-x-auto select-text">
       {children}

@@ -15,13 +15,10 @@ import type { Root } from 'react-dom/client'
 import DOMPurify from 'dompurify'
 import katex from 'katex'
 import { highlightCode, highlightToTokens, getDisplayName } from '@profer/core/highlight'
-import { MermaidBlock } from '@profer/ui'
+import { BlockRendererRegistry } from '@profer/ui'
 import type { HighlightTokensResult } from '@profer/core/highlight'
 import type { FileAccessOptions } from '@profer/shared'
 import { extractCodeText } from '../../lib/markdown-rich-text'
-import { shouldRenderMermaidCodeBlock, shouldRenderMindMapCodeBlock } from '@profer/ui'
-import { parseMindMapText } from '@profer/shared'
-import { MindMapBlock } from '../ai-elements/MindMapBlock'
 
 type FileAccessRef = { current: FileAccessOptions | undefined }
 /** 传 null 表示当前编辑器无会话/文件上下文（如 ScratchPad），跳过路径解析。 */
@@ -655,13 +652,12 @@ function createShikiCodeBlockView(initialNode: ProseMirrorNode, view: EditorView
     currentCode = node.textContent
     label.textContent = language === 'text' ? 'Code' : getDisplayName(language)
     const className = language === 'text' ? undefined : `language-${language}`
-    // ```mindmap 专用思维导图渲染（对话流 / 预览均为只读 + 可展开大图）；解析失败回退 Mermaid / 代码块
-    const isMindMap = !view.editable && shouldRenderMindMapCodeBlock(className, currentCode) && !!parseMindMapText(currentCode)
-    const shouldRenderMermaid = !view.editable && !isMindMap && shouldRenderMermaidCodeBlock(className, currentCode)
-    dom.classList.toggle('profer-code-block--mermaid', shouldRenderMermaid || isMindMap)
-    scheduleMermaidRender(
-      isMindMap ? <MindMapBlock code={currentCode} /> : shouldRenderMermaid ? <MermaidBlock code={currentCode} /> : null,
-    )
+    // 统一通过 BlockRendererRegistry 分发 kline / mindmap / mermaid 等特殊图示模块
+    const specialBlock = !view.editable
+      ? BlockRendererRegistry.resolve(className, currentCode, { isStreaming: false })
+      : null
+    dom.classList.toggle('profer-code-block--mermaid', Boolean(specialBlock))
+    scheduleMermaidRender(specialBlock ? specialBlock.element : null)
   }
 
   render(initialNode)

@@ -1,5 +1,5 @@
 /**
- * 思维导图代码块识别与 Mermaid 识别边界单测（§7.2）
+ * 特殊代码块识别（MindMap / KLine / Mermaid）与 BlockRendererRegistry 单测
  */
 
 import { describe, expect, test } from 'bun:test'
@@ -7,6 +7,9 @@ import {
   shouldRenderMermaidCodeBlock,
   shouldRenderMindMapCodeBlock,
   isMindMapLanguage,
+  isKLineLanguage,
+  shouldRenderKLineCodeBlock,
+  BlockRendererRegistry,
   Z_LAYER,
   Z_INDEX,
 } from './index'
@@ -40,6 +43,54 @@ describe('shouldRenderMindMapCodeBlock（思维导图代码块识别）', () => 
     const code = 'mindmap\n  root((x))\n    child'
     expect(shouldRenderMermaidCodeBlock('language-mermaid', code)).toBe(true)
     expect(shouldRenderMindMapCodeBlock('language-mermaid', code)).toBe(false)
+  })
+})
+
+describe('shouldRenderKLineCodeBlock & BlockRendererRegistry（K线图识别与统一分发）', () => {
+  test('isKLineLanguage 识别 kline / candlestick / ohlc / stock-kline', () => {
+    expect(isKLineLanguage('kline')).toBe(true)
+    expect(isKLineLanguage('candlestick')).toBe(true)
+    expect(isKLineLanguage('ohlc')).toBe(true)
+    expect(isKLineLanguage('stock-kline')).toBe(true)
+    expect(isKLineLanguage('python')).toBe(false)
+  })
+
+  test('显式 language-kline 与未标注语言头部嗅探', () => {
+    expect(shouldRenderKLineCodeBlock('language-kline', 'symbol: SH600519')).toBe(true)
+    expect(
+      shouldRenderKLineCodeBlock(undefined, 'symbol: SH600519\nmode: live\nperiod: 1d'),
+    ).toBe(true)
+    expect(shouldRenderKLineCodeBlock('language-ts', 'symbol: SH600519')).toBe(false)
+  })
+
+  test('BlockRendererRegistry 正确分发 kline / mindmap / mermaid，且支持 kline 流式渐进渲染', () => {
+    const klineResolved = BlockRendererRegistry.resolve(
+      'language-kline',
+      'mode: live\nsymbol: SH600519\nname: 贵州茅台\nperiod: 1d',
+      { isStreaming: true },
+    )
+    expect(klineResolved?.kind).toBe('kline')
+
+    const mindmapStreaming = BlockRendererRegistry.resolve(
+      'language-mindmap',
+      'mindmap\n  root((A))\n    B',
+      { isStreaming: true },
+    )
+    expect(mindmapStreaming).toBeNull()
+
+    const mindmapClosed = BlockRendererRegistry.resolve(
+      'language-mindmap',
+      'mindmap\n  root((A))\n    B',
+      { isStreaming: false },
+    )
+    expect(mindmapClosed?.kind).toBe('mindmap')
+
+    const mermaidClosed = BlockRendererRegistry.resolve(
+      'language-mermaid',
+      'flowchart TD\n  A --> B',
+      { isStreaming: false },
+    )
+    expect(mermaidClosed?.kind).toBe('mermaid')
   })
 })
 

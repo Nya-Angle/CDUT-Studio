@@ -1,3 +1,5 @@
+import { isKLineLanguage, shouldRenderKLineCodeBlock } from '@profer/shared'
+
 // 注意：graph / flowchart / flowchart-elk 不在此列。它们同时是常见英文/代码词，
 // 仅凭首行以其开头极易误判普通代码块。改用 MERMAID_DIRECTED_PATTERN 要求其后必须
 // 跟方向关键字（mermaid 强制语法），既精确又零漏报。
@@ -98,3 +100,5 @@ export function shouldRenderMindMapCodeBlock(className: string | undefined, code
   const firstLine = code.trimStart().split(/\r?\n/, 1)[0] ?? ''
   return /^mindmap\b/i.test(firstLine.trim())
 }
+
+export { isKLineLanguage, shouldRenderKLineCodeBlock }
