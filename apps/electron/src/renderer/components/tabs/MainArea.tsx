@@ -20,12 +20,24 @@ import { shouldAutoOpenBrowserFromPush } from '@/lib/browser-auto-open'
 import type { BrowserViewState } from '@profer/shared'
 import { TabBar } from './TabBar'
 import { TabContent } from './TabContent'
-import { AutomationFormView } from '@/components/automation/AutomationFormView'
-import { PlanningView } from '@/components/planning/PlanningView'
-import { AgentSkillsView } from '@/components/agent-skills/AgentSkillsView'
-import { CdutZoneView } from '@/components/cdut-zone/CdutZoneView'
-import { CdutScienceView } from '@/components/cdut-science/CdutScienceView'
+import { LazyViewFallback } from '@/components/app-shell/LazyViewFallback'
 import { automationFormAtom } from '@/atoms/automation-atoms'
+
+const AutomationFormView = React.lazy(() =>
+  import('@/components/automation/AutomationFormView').then((m) => ({ default: m.AutomationFormView })),
+)
+const PlanningView = React.lazy(() =>
+  import('@/components/planning/PlanningView').then((m) => ({ default: m.PlanningView })),
+)
+const AgentSkillsView = React.lazy(() =>
+  import('@/components/agent-skills/AgentSkillsView').then((m) => ({ default: m.AgentSkillsView })),
+)
+const CdutZoneView = React.lazy(() =>
+  import('@/components/cdut-zone/CdutZoneView').then((m) => ({ default: m.CdutZoneView })),
+)
+const CdutScienceView = React.lazy(() =>
+  import('@/components/cdut-science/CdutScienceView').then((m) => ({ default: m.CdutScienceView })),
+)
 import { activeViewAtom } from '@/atoms/active-view'
 import { cslabAuthAtom } from '@/atoms/cslab-atoms'
 import { appModeAtom } from '@/atoms/app-mode'
@@ -200,10 +212,10 @@ export function MainArea(): React.ReactElement {
   // ResizeObserver 首次回调前宽度是 0。此时必须用 CSS 等分兜底，不能把右栏写成 0px；
   // 否则初次合并会只剩一条窄边界，用户也很难命中分隔条。
   const groupGeometryReady = groupContainerWidth > GROUP_SPLIT_GAP
-  const rightPaneStyle: React.CSSProperties = {
+  const rightPaneStyle = React.useMemo<React.CSSProperties>(() => ({
     width: groupGeometryReady ? groupGeometry.rightWidth : `calc(50% - ${GROUP_SPLIT_GAP / 2}px)`,
     flexShrink: 0,
-  }
+  }), [groupGeometry.rightWidth, groupGeometryReady])
 
   // 成员被关闭/删除（或组合指向失效标签）时自动解散对应组合。
   React.useEffect(() => {
@@ -319,22 +331,30 @@ export function MainArea(): React.ReactElement {
         />
 
         {activeView === 'planning' ? (
-          automationFormOpen ? (
-            // 规划中心内的定时任务设置页：与列表同层级替换中间区，不经过 TabBar。
-            <AutomationFormView />
-          ) : (
-            // 规划中心视图（Task · 日历 · 定时任务）全屏取代 TabBar + TabContent
-            <PlanningView />
-          )
+          <React.Suspense fallback={<LazyViewFallback />}>
+            {automationFormOpen ? (
+              // 规划中心内的定时任务设置页：与列表同层级替换中间区，不经过 TabBar。
+              <AutomationFormView />
+            ) : (
+              // 规划中心视图（Task · 日历 · 定时任务）全屏取代 TabBar + TabContent
+              <PlanningView />
+            )}
+          </React.Suspense>
         ) : activeView === 'agent-skills' ? (
           // Agent 技能视图：全屏取代 TabBar + TabContent
-          <AgentSkillsView />
+          <React.Suspense fallback={<LazyViewFallback />}>
+            <AgentSkillsView />
+          </React.Suspense>
         ) : activeView === 'cdut-zone' ? (
           // CDUT 专区：全屏视图（特区账户登录 + 专区内容）
-          <CdutZoneView />
+          <React.Suspense fallback={<LazyViewFallback />}>
+            <CdutZoneView />
+          </React.Suspense>
         ) : activeView === 'cdut-science' ? (
           // CDUT Science 专区：全屏独立视图
-          <CdutScienceView />
+          <React.Suspense fallback={<LazyViewFallback />}>
+            <CdutScienceView />
+          </React.Suspense>
         ) : (
           <div className="flex min-h-0 flex-1 flex-col">
             {/* 顶栏横跨整个主区：组合分屏时两侧顶栏共用同一条基线。 */}
@@ -361,7 +381,9 @@ export function MainArea(): React.ReactElement {
                 >
                   {automationFormOpen ? (
                     // 兼容从会话内入口打开任务设置的场景。
-                    <AutomationFormView />
+                    <React.Suspense fallback={<LazyViewFallback />}>
+                      <AutomationFormView />
+                    </React.Suspense>
                   ) : showWelcomeLauncher ? (
                     <WelcomeView />
                   ) : leftPaneTabId ? (

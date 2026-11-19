@@ -10,11 +10,21 @@ import { useAtomValue } from 'jotai'
 import { tabsAtom } from '@/atoms/tab-atoms'
 import { markdownTocOpenAtom } from '@/atoms/markdown-toc'
 import { AgentView } from '@/components/agent'
-import { BrowserTabContent } from '@/components/browser/BrowserTabContent'
-import { MarkdownRichEditor } from '@/components/diff/MarkdownRichEditor'
-import { MarkdownToc } from '@/components/diff/MarkdownToc'
-import { ScratchPadView } from '@/components/scratch-pad/ScratchPadView'
+import { LazyViewFallback } from '@/components/app-shell/LazyViewFallback'
 import { TabErrorBoundary } from './TabErrorBoundary'
+
+const BrowserTabContent = React.lazy(() =>
+  import('@/components/browser/BrowserTabContent').then((m) => ({ default: m.BrowserTabContent })),
+)
+const MarkdownRichEditor = React.lazy(() =>
+  import('@/components/diff/MarkdownRichEditor').then((m) => ({ default: m.MarkdownRichEditor })),
+)
+const MarkdownToc = React.lazy(() =>
+  import('@/components/diff/MarkdownToc').then((m) => ({ default: m.MarkdownToc })),
+)
+const ScratchPadView = React.lazy(() =>
+  import('@/components/scratch-pad/ScratchPadView').then((m) => ({ default: m.ScratchPadView })),
+)
 
 export interface TabContentProps {
   tabId: string
@@ -40,7 +50,11 @@ export function TabContent({ tabId }: TabContentProps): React.ReactElement {
   }
 
   if (tab.type === 'scratch') {
-    return <ScratchPadView />
+    return (
+      <React.Suspense fallback={<LazyViewFallback />}>
+        <ScratchPadView />
+      </React.Suspense>
+    )
   }
 
   if (tab.type === 'tutorial') {
@@ -50,7 +64,9 @@ export function TabContent({ tabId }: TabContentProps): React.ReactElement {
   if (tab.type === 'browser') {
     return (
       <TabErrorBoundary key={tab.id} sessionId={tab.sessionId}>
-        <BrowserTabContent tabId={tab.id} sessionId={tab.sessionId} browserTabId={tab.browserTabId ?? ''} />
+        <React.Suspense fallback={<LazyViewFallback />}>
+          <BrowserTabContent tabId={tab.id} sessionId={tab.sessionId} browserTabId={tab.browserTabId ?? ''} />
+        </React.Suspense>
       </TabErrorBoundary>
     )
   }
@@ -94,15 +110,19 @@ function TutorialTabContent(): React.ReactElement {
 
   return (
     <div className="relative flex h-full min-h-0 overflow-hidden">
-      <MarkdownToc containerRef={scrollRef as React.RefObject<HTMLElement>} contentKey={content.slice(0, 100)} enabled={tocOpen} />
+      <React.Suspense fallback={null}>
+        <MarkdownToc containerRef={scrollRef as React.RefObject<HTMLElement>} contentKey={content.slice(0, 100)} enabled={tocOpen} />
+      </React.Suspense>
       <div ref={scrollRef} className="flex-1 min-w-0 overflow-y-auto p-8">
-        <MarkdownRichEditor
-          value={content}
-          editing={false}
-          onChange={() => {}}
-          onSave={() => {}}
-          onCancel={() => {}}
-        />
+        <React.Suspense fallback={<LazyViewFallback />}>
+          <MarkdownRichEditor
+            value={content}
+            editing={false}
+            onChange={() => {}}
+            onSave={() => {}}
+            onCancel={() => {}}
+          />
+        </React.Suspense>
       </div>
     </div>
   )

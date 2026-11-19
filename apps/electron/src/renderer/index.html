@@ -50,8 +50,87 @@
         // mode === 'light' 时不添加 dark 类
       })()
     </script>
+    <style>
+      #cdut-entry-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        display: grid;
+        place-items: center;
+        background: #f7f7f5;
+        color: #101114;
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-app-region: drag;
+        opacity: 1;
+        transform: scale(1);
+        transition: opacity 280ms cubic-bezier(0.22, 1, 0.36, 1), transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      html.dark #cdut-entry-overlay {
+        background: #0b0b0c;
+        color: #f3f3f3;
+      }
+      #cdut-entry-overlay.is-leaving {
+        opacity: 0;
+        transform: scale(1.015);
+        pointer-events: none;
+      }
+      #cdut-entry-overlay .cdut-entry-glow {
+        position: absolute;
+        width: min(44vw, 480px);
+        height: min(44vw, 480px);
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(60, 65, 74, 0.14) 0%, transparent 66%);
+        filter: blur(24px);
+        animation: cdut-entry-breathe 2.4s ease-in-out infinite;
+        pointer-events: none;
+      }
+      html.dark #cdut-entry-overlay .cdut-entry-glow {
+        background: radial-gradient(circle, rgba(174, 180, 189, 0.14) 0%, transparent 66%);
+      }
+      #cdut-entry-overlay .cdut-entry-logo {
+        position: relative;
+        z-index: 1;
+        font-size: clamp(32px, 5vw, 56px);
+        font-weight: 600;
+        font-style: italic;
+        letter-spacing: -0.045em;
+        transform: skewX(-7deg);
+        animation: cdut-entry-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      @keyframes cdut-entry-rise {
+        from { opacity: 0; transform: translateY(12px) skewX(-7deg) scale(0.97); }
+        to { opacity: 1; transform: translateY(0) skewX(-7deg) scale(1); }
+      }
+      @keyframes cdut-entry-breathe {
+        0%, 100% { opacity: 0.45; transform: scale(0.9); }
+        50% { opacity: 0.85; transform: scale(1.06); }
+      }
+    </style>
   </head>
   <body>
+    <div id="cdut-entry-overlay" aria-hidden="true">
+      <div class="cdut-entry-glow"></div>
+      <div class="cdut-entry-logo">CDUT Studio</div>
+    </div>
+    <script>
+      ;(function() {
+        var el = document.getElementById('cdut-entry-overlay')
+        if (!el) return
+        if (window.location.search.indexOf('window=') !== -1) {
+          el.remove()
+          return
+        }
+        window.__dismissCdutEntryOverlay = function() {
+          if (!el || !el.parentNode || el.classList.contains('is-leaving')) return
+          el.classList.add('is-leaving')
+          window.setTimeout(function() {
+            if (el && el.parentNode) el.parentNode.removeChild(el)
+          }, 300)
+        }
+      })()
+    </script>
     <div id="root"></div>
     <script type="module" src="/main.tsx"></script>
   </body>
