@@ -15,7 +15,7 @@ import type { Channel, OfficialChannelHealth, ProviderType } from '@profer/share
 import { getChannelLogo } from '@/lib/model-logo'
 import { useIsDarkTheme } from '@/hooks/use-is-dark-theme'
 import { agentChannelIdAtom, agentModelIdAtom, agentChannelIdsAtom } from '@/atoms/agent-atoms'
-import { channelsAtom } from '@/atoms/conversation-atoms'
+import { channelsAtom, selectedModelAtom } from '@/atoms/conversation-atoms'
 import { authStatusAtom } from '@/atoms/identity-atoms'
 import { SettingsSection, SettingsCard, SettingsRow } from './primitives'
 import {
@@ -46,8 +46,9 @@ export function ChannelSettings(): React.ReactElement {
   const [commercialMode, setCommercialMode] = React.useState(false)
   const [canSelfConfig, setCanSelfConfig] = React.useState(false)
   const [agentChannelId, setAgentChannelId] = useAtom(agentChannelIdAtom)
-  const [, setAgentModelId] = useAtom(agentModelIdAtom)
+  const [agentModelId, setAgentModelId] = useAtom(agentModelIdAtom)
   const [agentChannelIds, setAgentChannelIds] = useAtom(agentChannelIdsAtom)
+  const [selectedModel, setSelectedModel] = useAtom(selectedModelAtom)
   const setGlobalChannels = useSetAtom(channelsAtom)
   const authStatus = useAtomValue(authStatusAtom)
   const [deleteTarget, setDeleteTarget] = React.useState<Channel | null>(null)
@@ -139,6 +140,65 @@ export function ChannelSettings(): React.ReactElement {
     setAgentChannelIds(derivedIds)
     window.electronAPI.updateSettings({ agentChannelIds: derivedIds }).catch(console.error)
   }, [channels, loading, setAgentChannelIds])
+
+  // 补齐默认模型：新建第一个渠道后立即落为全局默认，避免引导/主界面仍判定「未配置模型」，
+  // 也避免用户必须重启应用才能开始对话。已有有效默认时不会被覆盖。
+  React.useEffect(() => {
+    if (loading) return
+    const usableChannel = channels.find(
+      (channel) => channel.enabled && channel.models.some((model) => model.enabled),
+    )
+    if (!usableChannel) return
+
+    const currentChannel = channels.find(
+      (channel) =>
+        channel.id === agentChannelId &&
+        channel.enabled &&
+        channel.models.some((model) => model.enabled),
+    )
+    const nextChannel = currentChannel ?? usableChannel
+    const nextModelId = nextChannel.models.some(
+      (model) => model.id === agentModelId && model.enabled,
+    )
+      ? agentModelId
+      : nextChannel.models.find((model) => model.enabled)?.id ?? null
+
+    const chatModelValid =
+      selectedModel !== null &&
+      channels.some(
+        (channel) =>
+          channel.id === selectedModel.channelId &&
+          channel.enabled &&
+          channel.models.some(
+            (model) => model.id === selectedModel.modelId && model.enabled,
+          ),
+      )
+
+    const settingsPatch: Parameters<typeof window.electronAPI.updateSettings>[0] = {}
+    if (nextChannel.id !== agentChannelId) {
+      setAgentChannelId(nextChannel.id)
+      settingsPatch.agentChannelId = nextChannel.id
+    }
+    if (nextModelId !== agentModelId) {
+      setAgentModelId(nextModelId)
+      settingsPatch.agentModelId = nextModelId ?? undefined
+    }
+    if (!chatModelValid && nextModelId) {
+      setSelectedModel({ channelId: nextChannel.id, modelId: nextModelId })
+    }
+    if (Object.keys(settingsPatch).length > 0) {
+      window.electronAPI.updateSettings(settingsPatch).catch(console.error)
+    }
+  }, [
+    channels,
+    loading,
+    agentChannelId,
+    agentModelId,
+    selectedModel,
+    setAgentChannelId,
+    setAgentModelId,
+    setSelectedModel,
+  ])
 
   // 商业模式且无自配权限时：不允许进入创建/编辑视图
   React.useEffect(() => {

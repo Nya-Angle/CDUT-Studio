@@ -1039,7 +1039,7 @@ export function registerCsLabIpc(): void {
   )
 
   ipcMain.handle(CSLAB_IPC_CHANNELS.GET_TOOL_RUNTIME, async (_event, labId: unknown) =>
-    getToolRuntimeStatus(asString(labId, '实验室标识')),
+    getToolRuntimeStatus(asString(labId, '实验室标识'), { force: true }),
   )
 
   ipcMain.handle(CSLAB_IPC_CHANNELS.INSTALL_TOOL_DEPS, async (_event, input: unknown) => {

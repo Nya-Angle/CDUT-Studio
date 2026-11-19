@@ -5,6 +5,10 @@ const fs = require('node:fs')
 const path = require('node:path')
 
 const WINDOWS_CLI_NAME = 'profer.exe'
+// electron-builder.yml 的 win.extraResources 会把 MinGit 复制到 resources/bin/git，
+// 该目录与 CLI 同级，是 Windows 开箱即用所需的合法内嵌运行时。
+const BUNDLED_GIT_DIR_NAME = 'git'
+const BUNDLED_GIT_EXE = path.join(BUNDLED_GIT_DIR_NAME, 'cmd', 'git.exe')
 
 function verifyPackagedWindowsCli(binDir) {
   if (!fs.existsSync(binDir)) {
@@ -12,20 +16,40 @@ function verifyPackagedWindowsCli(binDir) {
   }
 
   const entries = fs.readdirSync(binDir, { withFileTypes: true })
-  if (entries.length !== 1 || entries[0].name !== WINDOWS_CLI_NAME) {
-    const actual = entries.map((entry) => entry.name).sort().join(', ') || '<空>'
+  const actual = entries.map((entry) => entry.name).sort().join(', ') || '<空>'
+  const cliEntry = entries.find((entry) => entry.name === WINDOWS_CLI_NAME)
+  if (!cliEntry) {
     throw new Error(
-      `Windows 随包 CLI 目录必须且只能包含 ${WINDOWS_CLI_NAME}，实际为: ${actual}`,
+      `Windows 随包 CLI 目录必须包含 ${WINDOWS_CLI_NAME}，实际为: ${actual}`,
     )
   }
 
-  const entry = entries[0]
-  const cliPath = path.join(binDir, entry.name)
-  if (!entry.isFile()) {
+  const unexpected = entries
+    .map((entry) => entry.name)
+    .filter((name) => name !== WINDOWS_CLI_NAME && name !== BUNDLED_GIT_DIR_NAME)
+  if (unexpected.length > 0) {
+    throw new Error(
+      `Windows 随包 CLI 目录只能包含 ${WINDOWS_CLI_NAME} 与内置 MinGit 目录 ${BUNDLED_GIT_DIR_NAME}，实际为: ${actual}`,
+    )
+  }
+
+  const cliPath = path.join(binDir, cliEntry.name)
+  if (!cliEntry.isFile()) {
     throw new Error(`Windows 随包 CLI 必须是普通文件: ${cliPath}`)
   }
   if (fs.statSync(cliPath).size <= 0) {
     throw new Error(`Windows 随包 CLI 不能为空: ${cliPath}`)
+  }
+
+  const gitEntry = entries.find((entry) => entry.name === BUNDLED_GIT_DIR_NAME)
+  if (gitEntry) {
+    const gitExePath = path.join(binDir, BUNDLED_GIT_EXE)
+    if (!gitEntry.isDirectory()) {
+      throw new Error(`内置 MinGit 必须是目录: ${path.join(binDir, BUNDLED_GIT_DIR_NAME)}`)
+    }
+    if (!fs.existsSync(gitExePath) || fs.statSync(gitExePath).size <= 0) {
+      throw new Error(`内置 MinGit 缺少可执行文件或为空: ${gitExePath}`)
+    }
   }
 
   return cliPath

@@ -128,6 +128,7 @@ export async function digitizePlot(
 
     const stdout = await runner.runPython(labId, 'cslab-plot-digitizer.py', args, {
       timeoutMs: 120_000,
+      profile: 'plot',
     })
     const payload = JSON.parse(stdout.trim()) as RawDigitizePayload
     const series = normalizeSeries(payload.series)

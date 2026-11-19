@@ -38,6 +38,14 @@ interface RunnerState {
 
 const READY_SELECTOR_TIMEOUT = 10_000
 
+/** 步骤切换后仍在执行的准备动作统一以此中止，避免旧指令在后续步骤「补执行」 */
+class TourCancelledError extends Error {
+  constructor() {
+    super('引导步骤已切换')
+    this.name = 'TourCancelledError'
+  }
+}
+
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => window.setTimeout(resolve, ms))
 }
@@ -73,11 +81,18 @@ export function useCoachTourRunner(
   const commandSeqRef = React.useRef(0)
   /** 当前演示实验室 id：资产指令必须落到同一个实验室，避免切换实验室时的旧回调竞态 */
   const demoLabIdRef = React.useRef<string | null>(null)
+  /** 准备动作执行令牌：切步/关闭即自增，旧一轮异步动作据此静默中止 */
+  const runTokenRef = React.useRef(0)
 
   const waitForAck = React.useCallback(
-    async (id: number, timeoutMs: number): Promise<{ ok: boolean; error?: string } | null> => {
+    async (
+      id: number,
+      timeoutMs: number,
+      isStale?: () => boolean,
+    ): Promise<{ ok: boolean; error?: string } | null> => {
       const startedAt = Date.now()
       while (Date.now() - startedAt < timeoutMs) {
+        if (isStale?.()) throw new TourCancelledError()
         const ack = store.get(cslabTourAckAtom)
         if (ack?.id === id) return ack
         await sleep(120)
@@ -93,32 +108,39 @@ export function useCoachTourRunner(
         | { kind: 'open-table-at-index'; index: number }
         | { kind: 'open-asset-by-title'; title: string }
         | { kind: 'open-plot'; plotId: string }
+        | { kind: 'open-academic-search'; query: string }
         | { kind: 'refresh-assets' },
-      attempts = 3,
-      timeoutMs = 3000,
+      attempts = 2,
+      timeoutMs = 8000,
       expectedLabId?: string | null,
+      isStale?: () => boolean,
     ): Promise<void> => {
-      // 命令必须在工作台挂载完成后下发，否则 atom 指令会被漏掉
-      const workspaceSelector = expectedLabId
-        ? `[data-tour="cslab-workspace"][data-cslab-lab-id="${expectedLabId}"]`
-        : '[data-tour="cslab-workspace"]'
+      if (isStale?.()) throw new TourCancelledError()
+      // 重播/刷新后 ref 可能为空，回退到当前激活实验室，避免指令落到错误工作台
+      const labId = expectedLabId ?? demoLabIdRef.current ?? store.get(cslabActiveLabIdAtom)
+      // 必须等工作台挂载且资产首批加载完成，否则指令会被工作台当作「目标不存在」丢弃
+      const workspaceSelector = labId
+        ? `[data-tour="cslab-workspace"][data-cslab-lab-id="${labId}"][data-cslab-ready="true"]`
+        : '[data-tour="cslab-workspace"][data-cslab-ready="true"]'
       await waitForSelector(workspaceSelector, READY_SELECTOR_TIMEOUT)
       for (let attempt = 0; attempt < attempts; attempt += 1) {
+        if (isStale?.()) throw new TourCancelledError()
         commandSeqRef.current += 1
         const id = commandSeqRef.current
         store.set(cslabTourCommandAtom, { ...payload, id } as CsLabTourCommand)
-        const ack = await waitForAck(id, timeoutMs)
+        const ack = await waitForAck(id, timeoutMs, isStale)
         if (ack?.ok) return
         if (ack && !ack.ok) throw new Error(ack.error || '科研工作台执行引导指令失败')
       }
-      throw new Error('科研工作台未响应引导指令')
+      throw new Error('科研工作台未响应引导指令，请稍后点击「跳过本步」')
     },
     [store, waitForAck],
   )
 
   const fillComposer = React.useCallback(
-    async (text: string, composerSelector: string): Promise<void> => {
+    async (text: string, composerSelector: string, isStale?: () => boolean): Promise<void> => {
       await waitForSelector(composerSelector, READY_SELECTOR_TIMEOUT)
+      if (isStale?.()) throw new TourCancelledError()
       const sessionId = store.get(currentAgentSessionIdAtom)
       if (!sessionId) throw new Error('未找到可用的 Agent 会话')
       store.set(agentComposerInjectionAtom, { sessionId, text, nonce: Date.now() })
@@ -127,8 +149,31 @@ export function useCoachTourRunner(
     [store],
   )
 
+  /** 速课堂工件页签：等页签挂载 → 点击 → 等对应工件视图真正可见，失败重试到 8s */
+  const switchAiClassTab = React.useCallback(
+    async (
+      tab: 'mindmap' | 'flashcard' | 'quiz',
+      viewSelector: string,
+      isStale?: () => boolean,
+    ): Promise<void> => {
+      const tabSelector = `[data-tour-tab="${tab}"]`
+      await waitForSelector(tabSelector, 8000)
+      const deadline = Date.now() + 8000
+      while (Date.now() < deadline) {
+        if (isStale?.()) throw new TourCancelledError()
+        document.querySelector<HTMLElement>(tabSelector)?.click()
+        await sleep(300)
+        const view = document.querySelector<HTMLElement>(viewSelector)
+        if (view && view.getClientRects().length > 0) return
+      }
+      throw new Error('学习工件未能在预期时间内打开，请点击「跳过本步」继续')
+    },
+    [],
+  )
+
   const runTrigger = React.useCallback(
-    async (trigger: CoachTourTrigger): Promise<void> => {
+    async (trigger: CoachTourTrigger, isStale: () => boolean): Promise<void> => {
+      if (isStale()) throw new TourCancelledError()
       switch (trigger) {
         case 'ensure-draft-session': {
           if (store.get(currentAgentSessionIdAtom)) return
@@ -136,7 +181,7 @@ export function useCoachTourRunner(
           return
         }
         case 'fill-calculus':
-          await fillComposer(PROMPT_CALCULUS, '[data-input-mode="agent"]')
+          await fillComposer(PROMPT_CALCULUS, '[data-input-mode="agent"]', isStale)
           return
         case 'login-demo': {
           if (store.get(cdutAccountAtom).status === 'active') return
@@ -153,29 +198,28 @@ export function useCoachTourRunner(
         }
         case 'ensure-demo-ai-class': {
           const result = await window.electronAPI.cdutAiClass.ensureDemoSession()
+          if (isStale()) throw new TourCancelledError()
           if (!result.documentIngested) {
             toast.warning('演示资料未找到，《红楼梦》课堂仍可进入，但回答可能缺少原文依据')
           }
           enterAiClass(result.session.sessionId, result.session.courseName)
           return
         }
-        case 'switch-tab-mindmap': {
-          const btn = document.querySelector<HTMLElement>('[data-tour-tab="mindmap"]')
-          btn?.click()
+        case 'switch-tab-mindmap':
+          await switchAiClassTab('mindmap', '[data-tour="ai-class-mindmap-view"]', isStale)
           return
-        }
-        case 'switch-tab-flashcard': {
-          const btn = document.querySelector<HTMLElement>('[data-tour-tab="flashcard"]')
-          btn?.click()
+        case 'switch-tab-flashcard':
+          await switchAiClassTab('flashcard', '[data-tour="ai-class-flashcard-view"]', isStale)
           return
-        }
-        case 'switch-tab-quiz': {
-          const btn = document.querySelector<HTMLElement>('[data-tour-tab="quiz"]')
-          btn?.click()
+        case 'switch-tab-quiz':
+          await switchAiClassTab('quiz', '[data-tour="ai-class-quiz-view"]', isStale)
           return
-        }
         case 'fill-honglou-q1':
-          await fillComposer(PROMPT_HONGLOU_Q1, '[data-tour="ai-class-chat"] [data-input-mode="agent"]')
+          await fillComposer(
+            PROMPT_HONGLOU_Q1,
+            '[data-tour="ai-class-chat"] [data-input-mode="agent"]',
+            isStale,
+          )
           return
                 case 'prepare-pet-demo': {
           await waitForSelector('[data-tour="yanhu-express-stage"]', READY_SELECTOR_TIMEOUT)
@@ -210,7 +254,19 @@ export function useCoachTourRunner(
         }
         case 'apply-demo-cslab-password': {
           const status = await window.electronAPI.cslab.getAuthStatus()
-          if (status.isVerified || status.isInitialized) return
+          if (isStale()) throw new TourCancelledError()
+          if (status.isVerified) return
+          // 已设过密码（sessionVerified 仅存内存，重启后必然为 false）：先试演示密码，
+          // 失败则把演示密码预填到输入框并明确提示用户改成自己的密码，绝不空等验密超时
+          if (status.isInitialized) {
+            const result = await window.electronAPI.cslab.verifyPassword(DEMO_CSLAB_PASSWORD)
+            if (isStale()) throw new TourCancelledError()
+            if (result.success) return
+            // 不阻断步骤：预填演示密码并提示用户改成自己的密码，验密成功后 waitFor 会自动继续
+            setNativeInputValue('[data-tour="cslab-auth-password"]', DEMO_CSLAB_PASSWORD)
+            toast.warning('本机已设置过访问密码，演示密码未通过，请输入你的密码解锁后自动继续')
+            return
+          }
           await waitForSelector('[data-tour="cslab-auth-password"]', READY_SELECTOR_TIMEOUT)
           setNativeInputValue('[data-tour="cslab-auth-password"]', DEMO_CSLAB_PASSWORD)
           setNativeInputValue('[data-tour="cslab-auth-password-confirm"]', DEMO_CSLAB_PASSWORD)
@@ -225,74 +281,109 @@ export function useCoachTourRunner(
         }
         case 'open-demo-lab': {
           const result = await window.electronAPI.cslab.createDemoLab()
+          if (isStale()) throw new TourCancelledError()
           await window.electronAPI.cslab.openLab(result.lab.id)
           demoLabIdRef.current = result.lab.id
           store.set(cslabActiveLabIdAtom, result.lab.id)
-          // 已有同名实验室时 createDemoLab 会补入新资产，强制工作台刷新一次列表
-          await sendCsLabCommand({ kind: 'refresh-assets' }, 3, 3000, result.lab.id)
+          // 已有同名实验室时 createDemoLab 会补入新资产，等工作台就绪后强制刷新一次列表
+          await sendCsLabCommand({ kind: 'refresh-assets' }, 2, 8000, result.lab.id, isStale)
           return
         }
         case 'open-table-1':
           await sendCsLabCommand(
             { kind: 'open-table-at-index', index: 0 },
-            3,
-            3000,
+            2,
+            8000,
             demoLabIdRef.current,
+            isStale,
           )
           return
         case 'open-table-2':
           await sendCsLabCommand(
             { kind: 'open-table-at-index', index: 1 },
-            3,
-            3000,
+            2,
+            8000,
             demoLabIdRef.current,
+            isStale,
+          )
+          return
+        case 'open-geo-dem':
+          await sendCsLabCommand(
+            { kind: 'open-asset-by-title', title: 'biogeo_basin_dem.asc' },
+            2,
+            8000,
+            demoLabIdRef.current,
+            isStale,
           )
           return
         case 'open-digitizer-figure':
           await sendCsLabCommand(
             { kind: 'open-asset-by-title', title: 'standard_calibration_curve.png' },
-            3,
-            3000,
+            2,
+            8000,
             demoLabIdRef.current,
+            isStale,
           )
           return
         case 'open-mol-gold':
           await sendCsLabCommand(
             { kind: 'open-asset-by-title', title: 'b_dna_double_helix.pdb' },
-            3,
-            3000,
+            2,
+            8000,
             demoLabIdRef.current,
+            isStale,
           )
           return
         case 'open-mol-srtio3':
           await sendCsLabCommand(
             { kind: 'open-asset-by-title', title: 'perovskite_cubic.cif' },
-            3,
-            3000,
+            2,
+            8000,
             demoLabIdRef.current,
+            isStale,
           )
           return
         case 'open-mol-garnet':
           await sendCsLabCommand(
             { kind: 'open-asset-by-title', title: 'rutile_tio2.cif' },
-            3,
-            3000,
+            2,
+            8000,
             demoLabIdRef.current,
+            isStale,
           )
           return
         case 'open-publication-plot':
           await sendCsLabCommand(
             { kind: 'open-plot', plotId: 'flagship-xrd-dual' },
-            3,
-            3000,
+            2,
+            8000,
             demoLabIdRef.current,
+            isStale,
           )
           return
-        default:
+        case 'open-science-agent-window': {
+          const labId = demoLabIdRef.current ?? store.get(cslabActiveLabIdAtom)
+          if (!labId) throw new Error('演示实验室尚未打开，无法唤起科学助理')
+          await window.electronAPI.cslab.openAgentWindow({ labId })
           return
+        }
+        case 'open-academic-search':
+          await sendCsLabCommand(
+            { kind: 'open-academic-search', query: 'Attention Is All You Need' },
+            2,
+            8000,
+            demoLabIdRef.current,
+            isStale,
+          )
+          return
+        default: {
+          // 编译期穷尽检查：新增触发器却漏写分支时 typecheck 直接失败
+          const exhaustive: never = trigger
+          return exhaustive
+        }
       }
     },
-    [createAgent, enterAiClass, fillComposer, sendCsLabCommand, store],
+    [createAgent, enterAiClass, fillComposer, sendCsLabCommand, store, switchAiClassTab],
   )
 
   // 触发函数依赖导航 Hook，其引用可能随侧栏状态变化；用 ref 保证「每步只执行一次」
@@ -301,37 +392,60 @@ export function useCoachTourRunner(
 
   React.useEffect(() => {
     if (!open || !step) {
+      runTokenRef.current += 1
       setState({ phase: 'idle', message: '', key: null })
       return
     }
-    let cancelled = false
+    // 每次准备都有独立令牌：切步 / 关闭后旧动作立即失效，不再向工作台补发指令
+    const token = runTokenRef.current + 1
+    runTokenRef.current = token
+    const isStale = (): boolean => runTokenRef.current !== token
     const stepKey = step.key
-    setState({ phase: 'preparing', message: '正在准备演示环境…', key: stepKey })
     const prepare = step.prepare
+    const hasPrepare = Boolean(prepare?.triggers?.length || prepare?.readySelector)
+    // 无准备动作的步骤直接就绪，避免按钮闪一下「准备中…」
+    setState({
+      phase: hasPrepare ? 'preparing' : 'ready',
+      message: hasPrepare ? '正在准备演示环境…' : '',
+      key: stepKey,
+    })
+    let timer: number | null = null
     const run = async (): Promise<void> => {
       try {
         for (const trigger of prepare?.triggers ?? []) {
-          if (cancelled) return
-          await runTriggerRef.current(trigger)
+          if (isStale()) return
+          await runTriggerRef.current(trigger, isStale)
         }
         if (prepare?.readySelector) {
-          if (cancelled) return
+          if (isStale()) return
           await waitForSelector(
             prepare.readySelector,
             prepare.timeoutMs ?? READY_SELECTOR_TIMEOUT * 6,
           )
         }
-        if (!cancelled) setState({ phase: 'ready', message: '', key: stepKey })
+        if (!isStale()) setState({ phase: 'ready', message: '', key: stepKey })
       } catch (error) {
-        if (cancelled) return
+        if (error instanceof TourCancelledError || isStale()) return
         const message = error instanceof Error ? error.message : '演示准备失败'
         setState({ phase: 'error', message, key: stepKey })
         toast.error(message)
       }
     }
+    // 整体兜底：触发器内部 IPC 卡住时也要能退出「正在准备演示环境…」
+    if (hasPrepare) {
+      const overallMs = (prepare?.timeoutMs ?? READY_SELECTOR_TIMEOUT * 6) + 30_000
+      timer = window.setTimeout(() => {
+        if (isStale()) return
+        runTokenRef.current += 1
+        const message = '引导准备超时，可点击「跳过本步」继续'
+        setState({ phase: 'error', message, key: stepKey })
+        toast.error(message)
+      }, overallMs)
+    }
     void run()
     return () => {
-      cancelled = true
+      runTokenRef.current += 1
+      if (timer !== null) window.clearTimeout(timer)
     }
   }, [open, step?.key])
 

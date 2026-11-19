@@ -217,7 +217,11 @@ export const COACH_TOUR_STEPS: CoachTourStep[] = [
     placement: 'left',
     view: 'cdut-zone',
     cdutSubView: 'ai-class',
-    prepare: { triggers: ['switch-tab-mindmap'] },
+    prepare: {
+      triggers: ['switch-tab-mindmap'],
+      readySelector: '[data-tour="ai-class-mindmap-view"]',
+      timeoutMs: 20_000,
+    },
   },
   {
     key: 'ai-class-flashcard',
@@ -227,7 +231,11 @@ export const COACH_TOUR_STEPS: CoachTourStep[] = [
     placement: 'left',
     view: 'cdut-zone',
     cdutSubView: 'ai-class',
-    prepare: { triggers: ['switch-tab-flashcard'] },
+    prepare: {
+      triggers: ['switch-tab-flashcard'],
+      readySelector: '[data-tour="ai-class-flashcard-view"]',
+      timeoutMs: 20_000,
+    },
   },
   {
     key: 'ai-class-quiz',
@@ -237,7 +245,11 @@ export const COACH_TOUR_STEPS: CoachTourStep[] = [
     placement: 'left',
     view: 'cdut-zone',
     cdutSubView: 'ai-class',
-    prepare: { triggers: ['switch-tab-quiz'] },
+    prepare: {
+      triggers: ['switch-tab-quiz'],
+      readySelector: '[data-tour="ai-class-quiz-view"]',
+      timeoutMs: 20_000,
+    },
   },
   {
     key: 'yanhu',
@@ -274,26 +286,34 @@ export const COACH_TOUR_STEPS: CoachTourStep[] = [
     selectors: [
       '[data-tour="cslab-auth-gate"]',
       '[data-tour="cslab-workspace"]',
+      '[data-tour="cslab-preparation"]',
       '[data-tour="cslab-demo-lab"]',
     ],
     placement: 'top',
     view: 'cdut-science',
-    prepare: { readySelector: '[data-tour="cslab-auth-gate"], [data-tour="cslab-workspace"]' },
+    prepare: {
+      readySelector:
+        '[data-tour="cslab-auth-gate"], [data-tour="cslab-workspace"], [data-tour="cslab-preparation"]',
+    },
   },
   {
     key: 'science-gate',
     title: '解锁本机门禁',
     body: '密码仅保存在本机，由操作系统安全存储或本地 AES-256-GCM 加密。引导会自动填入演示密码 123456；门禁验证通过后自动继续，也可随时点击【跳过本步】。',
-    selectors: ['[data-tour="cslab-auth-gate"]', '[data-tour="cslab-workspace"]'],
+    selectors: [
+      '[data-tour="cslab-auth-gate"]',
+      '[data-tour="cslab-workspace"]',
+      '[data-tour="cslab-preparation"]',
+    ],
     placement: 'top',
     view: 'cdut-science',
     prepare: {
       triggers: ['apply-demo-cslab-password'],
       readySelector:
-        '[data-tour="cslab-auth-gate"], [data-tour="cslab-workspace"], [data-tour="cslab-demo-lab"]',
+        '[data-tour="cslab-auth-gate"], [data-tour="cslab-workspace"], [data-tour="cslab-preparation"], [data-tour="cslab-demo-lab"]',
     },
     advanceOn: 'wait',
-    waitFor: { kind: 'cslab-verified', timeoutMs: 180_000 },
+    waitFor: { kind: 'cslab-verified', timeoutMs: 90_000 },
   },
   {
     key: 'demo-lab',
@@ -304,8 +324,8 @@ export const COACH_TOUR_STEPS: CoachTourStep[] = [
     view: 'cdut-science',
     prepare: {
       triggers: ['open-demo-lab'],
-      readySelector: '[data-tour="cslab-workspace"]',
-      timeoutMs: 120_000,
+      readySelector: '[data-tour="cslab-workspace"][data-cslab-ready="true"]',
+      timeoutMs: 180_000,
     },
   },
   {
@@ -330,10 +350,14 @@ export const COACH_TOUR_STEPS: CoachTourStep[] = [
     key: 'geo-dem',
     title: '地理灾害 · biogeo_basin_dem.asc',
     body: '已为你打开成理特色地貌栅格（biogeo_basin_dem.asc）：展示基于 ESRI ASCII Grid 的流域数字高程模型（DEM）与山体阴影，支持地貌分析与滑坡泥石流隐患流向模拟。查看完毕后请点击「下一步」。',
-    selectors: ['[data-tour="cslab-workspace"]'],
+    selectors: ['[data-tour="cslab-terrain"]', '[data-tour="cslab-workspace"]'],
     placement: 'bottom',
     view: 'cdut-science',
-    prepare: { triggers: ['open-geo-dem'], readySelector: '[data-tour="cslab-workspace"]' },
+    prepare: {
+      triggers: ['open-geo-dem'],
+      readySelector: '[data-tour="cslab-terrain"]',
+      timeoutMs: 30_000,
+    },
   },
   {
     key: 'digitize-open',
@@ -424,23 +448,21 @@ export const COACH_TOUR_STEPS: CoachTourStep[] = [
     view: 'cdut-science',
     prepare: {
       triggers: ['open-science-agent-window'],
-      readySelector: '[data-tour="cslab-workspace"]',
+      // 伴生窗口是独立 BrowserWindow，主文档只能等工作台就绪
+      readySelector: '[data-tour="cslab-workspace"][data-cslab-ready="true"]',
     },
   },
   {
     key: 'science-literature-search',
     title: '学术文献检索 · Attention Is All You Need',
     body: '已为你唤起跨源学术检索大弹窗，并自动检索 Google 经典开山之作《Attention Is All You Need》（Vaswani et al., 2017）。可在此速览摘要、查看多源索引并一键入库文献智脑。体验完成后点击「下一步」继续。',
-    selectors: [
-      '[data-tour="cslab-literature-search-modal"]',
-      '[data-tour="cslab-workspace"]',
-    ],
+    selectors: ['[data-tour="cslab-literature-search-modal"]'],
     placement: 'left',
     view: 'cdut-science',
     prepare: {
       triggers: ['open-academic-search'],
-      readySelector:
-        '[data-tour="cslab-literature-search-modal"], [data-tour="cslab-workspace"]',
+      readySelector: '[data-tour="cslab-literature-search-modal"]',
+      timeoutMs: 30_000,
     },
   },
   {
@@ -466,4 +488,4 @@ export const COACH_TOUR_STEPS: CoachTourStep[] = [
 ]
 
 /** 引导内容版本：增删步骤/大改文案时 +1，老用户升级后自动重播一次新指引 */
-export const CURRENT_COACH_TOUR_VERSION = 11
+export const CURRENT_COACH_TOUR_VERSION = 12

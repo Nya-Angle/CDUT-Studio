@@ -101,7 +101,9 @@ export function CsLabMolstarViewer({
   const isoNegativeRef = React.useRef<string | null>(null)
   const [ready, setReady] = React.useState(false)
   const [state, setState] = React.useState<LoadState>('idle')
-  const [supercell, setSupercell] = React.useState(true)
+  // PDB 是非周期分子结构，即使带 CRYST1 也不应按晶体学对称展开。
+  const periodic = asset.format === 'cif' || asset.format === 'poscar'
+  const [supercell, setSupercell] = React.useState(periodic)
   const [atomCount, setAtomCount] = React.useState(0)
   const [performanceMode, setPerformanceMode] = React.useState(false)
   const [selection, setSelection] = React.useState<CsLabAtomSiteSelection | null>(null)
@@ -109,6 +111,11 @@ export function CsLabMolstarViewer({
   const [wavelengthId, setWavelengthId] =
     React.useState<(typeof WAVELENGTH_OPTIONS)[number]['id']>('Cu-Kα')
   const isDark = useIsDarkTheme()
+
+  // 切换资产时恢复该格式的默认视图（晶体默认超胞，PDB 默认单分子）。
+  React.useEffect(() => {
+    setSupercell(periodic)
+  }, [asset.uri, periodic])
 
   const [tables, setTables] = React.useState<CsLabAssetSummary[]>([])
   const [tableUri, setTableUri] = React.useState('')
@@ -428,10 +435,11 @@ export function CsLabMolstarViewer({
 
         const model = await plugin.builders.structure.createModel(trajectory)
 
-        // v5 的超晶胞通过 RootStructureDefinition 的 symmetry 参数展开。
+        // 仅周期晶体（CIF/POSCAR）按空间群与超胞展开；PDB 只渲染文件中的分子实体。
+        const expandSymmetry = periodic && supercell
         const structure = await plugin.builders.structure.createStructure(
           model,
-          supercell
+          expandSymmetry
             ? {
                 name: 'symmetry',
                 params: {
@@ -449,19 +457,31 @@ export function CsLabMolstarViewer({
         )
         if (cancelled) return
 
-        // 单胞虚线框挂在原始 Model 上，避免超晶胞重复画框。
-        await plugin.builders.structure.tryCreateUnitcell(model)
+        // 单胞虚线框仅对周期晶体有意义，且挂在原始 Model 上避免超晶胞重复画框。
+        if (periodic) {
+          await plugin.builders.structure.tryCreateUnitcell(model)
+        }
 
         const count = Number(structure.data?.elementCount ?? 0)
         setAtomCount(count)
-        // 大型 PDB 使用 Cartoon 保留次级结构纵深；其余大结构退化为点云。
-        const useCartoon = asset.format === 'pdb' && count > 5_000
+        // 大分子使用 Cartoon 保留次级结构纵深；PDB 的非聚合物结构回退球棍，避免 1px 点云不可见。
+        // polymerResidueCount 是 Mol* Structure 的运行时 getter，但未包含在当前 d.ts 中。
+        const polymerResidueCount = Number(
+          (structure.data as unknown as { polymerResidueCount?: number } | undefined)
+            ?.polymerResidueCount ?? 0,
+        )
+        const useCartoon = asset.format === 'pdb' && polymerResidueCount > 0
         const heavy = count > 20_000
         setPerformanceMode(heavy)
 
         await plugin.builders.structure.representation.addRepresentation(structure, {
-          type: useCartoon ? 'cartoon' : heavy ? 'point' : 'ball-and-stick',
-          color: 'element-symbol',
+          type: useCartoon
+            ? 'cartoon'
+            : asset.format === 'pdb' || !heavy
+              ? 'ball-and-stick'
+              : 'point',
+          // Cartoon 使用链配色以获得 ribbon 对比度，原子表示保留元素配色。
+          color: useCartoon ? 'chain-id' : 'element-symbol',
         })
 
         if (heavy) {
@@ -504,6 +524,7 @@ export function CsLabMolstarViewer({
     asset.text,
     asset.format,
     asset.title,
+    periodic,
     supercell,
     supercellRange?.na,
     supercellRange?.nb,
@@ -775,6 +796,8 @@ export function CsLabMolstarViewer({
     setPickedX(undefined)
   }
 
+  const supercellLabel = `${Math.max(1, Math.min(3, Math.round(supercellRange?.na ?? 2)))}×${Math.max(1, Math.min(3, Math.round(supercellRange?.nb ?? 2)))}×${Math.max(1, Math.min(3, Math.round(supercellRange?.nc ?? 2)))}`
+
   return (
     <div className="flex h-full min-h-0 flex-col bg-cslab-bg">
       <div className="flex h-8 shrink-0 items-center gap-2 border-b border-cslab-border px-2.5">
@@ -799,20 +822,22 @@ export function CsLabMolstarViewer({
             {exportingSnapshot ? <Loader2 size={9} className="animate-spin" /> : <Camera size={9} />}
             快照
           </button>
-          <button
-            type="button"
-            onClick={() => setSupercell((value) => !value)}
-            className={cn(
-              'inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] transition-colors',
-              supercell
-                ? 'border-cslab-accent/40 bg-cslab-accent/10 text-cslab-accent'
-                : 'border-cslab-border text-cslab-muted hover:bg-cslab-surface hover:text-cslab-text',
-            )}
-            title="切换 2×2×2 超晶胞"
-          >
-            <Box size={9} />
-            {supercell ? '2×2×2' : '单胞'}
-          </button>
+          {periodic && (
+            <button
+              type="button"
+              onClick={() => setSupercell((value) => !value)}
+              className={cn(
+                'inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] transition-colors',
+                supercell
+                  ? 'border-cslab-accent/40 bg-cslab-accent/10 text-cslab-accent'
+                  : 'border-cslab-border text-cslab-muted hover:bg-cslab-surface hover:text-cslab-text',
+              )}
+              title={`切换 ${supercellLabel} 超晶胞`}
+            >
+              <Box size={9} />
+              {supercell ? supercellLabel : '单胞'}
+            </button>
+          )}
           {performanceMode && (
             <span className="rounded bg-amber-50 px-1.5 py-0.5 text-[9px] text-amber-700">
               性能模式（已关 SSAO）

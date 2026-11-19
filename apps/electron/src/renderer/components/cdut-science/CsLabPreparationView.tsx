@@ -315,7 +315,7 @@ export function CsLabPreparationView(): React.ReactElement {
           : '切换到「全部」或「已归档」查看其他实验室。'
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden">
+    <div data-tour="cslab-preparation" className="flex h-full min-h-0 flex-col overflow-hidden">
       <header
         className="relative z-20 flex h-14 shrink-0 items-center justify-between"
         style={{

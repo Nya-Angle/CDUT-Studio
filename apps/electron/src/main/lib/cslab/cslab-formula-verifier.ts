@@ -76,7 +76,7 @@ export async function verifyFormula(
         '--symbols',
         JSON.stringify(input.symbolDimensions ?? {}),
       ],
-      { timeoutMs: 120_000 },
+      { timeoutMs: 120_000, profile: 'formula' },
     )
     const payload = JSON.parse(stdout.trim()) as RawVerifyPayload
     return {
@@ -129,7 +129,7 @@ export async function ocrFormula(
       'cslab-formula-verifier.py',
       ['--mode', 'ocr', '--image', imagePath],
       // OCR 首次可能加载模型，给予更宽裕的超时。
-      { timeoutMs: 180_000 },
+      { timeoutMs: 180_000, profile: 'formula-ocr' },
     )
     const payload = JSON.parse(stdout.trim()) as RawOcrPayload
     return {
@@ -177,7 +177,7 @@ export async function ocrSelectionText(
       labId,
       'cslab-formula-verifier.py',
       ['--mode', 'ocr-text', '--image', imagePath],
-      { timeoutMs: 180_000 },
+      { timeoutMs: 180_000, profile: 'formula-ocr' },
     )
     const payload = JSON.parse(stdout.trim()) as RawOcrTextPayload
     const missingDependency = payload.engine === 'pix2text-missing'
@@ -274,7 +274,7 @@ export async function ocrPdfRegionText(
       'cslab-formula-verifier.py',
       buildPdfOcrArgs('text', input),
       // OCR 首次可能加载模型，给予更宽裕的超时。
-      { timeoutMs: 180_000 },
+      { timeoutMs: 180_000, profile: 'formula-ocr' },
     )
     const payload = JSON.parse(stdout.trim()) as RawPdfOcrTextPayload
     const blocks = Array.isArray(payload.blocks)
@@ -328,7 +328,7 @@ export async function ocrPdfFormula(
       'cslab-formula-verifier.py',
       buildPdfOcrArgs('formula', input),
       // 公式识别首次同样可能加载模型，给予更宽裕的超时。
-      { timeoutMs: 180_000 },
+      { timeoutMs: 180_000, profile: 'formula-ocr' },
     )
     const payload = JSON.parse(stdout.trim()) as RawPdfOcrFormulaPayload
     return {

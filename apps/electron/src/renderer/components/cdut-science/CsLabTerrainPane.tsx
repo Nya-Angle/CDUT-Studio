@@ -342,7 +342,10 @@ export function CsLabTerrainPane({
   }
 
   return (
-    <div className="relative h-full min-h-0 w-full overflow-hidden bg-cslab-bg">
+    <div
+      data-tour="cslab-terrain"
+      className="relative h-full min-h-0 w-full overflow-hidden bg-cslab-bg"
+    >
       <div ref={containerRef} className="h-full w-full" />
       <div className="pointer-events-none absolute left-3 top-2.5 rounded-lg border border-cslab-border bg-cslab-elevated/85 px-2.5 py-1.5 text-[10px] leading-relaxed text-cslab-muted shadow-subtle backdrop-blur-sm">
         <p className="font-medium text-cslab-text">{payload.title}</p>

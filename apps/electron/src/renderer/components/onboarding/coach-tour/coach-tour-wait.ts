@@ -165,7 +165,9 @@ export function useCoachTourWait({
     }
     agentPhaseRef.current = next
     setStatus(next === 'done' ? 'done' : 'waiting')
-  }, [enabled, kind, running, backgroundWaiting, sessionId])
+    // contentLength / startedAt 必须入依赖：模型秒回时 running 的上升沿与下降沿可能落在两次渲染之间，
+    // 只有内容或回合时间变化能让本 effect 重跑，基线兜底才不会漏判
+  }, [enabled, kind, running, backgroundWaiting, sessionId, startedAt, contentLength])
 
   // CDUT 登录态
   React.useEffect(() => {
