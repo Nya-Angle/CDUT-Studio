@@ -36,4 +36,21 @@ describe('COACH_TOUR_STEPS 数据合法性', () => {
   test('版本号已升级', () => {
     expect(CURRENT_COACH_TOUR_VERSION).toBeGreaterThanOrEqual(8)
   })
+
+  test('速课堂工件步骤必须等待对应工件视图', () => {
+    COACH_TOUR_STEPS.filter((step) => step.key.startsWith('ai-class-') && step.prepare).forEach(
+      (step) => {
+        expect(step.prepare?.readySelector).toBeDefined()
+      },
+    )
+  })
+
+  test('科研步骤不得以未就绪的工作台作为就绪条件', () => {
+    COACH_TOUR_STEPS.forEach((step) => {
+      const readySelector = step.prepare?.readySelector?.trim()
+      if (readySelector !== '[data-tour="cslab-workspace"]') return
+      // 工作台一挂载就存在，必须叠加 data-cslab-ready="true" 才代表资产首批加载完成
+      throw new Error(`${step.key} 使用了未就绪的工作台选择器`)
+    })
+  })
 })

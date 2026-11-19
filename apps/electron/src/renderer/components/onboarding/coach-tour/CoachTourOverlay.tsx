@@ -29,8 +29,13 @@ import {
   currentAgentSessionIdAtom,
 } from '@/atoms/agent-atoms'
 import { channelsAtom, channelsLoadedAtom } from '@/atoms/conversation-atoms'
-import { cdutAccountAtom, cdutSubViewAtom } from '@/atoms/cdut-account-atoms'
+import {
+  cdutAccountAtom,
+  cdutSidebarRestoreAtom,
+  cdutSubViewAtom,
+} from '@/atoms/cdut-account-atoms'
 import { cslabAuthAtom } from '@/atoms/cslab-atoms'
+import { sidebarCollapsedAtom } from '@/atoms/tab-atoms'
 import { useGlobalOverlay } from '@/atoms/overlay-atoms'
 import { Button } from '@profer/ui/primitives/button'
 import { Z_LAYER } from '@profer/ui'
@@ -372,8 +377,17 @@ export function CoachTourOverlay(): React.ReactElement | null {
     restoreViewRef.current = store.get(activeViewAtom)
   }, [open, store])
 
-  // 关闭即视为看过：恢复原视图 + 写入引导版本
+  // 关闭即视为看过：恢复原视图 + 还原主边栏/子页面 + 写入引导版本
   const close = React.useCallback(() => {
+    // 子页面步骤中退出：先还原进入前的侧栏折叠态并回收子视图，避免主界面残留在沉浸布局
+    const sidebarRestore = store.get(cdutSidebarRestoreAtom)
+    if (sidebarRestore !== null) {
+      store.set(sidebarCollapsedAtom, sidebarRestore)
+      store.set(cdutSidebarRestoreAtom, null)
+    }
+    if (store.get(cdutSubViewAtom) !== null) {
+      store.set(cdutSubViewAtom, null)
+    }
     setOpen(false)
     setStepIndex(0)
     setTourCurrentStepKey(null)
@@ -493,6 +507,35 @@ export function CoachTourOverlay(): React.ReactElement | null {
     }
   }, [open, step, store])
 
+  // 子页面步骤与主边栏沉浸态同步：进入子页面立即收起，步骤声明 null 时还原。
+  // 不依赖异步触发器（ensureDemoSession 可能很慢或失败），避免 AI 速课堂三栏被侧栏挤窄。
+  const tourSubView = step?.cdutSubView
+  React.useEffect(() => {
+    if (!open) return
+    const sidebarRestore = store.get(cdutSidebarRestoreAtom)
+    if (tourSubView != null) {
+      if (sidebarRestore === null) {
+        store.set(cdutSidebarRestoreAtom, store.get(sidebarCollapsedAtom))
+      }
+      if (!store.get(sidebarCollapsedAtom)) {
+        store.set(sidebarCollapsedAtom, true)
+      }
+      return
+    }
+    if (tourSubView === null && sidebarRestore !== null) {
+      store.set(sidebarCollapsedAtom, sidebarRestore)
+      store.set(cdutSidebarRestoreAtom, null)
+    }
+  }, [open, tourSubView, store])
+
+  // 离开步骤时关闭引导临时唤起的 CSLab 浮层（如文献检索弹窗），避免退出引导后残留
+  React.useEffect(() => {
+    if (!open) return
+    return () => {
+      window.dispatchEvent(new CustomEvent('cslab:tour-dismiss-overlays'))
+    }
+  }, [open, step?.key])
+
   // 持续 rAF 跟踪锚点位置
   React.useEffect(() => {
     if (!open || !step) return
@@ -572,6 +615,8 @@ export function CoachTourOverlay(): React.ReactElement | null {
   const isQuickBarPending = step.key === 'cdut-login' && clickedQuickFeatures.size < 4
   const isAiClassQ1Pending = step.key === 'ai-class-q1' && wait.status !== 'done'
   const isStepPending = isCalculusPending || isQuickBarPending || isAiClassQ1Pending
+  /** 准备阶段禁用主按钮，只保留「跳过本步」，避免半途推进造成指令竞态 */
+  const isPreparing = runner.phase === 'preparing'
 
   // 15~17 步高亮区域禁止所有交互
   const isStep15To17Disabled = ['table-1', 'table-2', 'geo-dem'].includes(step.key)
@@ -900,6 +945,21 @@ export function CoachTourOverlay(): React.ReactElement | null {
               >
                 跳过本步
               </Button>
+            ) : isPreparing ? (
+              <>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 px-2.5 text-xs"
+                  onClick={next}
+                >
+                  跳过本步
+                </Button>
+                <Button type="button" size="sm" className="h-7 px-2.5 text-xs" disabled>
+                  准备中…
+                </Button>
+              </>
             ) : (
               <Button type="button" size="sm" className="h-7 px-2.5 text-xs" onClick={next}>
                 {isStepPending ? '跳过本步' : '下一步'}

@@ -912,12 +912,8 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
         } else if (tourCommand.kind === 'refresh-assets') {
           await refreshAssets()
         } else if (tourCommand.kind === 'open-academic-search') {
-          setDrawer({
-            open: true,
-            mode: 'brain',
-            title: `文献智脑 · ${tourCommand.query}`,
-            query: tourCommand.query,
-          })
+          setAcademicSearchQuery(tourCommand.query)
+          setAcademicSearchOpen(true)
         } else if (tourCommand.kind === 'close-drawer') {
           setDrawer((previous) => ({ ...previous, open: false }))
         } else {
@@ -934,6 +930,13 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
     }
     void run()
   }, [tourCommand, assets, activePaneId, openAssetInPane, openPlotInPane, refreshAssets, setTourAck])
+
+  // 引导离开本步 / 关闭时，收起引导临时唤起的文献检索弹窗，避免残留在工作台上
+  React.useEffect(() => {
+    const dismiss = (): void => setAcademicSearchOpen(false)
+    window.addEventListener('cslab:tour-dismiss-overlays', dismiss)
+    return () => window.removeEventListener('cslab:tour-dismiss-overlays', dismiss)
+  }, [])
 
   // ===== 生命周期 =====
 
@@ -1952,6 +1955,7 @@ export function CsLabWorkspaceView({ labId }: CsLabWorkspaceViewProps): React.Re
     <div
       data-tour="cslab-workspace"
       data-cslab-lab-id={labId}
+      data-cslab-ready={loading ? 'false' : 'true'}
       className="relative flex h-full min-h-0 flex-col overflow-hidden bg-cslab-bg font-sans text-cslab-text"
       onDragEnter={(event) => {
         if (!event.dataTransfer.types.includes('Files')) return

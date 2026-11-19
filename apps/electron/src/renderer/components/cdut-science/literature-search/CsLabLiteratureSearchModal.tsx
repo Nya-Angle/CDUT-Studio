@@ -160,6 +160,7 @@ export function CsLabLiteratureSearchModal({
 
   return (
     <div
+      data-tour="cslab-literature-search-modal"
       className="fixed inset-0 z-50 flex items-center justify-center bg-cslab-text/20 px-4 backdrop-blur-sm"
       onClick={onClose}
     >

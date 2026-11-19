@@ -138,6 +138,7 @@ export function FeatureTour({ onNext, onSkip, finishLabel }: FeatureTourProps): 
   const [progress, setProgress] = React.useState(0)
   const [animating, setAnimating] = React.useState(false)
   const lastNavTimeRef = React.useRef(0)
+  const transitionTimerRef = React.useRef<number | null>(null)
 
   const isLast = activeIndex === FEATURE_TOUR_SLIDES.length - 1
   const activeSlide = FEATURE_TOUR_SLIDES[activeIndex]!
@@ -152,7 +153,11 @@ export function FeatureTour({ onNext, onSkip, finishLabel }: FeatureTourProps): 
       setAnimating(true)
       setActiveIndex(nextIndex)
       setProgress(0)
-      window.setTimeout(() => setAnimating(false), TOUR_TRANSITION_MS)
+      if (transitionTimerRef.current !== null) window.clearTimeout(transitionTimerRef.current)
+      transitionTimerRef.current = window.setTimeout(() => {
+        transitionTimerRef.current = null
+        setAnimating(false)
+      }, TOUR_TRANSITION_MS)
     },
     [activeIndex],
   )
@@ -177,17 +182,29 @@ export function FeatureTour({ onNext, onSkip, finishLabel }: FeatureTourProps): 
     const step = (interval / TOUR_INTERVAL_MS) * 100
 
     const timer = window.setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          next()
-          return 0
-        }
-        return prev + step
-      })
+      // updater 保持纯函数：只累加进度，推进由下方 effect 统一处理
+      setProgress((prev) => Math.min(100, prev + step))
     }, interval)
 
     return () => window.clearInterval(timer)
-  }, [activeIndex, isHovered, isLast, isPaused, next])
+  }, [activeIndex, isHovered, isLast, isPaused])
+
+  // 进度走满后翻页（独立于 updater，避免严格模式下副作用被重复执行而连跳两页）
+  React.useEffect(() => {
+    if (progress < 100 || isLast || isPaused || isHovered) return
+    setProgress(0)
+    next()
+  }, [progress, isLast, isPaused, isHovered, next])
+
+  // 卸载时清理翻页动画计时器
+  React.useEffect(() => {
+    return () => {
+      if (transitionTimerRef.current !== null) {
+        window.clearTimeout(transitionTimerRef.current)
+        transitionTimerRef.current = null
+      }
+    }
+  }, [])
 
   // 键盘快捷键监听
   React.useEffect(() => {

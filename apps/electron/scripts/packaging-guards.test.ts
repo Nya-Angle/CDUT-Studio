@@ -105,18 +105,39 @@ describe('Windows 随包 CLI 契约', () => {
 
     const wrongBinDir = createBinDir()
     writeFileSync(join(wrongBinDir, 'profer'), 'mac-cli')
-    expect(() => verifyPackagedWindowsCli(wrongBinDir)).toThrow('必须且只能包含 profer.exe')
+    expect(() => verifyPackagedWindowsCli(wrongBinDir)).toThrow('必须包含 profer.exe')
   })
 
   test('Given 两种宿主 CLI 并存或 exe 为空 When 验证 Then 拒绝', () => {
     const mixedBinDir = createBinDir()
     writeFileSync(join(mixedBinDir, 'profer'), 'mac-cli')
     writeFileSync(join(mixedBinDir, 'profer.exe'), 'windows-cli')
-    expect(() => verifyPackagedWindowsCli(mixedBinDir)).toThrow('必须且只能包含 profer.exe')
+    expect(() => verifyPackagedWindowsCli(mixedBinDir)).toThrow('只能包含 profer.exe')
 
     const emptyBinDir = createBinDir()
     writeFileSync(join(emptyBinDir, 'profer.exe'), '')
     expect(() => verifyPackagedWindowsCli(emptyBinDir)).toThrow('不能为空')
+  })
+
+  test('Given 随包内置 MinGit When 验证 Then 接受与 profer.exe 同级的 git 目录', () => {
+    const binDir = createBinDir()
+    writeFileSync(join(binDir, 'profer.exe'), 'windows-cli')
+    mkdirSync(join(binDir, 'git', 'cmd'), { recursive: true })
+    writeFileSync(join(binDir, 'git', 'cmd', 'git.exe'), 'min-git')
+
+    expect(verifyPackagedWindowsCli(binDir)).toBe(join(binDir, 'profer.exe'))
+  })
+
+  test('Given 内置 MinGit 不完整或存在其它文件 When 验证 Then 拒绝', () => {
+    const brokenGitBinDir = createBinDir()
+    writeFileSync(join(brokenGitBinDir, 'profer.exe'), 'windows-cli')
+    mkdirSync(join(brokenGitBinDir, 'git', 'cmd'), { recursive: true })
+    expect(() => verifyPackagedWindowsCli(brokenGitBinDir)).toThrow('内置 MinGit 缺少可执行文件')
+
+    const strayFileBinDir = createBinDir()
+    writeFileSync(join(strayFileBinDir, 'profer.exe'), 'windows-cli')
+    writeFileSync(join(strayFileBinDir, 'profer-cli.exe'), 'stray')
+    expect(() => verifyPackagedWindowsCli(strayFileBinDir)).toThrow('只能包含 profer.exe')
   })
 })
 

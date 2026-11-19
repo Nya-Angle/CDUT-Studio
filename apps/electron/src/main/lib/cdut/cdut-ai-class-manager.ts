@@ -54,7 +54,7 @@ import {
   saveQuiz,
   saveTabs,
   getMindmap,
-  createHomeTab,
+  getTabs,
 } from '../study/study-session-store'
 import { createInitialFsrs } from '../study/fsrs-scheduler'
 import { ingestStudyDocuments, listStudyDocuments } from '../study/study-document-indexer'
@@ -1249,16 +1249,16 @@ export function readCachedGraphEdges(sessionId: string): KnowledgeGraphEdge[] {
  */
 function seedDemoAiClassArtifacts(sessionId: string): void {
   try {
-    const existing = getMindmap(sessionId)
-    if (existing) return
+    const existingMindmap = getMindmap(sessionId)
 
     const now = Date.now()
     const mindmapId = 'demo-honglou-mindmap'
     const flashcardDeckId = 'demo-honglou-flashcards'
     const quizSessionId = 'demo-honglou-quiz'
 
-    // 1. 思维导图
-    saveMindmap(sessionId, {
+    if (!existingMindmap) {
+      // 1. 思维导图
+      saveMindmap(sessionId, {
       id: mindmapId,
       title: '《红楼梦》前五回核心架构与伏线网络',
       sourceDocs: [DEMO_NOVEL_FILE_NAME],
@@ -1372,13 +1372,18 @@ function seedDemoAiClassArtifacts(sessionId: string): void {
       ],
     })
 
-    // 4. 保存 Tabs
-    saveTabs(sessionId, [
-      createHomeTab(),
-      { id: 'tab-mm', type: 'mindmap', title: '思维导图', closable: true, data: { mindmapId } },
-      { id: 'tab-fc', type: 'flashcard', title: '抽认卡', closable: true, data: { flashcardDeckId } },
-      { id: 'tab-qz', type: 'quiz', title: '自测练习', closable: true, data: { quizSessionId } },
-    ], 'home')
+    }
+
+    // 4. 补齐工件页签：老版本演示课堂可能只有首页，缺少思维导图/抽认卡/自测页签
+    const tabsState = getTabs(sessionId)
+    const missingTabs = [
+      { id: 'tab-mm', type: 'mindmap' as const, title: '思维导图', closable: true, data: { mindmapId } },
+      { id: 'tab-fc', type: 'flashcard' as const, title: '抽认卡', closable: true, data: { flashcardDeckId } },
+      { id: 'tab-qz', type: 'quiz' as const, title: '自测练习', closable: true, data: { quizSessionId } },
+    ].filter((tab) => !tabsState.tabs.some((existing) => existing.type === tab.type))
+    if (missingTabs.length > 0) {
+      saveTabs(sessionId, [...tabsState.tabs, ...missingTabs], tabsState.activeTabId)
+    }
   } catch (error) {
     console.warn('[AI速课堂] 预置演示工件失败:', sessionId, error)
   }

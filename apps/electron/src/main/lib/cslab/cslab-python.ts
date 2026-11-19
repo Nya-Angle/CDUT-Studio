@@ -12,6 +12,7 @@ import { join } from 'node:path'
 import { promisify } from 'node:util'
 import type { CsLabPythonCapability } from '@profer/shared'
 import { buildDataset, type ParsedDataset } from './cslab-formats/types'
+import { resolveLabPythonForModules } from './cslab-python-runtime'
 
 const execFileAsync = promisify(execFile)
 
@@ -57,7 +58,7 @@ async function probePython(): Promise<PythonProbe> {
           pythonPath: command,
           uvPath,
           note: scriptPath
-            ? `已检测到 ${command}${uvPath ? ' 与 uv' : ''}；可处理 MAT v7.3 / BioLogic .mpr 等增强格式`
+            ? `已检测到 ${command}${uvPath ? ' 与 uv' : ''}；增强解析优先使用实验室 .venv（可处理 MAT v7.3 / BioLogic .mpr）`
             : `已检测到 ${command}，但缺少 cslab-instrument-extractor.py，增强通道不可用`,
         },
         pythonCommand: command,
@@ -99,15 +100,31 @@ interface PythonDatasetPayload {
 export async function tryParseWithPython(
   filePath: string,
   format: 'mat-v73' | 'biologic-mpr',
+  labId?: string,
 ): Promise<ParsedDataset | null> {
-  if (!cachedProbe) cachedProbe = probePython()
-  const probe = await cachedProbe
-  if (!probe.capability.available || !probe.pythonCommand || !probe.scriptPath) return null
+  const scriptPath = resolveExtractorScript()
+  if (!scriptPath) return null
 
   try {
+    // 增强解析必须与「一键安装」目标一致：优先实验室 .venv，其次已具备依赖的系统 Python。
+    const modules = format === 'mat-v73' ? ['numpy', 'h5py'] : ['numpy', 'yadg']
+    let command: string | undefined
+    let argsPrefix: string[] = []
+    if (labId) {
+      const python = await resolveLabPythonForModules(labId, modules)
+      if (!python) return null
+      command = python.command
+      argsPrefix = python.argsPrefix
+    } else {
+      if (!cachedProbe) cachedProbe = probePython()
+      const probe = await cachedProbe
+      command = probe.pythonCommand
+    }
+    if (!command) return null
+
     const { stdout } = await execFileAsync(
-      probe.pythonCommand,
-      [probe.scriptPath, '--input', filePath, '--format', format],
+      command,
+      [...argsPrefix, scriptPath, '--input', filePath, '--format', format],
       { timeout: 120_000, maxBuffer: 64 * 1024 * 1024, windowsHide: true },
     )
     const payload = JSON.parse(stdout) as PythonDatasetPayload

@@ -127,6 +127,7 @@ async function parseBrml(buffer: Buffer): Promise<ParsedDataset> {
 }
 
 async function parseFile(
+  labId: string,
   filePath: string,
   head: Buffer,
   format: ReturnType<typeof sniffFormat>['format'],
@@ -137,7 +138,7 @@ async function parseFile(
       return { dataset: parseMatLevel5(await fs.readFile(filePath)) }
     }
     case 'mat-v73': {
-      const enhanced = await tryParseWithPython(filePath, 'mat-v73')
+      const enhanced = await tryParseWithPython(filePath, 'mat-v73', labId)
       if (enhanced) return { dataset: enhanced, note: '已通过可选 Python 通道解析 MAT v7.3' }
       throw new CsLabUnsupportedFormatError(
         'MATLAB v7.3（HDF5）需要可选 Python(h5py) 增强通道；当前仅登记原始文件元数据',
@@ -158,7 +159,7 @@ async function parseFile(
     case 'jcamp-dx':
       return { dataset: parseJcampDx(decodeText(await fs.readFile(filePath))) }
     case 'biologic-mpr': {
-      const enhanced = await tryParseWithPython(filePath, 'biologic-mpr')
+      const enhanced = await tryParseWithPython(filePath, 'biologic-mpr', labId)
       if (enhanced) return { dataset: enhanced, note: '已通过可选 Python 通道解析 BioLogic .mpr' }
       throw new CsLabUnsupportedFormatError(
         'BioLogic .mpr 需要可选 Python(yadg/eclabfiles) 增强通道；当前仅登记原始文件元数据',
@@ -174,7 +175,7 @@ async function parseFile(
       }
     default: {
       if (isMatV73(head)) {
-        const enhanced = await tryParseWithPython(filePath, 'mat-v73')
+        const enhanced = await tryParseWithPython(filePath, 'mat-v73', labId)
         if (enhanced) return { dataset: enhanced }
       }
       if (isMatLevel5(head)) return { dataset: parseMatLevel5(await fs.readFile(filePath)) }
@@ -446,7 +447,7 @@ export async function ingestFiles(
       let dataset: ParsedDataset | null = null
       let unsupported: string | undefined
       try {
-        const parsed = await parseFile(rawAbsPath, head, sniffed.format, extension)
+        const parsed = await parseFile(labId, rawAbsPath, head, sniffed.format, extension)
         dataset = parsed.dataset
       } catch (error) {
         if (error instanceof CsLabUnsupportedFormatError) {

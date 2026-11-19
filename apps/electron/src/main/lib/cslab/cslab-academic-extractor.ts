@@ -16,7 +16,7 @@ import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { randomUUID } from 'node:crypto'
 import { runLightweightCompletion } from '../lightweight-completion'
-import { resolveCsLabScript, resolveLabPython } from './cslab-python-runtime'
+import { resolveCsLabScript, resolveLabPythonForProfile } from './cslab-python-runtime'
 
 const execFileAsync = promisify(execFile)
 
@@ -120,7 +120,7 @@ export async function tryDoclingExtract(
   pdfPath: string,
 ): Promise<{ markdown: string } | null> {
   try {
-    const python = await resolveLabPython(labId)
+    const python = await resolveLabPythonForProfile(labId, 'docling')
     const script = resolveCsLabScript('cslab-docling-extractor.py')
     if (!python || !script) return null
 

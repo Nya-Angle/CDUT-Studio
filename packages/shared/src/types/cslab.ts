@@ -702,6 +702,9 @@ export type CsLabToolProfile = 'plot' | 'formula' | 'formula-ocr' | 'instrument'
 export interface CsLabToolProfileStatus {
   installed: boolean
   missing: string[]
+  /** 实际提供该 profile 能力的解释器。 */
+  pythonPath?: string
+  source?: 'venv' | 'system'
 }
 
 export interface CsLabToolRuntimeStatus {
