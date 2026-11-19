@@ -12,6 +12,7 @@
 
 import { atom, getDefaultStore } from 'jotai'
 import { DEFAULT_INTERFACE_VARIANT, type InterfaceVariant, type SkinInfo, type ThemeMode, type ThemeStyle } from '../../types'
+import { getSettingsCoalesced } from '@/lib/startup-ipc-cache'
 
 /** localStorage 缓存键 */
 const THEME_CACHE_KEY = 'profer-theme-mode'
@@ -393,7 +394,7 @@ export async function initializeTheme(
   setInterfaceVariant?: (variant: InterfaceVariant) => void,
 ): Promise<() => void> {
   // 从主进程加载持久化设置与皮肤注册表
-  const [settings] = await Promise.all([window.electronAPI.getSettings(), loadSkins()])
+  const [settings] = await Promise.all([getSettingsCoalesced(), loadSkins()])
   setThemeMode(settings.themeMode)
   cacheThemeMode(settings.themeMode)
 

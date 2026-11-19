@@ -9,6 +9,7 @@
 import { atom } from 'jotai'
 import { DEFAULT_MARKDOWN_FONT_SIZE } from '../../types'
 import type { MarkdownFontSize } from '../../types'
+import { getSettingsCoalesced } from '@/lib/startup-ipc-cache'
 
 /** 各档位对应的根字号（px） */
 const FONT_SIZE_PX: Record<MarkdownFontSize, number> = {
@@ -40,7 +41,7 @@ export async function initializeMarkdownFontSize(
   setSize: (size: MarkdownFontSize) => void,
 ): Promise<void> {
   try {
-    const settings = await window.electronAPI.getSettings()
+    const settings = await getSettingsCoalesced()
     const size = settings.markdownFontSize ?? DEFAULT_MARKDOWN_FONT_SIZE
     setSize(size)
     applyMarkdownFontSizeToDOM(size)
