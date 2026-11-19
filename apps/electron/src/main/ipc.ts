@@ -143,8 +143,10 @@ import { CHANGELOG_IPC_CHANNELS, type ChangelogEntry } from '@profer/shared'
 import { getChangelog } from './lib/changelog-service'
 import { BULLETIN_IPC_CHANNELS, type BulletinItem } from '@profer/shared'
 import { getBulletins } from './lib/bulletin-service'
-import { registerReviewIpc } from './lib/review/review-ipc'
-import { registerCsLabIpc } from './lib/cslab'
+import { REVIEW_IPC_CHANNELS, CSLAB_IPC_CHANNELS } from '@profer/shared'
+import { registerLazyIpcDomain } from './lib/lazy-ipc-chunk'
+import { loadReviewChunk } from './lib/review-lazy'
+import { loadCsLabChunk } from './lib/cslab-lazy'
 import { registerLongTermMemoryIpc } from './lib/longterm-memory/longterm-memory-ipc'
 import { grantCsLabToolTrust, revokeCsLabToolTrust } from './lib/cslab/cslab-tool-trust'
 import { cdutAuthManager, CDUT_AUTH_PARTITION } from './lib/cdut/cdut-auth-manager'
@@ -6238,11 +6240,17 @@ export function registerIpcHandlers(): void {
     return getBulletins()
   })
 
-  // 注册内容审核专区 IPC 处理器
-  registerReviewIpc()
+  // 注册内容审核专区 IPC 处理器（惰性加载：首次收到 review:* 请求时按需加载 review-bundle）
+  registerLazyIpcDomain(Object.values(REVIEW_IPC_CHANNELS), async () => {
+    const mod = await loadReviewChunk()
+    mod.installReviewSubsystem()
+  })
 
-  // 注册 CDUT Science (CSLab) IPC 处理器
-  registerCsLabIpc()
+  // 注册 CDUT Science (CSLab) IPC 处理器（惰性加载：首次收到 cslab:* 请求时按需加载 cslab-bundle）
+  registerLazyIpcDomain(Object.values(CSLAB_IPC_CHANNELS), async () => {
+    const mod = await loadCsLabChunk()
+    mod.registerCsLabIpc()
+  })
 
   // ===== 长期记忆图谱（用户习惯与偏好） =====
   registerLongTermMemoryIpc()

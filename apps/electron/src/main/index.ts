@@ -163,8 +163,6 @@ function registerProtocolsAndHandlers(): void {
 
 
 import { getSettings, updateSettings } from './lib/settings-service'
-import { resolveAppThemeIsDark } from './lib/app-theme-service'
-import { createCenteredStartupSplashBounds, createStartupSplashHtml } from './lib/startup-splash'
 import { handleProferFileRequest } from './lib/local-file-protocol'
 import { handleProferSkinRequest } from './lib/skin-service'
 import { disposeAgentPreviewRenderer } from './lib/agent-preview-renderer'
@@ -191,10 +189,7 @@ for (const key of Object.keys(process.env)) {
 
 import { createApplicationMenu, installTextContextMenus } from './menu'
 import { registerIpcHandlers, setRendererReadyHandler, stopAllGoalsForProcessExit } from './ipc'
-import { installC11LocalAuthorWorkbench } from './lib/review/review-v3-main-local-author-workbench'
-import { installC11LocalNativeProductIntake } from './lib/review/review-v3-main-local-product-intake'
-import { installC11NativeD4TechnicalPlan } from './lib/review/review-v3-main-d4-local-plan'
-import { installC11NativeB1TechnicalPlan } from './lib/review/review-v3-main-b1-local-plan'
+import { destroyCsLabAgentWindowIfLoaded, disposeCsLabIfLoaded } from './lib/cslab-lazy'
 import { setRemoteServiceEnabled, startRemoteService, stopRemoteService } from './lib/remote-service'
 import { startAgentFabricService, stopAgentFabricService } from './lib/agent-fabric/agent-fabric-service'
 import { createTray, destroyTray, getTray } from './tray'
@@ -213,15 +208,6 @@ import { yanhuExpressManager } from './lib/cdut/yanhu/yanhu-express-manager'
 import { yanhuPetWindowManager } from './lib/cdut/yanhu/yanhu-pet-window-manager'
 import { startStudyBenchmarkServer, stopStudyBenchmarkServer } from './lib/study/study-benchmark-server'
 import { startWorkspaceWatcher, stopWorkspaceWatcher } from './lib/workspace-watcher'
-import { closeAllLabToolWatchers } from './lib/cslab/cslab-tool-registry'
-import { closeAllVaultWatchers } from './lib/cslab/cslab-canvas-sync'
-import { closeAllCsLabVaultCaches } from './lib/cslab/cslab-vault-cache'
-import { stopAllShareWatchers } from './lib/cslab/cslab-share-watcher'
-import { closeAllShareDatabases } from './lib/cslab/cslab-share-db'
-import { stopAllHpcBridges } from './lib/cslab/cslab-hpc'
-import { closeAllHpcDatabases } from './lib/cslab/cslab-hpc-db'
-import { closeAllCsLabDatabases } from './lib/cslab/cslab-db'
-import { stopAllZoteroWatchers } from './lib/cslab/cslab-zotero'
 import { getIsQuitting, setQuitting } from './lib/app-lifecycle'
 import {
   registerBridge,
@@ -234,7 +220,6 @@ import { startScheduler, stopScheduler } from './lib/automation-scheduler'
 import { startPlanningReminderScheduler, stopPlanningReminderScheduler } from './lib/planning-reminder-scheduler'
 import { startLongTermMemoryConsolidator } from './lib/longterm-memory/longterm-memory-reflector'
 import { destroyPlanningWindow } from './lib/planning-window'
-import { destroyCsLabAgentWindow } from './lib/cslab/cslab-window-manager'
 import { getWindowFrameColor, updateWindowFrameAppearance } from './lib/titlebar-overlay'
 import { feishuBridgeManager } from './lib/feishu-bridge-manager'
 import { getFeishuMultiBotConfig } from './lib/feishu-config'
@@ -365,14 +350,6 @@ function parseDiagnosticPayload(raw: string): unknown {
     return raw
   }
 }
-let startupSplashWindow: BrowserWindow | null = null
-
-// CSS 圆环会在约 2.4 秒内陆续扩散；保留足够展示时间以便用户观察启动反馈。
-const STARTUP_SPLASH_MIN_MS = 2400
-
-/** 启动闪屏的背景明暗：与「Agent 打开的本地预览」共用同一套解析（皮肤 tone 优先于 id 后缀启发式） */
-const resolveStartupSplashDark = resolveAppThemeIsDark
-
 /** 获取主窗口实例（供其他模块使用）。 */
 export { getMainWindow }
 
@@ -603,94 +580,42 @@ function createWindow(): void {
   yanhuExpressManager.setOwnerWindow(mainWindow)
   yanhuPetWindowManager.setOwnerWindow(mainWindow)
 
-  // 主窗口隐藏加载 renderer；独立 splash 窗口覆盖整个初始化阶段，避免导航替换掉启动画面。
+  // 单窗口启动：主窗口内部自带轻量纯 CSS 进入动画，ready-to-show 后立即呈现，
+  // 不再开启独立 WebGL 闪屏窗口与 2.4 秒硬等待，大幅降低双进程内存与 GPU 争抢。
   const isDev = !app.isPackaged
   const rendererUrl = isDev ? VITE_DEV_SERVER_URL : null
   const rendererFile = join(__dirname, 'renderer', 'index.html')
-  let splashStartedAt = Date.now()
-  let splashShown = false
-  let rendererReady = false
-  let showTimer: ReturnType<typeof setTimeout> | null = null
+  let windowShown = false
   // 冷启动目标显示器的完整工作区；主窗口首次显示前同步到此区域，避免旧 bounds 闪现。
-  let startupDisplayWorkArea: { x: number; y: number; width: number; height: number } | null = null
+  const displayTarget = savedState
+    ? { x: savedState.x, y: savedState.y, width: savedState.width, height: savedState.height }
+    : screen.getPrimaryDisplay().workArea
+  const startupDisplayWorkArea = { ...screen.getDisplayMatching(displayTarget).workArea }
   // Ctrl/Cmd+R 热刷新时置 true：刷新只重载 renderer，不应改变窗口几何状态（修复刷新后被强制最大化）
   let isRefreshReload = false
   // 刷新前是否处于全屏：Windows 上全屏窗口 hide/show 会退出全屏导致位置/尺寸偏移，show 前需恢复
   let refreshWasFullScreen = false
-  // 刷新前是否处于最大化（无边框最大化视觉上等同全屏，splash 也应按整个显示器处理）
-  let refreshWasMaximized = false
 
-  const showWhenReady = (): void => {
-    if (!rendererReady || !splashShown || mainWindow?.isDestroyed()) return
-    if (showTimer) clearTimeout(showTimer)
-    const remaining = Math.max(0, STARTUP_SPLASH_MIN_MS - (Date.now() - splashStartedAt))
-    showTimer = setTimeout(() => {
-      // 冷启动先把隐藏主窗口同步到完整工作区，再显示并恢复原生最大化状态。
-      // 主窗口首次可见时已经是目标尺寸，不会先露出保存的普通 bounds。
-      if (!isRefreshReload && mainWindow && startupDisplayWorkArea) {
-        mainWindow.setBounds(startupDisplayWorkArea)
-      }
-      if (process.platform === 'darwin' && app.dock) app.dock.show()
-      // 全屏刷新：窗口可见前先恢复全屏。若先以普通尺寸 show 再 setFullScreen，窗口从左上角
-      // 扩展到全屏，页面内组件（初始化动画等）容器会随之在底边/右侧偏移（顶边/左侧不动）。
-      // 隐藏窗口上 setFullScreen 在 Windows 有效，主窗口 show 时直接就是全屏，无扩展过程。
-      if (isRefreshReload && refreshWasFullScreen) mainWindow?.setFullScreen(true)
-      // renderer 已经 ready，先显示完整尺寸的主窗口，再同步原生最大化状态，最后关闭 Splash。
-      mainWindow?.showInactive()
-      if (!isRefreshReload && mainWindow && !mainWindow.isMaximized()) mainWindow.maximize()
-      if (!startupSplashWindow?.isDestroyed()) startupSplashWindow?.close()
-      startupSplashWindow = null
-      // 兜底：隐藏窗口阶段 setFullScreen 未生效时（个别平台），show 后立即再恢复一次全屏
-      if (isRefreshReload && refreshWasFullScreen && mainWindow && !mainWindow.isFullScreen()) {
-        mainWindow.setFullScreen(true)
-      }
-    }, remaining)
+  const showMainWindowOnce = (): void => {
+    if (windowShown || !mainWindow || mainWindow.isDestroyed()) return
+    windowShown = true
+    if (!isRefreshReload) {
+      mainWindow.setBounds(startupDisplayWorkArea)
+    }
+    if (process.platform === 'darwin' && app.dock) app.dock.show()
+    if (isRefreshReload && refreshWasFullScreen) mainWindow.setFullScreen(true)
+    mainWindow.showInactive()
+    if (!isRefreshReload && !mainWindow.isMaximized()) mainWindow.maximize()
+    if (isRefreshReload && refreshWasFullScreen && !mainWindow.isFullScreen()) {
+      mainWindow.setFullScreen(true)
+    }
   }
+
+  mainWindow.once('ready-to-show', showMainWindowOnce)
 
   setRendererReadyHandler(() => {
-    rendererReady = true
-    showWhenReady()
+    showMainWindowOnce()
   })
-
-  const createSplashWindow = (splashBounds?: { width: number; height: number; x: number; y: number }): void => {
-    if (startupSplashWindow && !startupSplashWindow.isDestroyed()) startupSplashWindow.close()
-    // 以保存位置/刷新前窗口选择目标显示器，但冷启动 Splash 始终使用该屏工作区的四分之一尺寸并居中。
-    const displayTarget = splashBounds
-      ? { x: splashBounds.x, y: splashBounds.y, width: splashBounds.width, height: splashBounds.height }
-      : savedState
-        ? { x: savedState.x, y: savedState.y, width: savedState.width, height: savedState.height }
-        : screen.getPrimaryDisplay().workArea
-    const display = screen.getDisplayMatching(displayTarget)
-    startupDisplayWorkArea = { ...display.workArea }
-    const bounds = createCenteredStartupSplashBounds(display.workArea)
-    const minWidth = Math.min(800, bounds.width)
-    const minHeight = Math.min(600, bounds.height)
-    startupSplashWindow = new BrowserWindow({
-      x: bounds.x,
-      y: bounds.y,
-      width: bounds.width,
-      height: bounds.height,
-      minWidth,
-      minHeight,
-      frame: false,
-      resizable: true,
-      movable: true,
-      show: false,
-      backgroundColor: resolveStartupSplashDark() ? '#101010' : '#f4f4f2',
-      webPreferences: { contextIsolation: true, nodeIntegration: false },
-    })
-    const splashWindow = startupSplashWindow
-    splashWindow.setMenuBarVisibility(false)
-    // 主窗口完成首次最大化前保持 Splash 置顶，避免 showInactive / maximize 的异步重绘露出空白主窗口。
-    splashWindow.setAlwaysOnTop(true, 'floating')
-
-    splashWindow.webContents.once('did-finish-load', () => {
-      splashShown = true
-      startupSplashWindow?.show()
-      showWhenReady()
-    })
-    void splashWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(createStartupSplashHtml(resolveStartupSplashDark()))}`)
-  }
 
   /**
    * dev 下先等 dev server 端口就绪，再导航；避免 loadURL 早于 Vite 监听导致 ERR_CONNECTION_REFUSED。
@@ -728,21 +653,12 @@ function createWindow(): void {
 
   const replayStartupSplash = (): void => {
     if (!mainWindow || mainWindow.isDestroyed()) return
-    if (showTimer) clearTimeout(showTimer)
-    // 标记为热刷新，showWhenReady 据此跳过恢复最大化，保持刷新前窗口状态
+    // 标记为热刷新，避免跳过恢复最大化，保持刷新前窗口状态
     isRefreshReload = true
     // 在 hide 之前记录窗口状态，show 前恢复（全屏 hide/show 会丢失全屏状态）
     refreshWasFullScreen = mainWindow.isFullScreen()
-    refreshWasMaximized = mainWindow.isMaximized()
-    splashStartedAt = Date.now()
-    // 热刷新不再创建覆盖整个窗口的独立 splash。独立窗口一旦与 renderer-ready 通知竞态，
-    // 就会一直压在主窗口上，表现为浏览器标签栏和其他页面全部无法点击。
     // 刷新期间保持主窗口可见，只隐藏原生网页 View，待新 renderer 重新发布布局即可恢复。
-    splashShown = true
-    rendererReady = false
     browserController.hideAll()
-    if (startupSplashWindow && !startupSplashWindow.isDestroyed()) startupSplashWindow.close()
-    startupSplashWindow = null
     mainWindow.show()
     loadRenderer()
   }
@@ -754,7 +670,6 @@ function createWindow(): void {
     replayStartupSplash()
   })
 
-  createSplashWindow()
   loadRenderer()
 
   // 持久化窗口大小和位置（防抖 500ms，避免频繁写入）
@@ -875,8 +790,8 @@ function createWindow(): void {
   mainWindow.on('closed', () => {
     mainWindow = null
     setMainWindow(null)
-    // 助理窗口与主窗口生命周期强绑定，避免成为无主孤儿窗口
-    destroyCsLabAgentWindow()
+    // 助理窗口与主窗口生命周期强绑定，避免成为无主孤儿窗口（仅在已加载时清理）
+    destroyCsLabAgentWindowIfLoaded()
     browserController.dispose()
     yanhuExpressManager.dispose()
     yanhuPetWindowManager.dispose()
@@ -929,9 +844,9 @@ async function bootstrap(): Promise<void> {
   installCertificateSecurityPolicy(electronSession.defaultSession)
   installCertificateSecurityPolicy(electronSession.fromPartition(CDUT_AUTH_PARTITION), CDUT_AUTH_CERT_SESSION_ID)
 
-  // 初始化运行时环境（Shell 环境 + Bun + Git 检测）
-  // 热启动时从磁盘缓存恢复，耗时 < 10ms
-  await safeAwait('initializeRuntime', () => initializeRuntime())
+  // 初始化运行时环境（Shell 环境 + Bun + Git 检测）：
+  // 不阻塞窗口创建，异步在后台完成检测与缓存写入；Agent 运行时如需环境可自行 await。
+  void safeAwait('initializeRuntime', () => initializeRuntime())
 
   // 从旧 Proma/Profer 数据目录的迁移已随品牌切换移除（新软件不迁移旧数据）。
   // Create application menu
@@ -945,13 +860,8 @@ async function bootstrap(): Promise<void> {
     : join(__dirname, '../default-skills')
   configureGlobalSkillSystem(bundledGlobalSkillsDir)
 
-  // Register IPC handlers
+  // Register IPC handlers（Review / CSLab 重型子系统采用惰性代理，首次调用时按需加载）
   registerIpcHandlers()
-  // 审核模块的本机案卷能力只在正式 Electron 主进程启动时安装。
-  installC11LocalAuthorWorkbench()
-  installC11LocalNativeProductIntake()
-  installC11NativeD4TechnicalPlan()
-  installC11NativeB1TechnicalPlan()
 
   // 远程服务（remote-service）：显式启动参数 PROFER_REMOTE=1 兼容保留；
   // 设置页开启「启用移动端连接」后，下次启动自动恢复监听（正式版与开发版一致）。
@@ -993,16 +903,16 @@ async function bootstrap(): Promise<void> {
   // ─── 窗口 + 托盘：用户看到界面的临界点 ───
   createWindow()
 
-  // Skill / 预设迁移可能涉及目录扫描、复制和原子替换；必须在主窗口实际显示后才开始，
-  // 避免与 Renderer 首屏加载竞争。首次 Agent 运行前的幂等 ready gate 仍会兜底一致性。
+  // Skill / 预设迁移与工作区监听：延迟到窗口显示后错峰启动，避免与 Renderer 首屏加载竞争。
   mainWindow?.once('show', () => {
     setTimeout(() => {
-      // 必须先完成全局能力迁移，再运行旧 default-skills 的 seed：seed 可能在
-      // 缺少旧基线时替换 legacy master，导致 B1/B2 无法用旧 master 识别。
       safeRun('ensureGlobalSkillSystemReady', ensureGlobalSkillSystemReady)
       safeRun('ensurePresetSystemReady', ensurePresetSystemReady)
       safeRun('seedDefaultSkills', seedDefaultSkills)
-    }, 0)
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        safeRun('startWorkspaceWatcher', () => startWorkspaceWatcher(mainWindow!))
+      }
+    }, 300)
   })
 
   // 开发态由裸 electron.exe 承载；维护 .dev AUMID 的专属 Shell 快捷方式，
@@ -1038,13 +948,6 @@ async function bootstrap(): Promise<void> {
     console.log(`[启动] 开机自启动: ${enabled ? '已开启' : '已关闭'}`)
   })
 
-  // 启动工作区文件监听
-  if (mainWindow) {
-    safeRun('startWorkspaceWatcher', () => startWorkspaceWatcher(mainWindow!))
-  }
-
-  // 预创建快速任务窗口（隐藏状态，首次唤起秒开）——默认关闭，仅在设置开启时预创建
-
   // 飞书实时同步开启时，默认阻止系统自动休眠
   safeRun('syncFeishuSyncSleepBlocker', () => syncFeishuSyncSleepBlocker(getSettings()))
 
@@ -1053,7 +956,7 @@ async function bootstrap(): Promise<void> {
     registerGlobalShortcut('show-main-window', showAndFocusMainWindow),
   )
 
-  // Bridge 启动延后到下一个事件循环，让窗口先完成渲染
+  // 错峰启动后台 Bridge / 调度器 / 长期记忆整合，避开首屏加载与水合高峰，削平内存尖峰
   setTimeout(() => {
     safeRun('startAllBridges', () => { startAllBridges().catch(() => {}) })
     safeRun('startBridgeSelfHealing', startBridgeSelfHealing)
@@ -1062,10 +965,11 @@ async function bootstrap(): Promise<void> {
     safeRun('startLongTermMemoryConsolidator', () => {
       stopLongTermMemoryConsolidator = startLongTermMemoryConsolidator()
     })
-  }, 0)
+  }, 1800)
 
-  // 启动时恢复团队会话：先检查已登录，否则用 refreshToken 尝试恢复
-  safeRun('restoreTeamSession', async () => {
+  // 启动时恢复团队会话：错峰 2.2 秒执行，避免与首屏渲染抢占磁盘与网络
+  setTimeout(() => {
+    safeRun('restoreTeamSession', async () => {
     const { getAuthStatus, scheduleAutoRefresh, tryRestoreSession } = require('./lib/auth-service')
 
     // 如果 accessToken 已过期但 refreshToken 存在，先尝试恢复
@@ -1113,7 +1017,8 @@ async function bootstrap(): Promise<void> {
         })
       }, 3000)
     }
-  })
+    })
+  }, 2200)
 
   app.on('activate', () => {
 
@@ -1242,17 +1147,8 @@ app.on('before-quit', () => {
   killOrphanedClaudeSubprocesses()
   // 停止工作区文件监听
   stopWorkspaceWatcher()
-  // 显式释放 CSLab 目录监听句柄（Windows 下不释放会阻止重命名/删除实验室目录）
-  void closeAllVaultWatchers()
-  void closeAllLabToolWatchers()
-  void stopAllShareWatchers()
-  void stopAllHpcBridges()
-  closeAllCsLabVaultCaches()
-  closeAllShareDatabases()
-  closeAllHpcDatabases()
-  // 关闭 CSLab 中央库并停止 Zotero WAL 监听，避免退出时残留 SQLite 句柄
-  void stopAllZoteroWatchers()
-  closeAllCsLabDatabases()
+  // 显式释放 CSLab 目录监听句柄与独立窗口（仅当本会话加载过 CSLab 模块时才执行）
+  disposeCsLabIfLoaded()
   // 停止所有 Bridge
   stopBridgeSelfHealing()
   stopAllBridges()
@@ -1265,8 +1161,6 @@ app.on('before-quit', () => {
   stopLongTermMemoryConsolidator = null
   // 销毁规划窗口
   destroyPlanningWindow()
-  // 销毁科学助理独立窗口
-  destroyCsLabAgentWindow()
   // 停止移动端版远程服务
   stopRemoteService()
   // 停止 Agent Fabric 本地服务
