@@ -34,6 +34,22 @@ export default defineConfig({
   build: {
     outDir: resolve(__dirname, 'dist/renderer'),
     emptyOutDir: true,
+    modulePreload: {
+      // 禁止首屏预加载非首屏重型专业模块，留待用户实际打开对应功能时按需加载
+      resolveDependencies: (_filename, deps) => {
+        const deferredPrefixes = [
+          'molstar-',
+          'three-',
+          'pdfjs-',
+          'canvas-editor-',
+          'tiptap-',
+          'office-',
+          'ofv-profer-theme-',
+          'katex-',
+        ]
+        return deps.filter((dep) => !deferredPrefixes.some((prefix) => dep.includes(prefix)))
+      },
+    },
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'src/renderer/index.html'),
@@ -41,9 +57,29 @@ export default defineConfig({
         viewer: resolve(__dirname, 'src/renderer/viewer.html'),
       },
       output: {
-        // Mol* 体积较大且仅 CSLab 使用，单独分块避免拖慢主应用首屏。
+        // 将重型第三方依赖按域拆分为独立 chunk，避免拖慢主应用首屏解析。
         manualChunks(id: string) {
-          if (id.includes('node_modules/molstar')) return 'molstar'
+          if (!id.includes('node_modules')) return undefined
+          const normalized = id.replace(/\\/g, '/')
+          if (normalized.includes('node_modules/molstar/')) return 'molstar'
+          if (normalized.includes('node_modules/three/')) return 'three'
+          if (normalized.includes('node_modules/pdfjs-dist/')) return 'pdfjs'
+          if (normalized.includes('node_modules/@hufe921/canvas-editor/')) return 'canvas-editor'
+          if (
+            normalized.includes('node_modules/@tiptap/')
+            || normalized.includes('node_modules/lowlight/')
+            || normalized.includes('node_modules/prosemirror-')
+          ) {
+            return 'tiptap'
+          }
+          if (normalized.includes('node_modules/katex/')) return 'katex'
+          if (
+            normalized.includes('node_modules/xlsx/')
+            || normalized.includes('node_modules/pptxgenjs/')
+            || normalized.includes('node_modules/mammoth/')
+          ) {
+            return 'office'
+          }
           return undefined
         },
       },
