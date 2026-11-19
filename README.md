@@ -5,16 +5,16 @@
 <a id="cdut-studio-"></a>
 <a id="top"></a>
 <h1 align="center">CDUT Studio 🦖</h1>
-<h3 align="center">成都理工大学定制 AI 智能体工作台</h3>
+<h3 align="center">面向科研与校园生态的端侧 AI 智能体工作台</h3>
 
 <p align="center">
-  <strong>“穷究于理，成就于工”</strong><br>
-  专为成理师生打造的下一代端侧智能体协同平台：前沿科学计算 · 智能教务特区 · 工业级材料审核 · AI 速课堂 · 100% 本地优先<br>
+  <strong>端侧科研计算与校园智能体协同平台</strong><br>
+  专为高校师生打造的新一代端侧智能体工作台：前沿科学计算 · 智能教务特区 · 工业级材料审核 · AI 速课堂 · 100% 本地优先<br>
   <strong>Powered by 雫窝中央实验室 · 2026</strong><br>
 </p>
 
 <p align="center">
-  <a href="#-四大产品专区"><img src="https://img.shields.io/badge/成都理工大学-定制工作台-8B0000?style=for-the-badge&logo=target&logoColor=white" alt="CDUT Customized"/></a>
+  <a href="#-四大产品专区"><img src="https://img.shields.io/badge/高校科研-智能工作台-8B0000?style=for-the-badge&logo=target&logoColor=white" alt="CDUT Studio"/></a>
   <a href="#multihop-rag-benchmark"><img src="https://img.shields.io/badge/MultiHop--RAG-Hit%4010%2098.85%25%20-2ECC71?style=for-the-badge&logo=google-scholar&logoColor=white" alt="MultiHop-RAG Benchmark"/></a>
   <a href="#axtree-compression-benchmark"><img src="https://img.shields.io/badge/AXTree%20网页压缩-90.89%25%20(23.6x)-4A7DFF?style=for-the-badge&logo=google-chrome&logoColor=white" alt="AXTree Compression Benchmark"/></a>
   <a href="#-全景架构与技术栈"><img src="https://img.shields.io/badge/内核驱动-Pi%20Coding%20Agent-4A7DFF?style=for-the-badge&logo=electron&logoColor=white" alt="Pi Agent Driven"/></a>
@@ -40,9 +40,9 @@
 
 ## 📖 项目简介
 
-> **CDUT Studio** 是一款深度适配**成都理工大学**学术科研与校园生活生态的全功能端侧 AI 智能体（Agent）客户端。
+> **CDUT Studio** 是一款面向**高校学术科研与校园生活生态**的全功能端侧 AI 智能体（Agent）客户端。
 
-系统以 **Pi Coding Agent 为唯一执行内核**，彻底践行 **100% 本地优先（Local-First）** 架构。无论是优势学科的深度科学计算、期末复习精准提分带教、校园教务自动化速查，还是复杂的奖助学金与公文材料多栏比对审核，CDUT Studio 都能化身为成理师生的“端侧赛博外脑”，用前沿智能体自动化流打破重复劳动，重构高校学习与科研范式。
+系统以 **Pi Coding Agent 为唯一执行内核**，彻底践行 **100% 本地优先（Local-First）** 架构。无论是优势学科的深度科学计算、期末复习精准提分带教、校园教务自动化速查，还是复杂的奖助学金与公文材料多栏比对审核，CDUT Studio 都能化身为高校师生的“端侧赛博外脑”，用前沿智能体自动化流打破重复劳动，重构高校学习与科研范式。
 
 <p align="center">
   <img src="assets/screenshots/cdut-studio-main-preview.png" width="92%" alt="CDUT Studio 主界面" />
@@ -61,7 +61,7 @@
       </td>
       <td width="50%" valign="top">
         <h3>🏛️ CDUT 校园专区（教务特区）</h3>
-        <p><b>成理数字校园原生互通</b>：统一身份认证一键安全接入、课表自适应教学周、学业成绩精准换算（五级制/两级制自动折算与同分去重）、考场与空教室秒级速查、学籍卡片规整展示与砚湖易办业务流轻量辅助。<br>👉 <a href="#multihop-rag-benchmark"><b>[进入 MultiHop-RAG 知识库评测成绩入口]</b></a></p>
+        <p><b>高校数字校园原生互通</b>：统一身份认证一键安全接入、课表自适应教学周、学业成绩精准换算（五级制/两级制自动折算与同分去重）、考场与空教室秒级速查、学籍卡片规整展示与校园事务业务流轻量辅助。<br>👉 <a href="#multihop-rag-benchmark"><b>[进入 MultiHop-RAG 知识库评测成绩入口]</b></a></p>
       </td>
     </tr>
     <tr>
@@ -83,7 +83,7 @@
 
 ## 🔬 CDUT Science (科学实验室)
 
-围绕成都理工大学在地质古生物、资源勘查、核技术与自动化、材料化工与新能源等优势优势学科的科研需求，CDUT Studio 构建了从微观晶体结构、实验图谱拟合到宏观超算调度与学术出版的全链路计算系统：
+围绕材料化工、地学、物理化学与新能源等跨学科科研需求，CDUT Studio 构建了从微观晶体结构、实验图谱拟合到宏观超算调度与学术出版的全链路计算系统：
 
 <p align="center">
   <img src="assets/screenshots/cdut-science-lab-preview.png" width="92%" alt="CDUT Science 实验室界面展示" />
@@ -106,7 +106,7 @@
 
 ## 🏛️ CDUT 校园专区与教务特区
 
-针对成理校园日常学习与教务查询需求量身定制，在安全合规边界内全面消除重复查课表、登录繁琐与事务填报负担：
+针对高校校园日常学习与教务查询需求量身定制，在安全合规边界内全面消除重复查课表、登录繁琐与事务填报负担：
 
 <p align="center">
   <img src="assets/screenshots/cdut-campus-zone-preview.png" width="92%" alt="CDUT 专区主界面" />
@@ -121,7 +121,7 @@
 - **课表全景透视**：自动对齐北京时间教学周，清晰掌握当天及全周课程编排、上课教室与授课教师；
 - **成绩与绩点精确折算**：完整支持百分制、五级制（优/良/中/及格/不及格）及两级制（合格/不合格）自动映射，多次考核同分自动聚合最新学期；
 - **考场速查与空教室检索**：一键查询期末排考安排，按教学楼栋、时段智能检索自习空教室；
-- **砚湖易办轻量辅助**：以自然语言对话引导表单信息流转，协助快速梳理请假申报理由。
+- **校园事务轻量辅助**：以自然语言对话引导表单信息流转，协助快速梳理请假申报理由。
 
 ---
 
@@ -158,8 +158,8 @@
 
 ### 2. 智联万站：受管自动化浏览器
 - **多标签安全隔离**：内置现代化受管浏览器标签页，畅联校内外任意安全站点；
-- **校园直通生态**：预置成理教务处、图书馆、砚湖易办、易班等校内高频书签，支持视窗截图与自动化辅助；
-- **AXTree 高压缩无视感知**：通过 Chromium Blink 底层无障碍树（Accessibility Tree）实现纯文本 Agent 网页感知，将原始网页压缩 **90.89%**（缩减 **23.6 倍**），免去截屏图片传输开销。<br>👉 <a href="#axtree-compression-benchmark"><b>[进入 AXTree 网页压缩率权威评测成绩入口]</b></a>。
+- **校园直通生态**：支持预置教务系统、图书馆、校园办事大厅等高频学术与校园书签，支持视窗截图与自动化辅助；
+- **AXTree 高压缩无视觉感知**：通过 Chromium Blink 底层无障碍树（Accessibility Tree）实现纯文本 Agent 网页感知，将原始网页压缩 **90.89%**（缩减 **23.6 倍**），免去截屏图片传输开销。<br>👉 <a href="#axtree-compression-benchmark"><b>[进入 AXTree 网页压缩率权威评测成绩入口]</b></a>。
 
 ---
 
@@ -267,7 +267,7 @@ flowchart TD
     classDef storage fill:#F1F5F9,stroke:#64748B,stroke-width:1.5px,color:#334155
     classDef external fill:#F8FAFC,stroke:#94A3B8,stroke-width:1px,color:#475569
 
-    User(["成理师生用户"]):::user
+    User(["高校师生用户"]):::user
 
     subgraph ClientLayer["🖥️ 桌面客户端交互与伴学层 (Presentation & Companion)"]
         ClientApp["CDUT Studio 桌面工作台<br/>(Electron 43 + React 18 + Tailwind + Jotai)"]:::client
@@ -312,7 +312,7 @@ flowchart TD
             GradeService["绩点与成绩双轨换算<br/>(百分制/五级制/两级制 · 同分聚合)"]:::campus
             ClassroomExam["考场速查 & 自习空教室检索"]:::campus
             ProfileCard["学籍卡片与证件照规整呈现"]:::campus
-            YanhuAssist["砚湖易办轻量流程辅助"]:::campus
+            CampusAssist["校园事务轻量流程辅助"]:::campus
         end
 
         subgraph DomainReview["📑 材料审核专区 V2"]
@@ -441,11 +441,11 @@ bun run benchmark:axtree
         <b>嗷呜！我是 CDUT Studio 的「砚小龙」~</b>
       </td>
       <td width="70%" align="left">
-        <h3>💚 诞生于成理恐龙博物馆与砚湖湖畔的 AI 守护神</h3>
-        <p>成理不仅有享誉世界的<b>马门溪龙</b>，更有守护每个深夜赶 DDL 与学术攻关的“砚小龙”！</p>
+        <h3>💚 陪伴科研与学习的桌面 AI 守护神</h3>
+        <p>无论是深夜赶 DDL 还是沉浸式学术攻关，都有“砚小龙”静静守护在你身边！</p>
         <ul>
-          <li>🌱 <b>恐龙睡袍与小角</b>：象征成理地学与地质古生物的深厚历史积淀；</li>
-          <li>🎀 <b>砚湖绿缎带</b>：取自砚湖春水色，陪伴你在知识与科学的湖泊中探索成长；</li>
+          <li>🌱 <b>恐龙睡袍与小角</b>：象征对自然科学与未知世界的好奇与探索精神；</li>
+          <li>🎀 <b>湖绿缎带</b>：取自清新春水色，陪伴你在知识与科学的海洋中探索成长；</li>
           <li>🐾 <b>桌面伴学宠物（Floating Pet）</b>：支持将砚小龙呼唤至桌面任意角落，静静守候你的科研时光；</li>
           <li>🕰️ <b>拟物时钟与活跃热力图</b>：桌面端贴心挂载 Analog Clock 与 Usage Heatmap，直观记录你的学术成长轨迹。</li>
         </ul>
@@ -471,64 +471,42 @@ bun run benchmark:axtree
 
 <div align="center">
 
-> 🦖 **CDUT Studio Core Team** · 穷究于理，成就于工
+> 🦖 **CDUT Studio Core Team**
 
 </div>
 
 <div align="center">
 <table>
   <tr>
-    <td width="50%" valign="top">
-      <div style="display: flex; gap: 12px; align-items: flex-start;">
-        <img src="assets/team/team-1.jpg" width="68" height="68" style="border-radius: 50%; object-fit: cover;" alt="队长头像" />
+    <td colspan="2" valign="top">
+      <div style="display: flex; gap: 14px; align-items: flex-start;">
+        <img src="assets/team/team-1.jpg" width="76" height="76" style="border-radius: 50%; object-fit: cover;" alt="Nya-Angle 头像" />
         <div>
-          <b>队长</b><br/>
-          <sub>成都理工大学学生 &nbsp;·&nbsp; 队长</sub><br/>
+          <a href="https://github.com/Nya-Angle" target="_blank"><b style="font-size: 16px;">Nya-Angle</b></a><br/>
+          <sub>Owner</sub><br/>
           <sub><b>负责方向：</b>CDUT Science Lab 架构设计、长期记忆系统研发、智联万站与 AI 速课堂研发、RAG 检索增强算法、特区账户技术接入、「砚小龙」IP 形象设计</sub>
         </div>
       </div>
     </td>
+  </tr>
+  <tr>
     <td width="50%" valign="top">
       <div style="display: flex; gap: 12px; align-items: flex-start;">
-        <img src="assets/team/team-3.png" width="68" height="68" style="border-radius: 50%; object-fit: cover;" alt="核心成员头像" />
+        <img src="assets/team/team-3.png" width="68" height="68" style="border-radius: 50%; object-fit: cover;" alt="Fuck-GH-Admin 头像" />
         <div>
-          <b>核心成员</b><br/>
-          <sub>成都理工大学学生 &nbsp;·&nbsp; 核心队员</sub><br/>
+          <a href="https://github.com/Fuck-GH-Admin" target="_blank"><b>Fuck-GH-Admin</b></a><br/>
+          <sub>Dev</sub><br/>
           <sub><b>负责方向：</b>材料审核专区 V2 研发、项目图像视觉资源设计、客户端 UI 与卡片式交互体验</sub>
         </div>
       </div>
     </td>
-  </tr>
-  <tr>
-    <td colspan="2" valign="top">
-      <div style="display: flex; gap: 14px; align-items: flex-start;">
-        <img src="assets/team/team-2.gif" width="76" height="76" style="border-radius: 50%; object-fit: cover;" alt="特别鸣谢头像" />
-        <div>
-          <b style="font-size: 16px;">特别鸣谢成员</b> &nbsp; <a href="https://github.com/Yuan-lai-ru-ci/ProferAI" target="_blank"><img src="https://img.shields.io/badge/🌟-特别鸣谢-FF5722?style=flat-square" alt="Special Thanks"/></a><br/>
-          <sub><b>特别鸣谢 & 核心成员</b></sub><br/>
-          <sub><b>突出贡献：</b>衷心感谢该成员为本项目提供优秀的基座支持，并在客户端底层通信与架构选型中提供坚实的技术支撑！推荐关注其开源 Agent 项目 👉 <a href="https://github.com/Yuan-lai-ru-ci/ProferAI" target="_blank"><b>ProferAI</b></a>。</sub>
-        </div>
-      </div>
-    </td>
-  </tr>
-  <tr>
     <td width="50%" valign="top">
       <div style="display: flex; gap: 12px; align-items: flex-start;">
-        <img src="assets/team/team-4.png" width="68" height="68" style="border-radius: 50%; object-fit: cover;" alt="核心成员头像" />
+        <img src="assets/team/team-2.gif" width="68" height="68" style="border-radius: 50%; object-fit: cover;" alt="Yuan-lai-ru-ci 头像" />
         <div>
-          <b>核心成员</b><br/>
-          <sub>成都理工大学学生 &nbsp;·&nbsp; 核心队员</sub><br/>
-          <sub><b>负责方向：</b>核心交互功能设计、RAG 知识库工程构建、全流程技术架构与部署文档撰写</sub>
-        </div>
-      </div>
-    </td>
-    <td width="50%" valign="top">
-      <div style="display: flex; gap: 12px; align-items: flex-start;">
-        <img src="assets/team/team-5.jpg" width="68" height="68" style="border-radius: 50%; object-fit: cover;" alt="核心成员头像" />
-        <div>
-          <b>核心成员</b><br/>
-          <sub>成都理工大学学生 &nbsp;·&nbsp; 核心队员</sub><br/>
-          <sub><b>负责方向：</b>砚湖易办业务流逻辑梳理、学业场景需求设计、系统功能手册与用户操作指南设计</sub>
+          <a href="https://github.com/Yuan-lai-ru-ci" target="_blank"><b>Yuan-lai-ru-ci</b></a><br/>
+          <sub>Dev</sub><br/>
+          <sub><b>负责方向：</b>提供基座支持，并在客户端底层通信与架构选型中提供坚实的技术支撑！推荐关注其开源 Agent 项目 👉 <a href="https://github.com/Yuan-lai-ru-ci/ProferAI" target="_blank"><b>ProferAI</b></a>。</sub>
         </div>
       </div>
     </td>
@@ -542,12 +520,12 @@ bun run benchmark:axtree
 
 本项目基于 **GNU Affero General Public License v3.0 (AGPL-3.0)** 开放源代码。详见 [LICENSE](LICENSE) 文件。
 
-*免责声明：CDUT Studio 为成理学生自主开源 AI 智能体项目，非官方商业软件，旨在促进开源技术交流、学术科研效率与校园数字化学习体验提升。*
+*免责声明：CDUT Studio 为独立开源 AI 智能体项目，非任何高校或机构的官方软件，旨在促进开源技术交流、学术科研效率与数字化学习体验提升。*
 
 <br/>
 
 <div align="center">
-  <p><b>穷究于理，成就于工 · 攀登科学高峰，从 CDUT Studio 开始。</b></p>
+  <p><b>攀登科学高峰，从 CDUT Studio 开始。</b></p>
   <img src="https://img.shields.io/badge/Made%20with%20%E2%9D%A4%EF%B8%8F%20by-CDUT%20Studio%20Team-2ECC71?style=flat-square" alt="CDUT Studio Team"/>
   <br/><br/>
   <sub>CDUT Studio is an independent open-source project by <b>@雫窝中央实验室</b>. © 2026.</sub>
