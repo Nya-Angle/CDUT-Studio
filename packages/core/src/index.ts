@@ -4,6 +4,6 @@
 // @profer/core/office-engine）消费；这里仅做纯类型导出，编译后完全擦除，零运行时引入，
 // 避免渲染进程顺藤摸瓜把 Node 专用模块打进浏览器构建。
 export * from './providers/index.ts'
-export * from './highlight/index.ts'
+export type * from './highlight/index.ts'
 export type * from './pdf-engine/index.ts'
 export type * from './office-engine/index.ts'

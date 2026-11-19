@@ -121,6 +121,7 @@ import { GlobalShortcuts } from './components/shortcuts/GlobalShortcuts'
 import { TabSwitcher } from './components/tabs/TabSwitcher'
 import { NavigationInputProvider } from './components/navigation/NavigationInputProvider'
 import { htmlToMarkdown, markdownToHtml } from './lib/markdown-rich-text'
+import { getSettingsCoalesced, listAgentWorkspacesCoalesced, scheduleDeferredStartupTask } from './lib/startup-ipc-cache'
 import './styles/globals.css'
 import './styles/skin-base.css'
 import 'katex/dist/katex.min.css'
@@ -247,7 +248,7 @@ function AgentSettingsInitializer(): null {
     // 并行加载渠道列表和设置，确保两者都就绪后再验证渠道有效性
     Promise.all([
       window.electronAPI.listChannels(),
-      window.electronAPI.getSettings(),
+      getSettingsCoalesced(),
     ]).then(([channels, settings]) => {
       // 缓存渠道列表
       setChannels(channels)
@@ -349,7 +350,7 @@ function AgentSettingsInitializer(): null {
       }
 
       // 加载工作区列表并恢复上次选中的工作区
-      window.electronAPI.listAgentWorkspaces().then((workspaces) => {
+      listAgentWorkspacesCoalesced().then((workspaces) => {
         setAgentWorkspaces(workspaces)
         const visibleWorkspaces = getVisibleAgentWorkspaces(workspaces)
         const savedWorkspace = settings.agentWorkspaceId
@@ -446,7 +447,7 @@ function AgentSettingsInitializer(): null {
 function PlanningShortcutInitializer(): null {
   useEffect(() => {
     initShortcutRegistry()
-    void window.electronAPI.getSettings().then((settings) => {
+    void getSettingsCoalesced().then((settings) => {
       updateShortcutOverrides(settings.shortcutOverrides ?? {})
     }).catch((error) => {
       console.error('[任务/日程] 加载快捷键设置失败:', error)
@@ -506,7 +507,9 @@ function PlanningInitializer(): null {
       if (includes('calendar_groups')) loadCalendarGroups()
       if (includes('tags')) loadTags()
     }
-    load()
+    const cancelDeferred = scheduleDeferredStartupTask(() => {
+      if (!disposed) load()
+    }, 900)
     // TeamWorkspaceView normally负责连接 SSE；规划中心改走 MainArea 后仍需显式建立连接。
     if (isTeamWorkspace && currentWorkspaceId) {
       void window.electronAPI.sse.connect(currentWorkspaceId).catch((error) => console.error('[团队规划] SSE 连接失败:', error))
@@ -519,7 +522,7 @@ function PlanningInitializer(): null {
       const data = event.data as { resources?: string[] }
       load(data.resources)
     })
-    return () => { disposed = true; unsubscribe(); unsubscribeSse() }
+    return () => { disposed = true; cancelDeferred(); unsubscribe(); unsubscribeSse() }
   }, [currentWorkspaceId, isTeamWorkspace, setCalendarEvents, setCalendarGroups, setTags, setTodoGroups, setTodos])
 
   return null
@@ -532,9 +535,12 @@ function AutomationInitializer(): null {
     const load = (): void => {
       window.electronAPI.listAutomations().then(setAutomations).catch(console.error)
     }
-    load()
+    const cancelDeferred = scheduleDeferredStartupTask(load, 1100)
     const unsub = window.electronAPI.onAutomationChanged(load)
-    return unsub
+    return () => {
+      cancelDeferred()
+      unsub()
+    }
   }, [setAutomations])
 
   return null
@@ -684,22 +690,10 @@ function FeishuInitializer(): null {
   const store = useStore()
 
   useEffect(() => {
-    // 加载初始多 Bot 状态
-    const loadFeishuMultiStatus = window.electronAPI.getFeishuMultiStatus
-    if (!loadFeishuMultiStatus) {
-      window.electronAPI.getFeishuStatus()
-        .then((state: FeishuBridgeState) => {
-          const s = state as FeishuBotBridgeState
-          const botId = s.botId ?? 'default'
-          store.set(feishuBotStatesAtom, { [botId]: { ...s, botId, botName: s.botName ?? '飞书助手' } })
-        })
-        .catch((err: unknown) => console.error('[FeishuInitializer] 加载状态失败:', err))
-    } else loadFeishuMultiStatus()
-      .then((multiState: { bots: Record<string, FeishuBotBridgeState> }) => {
-        store.set(feishuBotStatesAtom, multiState.bots)
-      })
-      .catch(() => {
-        // 回退：使用旧 API 获取单 Bot 状态
+    // 错峰加载飞书多 Bot 初始状态，避开首屏水合高峰
+    const cancelDeferred = scheduleDeferredStartupTask(() => {
+      const loadFeishuMultiStatus = window.electronAPI.getFeishuMultiStatus
+      if (!loadFeishuMultiStatus) {
         window.electronAPI.getFeishuStatus()
           .then((state: FeishuBridgeState) => {
             const s = state as FeishuBotBridgeState
@@ -707,7 +701,21 @@ function FeishuInitializer(): null {
             store.set(feishuBotStatesAtom, { [botId]: { ...s, botId, botName: s.botName ?? '飞书助手' } })
           })
           .catch((err: unknown) => console.error('[FeishuInitializer] 加载状态失败:', err))
-      })
+      } else loadFeishuMultiStatus()
+        .then((multiState: { bots: Record<string, FeishuBotBridgeState> }) => {
+          store.set(feishuBotStatesAtom, multiState.bots)
+        })
+        .catch(() => {
+          // 回退：使用旧 API 获取单 Bot 状态
+          window.electronAPI.getFeishuStatus()
+            .then((state: FeishuBridgeState) => {
+              const s = state as FeishuBotBridgeState
+              const botId = s.botId ?? 'default'
+              store.set(feishuBotStatesAtom, { [botId]: { ...s, botId, botName: s.botName ?? '飞书助手' } })
+            })
+            .catch((err: unknown) => console.error('[FeishuInitializer] 加载状态失败:', err))
+        })
+    }, 1500)
 
     // 订阅状态变化（现在每次推送包含 botId）
     const cleanupStatus = window.electronAPI.onFeishuStatusChanged((raw: FeishuBridgeState) => {
@@ -732,6 +740,7 @@ function FeishuInitializer(): null {
     window.addEventListener('blur', reportPresence)
 
     return () => {
+      cancelDeferred()
       cleanupStatus()
       clearInterval(interval)
       window.removeEventListener('focus', reportPresence)
@@ -752,22 +761,10 @@ function DingTalkInitializer(): null {
   const store = useStore()
 
   useEffect(() => {
-    // 加载初始多 Bot 状态
-    const loadDingTalkMultiStatus = window.electronAPI.getDingTalkMultiStatus
-    if (!loadDingTalkMultiStatus) {
-      window.electronAPI.getDingTalkStatus()
-        .then((state: DingTalkBridgeState) => {
-          const s = state as DingTalkBotBridgeState
-          const botId = s.botId ?? 'default'
-          store.set(dingtalkBotStatesAtom, { [botId]: { ...s, botId, botName: s.botName ?? '钉钉助手' } })
-        })
-        .catch((err: unknown) => console.error('[DingTalkInitializer] 加载状态失败:', err))
-    } else loadDingTalkMultiStatus()
-      .then((multiState: { bots: Record<string, DingTalkBotBridgeState> }) => {
-        store.set(dingtalkBotStatesAtom, multiState.bots)
-      })
-      .catch(() => {
-        // 回退：使用旧 API 获取单 Bot 状态
+    // 错峰加载钉钉多 Bot 初始状态，避开首屏水合高峰
+    const cancelDeferred = scheduleDeferredStartupTask(() => {
+      const loadDingTalkMultiStatus = window.electronAPI.getDingTalkMultiStatus
+      if (!loadDingTalkMultiStatus) {
         window.electronAPI.getDingTalkStatus()
           .then((state: DingTalkBridgeState) => {
             const s = state as DingTalkBotBridgeState
@@ -775,7 +772,21 @@ function DingTalkInitializer(): null {
             store.set(dingtalkBotStatesAtom, { [botId]: { ...s, botId, botName: s.botName ?? '钉钉助手' } })
           })
           .catch((err: unknown) => console.error('[DingTalkInitializer] 加载状态失败:', err))
-      })
+      } else loadDingTalkMultiStatus()
+        .then((multiState: { bots: Record<string, DingTalkBotBridgeState> }) => {
+          store.set(dingtalkBotStatesAtom, multiState.bots)
+        })
+        .catch(() => {
+          // 回退：使用旧 API 获取单 Bot 状态
+          window.electronAPI.getDingTalkStatus()
+            .then((state: DingTalkBridgeState) => {
+              const s = state as DingTalkBotBridgeState
+              const botId = s.botId ?? 'default'
+              store.set(dingtalkBotStatesAtom, { [botId]: { ...s, botId, botName: s.botName ?? '钉钉助手' } })
+            })
+            .catch((err: unknown) => console.error('[DingTalkInitializer] 加载状态失败:', err))
+        })
+    }, 1600)
 
     // 订阅状态变化（现在每次推送包含 botId）
     const cleanupStatus = window.electronAPI.onDingTalkStatusChanged((raw: DingTalkBridgeState) => {
@@ -788,6 +799,7 @@ function DingTalkInitializer(): null {
     })
 
     return () => {
+      cancelDeferred()
       cleanupStatus()
     }
   }, [store])
@@ -830,9 +842,9 @@ function TabStatePersistenceInitializer(): null {
   // 启动恢复：读取 settings.tabState + 校验会话有效性
   useEffect(() => {
     Promise.all([
-      window.electronAPI.getSettings(),
+      getSettingsCoalesced(),
       window.electronAPI.listAgentSessions(true),
-      window.electronAPI.listAgentWorkspaces(),
+      listAgentWorkspacesCoalesced(),
     ]).then(([settings, agentSessions, agentWorkspaces]) => {
       const tabState = settings.tabState
       if (!tabState?.tabs?.length) {
@@ -998,7 +1010,7 @@ function ScratchPadPersistence(): null {
       try {
         // 加载 scratch-pad.md 内容（磁盘存的是 markdown，转为 HTML 给编辑器用）
         const [settings, loadedMd] = await Promise.all([
-          window.electronAPI.getSettings(),
+          getSettingsCoalesced(),
           window.electronAPI.loadScratchPad ? window.electronAPI.loadScratchPad() : Promise.resolve(''),
         ])
 

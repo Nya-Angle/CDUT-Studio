@@ -10,6 +10,7 @@
 
 import { atom } from 'jotai'
 import type { NotificationSoundId, NotificationSoundType, NotificationSoundSettings, CustomNotificationSound } from '@/types/settings'
+import { getSettingsCoalesced } from '@/lib/startup-ipc-cache'
 
 // ===== 音频资源导入 =====
 import soundDing from '@/assets/sound/ding.mp3'
@@ -107,7 +108,7 @@ export async function initializeNotifications(
   setCustomSounds?: (sounds: CustomNotificationSound[]) => void
 ): Promise<void> {
   try {
-    const settings = await window.electronAPI.getSettings()
+    const settings = await getSettingsCoalesced()
     setEnabled(settings.notificationsEnabled ?? true)
     setSoundEnabled(settings.notificationSoundEnabled ?? true)
     setSounds(settings.notificationSounds ?? {})

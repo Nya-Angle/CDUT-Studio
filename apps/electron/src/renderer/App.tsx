@@ -14,6 +14,7 @@ import { CoachTourOverlay } from './components/onboarding/coach-tour/CoachTourOv
 import { coachTourOpenAtom } from './atoms/coach-tour-atoms'
 import { CURRENT_COACH_TOUR_VERSION } from './components/onboarding/coach-tour/coach-tour-steps'
 import { useBulletinStartupTrigger } from './hooks/useBulletinStartupTrigger'
+import { getSettingsCoalesced } from './lib/startup-ipc-cache'
 import type { AppShellContextType } from './contexts/AppShellContext'
 
 /** 懒加载非首屏组件——减少首次渲染的 JS 解析量 */
@@ -22,6 +23,8 @@ const EnvironmentCheckDialog = React.lazy(() => import('./components/environment
 const MigrationImportDialog = React.lazy(() => import('./components/migration/MigrationImportDialog').then(m => ({ default: m.MigrationImportDialog })))
 const SettingsDialog = React.lazy(() => import('./components/settings/SettingsDialog').then(m => ({ default: m.SettingsDialog })))
 const BulletinDialog = React.lazy(() => import('./components/bulletin/BulletinDialog').then(m => ({ default: m.BulletinDialog })))
+
+const EMPTY_APP_SHELL_CONTEXT: AppShellContextType = {}
 
 export default function App(): React.ReactElement {
   const store = useStore()
@@ -35,7 +38,7 @@ export default function App(): React.ReactElement {
   React.useEffect(() => {
     const initialize = async () => {
       try {
-        const settings = await window.electronAPI.getSettings()
+        const settings = await getSettingsCoalesced()
         if (!settings.onboardingCompleted) {
           setShowOnboarding(true)
         } else if ((settings.coachTourVersion ?? 0) < CURRENT_COACH_TOUR_VERSION) {
@@ -53,9 +56,12 @@ export default function App(): React.ReactElement {
     initialize()
   }, [])
 
-  // 等 React 真正提交掉“正在初始化...”后，再允许主进程撤掉原生启动页。
+  // 等 React 真正提交掉“正在初始化...”后，再允许主进程撤掉原生启动页并淡出主窗口进入动画。
   React.useEffect(() => {
-    if (!isLoading) window.electronAPI.notifyRendererReady()
+    if (!isLoading) {
+      window.electronAPI.notifyRendererReady()
+      ;(window as Window & { __dismissCdutEntryOverlay?: () => void }).__dismissCdutEntryOverlay?.()
+    }
   }, [isLoading])
 
   // 打开教程 Tab：统一入口负责切回对话视图并同步副作用
@@ -108,14 +114,11 @@ export default function App(): React.ReactElement {
     )
   }
 
-  // Placeholder context value
-  const contextValue: AppShellContextType = {}
-
   // 显示主界面
   return (
     <TooltipProvider delayDuration={200}>
       <PlanningReminderRail />
-      <AppShell contextValue={contextValue} />
+      <AppShell contextValue={EMPTY_APP_SHELL_CONTEXT} />
       <React.Suspense fallback={null}>
         <SettingsDialog />
       </React.Suspense>

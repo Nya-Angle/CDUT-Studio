@@ -17,6 +17,7 @@
  */
 
 import { atom } from 'jotai'
+import { getSettingsCoalesced } from '@/lib/startup-ipc-cache'
 import { DEFAULT_UI_SCALE } from '../../types/settings'
 import type { UiScale } from '../../types/settings'
 
@@ -95,7 +96,7 @@ export async function initializeUiScale(
   setScale: (scale: UiScale) => void,
 ): Promise<void> {
   try {
-    const settings = await window.electronAPI.getSettings()
+    const settings = await getSettingsCoalesced()
     const stored = settings.uiScale
     if (stored && stored in UI_SCALE_VALUES) {
       setScale(stored as UiScale)

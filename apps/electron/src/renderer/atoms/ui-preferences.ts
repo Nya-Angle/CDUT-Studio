@@ -5,6 +5,7 @@
  */
 
 import { atom } from 'jotai'
+import { getSettingsCoalesced } from '@/lib/startup-ipc-cache'
 import {
   DEFAULT_COMPACT_MAX_HEIGHT,
   DEFAULT_COMPACT_MIN_HEIGHT,
@@ -54,7 +55,7 @@ export async function initializeUiPreferences(
   setComposerCompactMode?: (value: ComposerCompactModeSettings) => void
 ): Promise<void> {
   try {
-    const settings = await window.electronAPI.getSettings()
+    const settings = await getSettingsCoalesced()
     setStickyUserMessageEnabled(settings.stickyUserMessageEnabled ?? true)
     setLongTextPasteAsAttachmentEnabled?.(settings.longTextPasteAsAttachmentEnabled ?? false)
     setRichTextRenderingEnabled?.(settings.richTextRenderingEnabled ?? false)
